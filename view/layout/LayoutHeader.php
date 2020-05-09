@@ -20,7 +20,15 @@ $DATA = selectData($sql);
 if ($DATA[0]['numrow'] == 0) {
   header("location:../../index.php");
 }
-
+if ($USER[1]['Icon'] == "default.jpg") {
+  if ($USER[1]['Title'] == '1') {
+    $path = "0/defaultM.jpg";
+  } else {
+    $path = "0/defaultW.jpg";
+  }
+} else {
+  $path = "$userId/$iconpic";
+}
 //get user info 
 $DATAUSER = $_SESSION[md5('user')];
 $sql = "SELECT * FROM `user-type` WHERE UTID = " . $idUT;
@@ -266,7 +274,7 @@ if ($DATAUSER[1]['IsFarmer'] == 1 && $idUT != 4) {
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $DATAUSER[1]['UserName'] . " (" . $DATATPYEUSER[1]['UTName'] . ")"; ?></span>
 
-                <img class="img-radius img-profile" src="../../icon/user/<?php echo $userId; ?>/<?php echo $iconpic; ?>" />
+                <img class="img-radius img-profile" src="../../icon/user/<?php echo $path; ?>" />
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
