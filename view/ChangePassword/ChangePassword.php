@@ -17,9 +17,6 @@ if (!isset($_GET['IDkey'])) {
 
                 $time = (string) $data[2];
                 $IDUser = $data[1];
-
-
-
                 break;
             }
         }
@@ -35,6 +32,7 @@ if (!isset($_GET['IDkey'])) {
         $DATAUSER = selectData($sql);
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -44,31 +42,48 @@ if (!isset($_GET['IDkey'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Custom fonts for this template-->
+    <!-- fonts AND Icon CSS -->
     <link href="../../lib/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="../../css/font-googleapis/family_Nunito.css" rel="stylesheet" type="text/css">
+    <link href="../../css/font-googleapis/family_Material_Icon.css" rel="stylesheet" type="text/css">
 
-    <!-- Custom styles for this template-->
-    <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- styles template CSS -->
+    <link href="../../css/styles-template/sb-admin-2.min.css" rel="stylesheet" type="text/css">
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Datable CSS -->
+    <link href="../../css/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="../../css/datatables/style-exportDatable.css" rel="stylesheet" type="text/css">
 
-    <link href="../../css/customize.css" rel="stylesheet">
+    <!-- Range Slider CSS -->
+    <link href="../../css/ion-rangeSlider 2.3.1/ion-rangeSlider.min.css" rel="stylesheet" type="text/css">
 
-    <link href="../../lib/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <!-- bootstrap-sweetalert CSS-->
+    <link href="../../css/bootstrap-sweetalert 1.0.1/sweetalert.css" rel="stylesheet" type="text/css">
 
-    <!-- Range Slider Css -->
-    <link href="../../lib/ion-rangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
-    <link href="../../lib/ion-rangeslider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" />
+    <!-- Setting General CSS -->
+    <link href="../../css/customize.css" rel="stylesheet" type="text/css">
 
-    <link href='../../lib/calendar/css/fullcalendar.css' rel='stylesheet' />
-    <link href='../../lib/calendar/css/fullcalendar.print.css' rel='stylesheet' media='print' />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+    <!-- Select2 CSS -->
+    <link href="../../css/select2/select2.min.css" rel="stylesheet" type="text/css">
+    <link href="../../css/select2/style-select2.css" rel="stylesheet" type="text/css">
+
+    <!-- fengyuanchen-Datepicker CSS -->
+    <link href="../../css/fengyuanchen-Datepicker/datepicker.css" rel="stylesheet" type="text/css">
+
+    <!-- dmuy-MDTimePicker CSS -->
+    <link href="../../css/cp-MDTimePicker/MDTimePicker.css" rel="stylesheet" type="text/css">
+
+    <!-- croppie CSS -->
+    <link href="../../lib/croppie/croppie.css" rel="stylesheet" type="text/css">
+    <link href="../../css/style-croppie.css" rel="stylesheet" type="text/css">
+
+    <!-- HoldOn [Loader] CSS -->
+    <link href="../../css/HoldOn/HoldOn.css" rel="stylesheet" type="text/css">
 
 </head>
 <style>
     body {
-        background-color: #E91E63 !important;
+        background-color: #006664 !important;
     }
 
     .card-signin {
@@ -144,18 +159,54 @@ if (!isset($_GET['IDkey'])) {
 
 </html>
 
-<script src="../../lib/jquery/jquery.min.js">
-</script>
-<script src="../../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap core JS -->
+<script src="../../js/jquery/jquery.min.js"></script>
+<script src="../../js/bootstrap/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="../../lib/jquery-easing/jquery.easing.min.js"></script>
+<!-- Core plugin JS -->
+<script src="../../js/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="../../js/sb-admin-2.min.js"></script>
+<!-- scripts template JS -->
+<script src="../../js/styles-template/sb-admin-2.min.js"></script>
 
-<script src="../../lib/datatables/jquery.dataTables.min.js"></script>
-<script src="../../lib/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Datable JS -->
+<script src="../../js/datatable/jquery.dataTables.min.js"></script>
+<script src="../../js/datatable/dataTables.bootstrap4.min.js"></script>
+<script src="../../js/datatable/dataTables.buttons.min.js"></script>
+<script src="../../js/datatable/buttons.bootstrap4.min.js"></script>
+<script src="../../js/datatable/jszip.min.js"></script>
+<script src="../../js/datatable/pdfmake.min.js"></script>
+<script src="../../js/datatable/vfs_fonts.js"></script>
+<script src="../../js/datatable/buttons.html5.min.js"></script>
+<script src="../../js/datatable/setOption.DataTable.js"></script>
+
+<!-- RangeSlider Plugin JS -->
+<script src="../../js/ion-rangeSlider 2.3.1/ion-rangerSlider.min.js"></script>
+
+<!-- bootstrap-sweetalert JS -->
+<script src="../../js/bootstrap-sweetalert 1.0.1/sweetalert.min.js"></script>
+
+<!-- Setting General JS -->
+<script src='../../js/customize.js'></script>
+
+<!-- Select2 JS -->
+<script src="../../js/select2/select2.min.js"></script>
+
+<!-- fengyuanchen-Datepicker JS -->
+<script src="../../js/fengyuanchen-Datepicker/datepicker.js"></script>
+<script src="../../js/fengyuanchen-Datepicker/datepicker.th-TH.js"></script>
+
+<!-- dmuy-MDTimePicker JS -->
+<script src="../../js/cp-MDTimePicker/MDTimePicker.js"></script>
+
+<!-- croppie JS -->
+<script src="../../lib/croppie/croppie.js"></script>
+
+<!-- HoldOn [Loader] JS -->
+<script src="../../js/HoldOn/HoldOn.js"></script>
+
+<!-- NPM Chart 2.8.0 JS -->
+<script src="../../js/npm chart 2.8.0/chart.js"></script>
 
 <script type="text/javascript">
     var h1 = document.getElementById('hide1');

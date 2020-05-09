@@ -79,9 +79,11 @@ if (isset($_POST['cancel'])) {
     $username = $_POST['username'];
     $sql = "SELECT * FROM `db-user` INNER JOIN `db-emailtype` ON `db-user`.`ETID`=`db-emailtype`.`ETID` WHERE `UserName` = '" . $username . "'";
     $DATA = selectData($sql);
-
+    $responseinfo = array();
     if ($DATA[0]['numrow'] == 0) {
-        echo ' <div class="modal-header header-modal">
+        $responseinfo['status'] = "no";
+
+        $responseinfo['text'] = ' <div class="modal-header header-modal">
         <h4 class="modal-title" style="color:white">ตั้ง Password ใหม่</h4>
         </div>
         <div class="modal-body" id="ChangeModalBody">
@@ -101,9 +103,15 @@ if (isset($_POST['cancel'])) {
         <button type="button" name="save" id="save" value="insert" class="btn btn-success save">ยืนยัน</button>
         <button type="button" class="btn btn-danger cancel"  id="a_cancel" data-dismiss="modal">ยกเลิก</button>
         </div>';
+        $responseinfo['key'] = null;
     } else {
         $Email = $DATA[1]['EMAIL'] . '@' . $DATA[1]['Type'];
-        echo '   <div class="modal-header header-modal">
+        $responseinfo['status'] = "yes";
+        $responseinfo['Email'] = $Email;
+        for ($i = 0; $i < 4; $i++) {
+            $Email[$i] = 'x';
+        }
+        $responseinfo['text'] = '   <div class="modal-header header-modal">
         <h4 class="modal-title" style="color:white">ตั้ง Password ใหม่</h4>
         </div>
         <div class="modal-body" id="ChangeModalBody">
@@ -130,83 +138,82 @@ if (isset($_POST['cancel'])) {
         $strText1 = "$IDKey,{$DATA[1]['UID']},$time\r\n";
         fwrite($objFopen, $strText1);
         fclose($objFopen);
-        require("../../lib/PHPMailer/PHPMailerAutoload.php");
-
-        header('Content-Type: text/html; charset=utf-8');
-
-        $mail = new PHPMailer;
-        $mail->CharSet = "utf-8";
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 587;
-        $mail->SMTPSecure = 'tls';
-        $mail->SMTPAuth = true;
-
-
-        $gmail_username = "plamserviceth@gmail.com"; // gmail ที่ใช้ส่ง
-        $gmail_password = "PlamServiceTH1234"; // รหัสผ่าน gmail
-        // ตั้งค่าอนุญาตการใช้งานได้ที่นี่ https://myaccount.google.com/lesssecureapps?pli=1
-
-
-        $sender = "Plam IT Support"; // ชื่อผู้ส่ง
-        $email_sender = "PlamServiceTH@gmail.com"; // เมล์ผู้ส่ง 
-        $email_receiver = $Email; // เมล์ผู้รับ ***
-
-        $subject = "เปลี่ยนรหัสผ่าน"; // หัวข้อเมล์ 
+        $responseinfo['key'] = $IDKey;
+        echo json_encode($responseinfo);
+    }
+} else if (isset($_POST['Email'])) {
+    $Email = $_POST['Email'];
+    $IDKey = $_POST['IDKey'];
+    require("../../lib/PHPMailer/PHPMailerAutoload.php");
+    header('Content-Type: text/html; charset=utf-8');
+    $mail = new PHPMailer;
+    $mail->CharSet = "utf-8";
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = 587;
+    $mail->SMTPSecure = 'tls';
+    $mail->SMTPAuth = true;
+    $gmail_username = "plamserviceth@gmail.com"; // gmail ที่ใช้ส่ง
+    $gmail_password = "PlamServiceTH1234"; // รหัสผ่าน gmail
+    // ตั้งค่าอนุญาตการใช้งานได้ที่นี่ https://myaccount.google.com/lesssecureapps?pli=1
 
 
-        $mail->Username = $gmail_username;
-        $mail->Password = $gmail_password;
-        $mail->setFrom($email_sender, $sender);
-        $mail->addAddress($email_receiver);
-        $mail->Subject = $subject;
+    $sender = "Plam IT Support"; // ชื่อผู้ส่ง
+    $email_sender = "PlamServiceTH@gmail.com"; // เมล์ผู้ส่ง 
+    $email_receiver = $Email; // เมล์ผู้รับ ***
 
-        /* $email_content = "เปลี่ยน password คลิ๊กที่นี้ 
-        < http://localhost/Palm-update/view/ChangePassword/ChangePassword.php?IDkey=$IDKey >";*/
-        $email_content = "
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset=utf-8'/>
-            </head>
-            <body>
-                <h1 style='background: #E91E63;padding: 10px 0 20px 10px;margin-bottom:10px;font-size:30px;color:white;' >
-                ระบบบริหารจัดการแปลงปลูกปาล์มน้ำมัน
-                </h1>
-                <div style='padding:20px;'>
-                    
-                    <div>             
-                        <h2>การเปลี่ยนรหัสผ่าน <strong style='color:#0000ff;'></strong></h2>
-                        <a href='http://203.150.37.208/Palm/view/ChangePassword/ChangePassword.php?IDkey=$IDKey' target='_blank'>
-                            <h1><strong style='color:#3c83f9;'> >> กรุณาคลิ๊กที่นี่ เพื่อตั้งรหัสผ่านใหม่<< </strong> </h1>
-                        </a>
+    $subject = "เปลี่ยนรหัสผ่าน"; // หัวข้อเมล์ 
+
+
+    $mail->Username = $gmail_username;
+    $mail->Password = $gmail_password;
+    $mail->setFrom($email_sender, $sender);
+    $mail->addAddress($email_receiver);
+    $mail->Subject = $subject;
+
+    /* $email_content = "เปลี่ยน password คลิ๊กที่นี้ 
+            < http://localhost/Palm-update/view/ChangePassword/ChangePassword.php?IDkey=$IDKey >";*/
+
+    $email_content = "
+            <html>
+                <head>
+                    <meta charset=utf-8'/>
+                </head>
+                <body>
+                    <h1 style='background: #E91E63;padding: 10px 0 20px 10px;margin-bottom:10px;font-size:30px;color:white;' >
+                    ระบบบริหารจัดการแปลงปลูกปาล์มน้ำมัน
+                    </h1>
+                    <div style='padding:20px;'>
+
+                        <div>             
+                            <h2>การเปลี่ยนรหัสผ่าน <strong style='color:#0000ff;'></strong></h2>
+                            <a href='http://localhost/PalmProject/view/ChangePassword/ChangePassword.php?IDkey=$IDKey' target='_blank'>
+                                <h1><strong style='color:#3c83f9;'> >> กรุณาคลิ๊กที่นี่ เพื่อตั้งรหัสผ่านใหม่<< </strong> </h1>
+                            </a>
+                        </div>
+
                     </div>
-                    
-                </div>
-                <div style='background: #E91E63;color: white;padding:30px;'>
-                    <div style='text-align:center'> 
-                        © KU ศูนย์เทคโนโลยีชีวภาพเกษตร
+                    <div style='background: #E91E63;color: white;padding:30px;'>
+                        <div style='text-align:center'> 
+                            © KU ศูนย์เทคโนโลยีชีวภาพเกษตร
+                        </div>
                     </div>
-                </div>
-            </body>
-        </html>
-    ";
+                </body>
+            </html>
+        ";
 
 
-        //  ถ้ามี email ผู้รับ
-        if ($email_receiver) {
-            $mail->msgHTML($email_content);
+    //  ถ้ามี email ผู้รับ
+    if ($email_receiver) {
+        $mail->msgHTML($email_content);
+        if (!$mail->send()) {  // สั่งให้ส่ง email
 
-
-            if (!$mail->send()) {  // สั่งให้ส่ง email
-
-                // กรณีส่ง email ไม่สำเร็จ
-                //echo "<h3 class='text-center'>ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง</h3>";
-                //echo $mail->ErrorInfo; // ข้อความ รายละเอียดการ error
-            } else {
-                // กรณีส่ง email สำเร็จ
-                //echo "ระบบได้ส่งข้อความไปเรียบร้อย";
-            }
+            // กรณีส่ง email ไม่สำเร็จ
+            echo "ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง";
+            echo $mail->ErrorInfo; // ข้อความ รายละเอียดการ error
+        } else {
+            // กรณีส่ง email สำเร็จ
+            // echo "ระบบได้ส่งข้อความไปเรียบร้อย";
         }
     }
 } else {

@@ -164,9 +164,10 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
 
 <!-- Modal -->
 <div class="modal fade" id="ChangeModal" name="ChangeModal" tabindex="-1" role="dialog" style="margin-top: 10%;">
-    <form method="post" id="formAdd" name="formAdd" action="manage.php">
-        <div class="modal-dialog modal-lg" role="document" style="width: 30%">
-            <div class="modal-content">
+
+    <div class="modal-dialog modal-lg" role="document" style="width: 30%">
+        <div class="modal-content">
+            <form method="post" id="formAdd" name="formAdd" action="manage.php">
                 <div class="changepass">
                     <div class="modal-header header-modal">
                         <h4 class="modal-title" style="color:white">ตั้ง Password ใหม่</h4>
@@ -191,10 +192,10 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
                         <button type="button" class="btn btn-danger cancel" id="a_cancel" data-dismiss="modal">ยกเลิก</button>
                     </div>
                 </div>
-
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
+
 </div>
 
 <!-- Bootstrap core JavaScript-->
@@ -237,18 +238,43 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
 
         $(document).on('click', '.save', function() {
             var user = document.getElementById("username2").value;
-            changepassword(user);
-        });
-
-        $(document).on('click', '.cancel', function() {
-            cancel();
-        });
-
-        function changepassword(username2) {
             $.ajax({
                 type: "POST",
                 data: {
-                    username: username2
+                    username: user
+                },
+                url: "view/ChangePassword/manage.php",
+                async: false,
+                success: function(result) {
+                    var responseinfo = JSON.parse(result);
+                    console.log(responseinfo);
+                    $(".changepass").empty();
+                    $(".changepass").append(responseinfo.text);
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            Email: responseinfo.Email,
+                            IDKey: responseinfo.key
+
+                        },
+                        url: "view/ChangePassword/manage.php",
+                        async: true,
+                        success: function(result) {
+                            if (result != "") {
+                                // alert(result);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $("#ChangeModal").on("hide.bs.modal", function() {
+            $.ajax({
+                type: "POST",
+                data: {
+                    cancel: "cancel"
                 },
                 url: "view/ChangePassword/manage.php",
                 async: false,
@@ -257,22 +283,8 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
                     $(".changepass").append(result);
                 }
             });
-        }
+        });
 
-        function cancel() {
-            $.ajax({
-                type: "POST",
-                data: {
-                    cancel: "ccc"
-                },
-                url: "view/ChangePassword/manage.php",
-                async: false,
-                success: function(result) {
-                    $(".changepass").empty();
-                    $(".changepass").append(result);
-                }
-            });
-        }
 
     });
 </script>
