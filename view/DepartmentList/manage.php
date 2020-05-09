@@ -2,7 +2,7 @@
 require_once("../../dbConnect.php");
 connectDB();
 session_start(); 
-require_once("set-log-login.php");
+require_once("../../set-log-login.php");
 // echo $_POST['did'];
 // echo "come";
 // echo $_POST['request'];
