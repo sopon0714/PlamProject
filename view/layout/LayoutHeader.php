@@ -295,7 +295,7 @@ if ($DATAUSER[1]['IsFarmer'] == 1 && $idUT != 4) {
                   <div class="dropdown-divider"></div>
                 <?php } ?>
 
-                <a class="dropdown-item" href="../../Logout.php">
+                <a class="dropdown-item" href="../../view/Logout/Logout.php">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   <span style="color: black;">ออกจากระบบ</span>
                 </a>
