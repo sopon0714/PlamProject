@@ -41,6 +41,7 @@ if(isset($_POST['request'])){
             $fname = trim($_POST['fname']);
             // echo $fname;
             $lname = trim($_POST['lname']);
+            $idline = trim($_POST['idline']);
             $formalid = trim($_POST['formalid']);
             $address = trim($_POST['address']);
             $address = preg_replace('/[[:space:]]+/', ' ', trim($address));
@@ -73,8 +74,8 @@ if(isset($_POST['request'])){
             }
             echo "uid = $uid <br>";
             
-            $sql = "INSERT INTO `db-farmer` (`UFID`,Title,FirstName,LastName,FormalID,Icon,`Address`,AD3ID,IsBlock) 
-             VALUES ('$uid','$title','$fname','$lname','$formalid','default.jpg','$address','$id_subdistrinct','0')";
+            $sql = "INSERT INTO `db-farmer` (`UFID`,Title,FirstName,LastName,IdLine,FormalID,Icon,`Address`,AD3ID,IsBlock) 
+             VALUES ('$uid','$title','$fname','$lname','$idline','$formalid','default.jpg','$address','$id_subdistrinct','0')";
 
             addinsertData($sql);
 
@@ -216,6 +217,7 @@ if(isset($_POST['request'])){
             $title = trim($_POST['e_title']);
             $fname = trim($_POST['e_fname']);
             $lname = trim($_POST['e_lname']);
+            $idline = trim($_POST['e_idline']);
             // $formalid = trim($_POST['e_formalid']);
             $address = trim($_POST['e_address']);
             $address = preg_replace('/[[:space:]]+/', ' ', trim($address));
@@ -237,6 +239,7 @@ if(isset($_POST['request'])){
                 $o_title = $get_User[1]['Title'];
                 $o_fname = $get_User[1]['FirstName'];
                 $o_lname = $get_User[1]['LastName'];
+                $o_idline = $get_User[1]['IdLine'];
                 $o_address= $get_User[1]['Address'];
                 $o_id_subdistrinct = $get_User[1]['AD3ID'];
 
@@ -254,7 +257,7 @@ if(isset($_POST['request'])){
                 $loglogin_id = $loglogin[1]['ID'];
 
                 $sql=   "UPDATE `db-farmer` 
-                        SET Title='$title', FirstName='$fname', LastName='$lname',`Address`='$address',AD3ID='$id_subdistrinct'
+                        SET Title='$title', FirstName='$fname', LastName='$lname', IdLine='$idline', `Address`='$address',AD3ID='$id_subdistrinct'
                         WHERE `UFID`='$uid' ";
 
                 $re = updateData($sql);

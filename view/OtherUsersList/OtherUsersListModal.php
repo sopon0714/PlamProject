@@ -49,6 +49,15 @@
                         </div>
                         <div class="row mb-4">
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right">
+                                <span>ID Line<span class="text-danger"> *</span></span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" id="idline" name="idline" placeholder="ID Line"
+                                    required="" oninput="setCustomValidity(' ')">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right">
                                 <span>ชื่อผู้ใช้<span class="text-danger"> *</span></span>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
@@ -224,6 +233,15 @@
                             <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" id="e_lname" name="e_lname"
                                     placeholder="นามสกุล" required="" oninput="setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right">
+                                <span>ID Line<span class="text-danger"> *</span></span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" id="e_idline" name="e_idline" placeholder="ID Line"
+                                    required="" oninput="setCustomValidity(' ')">
                             </div>
                         </div>
                         <div class="row mb-4">

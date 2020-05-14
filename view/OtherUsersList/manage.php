@@ -70,6 +70,7 @@ if(isset($_POST['request'])){
             $fname = trim($_POST['fname']);
             // echo $fname;
             $lname = trim($_POST['lname']);
+            $idline = trim($_POST['idline']);
             $username = strtolower(trim($_POST['username']));
             $pwd = trim($_POST['pwd']);
            
@@ -91,8 +92,8 @@ if(isset($_POST['request'])){
             }
             echo "uid = $uid <br>";
             
-            $sql = "INSERT INTO `db-user` (`UID`,Title,FirstName,LastName,UserName,PWD,Icon,EMAIL,ETID,DID,IsAdmin,IsAdmin2,IsResearch,IsOperator,IsFarmer,IsBlock) 
-             VALUES ('$uid','$title','$fname','$lname','$username','null','default.jpg','$mail','$id_type','$id_department','$admin','$admin2','$research','$operator','$farmer','0')";
+            $sql = "INSERT INTO `db-user` (`UID`,Title,FirstName,LastName,IdLine,UserName,PWD,Icon,EMAIL,ETID,DID,IsAdmin,IsAdmin2,IsResearch,IsOperator,IsFarmer,IsBlock) 
+             VALUES ('$uid','$title','$fname','$lname','$idline','$username','null','default.jpg','$mail','$id_type','$id_department','$admin','$admin2','$research','$operator','$farmer','0')";
 
             addinsertData($sql);
    
@@ -357,6 +358,7 @@ if(isset($_POST['request'])){
             $title = trim($_POST['e_title']);
             $fname = trim($_POST['e_fname']);
             $lname = trim($_POST['e_lname']);
+            $idline = trim($_POST['e_idline']);
             $username = strtolower(trim($_POST['e_username1']));
             $mail = trim($_POST['e_mail']);
             $id_type = trim($_POST['e_type']);
@@ -369,6 +371,7 @@ if(isset($_POST['request'])){
                 $o_title = $get_User[1]['Title'];
                 $o_fname = $get_User[1]['FirstName'];
                 $o_lname = $get_User[1]['LastName'];
+                $o_idline = $get_User[1]['IdLine'];
                 $o_username = $get_User[1]['UserName'];
                 $o_admin = $get_User[1]['IsAdmin'];
                 $o_admin2 = $get_User[1]['IsAdmin2'];
@@ -399,7 +402,7 @@ if(isset($_POST['request'])){
                 $loglogin_id = $loglogin[1]['ID'];
 
                 $sql=   "UPDATE `db-user` 
-                        SET Title='$title', FirstName='$fname', LastName='$lname',UserName='$username', EMAIL='$mail', ETID='$id_type',
+                        SET Title='$title', FirstName='$fname', LastName='$lname', IdLine='$idline',UserName='$username', EMAIL='$mail', ETID='$id_type',
                         DID='$id_department', IsAdmin='$admin',IsAdmin2='$admin2', IsResearch='$research',IsOperator='$operator', IsFarmer='$farmer'
                         WHERE `UID`='$uid' ";
 
@@ -420,7 +423,7 @@ if(isset($_POST['request'])){
                         $fullemail = $mail.'@'.$type;
 
 
-                if($o_title == $title && $o_fname == $fname && $o_lname == $lname && $o_username == $username &&
+                if($o_title == $title && $o_fname == $fname && $o_lname == $lname && $o_idline == $idline && $o_username == $username &&
                 $o_idd == $id_department && $o_admin == $admin && $o_admin2 == $admin2 && $o_research == $research && $o_operator == $operator 
                 && $o_farmer == $farmer){
                     $id_dim=$get_idDim;

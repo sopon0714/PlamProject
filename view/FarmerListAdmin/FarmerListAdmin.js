@@ -110,6 +110,7 @@ $( document ).ready(function() {
         var title = $(this).attr('titles');
         var fname = $(this).attr('fname');
         var lname = $(this).attr('lname');
+        var idline = $(this).attr('idline');
         var formalid = $(this).attr('formalid');
         var address = $(this).attr('address');
         var province = $(this).attr('province');
@@ -122,6 +123,7 @@ $( document ).ready(function() {
         $('#e_uid').val(uid);
         $('#e_fname').val(fname);
         $('#e_lname').val(lname);
+        $('#e_idline').val(idline);
         $('#e_formalid').val(formalid);
         $('#e_address').val(address);
 
@@ -142,6 +144,7 @@ $( document ).ready(function() {
         let title = $("select[name = 'title']");
         let fname = $("input[name = 'fname']");
         let lname = $("input[name = 'lname']");
+        let idline = $("input[name = 'idline']");
         let formalid = $("input[name = 'formalid']");
         let address = $("input[name = 'address']");
         let st = $("[name='status']:checked").val();
@@ -166,9 +169,8 @@ $( document ).ready(function() {
         $('#id_dist').val(id_dist);
         $('#id_subdist').val(id_subdist);    
  
-        
-        let data = [fname,lname,formalid,address];
-        let data1 = [fname,lname,formalid];
+        let data = [fname,lname,idline,formalid,address];
+        let data1 = [fname,lname,idline,formalid];
 
         document.getElementById("save").setAttribute("type","submit");
 
@@ -332,6 +334,7 @@ $( document ).ready(function() {
         let uid = $("input[name = 'e_uid']");
         let fname= $("input[name = 'e_fname']");
         let lname = $("input[name = 'e_lname']");
+        let idline = $("input[name = 'e_idline']");
         let formalid = $("input[name = 'e_formalid']");
         let address = $("input[name = 'e_address']");
         // let st = $("[name='e_status']:checked").val();
@@ -356,8 +359,8 @@ $( document ).ready(function() {
         $('#e_id_subdist').val(id_subdist);    
  
         
-        let data = [fname,lname,formalid,address];
-        let data1 = [fname,lname,formalid];
+        let data = [fname,lname,idline,formalid,address];
+        let data1 = [fname,lname,idline,formalid];
         // if(!check_checkbox()) return;
         document.getElementById("edit").setAttribute("type","submit");
         if(!check_editaddr(id_prov,id_dist,id_subdist)) return;

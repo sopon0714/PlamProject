@@ -116,9 +116,9 @@ $DISESASES = getDiseases();
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h6 class="m-0 font-weight-bold" style="color:#006664">ลักษณะทั่วไป</h6>
                             <span class="more">
-                                <?= $DISESASES['info'][1]["Charactor"]; ?>
+                                <?= $DISESASES['info'][1]["Charactor"]; ?> 
                             </span>
-                            <br>
+                            <br><br>
                             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" id="silder">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
@@ -145,9 +145,9 @@ $DISESASES = getDiseases();
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h6 class="m-0 font-weight-bold" style="color:#006664">อันตรายของโรคพืช</h6>
                             <span class="more">
-                                <?= $DISESASES['info'][1]["Danger"]; ?>
+                                <?= $DISESASES['info'][1]["Danger"]; ?> 
                             </span>
-                            <br>
+                            <br><br>
                             <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" id="silder">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
