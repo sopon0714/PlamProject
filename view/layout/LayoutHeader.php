@@ -165,13 +165,7 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
   </a>";
   $AmountChangeType++;
 }
-if ($DATAUSER[1]['IsFarmer'] == 1 && $idUT != 4) {
-  $strtpye = $strtpye . "<a class='dropdown-item' href='../../changeType.php?UTID=4'>
-    <i class='fas fa-user fa-sm fa-fw mr-2 text-gray-400'></i>
-    " . $DATATPYE[4]['UTName'] . "
-    </a>";
-  $AmountChangeType++;
-}
+
 
 ?>
 

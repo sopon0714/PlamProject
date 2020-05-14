@@ -235,6 +235,10 @@ $(document).ready(function() {
                 let j = 0
                 if (dataF != null) {
                     for (i in dataF) {
+                        var dS = dataF[i].Start.substring(0, 2);
+                        var mS = dataF[i].Start.substring(2);
+                        var dE = dataF[i].End.substring(0, 2);
+                        var mE = dataF[i].End.substring(2);
                         j++
                         let icon = `<img src="../../icon/fertilizer/${dataF[i].FID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
                         if (dataF[i].Icon == '') {
@@ -270,7 +274,16 @@ $(document).ready(function() {
                         </center>
                     </div>
                     <div class="fer-column2">
-                        <h4> เงื่อนไข </h4>
+                        <h4> เงื่อนไข </h4>`
+                        if (dataF[i].Start == "0101" && dataF[i].End == "3112") {
+                            text += `สามารถใส่ปุ๋ยได้ทั้งปี`
+                        } else {
+                            text += ` ช่วงเดือนที่ใส่ ${dS}/${mS} - ${dE}/${mE} `
+                        }
+                        text += `
+                        <br>
+                        <br>
+                        <h4> ข้อห้าม/คำเตือน </h4>
                         <div>
                         `
                         loadCondition(dataF[i].FID);
@@ -306,16 +319,19 @@ $(document).ready(function() {
                     for (i in dataF) {
                         let unitY = ''
                         let unitX = ''
-                        console.log(dataF[i].Usage);
+
                         switch (dataF[i].Usage) {
                             case '1':
                                 unitX = "อายุ (ปี)"
+                                console.log(1);
                                 break;
                             case '2':
-                                unitX = "ผลผลิต (กิโลกรัม)"
+                                unitX = "ผลผลิต (ตัน)"
+                                console.log(2);
                                 break;
                             case '3':
                                 unitX = "อายุ(ปี)"
+                                console.log(3);
                                 break;
                         }
                         switch (dataF[i].Unit) {
@@ -353,7 +369,8 @@ $(document).ready(function() {
                         backgroundColor: 'rgba(0, 188, 212, 0.3)',
                         pointBorderColor: 'rgba(0, 188, 212, 0)',
                         pointBackgroundColor: 'rgba(0, 188, 212, 0.9)',
-                        pointBorderWidth: 1
+                        pointBorderWidth: 1,
+
                     }]
                 },
                 options: {
@@ -378,7 +395,7 @@ $(document).ready(function() {
                 }
             }
         }
-        console.log("b" + b2);
+        // console.log("b" + b2);
         return config;
     }
 
