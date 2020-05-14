@@ -99,7 +99,7 @@ $INSECT = getInsect();
                             <span class="more">
                                 <?= $INSECT['info'][1]["Charactor"]; ?>
                             </span>
-                            <br>
+                            <br><br>
                             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" id="silder">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
@@ -128,7 +128,7 @@ $INSECT = getInsect();
                             <span class="more">
                                 <?= $INSECT['info'][1]["Danger"]; ?>
                             </span>
-                            <br>
+                            <br><br>
                             <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" id="silder">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">

@@ -307,15 +307,24 @@ $(document).ready(function() {
     }
 
     // Configure/customize these variables.
-    var showChar = 100; // How many characters are shown by default
+    var showChar = 180; // How many characters are shown by default
     var ellipsestext = "...";
     var moretext = "Show more";
     var lesstext = "Show less";
 
     $('.more').each(function() {
         var content = $(this).html();
+        content = content.trim();
+        content += ' ';
 
-        if (content.length > showChar) {
+        for(i = showChar ; i<content.length; i++){
+            if(content[i] == ' '){
+                showChar = i;
+                break;
+            }
+        }
+        
+        if (content.length-1 > showChar) {
 
             var c = content.substr(0, showChar);
             var h = content.substr(showChar, content.length - showChar);
