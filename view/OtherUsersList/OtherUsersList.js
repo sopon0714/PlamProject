@@ -110,6 +110,7 @@ $(document).ready(function() {
         var title = $(this).attr('titles');
         var fname = $(this).attr('fname');
         var lname = $(this).attr('lname');
+        var idline = $(this).attr('idline');
         var username = $(this).attr('username');
         var mail = $(this).attr('mail');
         var type = $(this).attr('type_email');
@@ -123,6 +124,7 @@ $(document).ready(function() {
         $('#uid').val(uid);
         $('#e_fname').val(fname);
         $('#e_lname').val(lname);
+        $('#e_idline').val(idline);
         $('#e_username').val(username);
         $('#e_username1').val(username);
         $('#e_mail').val(mail);
@@ -156,6 +158,7 @@ $(document).ready(function() {
         let title = $("select[name = 'title']");
         let fname = $("input[name = 'fname']");
         let lname = $("input[name = 'lname']");
+        let idline = $("input[name = 'idline']");
         let username = $("input[name = 'username']");
         let pwd = $("input[name = 'pwd']");
         let pwd1 = $("input[name = 'pwd1']");
@@ -167,8 +170,8 @@ $(document).ready(function() {
         let farmer = $("input[name = 'farmer']");
         let error = $("input[name = 'error']");
 
-        let data = [fname, lname, username, pwd, pwd1, mail];
-        let data1 = [fname, lname, username, mail];
+        let data = [fname, lname, idline, username, pwd, pwd1, mail];
+        let data1 = [fname, lname, idline, username, mail];
         // if(!check_checkbox()) return;
         document.getElementById("save").setAttribute("type", "submit");
 
@@ -366,11 +369,12 @@ $(document).ready(function() {
         let title = $("select[name = 'e_title']");
         let fname = $("input[name = 'e_fname']");
         let lname = $("input[name = 'e_lname']");
+        let idline = $("input[name = 'e_idline']");
         let username = $("input[name = 'e_username1']");
         let mail = $("input[name = 'e_mail']");
         let uid = $("input[name = 'uid']");
 
-        let data = [fname, lname, username, mail];
+        let data = [fname, lname, idline, username, mail];
 
         document.getElementById("edit").setAttribute("type", "submit");
 
