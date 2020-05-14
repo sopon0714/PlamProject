@@ -9,7 +9,7 @@ let editModal = `<div class="edit-modal" >
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header header-modal" id="header-card">
-                                        <h4 class="modal-title" id="largeModalLabel">แก้ไขปุ๋ย</h4>
+                                        <h4 class="modal-title" id="largeModalLabel">แก้ไขข้อมูลปุ๋ย</h4>
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">

@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <!-- -----------------header------------------------------ -->
                 <div class="modal-header header-modal" id="header-card">
-                    <h4 class="modal-title" id="largeModalLabel">แก้ไขปุ๋ย</h4>
+                    <h4 class="modal-title" id="largeModalLabel">แก้ไขข้อมูลปุ๋ย</h4>
                 </div>
                 <!-- start body ------------------------------------- -->
                 <div class="modal-body">
@@ -26,15 +26,19 @@
                                 <input type="text" class="form-control col-8" id="nameF" name="name" required="" oninput="setCustomValidity(' ')">
                                 <label ">ขื่อย่อปุ๋ย<span class=" ml-2"> *</span></label>
                                 <input type="text" class="form-control col-8" id="aliasF" name="alias" required="" oninput="setCustomValidity(' ')">
-                                <label for="iconF">ไอคอน</label>
+                                <label for="iconF">ไอคอนปุ๋ย</label>
                                 <!-- <img id="icon" style="width : 100px;height : 150;"  src="" alt=""> -->
                                 <!-- <input  onchange="changeIcon(this);" type="file" accept=".jpg,.png"  id="iconF" name="icon" > -->
-                                <div class="upload-btn-wrapper">
+                                <div class="upload-btn-wrapper ">
                                     <!-- <button class="btn btn-warning">แก้ไขไอคอน</button> -->
                                     <img id="img-update" src="https://imbindonesia.com/images/placeholder/camera.jpg" alt="" width="200" height="200">
                                     <input type="file" accept=".jpg,.png" id="iconF" name="icon" />
+                                    <label>**กดที่รูปเมื่อต้องการเปลี่ยนแปลง icon**</label>
                                 </div>
+
+
                             </div>
+
                             <!-- end grid name alias icon------------------------------------- -->
                             <!-- start usage             ------------------------------------- -->
                             <div class="grid-form-condition">
@@ -43,13 +47,13 @@
                                     <div class="form-check ml-5">
                                         <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios1" value="1">
                                         <label class="form-check-label" for="exampleRadios1">
-                                            จำนวนต้นและอายุ
+                                            จำนวนต้นและอายุ (ปี)
                                         </label>
                                     </div>
                                     <div class="form-check ml-5">
                                         <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios2" value="2">
                                         <label class="form-check-label" for="exampleRadios2">
-                                            จำนวนต้นและผลผลิต
+                                            จำนวนต้นและผลผลิต (ตัน)
                                         </label>
                                     </div>
                                     <div class="form-check ml-5">
@@ -132,7 +136,7 @@
 
                 <div class="modal-footer">
                     <div class="divBU">
-                        <button type="button" class="btn btn-success editSubmit" style="margin-left:15px;">ยืนยัน</button>
+                        <button type="button" class="btn btn-success editSubmit " style="margin-left:15px;">ยืนยัน</button>
                         <button type="button" class="btn btn-danger " data-dismiss="modal">ยกเลิก</button>
                     </div>
                     <div class="divBCU">
