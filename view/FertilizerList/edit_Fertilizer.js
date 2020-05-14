@@ -302,11 +302,11 @@ $(document).ready(function() {
                     }
                     // console.log("a " +dataF[i].EQ1+"b" +dataF[i].EQ2)
                     $('.bodyF').append(text);
-
+                    console.log(dataF);
                     for (i in dataF) {
                         let unitY = ''
                         let unitX = ''
-                            // console.log("Usage"+dataF[i].Usage)
+                        console.log(dataF[i].Usage);
                         switch (dataF[i].Usage) {
                             case '1':
                                 unitX = "อายุ (ปี)"
