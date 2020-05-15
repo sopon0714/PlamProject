@@ -341,8 +341,7 @@ function insertLog($data)
         // echo"---". "elsessssss";
         $sqlDIM_Fertilizer = "INSERT INTO `dim-fertilizer` (`dbID`,`Name`,`Alias`) VALUE ($FID,'$Name','$Alias')";
         $DIMfertID = addinsertData($sqlDIM_Fertilizer);
-        $sqltest = "INSERT INTO `test` (`idtest`, `sqlline`, `type`) VALUES (NULL, 'INSERT INTO `dim-fertilizer` (`dbID`,`Name`,`Alias`) VALUE ($FID,$Name,$Alias)', 'fertilizer')";
-        addinsertData($sqltest);
+
         // echo"---". "insertDIM";
         // echo"---". $sqlDIM_Fertilizer;
     }
