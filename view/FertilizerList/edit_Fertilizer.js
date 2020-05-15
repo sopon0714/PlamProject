@@ -38,7 +38,7 @@ $(document).ready(function() {
 
         let j = 0;
         // console.log("numcon :"+Object.keys(conditionF).length); // fetch data condition
-        if (conditionF != null) {
+        if (conditionF != "") {
             // console.log("...................................." + conditionF + " " + j + " *-*-*-\n")
             for (i in conditionF) {
                 if (j > 0) {
@@ -248,10 +248,10 @@ $(document).ready(function() {
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between header-fertilizer"  >
                 <h6 class="m-0 font-weight-bold text-white">${dataF[i].Name}</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle editF" index=${i}  id="FID${dataF[i].FID}" data-toggle="modal" data-target="#edit" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-cog fa-lg mr-3 curser"  style="color:#FDFEFE"></i>
+                    <a class="dropdown-toggle editF tt" title="แก้ไขข้อมูล" index=${i}  id="FID${dataF[i].FID}" data-toggle="modal" data-target="#edit" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog fa-lg mr-3 curser"  style="color:#FDFEFE;padding-left: 25px"></i>
                     </a>
-                    <a class="dropdown-toggle deleteF" index=${i}  id=${dataF[i].FID} DIMID = ${dataF[i].ID} data-name=${dataF[i].Name}>
+                    <a class="dropdown-toggle deleteF tt" title="ลบปุ๋ย" index=${i}  id=${dataF[i].FID} DIMID = ${dataF[i].ID} data-name=${dataF[i].Name}>
                         <i class="fas fa-trash-alt curser" style="color:#FDFEFE"></i>
                     </a>
                 </div>
@@ -287,14 +287,14 @@ $(document).ready(function() {
                         <div>
                         `
                         loadCondition(dataF[i].FID);
-                        if (conditionF != null) {
+                        if (conditionF != "") {
                             for (k in conditionF) {
                                 text += `
                                 <h5>${conditionF[k].Order}. ${conditionF[k].Condition}</h5>
                                 `
                             }
                         } else {
-                            text += `<h5>ไม่มีเงื่อนไข</h5>`
+                            text += `ไม่มีข้อห้าม/คำเตือน`
                         }
 
                         text += `
@@ -968,3 +968,9 @@ $(document).ready(function() {
 
     }
 })
+
+$(document).ready(function() {
+
+    $('.tt').tooltip();
+
+});
