@@ -33,7 +33,13 @@ $(document).ready(function() {
         $("input[name='id']").val(idF);
         $("input[name='name']").val(nameF);
         $("input[name='alias']").val(aliasF);
-        $("#img-update").attr('src', `../../icon/fertilizer/${idF}/${iconF}`);
+        let icon = '';
+        if (dataF[i].Icon == "defultF.png") {
+            $("#img-update").attr('src', `../../icon/fertilizer/0/defultF.png`);
+        } else {
+            $("#img-update").attr('src', `../../icon/fertilizer/${idF}/${iconF}`);
+        }
+
         $('#addCondition').empty();
 
         let j = 0;
@@ -240,10 +246,16 @@ $(document).ready(function() {
                         var dE = dataF[i].End.substring(0, 2);
                         var mE = dataF[i].End.substring(2);
                         j++
-                        let icon = `<img src="../../icon/fertilizer/${dataF[i].FID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
-                        if (dataF[i].Icon == '') {
-                            icon = `<img src="https://imbindonesia.com/images/placeholder/camera.jpg" id="pic-Fertilizer" class="" width="150px" height="200px" >`;
+                        let icon = '';
+                        if (dataF[i].Icon == "defultF.png") {
+                            icon = `<img src="../../icon/fertilizer/0/defultF.png" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
+                        } else {
+                            icon = `<img src="../../icon/fertilizer/${dataF[i].FID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
                         }
+                        // let icon = `<img src="../../icon/fertilizer/${dataF[i].FID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
+                        // if (dataF[i].Icon == '') {
+                        //     icon = `<img src="https://imbindonesia.com/images/placeholder/camera.jpg" id="pic-Fertilizer" class="" width="150px" height="200px" >`;
+                        // }
                         text += `
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between header-fertilizer"  >
                 <h6 class="m-0 font-weight-bold text-white">${dataF[i].Name}</h6>
@@ -715,7 +727,7 @@ $(document).ready(function() {
         for (i in dataF) {
             console.log(dataF[i].Name);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataF[i].Name && dataF[i].FID != id) {
-                name[0].setCustomValidity('ชื่อนี้ซ้ำ');
+                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
                 return false;
             } else {
                 name[0].setCustomValidity('');
@@ -733,7 +745,7 @@ $(document).ready(function() {
         for (i in dataF) {
             console.log(dataF[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataF[i].Alias && dataF[i].FID != id) {
-                name[0].setCustomValidity('ชื่อนี้ซ้ำ')
+                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;
             } else {
                 name[0].setCustomValidity('');
@@ -960,9 +972,31 @@ $(document).ready(function() {
                                 // alert("sss")
                         }
                     });
-                    swal("ดำเนินการลบ", me.attr('data-name') + " เรียบร้อย", "success");
+                    swal({
+                        title: "ดำเนินการลบ",
+                        text: "ปุ๋ย " + me.attr('data-name') + " เรียบร้อย",
+                        type: "success",
+                        showCancelButton: false,
+                        showConfirmButton: false
+
+                    });
+                    setTimeout(function() {
+                        swal.close();
+                    }, 2000);
+
+
                 } else {
-                    swal("ยกเลิกการลบ !!", "ปุ๋ย " + me.attr('data-name'), "error");
+                    swal({
+                        title: "ยกเลิกการลบ !!",
+                        text: "ปุ๋ย " + me.attr('data-name'),
+                        type: "error",
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    });
+                    setTimeout(function() {
+                        swal.close();
+                    }, 2000);
+
                 }
             });
 
