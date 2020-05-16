@@ -95,8 +95,8 @@ switch ($request) {
             $EndMM = intval(str_split($dataAll['End'], 2)[1]);
 
             $data = [
-                'FID' => $FID, 'Name' => $Name, 'Alias' => $Alias, 'Unit' => $Unit, 'Usage' => $dataAll['Usage'], 'EQ1' => $dataAll['EQ1'],
-                'EQ2' => $dataAll['EQ2'], 'StartDD' => $StartDD, 'StartMM' => $StartMM, 'EndDD' => $EndDD,
+                'FID' => $FID, 'Name' => $Name, 'Alias' => $Alias, 'Unit' => $Unit, 'Usage' => $Usage, 'EQ1' => $EQ1,
+                'EQ2' => $EQ2, 'StartDD' => $StartDD, 'StartMM' => $StartMM, 'EndDD' => $EndDD,
                 'EndMM' => $EndMM
             ];
 
