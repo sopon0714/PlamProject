@@ -549,13 +549,13 @@ $(document).ready(function() {
         }
     }
 
-    function getMountAll(date, date3, mount1, mount2, isStart) {
+    function getMountAll(date, date2, mount1, mount2, isStart) {
         let arrMount = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         let arrDate;
         if (isStart) {
-            if (date >= date3) arrMount[mount2 - 1] = undefined
+            if (date >= date2) arrMount[mount2 - 1] = undefined
         } else {
-            if (date <= date3) arrMount[mount1 - 1] = undefined
+            if (date <= date2) arrMount[mount1 - 1] = undefined
         }
         if (date <= 28 && isStart) {
             arrMount = arrMount.filter(function(item) {
