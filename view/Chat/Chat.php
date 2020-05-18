@@ -93,7 +93,7 @@ $CurrentMenu = "Chat";
 									</select>
 								</div>
 							</div>
-							<div class="row mb-4" id="Infolevel2">
+							<div class="row mb-4" id="Infolevel2" style="display: none">
 								<div class="col-xl-3 col-12 text-right">
 									<span>เกษตรกร</span>
 								</div>
@@ -104,7 +104,7 @@ $CurrentMenu = "Chat";
 										<?php
 										$ArrayInfoFarmer = getAllFarmer();
 										for ($i = 1; $i <= count($ArrayInfoFarmer); $i++) {
-											echo "<li ufid='{$ArrayInfoFarmer[$i]['UFID']}'>$i) {$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}</li>";
+											echo "<li NameF='{$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}'>$i) {$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}</li>";
 										}
 										?>
 									</ul>
@@ -117,7 +117,7 @@ $CurrentMenu = "Chat";
 									</ul>
 								</div>
 							</div>
-							<div class="row mb-4" id="Infolevel3">
+							<div class="row mb-4" id="Infolevel3" style="display: none">
 								<div class="col-xl-3 col-12 text-right">
 									<span>จังหวัด</span>
 								</div>
@@ -126,7 +126,7 @@ $CurrentMenu = "Chat";
 										<?php
 										$ArrayInfoProvince = getAllProvince();
 										for ($i = 1; $i <= count($ArrayInfoProvince); $i++) {
-											echo "<option value='{$ArrayInfoProvince[$i]['AD1ID']}'>{$ArrayInfoProvince[$i]['Province']}</option>";
+											echo "<option value='{$ArrayInfoProvince[$i]['Province']}'>{$ArrayInfoProvince[$i]['Province']}</option>";
 										}
 										?>
 									</select>
@@ -189,87 +189,4 @@ $CurrentMenu = "Chat";
 </body>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
-
-<script>
-	$(document).ready(function() {
-		document.getElementById("Infolevel2").style.display = 'none ';
-		document.getElementById("Infolevel3").style.display = 'none ';
-		$("#level").change(function(e) {
-			var level = $("#level").val();
-			$("#Infolevel").empty();
-			if (level == 2) {
-				document.getElementById("Infolevel2").style.display = '';
-				document.getElementById("Infolevel3").style.display = 'none ';
-
-			} else if (level == 3) {
-
-				$("#province").val(1);
-				document.getElementById("Infolevel2").style.display = 'none ';
-				document.getElementById("Infolevel3").style.display = '';
-			} else {
-				document.getElementById("Infolevel2").style.display = 'none ';
-				document.getElementById("Infolevel3").style.display = 'none ';
-			}
-		});
-		$(function() {
-			$(".list1, .list2").sortable({
-				connectWith: ".sortable"
-			});
-		});
-
-		$("#submitSend").click(function(e) {
-			var levelP = $('#level').val();
-			var provinceP = $('#province').val();
-			var optradioP = $('input[name="optradio"]:checked').val();
-			var optradio2P = $('input[name="optradio2"]:checked').val();
-			var textotherP = $('#txt2').val();
-			var children = $('#list2').children();
-			var ArrayIdfarmerP = [];
-			var currentChild;
-			for (var i = 0; i < children.length; i++) {
-				currentChild = children.eq(i);
-				ArrayIdfarmerP[i] = currentChild.attr('ufid');
-			}
-			var jsonArrayIdfarmer = JSON.stringify(ArrayIdfarmerP);
-			$.ajax({
-				url: "./line.php",
-				method: "POST",
-				data: {
-					level: levelP,
-					province: provinceP,
-					optradio: optradioP,
-					optradio2: optradio2P,
-					textother: textotherP,
-					ArrayIdfarmer: jsonArrayIdfarmer
-				},
-				async: false,
-				success: function(data) {
-					swal({
-						title: "",
-						text: "การส่งข้อความเรียบร้อย",
-						type: "success",
-						showCancelButton: false,
-						showConfirmButton: false
-
-					});
-					setTimeout(function() {
-						location.reload();
-					}, 2000);
-				}
-			});
-		});
-
-
-	});
-
-	function hiddenn(pvar) {
-		if (pvar == 0) {
-			document.getElementById("txt1").style.display = 'none ';
-			document.getElementById("txt2").style.display = 'none ';
-		} else {
-			document.getElementById("txt1").style.display = '';
-			document.getElementById("txt2").style.display = '';
-		}
-
-	}
-</script>
+<script src="./Chat.js"></script>
