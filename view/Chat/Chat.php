@@ -1,9 +1,11 @@
 <?php
 session_start();
-include_once("../../dbConnect.php");
-require_once("../../set-log-login.php");
+// include_once("../../dbConnect.php");
+// require_once("../../set-log-login.php");
+require_once("./getData.php");
 $idUT = $_SESSION[md5('typeid')];
 $CurrentMenu = "Chat";
+
 ?>
 
 <?php include_once("../layout/LayoutHeader.php"); ?>
@@ -24,7 +26,30 @@ $CurrentMenu = "Chat";
 		background-color: #F44336;
 		color: #F44336;
 	}
+
+	.sortable {
+		list-style-type: none;
+		list-style-position: inside;
+		margin: 0px 12px 8px 0px;
+		width: 80%;
+		padding: 2px;
+		border-width: 1px;
+		border-style: solid;
+		min-height: 100px;
+	}
+
+	.sortable li {
+		margin: 3px 3px 3px 3px;
+		font-size: 1em;
+		height: 18px;
+		padding-bottom: 30px;
+		padding-left: 10px;
+		border: 2px dashed #d3d3d3;
+		background-color: #eee;
+		cursor: pointer;
+	}
 </style>
+
 
 <body onload="hiddenn('0')">
 	<div class="container">
@@ -51,66 +76,108 @@ $CurrentMenu = "Chat";
 					<div class="card">
 						<div class="card-header card-bg">
 							<div>
-								<span class="link-active font-weight-bold" style="color:<?= $color ?>;">ส่งแจ้งเตือนเข้ากลุ่ม</span>
+								<span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายละเอียดการส่งแจ้งเตือน</span>
 							</div>
 						</div>
 						<div class="card-body card-bg" style="overflow-x:scroll;">
-							<form name="line-notify" action="line.php" method="post">
-								<div class="row mb-4">
-									<div class="col-xl-3 col-12 text-right">
-										<span>ชื่อสวนปาล์ม</span>
-									</div>
-									<div class="col-xl-9 col-12">
-										<select class="form-control" id="nameframe" name="nameframe" required>
-											<option selected="" disabled="" value="">เลือกสวน</option>
-											<?php
-											$data = getAll();
-											foreach ($data as $key => $val) {
-												echo "<option value='" . $data[$key]['Name'] . "'>" . $data[$key]['Name'] . "</option>";
-											}
-											?>
-										</select>
-									</div>
+
+							<div class="row mb-4">
+								<div class="col-xl-3 col-12 text-right">
+									<span>กลุ่มผู้รับข้อมูล</span>
+								</div>
+								<div class="col-xl-3 col-12">
+									<select class="form-control" id="level" name="level" required>
+										<option value='1'>ทั้งหมด</option>
+										<option value='2'>เกษตรกร</option>
+										<option value='3'>จังหวัด</option>
+									</select>
+								</div>
+							</div>
+							<div class="row mb-4" id="Infolevel2">
+								<div class="col-xl-3 col-12 text-right">
+									<span>เกษตรกร</span>
+								</div>
+								<div class="col-xl-4 ">
+									รายชื่อเกษตรกร
 									<br>
-									<div class="col-xl-3 col-12 text-right">
-										<span>เลือกหัวข้อที่ต้องการส่ง</span>
-									</div>
-									<div class="col-xl-9 col-12">
-										<label class="radio-inline">
-											<input type="radio" name="optradio" value="แจ้งเตื่อน" checked> แจ้งแตือน
-										</label> &nbsp;&nbsp;&nbsp;&nbsp;
-										<label class="radio-inline">
-											<input type="radio" name="optradio" value="แจ้งให้ทราบ"> แจ้งให้ทราบ
-										</label>
-									</div>
-									<div class="col-xl-3 col-12 text-right">
-										<span>เนื้อหาการแจ้งเตื่อน</span>
-									</div>
-									<div class="col-xl-9 col-12">
-										<label class="radio-inline">
-											<input type="radio" name="optradio2" value="สวนขาดน้ำ" onclick="hiddenn('0')" checked> สวนขาดน้ำ
-										</label> &nbsp;&nbsp;&nbsp;
-										<label class="radio-inline">
-											<input type="radio" name="optradio2" value="ฝนไม่ตกมาหลายวัน" onclick="hiddenn('0')"> ฝนไม่ตกมาหลายวัน
-										</label> &nbsp;&nbsp;&nbsp;
-										<label class="radio-inline">
-											<input type="radio" name="optradio2" value="มีศัตรูพืชในบริเวณข้างเคียง" onclick="hiddenn('0')"> มีศัตรูพืชในบริเวณข้างเคียง
-										</label> &nbsp;&nbsp;&nbsp;
-										<label class="radio-inline">
-											<input type="radio" name="optradio2" value="other" onclick="hiddenn('1')" /> อื่นๆ
-										</label>
-									</div>
-									<div class="col-xl-3 col-12 text-right">
-										<span id="txt1">ข้อความ
-									</div>
-									<div class="col-xl-9 col-12">
-										<input class="form-control" type="text" name="other" id="txt2" />
-									</div>
+									<ul class="list1 sortable" id="list1">
+										<?php
+										$ArrayInfoFarmer = getAllFarmer();
+										for ($i = 1; $i <= count($ArrayInfoFarmer); $i++) {
+											echo "<li ufid='{$ArrayInfoFarmer[$i]['UFID']}'>$i) {$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}</li>";
+										}
+										?>
+									</ul>
 								</div>
-								<div class="modal-footer">
-									<button class="btn btn-success btn-md" style="float:right;" type="submit">ส่งข้อความ</button>
+								<div class="col-xl-4 ">
+									รายชื่อเกษตรกรที่ต้องการส่งข้อความ
+									<br>
+									<ul class="list2 sortable" id="list2">
+
+									</ul>
 								</div>
-							</form>
+							</div>
+							<div class="row mb-4" id="Infolevel3">
+								<div class="col-xl-3 col-12 text-right">
+									<span>จังหวัด</span>
+								</div>
+								<div class="col-xl-3 ">
+									<select class="form-control" id="province" name="province" required>"
+										<?php
+										$ArrayInfoProvince = getAllProvince();
+										for ($i = 1; $i <= count($ArrayInfoProvince); $i++) {
+											echo "<option value='{$ArrayInfoProvince[$i]['AD1ID']}'>{$ArrayInfoProvince[$i]['Province']}</option>";
+										}
+										?>
+									</select>
+								</div>
+							</div>
+							<div class="row mb-4">
+								<div class="col-xl-3 col-12 text-right">
+									<span>เลือกหัวข้อที่ต้องการส่ง</span>
+								</div>
+								<div class="col-xl-9 col-12">
+									<label class="radio-inline">
+										<input type="radio" name="optradio" value="แจ้งเตือน" checked> แจ้งแตือน
+									</label> &nbsp;&nbsp;&nbsp;&nbsp;
+									<label class="radio-inline">
+										<input type="radio" name="optradio" value="แจ้งให้ทราบ"> แจ้งให้ทราบ
+									</label>
+								</div>
+							</div>
+							<div class="row mb-4">
+								<div class="col-xl-3 col-12 text-right">
+									<span>เนื้อหาการแจ้งเตื่อน</span>
+								</div>
+
+								<div class="col-xl-9 col-12">
+									<label class="radio-inline">
+										<input type="radio" name="optradio2" value="สวนขาดน้ำ" onclick="hiddenn('0')" checked> สวนขาดน้ำ
+									</label> &nbsp;&nbsp;&nbsp;
+									<label class="radio-inline">
+										<input type="radio" name="optradio2" value="ฝนไม่ตกมาหลายวัน" onclick="hiddenn('0')"> ฝนไม่ตกมาหลายวัน
+									</label> &nbsp;&nbsp;&nbsp;
+									<label class="radio-inline">
+										<input type="radio" name="optradio2" value="มีศัตรูพืชในบริเวณข้างเคียง" onclick="hiddenn('0')"> มีศัตรูพืชในบริเวณข้างเคียง
+									</label> &nbsp;&nbsp;&nbsp;
+									<label class="radio-inline">
+										<input type="radio" name="optradio2" value="other" onclick="hiddenn('1')" /> อื่นๆ
+									</label>
+								</div>
+							</div>
+
+							<div class="row mb-4">
+								<div class="col-xl-3 col-12 text-right">
+									<span id="txt1">ข้อความ
+								</div>
+								<div class="col-xl-9 col-12">
+									<input class="form-control" type="text" name="textother" id="txt2" />
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-success btn-md" style="float:right;" id="submitSend">ส่งข้อความ</button>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -124,6 +191,77 @@ $CurrentMenu = "Chat";
 <?php include_once("../layout/LayoutFooter.php"); ?>
 
 <script>
+	$(document).ready(function() {
+		document.getElementById("Infolevel2").style.display = 'none ';
+		document.getElementById("Infolevel3").style.display = 'none ';
+		$("#level").change(function(e) {
+			var level = $("#level").val();
+			$("#Infolevel").empty();
+			if (level == 2) {
+				document.getElementById("Infolevel2").style.display = '';
+				document.getElementById("Infolevel3").style.display = 'none ';
+
+			} else if (level == 3) {
+
+				$("#province").val(1);
+				document.getElementById("Infolevel2").style.display = 'none ';
+				document.getElementById("Infolevel3").style.display = '';
+			} else {
+				document.getElementById("Infolevel2").style.display = 'none ';
+				document.getElementById("Infolevel3").style.display = 'none ';
+			}
+		});
+		$(function() {
+			$(".list1, .list2").sortable({
+				connectWith: ".sortable"
+			});
+		});
+
+		$("#submitSend").click(function(e) {
+			var levelP = $('#level').val();
+			var provinceP = $('#province').val();
+			var optradioP = $('input[name="optradio"]:checked').val();
+			var optradio2P = $('input[name="optradio2"]:checked').val();
+			var textotherP = $('#txt2').val();
+			var children = $('#list2').children();
+			var ArrayIdfarmerP = [];
+			var currentChild;
+			for (var i = 0; i < children.length; i++) {
+				currentChild = children.eq(i);
+				ArrayIdfarmerP[i] = currentChild.attr('ufid');
+			}
+			var jsonArrayIdfarmer = JSON.stringify(ArrayIdfarmerP);
+			$.ajax({
+				url: "./line.php",
+				method: "POST",
+				data: {
+					level: levelP,
+					province: provinceP,
+					optradio: optradioP,
+					optradio2: optradio2P,
+					textother: textotherP,
+					ArrayIdfarmer: jsonArrayIdfarmer
+				},
+				async: false,
+				success: function(data) {
+					swal({
+						title: "",
+						text: "การส่งข้อความเรียบร้อย",
+						type: "success",
+						showCancelButton: false,
+						showConfirmButton: false
+
+					});
+					setTimeout(function() {
+						location.reload();
+					}, 2000);
+				}
+			});
+		});
+
+
+	});
+
 	function hiddenn(pvar) {
 		if (pvar == 0) {
 			document.getElementById("txt1").style.display = 'none ';
@@ -134,13 +272,4 @@ $CurrentMenu = "Chat";
 		}
 
 	}
-
-	<?php
-	function getAll()
-	{
-		$sql = "SELECT DISTINCT `dim-farm`.`Name`,`dim-user`.`FullName` FROM `log-farm` INNER JOIN `dim-farm`ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID` INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` WHERE ISNULL(`log-farm`.`EndT`) AND ISNULL(`log-farm`.`EndID`)";
-		$data = selectAll($sql);
-		return $data;
-	}
-	?>
 </script>

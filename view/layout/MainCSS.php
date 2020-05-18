@@ -35,3 +35,5 @@
 
 <!-- HoldOn [Loader] CSS -->
 <link href="../../css/HoldOn/HoldOn.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
