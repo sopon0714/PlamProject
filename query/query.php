@@ -1318,14 +1318,14 @@ function getWeed()
 }
 
 //OTHER-PESTLIST.php
-function getCountOhterPest()
+function getCountOtherPest()
 {
     $sql = "SELECT COUNT(*) AS countOhterPest FROM `db-pestlist` WHERE `PTID` = 4";
     $countOhterPest = selectData($sql)[1]['countOhterPest'];
     return $countOhterPest;
 }
 
-function getOhterPest()
+function getOtherPest()
 {
     $sql = "SELECT `PID`,`Alias`,`Icon` FROM `db-pestlist` WHERE `PTID` = 4";
     $ALLOTHER = selectData($sql);

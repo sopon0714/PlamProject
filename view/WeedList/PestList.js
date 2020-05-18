@@ -1,42 +1,31 @@
 $(document).ready(function() {
+    let DATA_DB;
+    pullData();
 
-    $(document).on('click', '.card-item', function() {
+    function pullData() {
         $.ajax({
             type: "POST",
-            datatype: 'json',
-            url: "getDataBug.php",
+            datatype: 'application/json',
+            url: "manage.php",
             data: {
-                id: $(this).attr('id')
+                request: 'select'
             },
             async: false,
             success: function(result) {
-                dataF = result;
-
-                console.log(result)
-                $("#card-pest").empty();
-                $("#card-pest").append(dataF);
+                DATA_DB = JSON.parse(result);
+                console.log(DATA_DB);
             }
-        })
-    });
+        });
+    }
 
     // insert submit
-    $(document).on('click', '.insertSubmit', function(e) {
+    $('#save').click(function() {
         // alert('55555555')
         let name = $("input[name='name_insert']");
         let alias = $("input[name='alias_insert']");
         let styleChar = $("input[name='charactor_insert']");
         let styleDanger = $("input[name='danger_insert']");
-        // let icon = $("#pic-logo");
-        // let picstyle = $("#pic-style-char");
-        // let picdan = $("#pic-danger");
 
-        let dataNull = [name, alias, styleChar, styleDanger]
-
-        if (!checkNull(dataNull)) return;
-        if (!checkSameName(name, -1)) return;
-
-        // console.log('insert');
-        let form = new FormData($('#form-insert')[0]);
         let pic_sc = new Array()
         let pic_photo = new Array()
         let pic_logo
@@ -47,32 +36,55 @@ $(document).ready(function() {
         $('.pic-photo').each(function(i, obj) {
             pic_photo.push($(this).attr('src') + 'manu20')
         });
-        form.append('pic1', pic_logo)
-        form.append('pic2', pic_sc)
-        form.append('pic3', pic_photo)
-        $.ajax({ // update data
-            type: "POST",
-            data: form,
-            url: "upload.php",
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
+        $('#pic1').val(pic_logo);
+        $('#pic2').val(pic_sc);
+        $('#pic3').val(pic_photo);
 
-            success: function(result) {
-                location.reload();
-                // alert(result)
-            }
-        });
-        if (!checkNull(dataNull)) return;
-        if (!checkSameName(name, -1)) return;
+        var PIC_SC = $(".pic-SC");
+        var PIC_PHOTO = $(".pic-photo");
+
+        // console.log(PIC_SC.length);
+
+        if(PIC_PHOTO.length == 0){
+            // console.log('PIC_PHOTO.length == 0');
+            $("#p_photo").attr("required","");
+            $("#p_photo")[0].setCustomValidity('กรุณาเพิ่มรูปการทำลาย');
+
+        }else{
+            $("#p_photo").removeAttr("required");
+            $("#p_photo")[0].setCustomValidity('');
+
+        }
+        if(PIC_SC.length == 0){
+            // console.log('PIC_SC.length == 0');
+            $("#pic-style-char").attr("required","");
+            $("#pic-style-char")[0].setCustomValidity('กรุณาเพิ่มรูปลักษณะ');
+
+        }else{
+            $("#pic-style-char").removeAttr("required");
+            $("#pic-style-char")[0].setCustomValidity('');
+        }
+
+        if($('#img-pic-logo').attr('src') == 'https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg'){
+            // console.log('img-pic-logo not change');
+            $("#pic-logo").attr("required","");
+            $("#pic-logo")[0].setCustomValidity('กรุณาเพิ่มรูป');
+        }else{
+            $("#pic-logo").removeAttr("required");
+            $("#pic-logo")[0].setCustomValidity('');
+        }
+
+        
+        if (!checkSameName(name)) return;
+        if (!checkSameAlias(alias)) return;
+
     });
 
-    function checkSameName(name, id) { // check same name
-        for (i in dataF) {
-            console.log(dataF[i].Name);
-            if (name.val().trim() == dataF[i].Name && dataF[i].FID != id) {
-                name[0].setCustomValidity('ชื่อนี้ซ้ำ');
+    function checkSameName(name) { // check same name
+        for (i in DATA_DB) {
+            console.log(DATA_DB[i].Name);
+            if (name.val().trim() == DATA_DB[i].Name) {
+                name[0].setCustomValidity('ชื่อทางการนี้ซ้ำ');
                 return false;
             } else {
                 name[0].setCustomValidity('');
@@ -80,207 +92,289 @@ $(document).ready(function() {
         }
         return true;
     }
-
-    function checkNull(selecter) { // check name null
-        for (i in selecter) {
-            if (selecter[i].val() == '') {
-                console.log('key')
-                selecter[i][0].setCustomValidity('กรุณากรอกข้อมูล');
+    function checkSameAlias(alias) { // check same alias
+        for (i in DATA_DB) {
+            // console.log(DATA_DB[i].Name);
+            if (alias.val().trim() == DATA_DB[i].Alias) {
+                alias[0].setCustomValidity('ชื่อนี้ซ้ำ');
                 return false;
-            } else selecter[i][0].setCustomValidity('');
+            } else {
+                alias[0].setCustomValidity('');
+            }
         }
         return true;
     }
 
-    function setImgEdit(icon, pid, num, footer) {
-        var textPicChar = ''
-        console.log("num" + num)
-        for (let i = 0; i < num; i++) {
-            let num2 = i
-            textPicChar += `<div class="card" width="70px" hight="70px">
-                                <div class="card-body" style="padding:0;">
-         `;
-            let path;
-            console.log("i" + i)
-            if (i == 0)
-                path = `../../picture/Pest/weed/style/${pid}/${icon}`
-            else
-                path = `../../picture/Pest/weed/style/${pid}/${num2-1}_${icon}`
+    function setImgEdit(pid, num, footer, type) {
+        // console.log('setIMG');
+        $.post("manage.php", {request: type,pid: pid}, function(result){
+            // console.log(result);
+            string = result;
+            string = string.replace(/^\s*|\s*$/g,'');
+            // console.log(string);
+            // console.log(typeof string);
+            var arr = string.split(',');
 
-            textPicChar += `<img class="" src = "${path}" id="img-${(+new Date)}" width="100%" hight="100%" />`
-            textPicChar += `</div>
-            <div class="card-footer">
-                <button  type="button" class="btn btn-warning edit-img">แก้ไข</button>
-                <button  type="button" class="btn btn-danger delete-img">ลบ</button>
-            </div>
-        </div>`
+            console.log(arr);
+            // console.log('arr[0]'+arr[0]);
 
+            var textPicChar = ''
+            if(type == 'style'){
+                var cl = 'pic-SC-edit';
+            }else if(type == 'danger'){
+                var cl = 'pic-photo-edit';
+            }
+            // console.log("num" + num)
+    
+            for (i = 0;i < num ;i++) {
+                textPicChar += `<div class="card" width="70px" hight="70px">
+                                    <div class="card-body" style="padding:0;">
+             `;
+                let path;
+                // console.log('arr[i] = '+arr[i]);
+        
+                path = `../../picture/pest/weed/${type}/${pid}/${arr[i]}`
+                
+                // console.log('path = '+path);
+                textPicChar += `<img class="${cl}" src = "${path}" id="img-${(+new Date)}" width="100%" hight="100%" />`
+                textPicChar += `</div>
+                <div class="card-footer">
+                    <button  type="button" class="btn btn-warning edit-img-edit">แก้ไข</button>
+                    <button  type="button" class="btn btn-danger delete-img">ลบ</button>
+                </div>
+            </div>`
+            }
+            textPicChar += footer
+            if(type == 'style'){
+                $('#grid-pic-style-char-edit').html(textPicChar);
+            }else if (type == 'danger'){
+                $('#grid-p_photo-edit').html(textPicChar);
 
-        }
-        textPicChar += footer
-        return textPicChar;
+                $('#p_photo-edit').on('change', function() {
+                    // alert('change')
+                    imagesPreview(this, '#grid-p_photo-edit', 'p_photo-edit', 'pic-photo-edit','edit-img-edit');
+                });
+        
+                $('#pic-style-char-edit').on('change', function() {
+                    // alert('change')
+                    imagesPreview(this, '#grid-pic-style-char-edit', 'pic-style-char-edit', 'pic-SC-edit','edit-img-edit');
+                });
+        
+                $(document).on('click', '.edit-img-edit', function() {
+                    let url = $(this).parent().prev().children().attr('src')
+                    // console.log('url = '.url);
+                    idImg = $(this).parent().prev().children().attr('id')
+                    cropImgEdit(url, 'square')
+                })
+                $('.crop-img-edit').hide()
+                $('.crop-button-edit').hide()
+            
+                function cropImgEdit(url, type) {
+                    // console.log('url = '+url);
+                    // console.log('type = '+type);
+                    // console.log('crop-img-edit');
+                    $('.main-edit').hide()
+                    $('.normal-button-edit').hide()
+                    $('.crop-img-edit').show()
+                    $('.crop-button-edit').show()
+            
+                    let UC = $('.upload-demo2-edit').croppie({
+                        viewport: {
+                            width: 200,
+                            height: 200,
+                            type: type
+                        },
+                        enforceBoundary: false,
+                        enableExif: true
+                    });
+                    UC.croppie('bind', {
+                        url: url
+                    }).then(function() {
+                        // console.log('jQuery bind edit complete');
+                    });
+                }
+        
+                $(document).on('click', '.btn-crop-edit', function(ev) {
+                    submitCrop(idImg)
+                });
+            
+                $(document).on('click', '.btn-cancel-crop-edit', function() {
+                    // console.log('btn-cancel-crop-edit');
+                    $('.main-edit').toggle()
+                    $('.normal-button-edit').toggle()
+                    $('.crop-img-edit').toggle()
+                    $('.crop-button-edit').toggle()
+                    $('.upload-demo2-edit').croppie('destroy')
+                })
+            }
+
+        });
 
     }
+
     $('.btn_edit').click(function() {
         $("#editModal").modal();
         var pid = $(this).attr('pid');
-        var nameinsect = $(this).attr('name');
+        var name = $(this).attr('name');
         var alias = $(this).attr('alias');
         var charstyle = $(this).attr('charstyle');
-        var dangerInsect = $(this).attr('dangerstyle');
+        var danger = $(this).attr('dangerstyle');
         var numPicChar = $(this).attr('numPicChar')
         var numPicDanger = $(this).attr('numPicDanger')
         var icon = $(this).attr('data-icon')
         var footer;
 
-
-        console.log("icon = " + icon)
+        // console.log("icon = " + icon)
 
         $('#img-pic-logo-edit').attr('src', "../../icon/pest/" + pid + "/" + icon)
         footer = `<div class="img-reletive">
 
         <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
-        <input type="file" id="pic-style-char-edit" name="picstyle_insert-edit[]" accept=".jpg" multiple>
+        <input type="file" id="pic-style-char-edit" name="picstyle_insert-edit[]" accept=".jpg,.png" multiple>
     </div>`
-        $('#grid-pic-style-char-edit').html(setImgEdit(icon, pid, numPicChar, footer))
-
+        setImgEdit(pid, numPicChar, footer, "style");
 
         footer = `<div class="img-reletive">
         <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
         <input type="file" class="form-control" id="p_photo-edit" name="p_photo-edit[]" accept=".jpg,.png" multiple>
     </div>`
-        $('#grid-p_photo-edit').html(setImgEdit(icon, pid, numPicDanger, footer))
-
-        $('#e_name').val(alias);
-        $('#e_alias').val(nameinsect);
+        setImgEdit(pid, numPicDanger, footer, "danger");
+        
+        $('#e_name').val(name);
+        $('#e_alias').val(alias);
         $('#e_charactor').text(charstyle);
-        $('#e_danger').text(dangerInsect);
-        //document.getElementById("e_charactor").value = charstyle;
-        //document.getElementById("e_danger").value = dangerInsect;
-        $('#e_pid').val(pid);
+        $('#e_danger').text(danger);
 
-        $('#e_o_name').val(alias);
-        $('#e_o_alias').val(nameinsect);
+        // console.log("pid = " + pid)
+
+        $('#e_pid').val(pid);
+        // console.log("pid = " + $('#e_pid').val())
+
+        $('#e_o_name').val(name);
+        $('#e_o_alias').val(alias);
         $('#e_o_charcator').text(charstyle);
-        $('#e_o_danger').text(dangerInsect);
-        // document.getElementById("e_o_charactor").value = charstyle;
-        //document.getElementById('e_o_alias').value = dangerInsect;
+        $('#e_o_danger').text(danger);
+
+        $('#pic-logo-edit').on('change', function() {
+            alert('pic-logo-edit');
+            cropImageEdit(this)
+            idImg = 'img-pic-logo-edit'
+    
+        });
+        function cropImageEdit(input) {
+            // console.log('crop-image');
+            let rawImg
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    let rawImg = e.target.result;
+                    cropImgEdit(rawImg, 'circle');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            $(input).val('')
+        }
+
     });
 
-    $('#save').click(function() {
-        // console.log("save");
-        let nameinsect = $("input[name = Name]");
-        let alias = $("input[name = 'Alias']");
-        let charstyle = $("input[name = 'Charactor']");
-        let dangerInsect = $("input[name = 'Danger']");
-
-        let data = [nameinsect, alias];
-        if (!check_blank(data)) return;
-        if (!check_name(nameinsect)) return;
-        if (!check_alias(alias)) return;
-    })
-
-    function check_blank(selecter) {
-        for (i in selecter) {
-            // console.log(selecter[i]);
-            if (selecter[i].val().trim() == '') {
-                //  console.log("if");
-                selecter[i][0].setCustomValidity('กรุณากรอกข้อมูล');
-                return false;
-            } else {
-                // console.log("else");
-                selecter[i][0].setCustomValidity('');
-            }
-        }
-        return true;
-    }
-
-    function check_name(name) {
-        for (i in dataD) {
-            console.log(dataD[i].Department);
-            if (name.val().trim() == dataD[i].Department) {
-                name[0].setCustomValidity('ชื่อซ้ำ');
-                return false;
-            } else {
-                name[0].setCustomValidity('');
-            }
-        }
-
-        return true;
-    }
-
-    function check_alias(name) {
-
-        for (i in dataD) {
-            console.log(dataD[i].Alias);
-            if (name.val().trim() == dataD[i].Alias) {
-                name[0].setCustomValidity('ชื่อสามัญซ้ำ');
-                return false;
-            } else {
-                name[0].setCustomValidity('');
-            }
-        }
-
-        return true;
-    }
-
     $('#edit').click(function() {
-        console.log("edit");
+        // console.log("edit");
 
-        let nameinsect = $("input[name = 'e_name']");
+        let name = $("input[name = 'e_name']");
         let alias = $("input[name = 'e_alias']");
         let charstyle = $("input[name = 'e_charactor']");
-        let dangerInsect = $("input[name = 'e_danger']");
-        let did = $("input[name = 'e_pid']");
+        let danger = $("input[name = 'e_danger']");
+        let pid = $("input[name = 'e_pid']");
 
-        let o_nameinsect = $("input[name = 'e_o_name']");
+        let o_name = $("input[name = 'e_o_name']");
         let o_alias = $("input[name = 'e_o_alias']");
         let o_charstyle = $("input[name = 'e_o_charcator']");
-        let o_dangerInsect = $("input[name = 'e_o_danger']");
+        let o_danger = $("input[name = 'e_o_danger']");
 
-        let data = [nameinsect, alias];
-        if (!check_duplicate(o_nameinsect, o_alias, o_charstyle, o_dangerInsect, nameinsect, alias, charstyle, dangerInsect)) return;
-        if (!check_blank(data)) return;
-        if (!check_editpest(nameinsect, pid)) return;
-        if (!check_editAlias(alias, pid)) return;
+        let pic_sc = new Array()
+        let pic_photo = new Array()
+        let pic_logo
+        pic_logo = $('#img-pic-logo-edit').attr('src')
+        $('.pic-SC-edit').each(function(i, obj) {
+            pic_sc.push($(this).attr('src') + 'manu20')
+        });
+        $('.pic-photo-edit').each(function(i, obj) {
+            pic_photo.push($(this).attr('src') + 'manu20')
+        });
+        $('#e_pic1').val(pic_logo);
+        $('#e_pic2').val(pic_sc);
+        $('#e_pic3').val(pic_photo);
+
+        var PIC_SC_EDIT = $(".pic-SC-edit");
+        var PIC_PHOTO_EDIT = $(".pic-photo-edit");
+
+        // console.log(PIC_SC_EDIT.length);
+
+        if(PIC_PHOTO_EDIT.length == 0){
+            // console.log('PIC_PHOTO_EDIT.length == 0');
+            $("#p_photo-edit").attr("required","");
+            $("#p_photo-edit")[0].setCustomValidity('กรุณาเพิ่มรูปการทำลาย');
+
+        }else{
+            $("#p_photo-edit").removeAttr("required");
+            $("#p_photo-edit")[0].setCustomValidity('');
+
+        }
+        if(PIC_SC_EDIT.length == 0){
+            // console.log('PIC_SC_EDIT.length == 0');
+            $("#pic-style-char-edit").attr("required","");
+            $("#pic-style-char-edit")[0].setCustomValidity('กรุณาเพิ่มรูปลักษณะ');
+
+        }else{
+            $("#pic-style-char-edit").removeAttr("required");
+            $("#pic-style-char-edit")[0].setCustomValidity('');
+        }
+
+        if($('#img-pic-logo-edit').attr('src') == 'https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg'){
+            // console.log('img-pic-logo-edit not change');
+            $("#pic-logo-edit").attr("required","");
+            $("#pic-logo-edit")[0].setCustomValidity('กรุณาเพิ่มรูป');
+        }else{
+            $("#pic-logo-edit").removeAttr("required");
+            $("#pic-logo-edit")[0].setCustomValidity('');
+        }
+        // console.log('name pid = '+name.val());
+        // console.log('edit pid = '+pid.val());
+        if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
+        if (!checkSameNameEdit(name,pid)) return;
+        if (!checkSameAliasEdit(alias,pid)) return;
 
     })
 
-    function check_duplicate(o_nameinsect, o_alias, o_charstyle, o_dangerInsect, nameinsect, alias, charstyle, dangerInsect) {
-        if (o_nameinsect == nameinsect && o_alias == alias && o_charstyle == charstyle && o_dangerInsect == dangerInsect) {
+    function check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger) {
+        if (o_name == name && o_alias == alias && o_charstyle == charstyle && o_danger == danger) {
             return false;
         }
         return true;
     }
 
-    function check_editpest(name, pid) {
-        console.log("check_de");
-        for (i in dataD) {
-            console.log(dataD[i].Department);
-            if (name.val().trim() == dataD[i].Department && dataD[i].DID != did.val()) {
-                console.log("du");
-                name[0].setCustomValidity('ชื่อซ้ำ');
+    function checkSameNameEdit(name, id) { // check same name
+        for (i in DATA_DB) {
+            // console.log(DATA_DB[i].Name);
+            if (name.val().trim() == DATA_DB[i].Name && DATA_DB[i].PID != id.val()) {
+                name[0].setCustomValidity('ชื่อทางการนี้ซ้ำ');
                 return false;
             } else {
                 name[0].setCustomValidity('');
             }
         }
-
         return true;
     }
-
-    function check_editAlias(name, pid) {
-        console.log("check_ali");
-        for (i in dataD) {
-            console.log(dataD[i].Alias);
-            if (name.val().trim() == dataD[i].Alias && dataD[i].DID != did.val()) {
-                name[0].setCustomValidity('ชื่อสามัญซ้ำ');
+    function checkSameAliasEdit(alias, id) { // check same alias
+        for (i in DATA_DB) {
+            // console.log(DATA_DB[i].Name);
+            if (alias.val().trim() == DATA_DB[i].Alias && DATA_DB[i].PID != id.val()) {
+                alias[0].setCustomValidity('ชื่อนี้ซ้ำ');
                 return false;
             } else {
-                name[0].setCustomValidity('');
+                alias[0].setCustomValidity('');
             }
         }
-
         return true;
     }
 
@@ -303,6 +397,7 @@ $(document).ready(function() {
         }
         
         if (content.length-1 > showChar) {
+            
             var c = content.substr(0, showChar);
             var h = content.substr(showChar, content.length - showChar);
 
@@ -329,8 +424,8 @@ $(document).ready(function() {
     });
 
     $('#addInsect').click(function() {
-        console.log('fffff')
-        $('.Modal').append(addModal);
+        // console.log('fffff')
+        // $('.Modal').append(addModal);
         $('#addModal').modal('show');
     });
 });
@@ -361,23 +456,19 @@ function delfunction(_sid, _alias) {
         },
         function(isConfirm) {
             if (isConfirm) {
-                console.log(1)
+                // console.log(1)
                 swal({
-
                     title: "ลบข้อมูลสำเร็จ",
                     type: "success",
                     confirmButtonClass: "btn-danger",
                     confirmButtonText: "ตกลง",
                     closeOnConfirm: false,
-
                 }, function(isConfirm) {
                     if (isConfirm) {
                         delete_1(_sid)
                     }
-
                 });
             } else {
-
             }
         });
 }
@@ -387,10 +478,10 @@ function delete_1(_sid) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             window.location.href = 'WeedList.php';
-            //alert(this.responseText);
+            // alert(this.responseText);
         }
     };
-    xhttp.open("POST", "upload.php", true);
+    xhttp.open("POST", "manage.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(`request=delete&pid=${_sid}`);
 

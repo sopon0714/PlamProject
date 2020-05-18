@@ -1,20 +1,41 @@
 <script>
+    // console.log('crop');
     let idImg;
+
+    // console.log($('#pic-style-char').val());
+
     $('#pic-logo').on('change', function() {
         cropImage(this)
         idImg = 'img-pic-logo'
-
+ 
     })
 
+    // $('#pic-logo-edit').on('change', function() {
+    //     cropImage(this)
+    //     idImg = 'img-pic-logo-edit'
+
+    // })
+
     $('#p_photo').on('change', function() {
-        //alert('change')
-        imagesPreview(this, '#grid-p_photo', 'p_photo', 'pic-photo');
+        // alert('change')
+        imagesPreview(this, '#grid-p_photo', 'p_photo', 'pic-photo', 'edit-img');
     });
 
+    // $('#p_photo-edit').on('change', function() {
+    //     // alert('change')
+    //     imagesPreview(this, '#grid-p_photo-edit', 'p_photo-edit', 'pic-photo-edit');
+    // });
+
     $('#pic-style-char').on('change', function() {
-        //alert('change')
-        imagesPreview(this, '#grid-pic-style-char', 'pic-style-char', 'pic-SC');
+        // alert('change')
+        imagesPreview(this, '#grid-pic-style-char', 'pic-style-char', 'pic-SC', 'edit-img');
     });
+
+    // $('#pic-style-char-edit').on('change', function() {
+    //     // alert('change')
+    //     imagesPreview(this, '#grid-pic-style-char-edit', 'pic-style-char-edit', 'pic-SC-edit');
+    // });
+
 
     $(document).on('click', '.delete-img', function() {
         $(this).parent().parent().remove()
@@ -41,7 +62,7 @@
         $('.upload-demo2').croppie('destroy')
     })
 
-    function imagesPreview(input, img_prepend, first_img, className) {
+    function imagesPreview(input, img_prepend, first_img, className, edit, del) {
         if (input.files) {
             var filesAmount = input.files.length;
 
@@ -55,7 +76,7 @@
                                     <img class="${className}" src = "${event.target.result}" id="img-${first_img+(+new Date)}" width="100%" hight="100%" />
                                 </div>
                                 <div class="card-footer">
-                                    <button  type="button" class="btn btn-warning edit-img">แก้ไข</button>
+                                    <button  type="button" class="btn btn-warning ${edit}">แก้ไข</button>
                                     <button  type="button" class="btn btn-danger delete-img">ลบ</button>
                                 </div>
                             </div>`)
@@ -67,6 +88,7 @@
     }
 
     function cropImage(input) {
+        // console.log('crop-image');
         let rawImg
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -80,6 +102,10 @@
     }
 
     function cropImg(url, type) {
+
+        // console.log('crop-img');
+        // console.log('url = '+url);
+
         $('.main').hide()
         $('.normal-button').hide()
         $('.crop-img').show()
@@ -97,10 +123,10 @@
         UC.croppie('bind', {
             url: url
         }).then(function() {
-            console.log('jQuery bind complete');
+            // console.log('jQuery bind complete');
         });
     }
-
+   
     function submitCrop(output) {
         $('.upload-demo2').croppie('result', {
                 type: 'canvas',
