@@ -426,7 +426,9 @@ $(document).ready(function() {
     $('#addInsect').click(function() {
         // console.log('fffff')
         // $('.Modal').append(addModal);
-        $('#addModal').modal('show');
+        id =  $('#addModal').attr("class");
+        console.log(id);
+        $('#addModal').modal();
     });
 });
 
