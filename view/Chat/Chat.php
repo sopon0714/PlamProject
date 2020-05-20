@@ -32,10 +32,13 @@ $CurrentMenu = "Chat";
 		list-style-position: inside;
 		margin: 0px 12px 8px 0px;
 		width: 80%;
+		height: 200px;
 		padding: 2px;
 		border-width: 1px;
 		border-style: solid;
 		min-height: 100px;
+		overflow: scroll;
+
 	}
 
 	.sortable li {
@@ -100,7 +103,7 @@ $CurrentMenu = "Chat";
 								<div class="col-xl-4 ">
 									รายชื่อเกษตรกร
 									<br>
-									<ul class="list1 sortable" id="list1">
+									<ul class="list1 sortable " id="list1">
 										<?php
 										$ArrayInfoFarmer = getAllFarmer();
 										for ($i = 1; $i <= count($ArrayInfoFarmer); $i++) {

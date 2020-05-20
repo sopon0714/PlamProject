@@ -11,6 +11,13 @@
 <!-- End of Page Wrapper -->
 
 <?php include_once("MainJS.php"); ?>
+{
+<script>
+    $(document).ready(function() {
+        $('.tableSearch').DataTable();
+    });
+</script>
+}
 
 </body>
 

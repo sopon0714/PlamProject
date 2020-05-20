@@ -286,7 +286,7 @@ $(document).ready(function() {
                         </center>
                     </div>
                     <div class="fer-column2">
-                        <h4> เงื่อนไข </h4>`
+                        <h4> ระยะเวลาในการใส่ปุ๋ย </h4>`
                         if (dataF[i].Start == "0101" && dataF[i].End == "3112") {
                             text += `สามารถใส่ปุ๋ยได้ทั้งปี`
                         } else {
@@ -302,7 +302,7 @@ $(document).ready(function() {
                         if (conditionF != "") {
                             for (k in conditionF) {
                                 text += `
-                                <h5>${conditionF[k].Order}. ${conditionF[k].Condition}</h5>
+                                ${conditionF[k].Order}. ${conditionF[k].Condition} <br>
                                 `
                             }
                         } else {
