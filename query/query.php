@@ -89,7 +89,7 @@ function getProvince(){
 //อำเภอในจังหวัด ตาม id จังหวัด
 function getDistrinctInProvince($fpro){
     $sql = "SELECT * FROM `db-distrinct` WHERE `AD1ID`=$fpro ORDER BY `db-distrinct`.`Distrinct`  ASC";
-    $DISTRINCT_PROVINCE = selectData($sql);
+    $DISTRINCT_PROVINCE = selectData($sql); 
     return $DISTRINCT_PROVINCE;
 }
 
@@ -1384,7 +1384,11 @@ function select_dimPest()
   return $DATA;
 }
 // end - หน้าการจัดการศีตรูพืช
+// update By โสภณ โตใหญ่
 
-
-
-?>
+//OilPalmAreaList.php
+function getAllFarmer(){
+    $sql = "SELECT * FROM `db-farmer` ORDER BY`FirstName` ,`LastName`";
+    $data = selectData($sql);
+    return $data;
+}

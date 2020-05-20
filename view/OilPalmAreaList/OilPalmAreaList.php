@@ -56,7 +56,7 @@ $OILPALMAREALIST = getOilPalmAreaList();
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="font-weight-bold  text-uppercase mb-1">เพิ่มสวน</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">+1 คน</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">+1 สวน</div>
                         </div>
                         <div class="col-auto">
                             <i class="material-icons icon-big">add_location</i>
@@ -183,7 +183,7 @@ $OILPALMAREALIST = getOilPalmAreaList();
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-data" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-data  tableSearch" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>จังหวัด</th>
@@ -219,7 +219,7 @@ $OILPALMAREALIST = getOilPalmAreaList();
                                 <td class="text-left"><?php echo $OILPALMAREALIST[$i]['Name']; ?></td>
                                 <td class="text-right"><?php echo $OILPALMAREALIST[$i]['NumSubFarm']; ?> แปลง</td>
                                 <td class="text-right"><?php echo $OILPALMAREALIST[$i]['AreaRai']; ?> ไร่
-                                    <?php $OILPALMAREALIST[$i]['AreaNgan']; ?> งาน</td>
+                                    <?php echo $OILPALMAREALIST[$i]['AreaNgan']; ?> งาน</td>
                                 <td class="text-right"><?php echo $OILPALMAREALIST[$i]['NumTree']; ?> ต้น</td>
                                 <td style='text-align:center;'>
                                     <a href='./OilPalmAreaListDetail.php?fmid=<?php echo $OILPALMAREALIST[$i]['FMID']; ?>'>

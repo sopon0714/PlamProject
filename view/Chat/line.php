@@ -23,7 +23,7 @@ if ($level == 1) {
 		$message .= " `คุณ " . $ArrayNamefarmer[$i] . "` \n";
 	}
 } else {
-	$message .= "แจ้งเตือนถึง: `ทุกคน ใน จังหวัด $province` \n";
+	$message .= "แจ้งเตือนถึง: `ทุกสวนปาล์มในจังหวัด $province` \n";
 }
 $message .= "ระดับการแจ้งเตือน: `$optradio` \n";
 $message .= "รายละเอียดเนื้อหา: `";
