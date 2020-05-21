@@ -6,17 +6,17 @@ $FARMER = getAllFarmer();
 <div class="modal fade" id="addModal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form class="form-signin" method="POST" action='manage.php'>
-                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
-                    <h4 class=" modal-title">เพิ่มสวนปาล์ม</h4>
-                </div>
-                <div class="modal-body" id="addModalBody">
+            <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
+                <h4 class=" modal-title">เพิ่มสวนปาล์ม</h4>
+            </div>
+            <div class="modal-body" id="addModalBody">
+                <form action="#" method="post">
                     <div class="row mb-4">
                         <div class="col-xl-3 col-12 text-right">
                             <span>ชื่อสวนปาล์ม</span>
                         </div>
                         <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" name="namefarm" id="rank3">
+                            <input type="text" class="form-control" name="namefarm" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกชื่อสวนปาล์ม">
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -24,15 +24,15 @@ $FARMER = getAllFarmer();
                             <span>ชื่อย่อสวนปาล์ม</span>
                         </div>
                         <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" name="aliasfarm" id="rank4">
+                            <input type="text" class="form-control" name="aliasfarm" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกชื่อย่อสวนปาล์ม">
                         </div>
                     </div>
                     <div class="row mb-4">
                         <div class="col-xl-3 col-12 text-right">
-                            <span>ที่อยู่</span>
+                            <span>ที่อยู่ </span>
                         </div>
                         <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" name="addfarm" id="rrr">
+                            <input type="text" class="form-control" name="addfarm" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกที่อยู่สวนปาล์ม">
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -97,13 +97,13 @@ $FARMER = getAllFarmer();
                         </div>
                     </div>
                     <input type="hidden" name="add">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-md insertFarm" style="float:right;">ยืนยัน</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+            </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success btn-md" style="float:right;" type="submit">ยืนยัน</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>

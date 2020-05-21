@@ -222,7 +222,7 @@ $OILPALMAREALIST = getOilPalmAreaList();
                                     <?php echo $OILPALMAREALIST[$i]['AreaNgan']; ?> งาน</td>
                                 <td class="text-right"><?php echo $OILPALMAREALIST[$i]['NumTree']; ?> ต้น</td>
                                 <td style='text-align:center;'>
-                                    <a href='./OilPalmAreaListDetail.php?fmid=<?php echo $OILPALMAREALIST[$i]['FMID']; ?>'>
+                                    <a href='./OilPalmAreaListDetail.php?fmid=<?php echo $OILPALMAREALIST[$i]['FMID']; ?>' style=" text-decoration: none;">
                                         <button type='button' id='btn_info' class="btn btn-info btn-sm btn_edit tt" data-toggle="tooltip" title="รายละเอียดข้อมูลสวน">
                                             <i class='fas fa-bars'></i>
                                         </button>

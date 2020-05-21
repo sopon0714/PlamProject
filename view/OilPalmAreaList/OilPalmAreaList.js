@@ -1,67 +1,92 @@
-
-$( document ).ready(function() {
+$(document).ready(function() {
     // console.log("y");
     $('.tt').tooltip();
 
-    $('#add').click(function(){
-        $("#addModal").modal();    
-            
+    $('#add').click(function() {
+        $("#addModal").modal();
+
     });
-    $('#s_province').click(function(){
+    $('#s_province').click(function() {
 
         var e = document.getElementById("s_province");
         var select_id = e.options[e.selectedIndex].value;
         // console.log(select_id);
-        data_show(select_id,"s_distrinct",'');
-            
+        data_show(select_id, "s_distrinct", '');
+
 
     });
-    $('#province').click(function(){
+
+    $('#province').click(function() {
 
         var e = document.getElementById("province");
         var select_id = e.options[e.selectedIndex].value;
-        data_show(select_id,"distrinct",'');
-            
+        data_show(select_id, "distrinct", '');
+
 
     });
-    $('#distrinct').click(function(){
+    $('#distrinct').click(function() {
 
         var e = document.getElementById("distrinct");
         var select_id = e.options[e.selectedIndex].value;
-        data_show(select_id,"subdistrinct",'');
-            
+        data_show(select_id, "subdistrinct", '');
+
 
     });
-    function data_show(select_id,result,point_id){
+
+    function data_show(select_id, result, point_id) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
-            // console.log(result);
-            document.getElementById(result).innerHTML = xhttp.responseText;         
-            
-        };
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                // console.log(result);
+                document.getElementById(result).innerHTML = xhttp.responseText;
+
+            };
         }
         xhttp.open("POST", "data.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
-}
+    }
     // -------------------------------------------------------------
-    function data_show(select_id,result,point_id){
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
+    function data_show(select_id, result, point_id) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
                 // console.log(this.responseText);
                 // console.log(result);
-                document.getElementById(result).innerHTML = xhttp.responseText;         
-                
+                document.getElementById(result).innerHTML = xhttp.responseText;
+
             };
-            }
-            xhttp.open("POST", "data.php", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
+        }
+        xhttp.open("POST", "data.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
     }
+    // create by โสภณ โตใหญ่
+    // หน้า แรก ของสวนปาล์ม ตรวจสอบการเพิ่มสวนpalm
+    $('.insertFarm').click(function() {
+        var namefarm = $("input[name='namefarm']");
+        var aliasfarm = $("input[name='aliasfarm']");
+        var addfarm = $("input[name='addfarm']");
+        var subdistrinct = $("select[name='subdistrinct']");
+        var farmer = $("select[name='id']");
+        let dataNull = [namefarm, aliasfarm, addfarm];
+
+        //if (!checkNull(dataNull)) return;
+    });
+    //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
+    function checkNull(selecter) {
+        for (i in selecter) {
+            if (selecter[i].val() == '') {
+                selecter[i][0].setCustomValidity('กรุณากรอกข้อมูล');
+                return false;
+            } else selecter[i][0].setCustomValidity('');
+        }
+        return true;
+    }
+
 });
+
 function initMap() {
     var startLatLng = new google.maps.LatLng(13.736717, 100.523186);
 
@@ -79,8 +104,9 @@ function initMap() {
         map: mapdetail,
         title: "test"
     });
-    
+
 }
+
 function delfunction(_username, _uid) {
 
     swal({
