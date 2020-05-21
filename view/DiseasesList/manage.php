@@ -1,6 +1,7 @@
 <?php
 
     include_once("../PestList/headManage.php");
+    $location = "location:DiseasesList.php?id=";
 
     $folderIcon = "../../icon/pest/";
     $folderStyle = "../../picture/pest/disease/style/";

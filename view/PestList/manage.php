@@ -82,8 +82,25 @@
         $dataPic3 = explode('manu20', $_POST['pic3']);
         $countfiles_danger = sizeof($dataPic3) - 1;
 
+
+        $DATA = select_dimPest();
+        $i = 1;
+        $check_dim = 1;
+        for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
+          if ($DATA[$i]['dbpestTID'] == $dptid && $DATA[$i]['Name'] == $Name && $DATA[$i]['Alias'] == $Alias  && $DATA[$i]['Charactor'] == $Charactor && $DATA[$i]['Danger'] == $Danger && $DATA[$i]['TypeTH'] == $type_pest) {
+            $check_dim = 0; //dup
+            $add_pid = $DATA[$i]['dbpestLID'];
+            $id_d = getID_DIM($Name,$Alias,$Charactor,$Danger,$dptid,$type_pest); 
+            break;
+          }
+        }
+        echo  'check dim = '.$check_dim.'<br>'; 
+
+        if($check_dim){
+          $add_pid = '';
+        }
         $sql = "INSERT INTO `db-pestlist` (`PID`, `Name`, `Alias`, `PTID`, `Charactor`, `Danger`, `Icon` , `NumPicChar`, `NumPicDanger`)
-              VALUES ('','$Name','$Alias','$dptid ','$Charactor','$Danger','$nameImg1','$countfiles_style','$countfiles_danger')";
+              VALUES ('$add_pid','$Name','$Alias','$dptid ','$Charactor','$Danger','$nameImg1','$countfiles_style','$countfiles_danger')";
         //echo $sql;
         $pid = addinsertData($sql);
         echo 'pid = '.$pid.'<br>';
@@ -129,17 +146,6 @@
 
        //-------------------------------------------------------- log and dim --------------------------------------------------------
 
-        $DATA = select_dimPest();
-        $i = 1;
-        $check_dim = 1;
-        for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
-          if ($DATA[$i]['dbpestLID'] == $pid && $DATA[$i]['dbpestTID'] == $dptid && $DATA[$i]['Name'] == $Name && $DATA[$i]['Alias'] == $Alias  && $DATA[$i]['Charactor'] == $Charactor && $DATA[$i]['Danger'] == $Danger && $DATA[$i]['TypeTH'] == $type_pest) {
-            $check_dim = 0;
-            break;
-          }
-        }
-        echo  'check dim = '.$check_dim.'<br>'; 
-
         if ($check_dim) {
          
           $sql = "INSERT INTO `dim-pest` (`ID`,`dbpestLID`,`dbpestTID`,`Name`,`Alias`,`Charactor`,`Danger`,`TypeTH`) 
@@ -160,16 +166,19 @@
         VALUES ('','$loglogin_id','$time','$startID','$id_d','1','$nameImg1','$path')";
 
         addinsertData($sql);
-        header("location:DiseasesList.php?id=".$pid);
+        header($location.$pid);
 
         break;
 
       case 'delete';
         $pid = $_POST['pid'];
         echo 'pid = '.$pid.'<br>';
+        
+        $sql = "SELECT * FROM `db-pestlist` WHERE `PID`='" . $pid . "'";
+        $PESTLIST = selectData($sql); //get old data
 
-        $sql = "SELECT ID FROM `dim-pest` WHERE `dbPestLID`='$pid' AND `dbPestTID`='$dptid'"; 
-        $get_idDim = selectData($sql)[1]['ID'];
+        $get_idDim = getID_DIM($PESTLIST[1]['Name'],$PESTLIST[1]['Alias'],$PESTLIST[1]['Charactor'],
+        $PESTLIST[1]['Danger'],$dptid,$type_pest);
 
         echo 'get_idDim = '.$get_idDim.'<br>';
 
@@ -352,7 +361,7 @@
         }
         ////////////////////
 
-        $id_dim_old = getID_DIM($PESTLIST[1]['PID'],$PESTLIST[1]['Name'],$PESTLIST[1]['Alias'],$PESTLIST[1]['Charactor'],
+        $id_dim_old = getID_DIM($PESTLIST[1]['Name'],$PESTLIST[1]['Alias'],$PESTLIST[1]['Charactor'],
         $PESTLIST[1]['Danger'],$dptid,$type_pest);
 
         echo $pid."<br>";
@@ -369,9 +378,10 @@
         $i = 1;
         $check_dim = 1;
         for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
-          if ($DATA[$i]['dbpestLID'] == $pid && $DATA[$i]['dbpestTID'] == $dptid && $DATA[$i]['Name'] == $Name && $DATA[$i]['Alias'] == $Alias 
+          if ($DATA[$i]['dbpestTID'] == $dptid && $DATA[$i]['Name'] == $Name && $DATA[$i]['Alias'] == $Alias 
            && $DATA[$i]['Charactor'] == $Charactor && $DATA[$i]['Danger'] == $Danger && $DATA[$i]['TypeTH'] == $type_pest) {
             $check_dim = 0; //dup
+            $id_d = getID_DIM($Name,$Alias,$Charactor,$Danger,$dptid,$type_pest); 
             break;
           }
         }
@@ -382,9 +392,6 @@
                   VALUES ('','$pid','$dptid','$Name','$Alias','$Charactor','$Danger','$type_pest')";
           $id_d = addinsertData($sql);
           $data_t =  getDIMDate();
-        }else{
-          $id_d = $id_dim_old ;
-          
         }
           echo 'id_d = '.$id_d.'<br>';
           echo 'id_dim_old = '.$id_dim_old.'<br>';
@@ -418,7 +425,8 @@
             $log_id = addinsertData($sql);
             echo 'insert log pest'.$log_id;
 
-            if($check_dim || $PESTLIST[1]['Icon'] != $nameImg1 ){
+            if($id_d != $id_dim_old || $PESTLIST[1]['Icon'] != $nameImg1 ){
+              echo 'id_d dim = '.$id_d.'<br>';
               $LOG = getLogIcon($id_dim_old );
               print_r($LOG);
               $o_log_id = $LOG[1]['ID'];     
@@ -439,13 +447,13 @@
             }
           }
 
-        header("location:DiseasesList.php?id=".$pid);
+        header($location.$pid);
         break;
     }
 
-    function getID_DIM($pid, $name, $alias, $char, $dang, $tid, $type)
+    function getID_DIM($name, $alias, $char, $dang, $tid, $type)
     {
-      $sql = "SELECT ID FROM `dim-pest` WHERE `dbpestLID`='$pid' AND `Name`='$name' AND `Alias`='$alias' 
+      $sql = "SELECT ID FROM `dim-pest` WHERE `Name`='$name' AND `Alias`='$alias' 
                     AND `Charactor`='$char' AND `Danger`='$dang' AND `dbpestTID`='$tid' AND `TypeTH`='$type'";
 
       $DATA = selectData($sql);

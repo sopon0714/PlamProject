@@ -17,6 +17,14 @@
             top: 0;
             opacity: 0;
         }
+        .croppie-container .cr-boundary {
+            width: 350px;
+            height: 220px;
+        }
+        .upload-demo2  {
+            width: 350px;
+            height: 250px;
+        }
     </style>
 </head>
 

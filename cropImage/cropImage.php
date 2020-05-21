@@ -9,33 +9,17 @@
         idImg = 'img-pic-logo'
  
     })
-
-    // $('#pic-logo-edit').on('change', function() {
-    //     cropImage(this)
-    //     idImg = 'img-pic-logo-edit'
-
-    // })
-
     $('#p_photo').on('change', function() {
         // alert('change')
+        // cropImage(this)
+
         imagesPreview(this, '#grid-p_photo', 'p_photo', 'pic-photo', 'edit-img');
     });
-
-    // $('#p_photo-edit').on('change', function() {
-    //     // alert('change')
-    //     imagesPreview(this, '#grid-p_photo-edit', 'p_photo-edit', 'pic-photo-edit');
-    // });
 
     $('#pic-style-char').on('change', function() {
         // alert('change')
         imagesPreview(this, '#grid-pic-style-char', 'pic-style-char', 'pic-SC', 'edit-img');
     });
-
-    // $('#pic-style-char-edit').on('change', function() {
-    //     // alert('change')
-    //     imagesPreview(this, '#grid-pic-style-char-edit', 'pic-style-char-edit', 'pic-SC-edit');
-    // });
-
 
     $(document).on('click', '.delete-img', function() {
         $(this).parent().parent().remove()
@@ -105,6 +89,13 @@
 
         // console.log('crop-img');
         // console.log('url = '+url);
+        if(type == 'circle'){
+            w = 200;
+            h = 200;
+        }else{
+            w = 300;
+            h = 200;
+        }
 
         $('.main').hide()
         $('.normal-button').hide()
@@ -113,12 +104,16 @@
 
         let UC = $('.upload-demo2').croppie({
             viewport: {
-                width: 200,
-                height: 200,
+                width: w,
+                height: h,
                 type: type
             },
-            enforceBoundary: false,
-            enableExif: true
+            enableExif: true,
+            enableOrientation: true,
+            enableZoom: true,
+            enforceBoundary: true,
+            mouseWheelZoom: true,
+            showZoomer: true,
         });
         UC.croppie('bind', {
             url: url

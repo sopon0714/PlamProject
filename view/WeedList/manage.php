@@ -1,6 +1,7 @@
 <?php
 
     include_once("../PestList/headManage.php");
+    $location = "location:WeedList.php?id=";
 
     $folderIcon = "../../icon/pest/";
     $folderStyle = "../../picture/pest/weed/style/";

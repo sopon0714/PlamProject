@@ -4,6 +4,7 @@ $FARMER = getAllFarmer();
 ?>
 
 <div class="modal fade" id="addModal">
+<form action="" method="post" enctype="multipart/form-data" id="form-insert">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
@@ -100,10 +101,11 @@ $FARMER = getAllFarmer();
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-md insertFarm" style="float:right;">ยืนยัน</button>
+                <button type="submit" class="btn btn-success btn-md insertFarm" style="float:right;">ยืนยัน</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
             </div>
 
         </div>
     </div>
+    </form>
 </div>
