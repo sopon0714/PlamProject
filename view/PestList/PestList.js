@@ -1,6 +1,10 @@
 $(document).ready(function() {
     let DATA_DB;
     pullData();
+    // console.log('path = '+path);
+    var loc = window.location.pathname;
+var dir = loc.substring(0, loc.lastIndexOf('/'));
+console.log('dir = '+loc);
 
     function pullData() {
         $.ajax({
@@ -12,6 +16,8 @@ $(document).ready(function() {
             },
             async: false,
             success: function(result) {
+                // console.log(result);
+
                 DATA_DB = JSON.parse(result);
                 console.log(DATA_DB);
             }
@@ -74,9 +80,8 @@ $(document).ready(function() {
             $("#pic-logo")[0].setCustomValidity('');
         }
 
-        
-        if (!checkSameName(name)) return;
         if (!checkSameAlias(alias)) return;
+        if (!checkSameName(name)) return;
 
     });
 
@@ -133,7 +138,7 @@ $(document).ready(function() {
                 let path;
                 // console.log('arr[i] = '+arr[i]);
         
-                path = `../../picture/pest/insect/${type}/${pid}/${arr[i]}`
+                path = `../../picture/pest/${folder}/${type}/${pid}/${arr[i]}`
                 
                 // console.log('path = '+path);
                 textPicChar += `<img class="${cl}" src = "${path}" id="img-${(+new Date)}" width="100%" hight="100%" />`
@@ -341,8 +346,8 @@ $(document).ready(function() {
         // console.log('name pid = '+name.val());
         // console.log('edit pid = '+pid.val());
         if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
-        if (!checkSameNameEdit(name,pid)) return;
         if (!checkSameAliasEdit(alias,pid)) return;
+        if (!checkSameNameEdit(name,pid)) return;
 
     })
 
@@ -425,7 +430,6 @@ $(document).ready(function() {
 
     $('#addInsect').click(function() {
         // console.log('fffff')
-        // $('.Modal').append(addModal);
         $('#addModal').modal();
     });
 });
@@ -477,7 +481,7 @@ function delete_1(_sid) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            window.location.href = 'InsectList.php';
+            window.location.href = page;
             // alert(this.responseText);
         }
     };

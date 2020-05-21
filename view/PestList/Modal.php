@@ -1,10 +1,3 @@
-<?php
-    $str_title_add = "เพิ่มชนิดศัตรูพืชอื่นๆ";
-    $str_picture = "รูปศัตรูพืชอื่นๆ";
-    $str_title_edit = "แก้ไขชนิดศัตรูพืชอื่นๆ";
-    $str_placeholder = "ชื่อศัตรูพืชอื่นๆ";
-
- ?>
 <!-- addModal -->
 <div class="modal fade" id="addModal" name="addModal" tabindex="-1" role="dialog">
     <form action="manage.php" method="post" enctype="multipart/form-data" id="form-insert">
@@ -301,4 +294,4 @@
 </div>
 
 
-<?php include_once("../../cropImage/cropImage.php"); ?>
+<?php //include_once("../../cropImage/cropImage.php"); ?>

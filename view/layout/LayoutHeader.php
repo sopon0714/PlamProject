@@ -48,6 +48,7 @@ $DATA = selectData($sql);
 $selectedMenu1 = $DATA[1]['mm-mainmenu'];
 $selectedMenu2 = $DATA[1]['mm-submenu'];
 
+
 //Create menu list
 $sql = "SELECT `mm-mainmenu`,`mm-submenu`,`wm-name`, `wm-alias`, `wm-page`, `wm-icon`, `wm-note`";
 $sql = $sql . " FROM `main-menu-list` as L JOIN `web-menu` as M ";
@@ -60,13 +61,17 @@ $DATA = selectData($sql);
 $strMenu = "";
 
 for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
+  // echo "---- DATA[i]['mm-submenu'] = ".$DATA[$i]['mm-submenu']."<br>";
+
   if ($DATA[$i]['mm-submenu'] == 0) {
     // main menu
     if ($DATA[$i]['mm-mainmenu'] == $selectedMenu1) {
       // active main menu
       $classType = " class='nav-item active' ";
+      $classShow = " class='collapse show' ";
     } else {
       $classType = " class='nav-item' ";
+      $classShow = " class='collapse' ";
     }
 
     if ($DATA[$i]['wm-icon'] == "") {
@@ -74,8 +79,6 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
     } else {
       $icon =  $DATA[$i]['wm-icon'];
     }
-
-
     if (($i + 1 <= $DATA[0]['numrow'] && $DATA[$i]['mm-mainmenu'] != $DATA[$i + 1]['mm-mainmenu']) || $DATA[$i]['wm-name'] == "ออกจากระบบ") {
       $url  = $DATA[$i]['wm-alias'] . "/" . $DATA[$i]['wm-page'];
 
@@ -102,7 +105,7 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                               <i class='material-icons'>" . $icon . "</i>
                               <span>" . $DATA[$i]['wm-name'] . "</span>
                             </a>
-                            <div id='link-" . $i . "' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
+                            <div id='link-" . $i ."' ".$classShow ." aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
                               <div class=' py-2 collapse-inner rounded' style='border-left: 2px solid white; border-radius: 0% !important;'>";
       } else {
         $strMenu .= " <li class='nav-item'>
@@ -110,13 +113,13 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                               <i class='material-icons'>" . $icon . "</i>
                               <span>" . $DATA[$i]['wm-name'] . "</span>
                             </a>
-                            <div id='link-" . $i . "' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
+                            <div id='link-" . $i ."' ".$classShow ." aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
                               <div class=' py-2 collapse-inner rounded' style='border-left: 2px solid white; border-radius: 0% !important;'>";
       }
     }
   } else {
     //sub menau
-    if ($DATA[$i]['mm-submenu'] == $selectedMenu2) {
+    if ($DATA[$i]['mm-submenu'] == $selectedMenu2 && $DATA[$i]['mm-mainmenu'] == $selectedMenu1) {
       // active sub menu
       $classType = "class='collapse-item active'";
     } else {
