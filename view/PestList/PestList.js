@@ -2,9 +2,9 @@ $(document).ready(function() {
     let DATA_DB;
     pullData();
     // console.log('path = '+path);
-    var loc = window.location.pathname;
-var dir = loc.substring(0, loc.lastIndexOf('/'));
-console.log('dir = '+loc);
+    // var loc = window.location.pathname;
+    // var dir = loc.substring(0, loc.lastIndexOf('/'));
+    // console.log('dir = '+loc);
 
     function pullData() {
         $.ajax({
@@ -141,7 +141,7 @@ console.log('dir = '+loc);
                 path = `../../picture/pest/${folder}/${type}/${pid}/${arr[i]}`
                 
                 // console.log('path = '+path);
-                textPicChar += `<img class="${cl}" src = "${path}" id="img-${(+new Date)}" width="100%" hight="100%" />`
+                textPicChar += `<img class="${cl}" src = "${path}" id="img${i}-${(+new Date)}" width="100%" hight="100%" />`
                 textPicChar += `</div>
                 <div class="card-footer">
                     <button  type="button" class="btn btn-warning edit-img-edit">แก้ไข</button>
@@ -171,9 +171,7 @@ console.log('dir = '+loc);
                     idImg = $(this).parent().prev().children().attr('id')
                     cropImgEdit(url, 'square')
                 })
-                $('.crop-img-edit').hide()
-                $('.crop-button-edit').hide()
-            
+
                 function cropImgEdit(url, type) {
                     // console.log('url = '+url);
                     // console.log('type = '+type);
@@ -185,7 +183,7 @@ console.log('dir = '+loc);
             
                     let UC = $('.upload-demo2-edit').croppie({
                         viewport: {
-                            width: 200,
+                            width: 300,
                             height: 200,
                             type: type
                         },
@@ -198,19 +196,11 @@ console.log('dir = '+loc);
                         // console.log('jQuery bind edit complete');
                     });
                 }
-        
-                $(document).on('click', '.btn-crop-edit', function(ev) {
-                    submitCrop(idImg)
-                });
+
+                $('.crop-img-edit').hide()
+                $('.crop-button-edit').hide()
             
-                $(document).on('click', '.btn-cancel-crop-edit', function() {
-                    // console.log('btn-cancel-crop-edit');
-                    $('.main-edit').toggle()
-                    $('.normal-button-edit').toggle()
-                    $('.crop-img-edit').toggle()
-                    $('.crop-button-edit').toggle()
-                    $('.upload-demo2-edit').croppie('destroy')
-                })
+                
             }
 
         });
@@ -279,7 +269,31 @@ console.log('dir = '+loc);
             }
             $(input).val('')
         }
-
+        function cropImgEdit(url, type) {
+            // console.log('url = '+url);
+            // console.log('type = '+type);
+            // console.log('crop-img-edit');
+            $('.main-edit').hide()
+            $('.normal-button-edit').hide()
+            $('.crop-img-edit').show()
+            $('.crop-button-edit').show()
+    
+            let UC = $('.upload-demo2-edit').croppie({
+                viewport: {
+                    width: 200,
+                    height: 200,
+                    type: type
+                },
+                enforceBoundary: false,
+                enableExif: true
+            });
+            UC.croppie('bind', {
+                url: url
+            }).then(function() {
+                // console.log('jQuery bind edit complete');
+            });
+        }
+        
     });
 
     $('#edit').click(function() {

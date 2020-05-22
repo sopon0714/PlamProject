@@ -166,6 +166,7 @@
         VALUES ('','$loglogin_id','$time','$startID','$id_d','1','$nameImg1','$path')";
 
         addinsertData($sql);
+
         header($location.$pid);
 
         break;
@@ -448,6 +449,9 @@
           }
 
         header($location.$pid);
+        ob_end_flush();
+
+        // header("refresh: 0; url=".$location.$pid);
         break;
     }
 

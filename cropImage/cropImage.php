@@ -11,14 +11,13 @@
     })
     $('#p_photo').on('change', function() {
         // alert('change')
-        // cropImage(this)
-
         imagesPreview(this, '#grid-p_photo', 'p_photo', 'pic-photo', 'edit-img');
     });
 
     $('#pic-style-char').on('change', function() {
         // alert('change')
         imagesPreview(this, '#grid-pic-style-char', 'pic-style-char', 'pic-SC', 'edit-img');
+
     });
 
     $(document).on('click', '.delete-img', function() {
@@ -35,9 +34,39 @@
     })
 
     $(document).on('click', '.btn-crop', function(ev) {
+        console.log('submit crop');
+        console.log(idImg);
+        console.log('RESULT:', $('#' + idImg).attr('src'))
+
         submitCrop(idImg)
     });
 
+    $(document).on('click', '.btn-crop-edit', function(ev) {
+        console.log('submit crop');
+
+        console.log(idImg);
+        submitCropEdit(idImg)
+
+        // toDataURL($('#' + idImg).attr('src'), function(dataUrl) {
+        //     // console.log('RESULT:', dataUrl)
+        //     $('#' + idImg).attr('src',dataUrl);
+        //     console.log('RESULT:', $('#' + idImg).attr('src'))
+
+        //     submitCropEdit(idImg)
+
+        // })
+
+        
+    });
+    
+    $(document).on('click', '.btn-cancel-crop-edit', function() {
+        // console.log('btn-cancel-crop-edit');
+        $('.main-edit').toggle()
+        $('.normal-button-edit').toggle()
+        $('.crop-img-edit').toggle()
+        $('.crop-button-edit').toggle()
+        $('.upload-demo2-edit').croppie('destroy')
+    })
     $(document).on('click', '.btn-cancel-crop', function() {
         $('.main').toggle()
         $('.normal-button').toggle()
@@ -54,6 +83,8 @@
                 var reader = new FileReader();
 
                 reader.onload = function(event) {
+                    // let rawImg = event.target.result;
+                    // cropImg(rawImg, 'square');
                     // $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
                     $(img_prepend).prepend(`<div class="card" width="70px" hight="70px">
                                 <div class="card-body" style="padding:0;">
@@ -135,6 +166,40 @@
                 $('#' + output).attr('src', r)
             });
         $('.upload-demo2').croppie('destroy')
+
+    }
+    function submitCropEdit(output) {
+        // toDataURL($('#' + output).attr('src'), function(dataUrl) {
+        //     console.log('RESULT:', dataUrl)
+        //     $('#' + output).attr('src',dataUrl);
+            $('.upload-demo2-edit').croppie('result', {
+                type: 'canvas',
+                size: 'viewport'
+            })
+            .then(function(r) {
+                $('.main-edit').show()
+                $('.normal-button-edit').show()
+                $('.crop-img-edit').hide()
+                $('.crop-button-edit').hide()
+                $('#' + output).attr('src', r)
+            });
+        $('.upload-demo2-edit').croppie('destroy')
+
+        // })
+
+    }
+    function toDataURL(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+            callback(reader.result);
+            }
+            reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
     }
     
 </script>
