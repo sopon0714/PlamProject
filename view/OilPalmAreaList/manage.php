@@ -1,6 +1,7 @@
 <?php
 require_once("../../dbConnect.php");
 require_once("../../set-log-login.php");
+require_once("../../query/query.php");
 session_start();
 if (isset($_POST['add'])) {
     $namefarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['namefarm']));
@@ -65,17 +66,31 @@ if (isset($_POST['delete'])) {
     $FID = $_POST['fid'];
     $time = time();
     $DIMDATE = getDIMDate();
-    $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'  WHERE `log-farm`.`ID` IN (SELECT `log-farm`.`ID` FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID` 
-    WHERE `dim-farm`.`dbID`=' $FID' AND `log-farm`.`EndT` IS NULL)  ";
+    // update log-farm
+    $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'  WHERE `log-farm`.`ID` IN 
+    (SELECT `log-farm`.`ID` FROM `log-farm` INNER JOIN `dim-farm` ON `log-farm`.`DIMfarmID`=`dim-farm`.`ID` 
+    WHERE`dim-farm`.`dbID`=$FID AND `dim-farm`.`IsFarm`=1 AND `log-farm`.`EndT`IS NULL) ";
     updateData($sql);
-    echo $sql . "<br/>";
+    //update log-icon subfarm
+    $sql = "UPDATE `log-icon` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'
+      WHERE `log-icon`.`Type`= 3 AND `log-icon`.`EndT` IS NULL AND `log-icon`.`DIMiconID` IN 
+      (SELECT `dim-farm`.`ID` FROM `dim-farm` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID`=`dim-farm`.`dbID`
+       WHERE `dim-farm`.`IsFarm`=0 AND `db-subfarm`.`FMID` = $FID) ";
+    updateData($sql);
+    // update log-iconfarm
+    $sql = "UPDATE `log-icon` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'
+      WHERE `log-icon`.`Type`= 4 AND `log-icon`.`EndT` IS NULL AND `log-icon`.`DIMiconID` IN 
+      (SELECT `dim-farm`.`ID` FROM `dim-farm` INNER JOIN `db-farm`ON `db-farm`.`FMID` = `dim-farm`.`dbID`
+       WHERE `dim-farm`.`IsFarm`=1 AND `db-farm`.`FMID` =$FID) ";
+    updateData($sql);
+
     $sql = "DELETE FROM `db-coorfarm` WHERE `db-coorfarm`.`FCID`IN 
     (SELECT `db-coorfarm`.`FCID` FROM `db-coorfarm` INNER JOIN `db-subfarm`
      ON  `db-coorfarm`.`FSID` = `db-subfarm`.`FSID` WHERE `db-subfarm`.`FMID` = '$FID')";
     delete($sql);
-    echo $sql . "<br/>";
     $sql = "DELETE FROM `db-subfarm` WHERE `db-subfarm`.`FMID`='$FID'";
     delete($sql);
+
     echo $sql . "<br/>";
     $sql = "DELETE FROM`db-farm` WHERE `db-farm`.`FMID`='$FID'";
     delete($sql);

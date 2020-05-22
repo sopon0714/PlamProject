@@ -11,65 +11,60 @@ $point_id = $_POST["point_id"] ?? '';
 // echo $result;
 // echo $point_id;
 
-if($result == 'distrinct' || $result == 'e_distrinct' || $result =='s_distrinct'){
-    if($select_id == 0){
+if ($result == 'distrinct' || $result == 'e_distrinct' || $result == 's_distrinct') {
+    if ($select_id == 0) {
         echo "<option selected value=0>เลือกอำเภอ</option>";
     }
     $sql = "SELECT * FROM `db-distrinct` WHERE `AD1ID` = '$select_id' ORDER BY `db-distrinct`.`Distrinct`  ASC ";
-    $result = $myConDB->prepare( $sql ); 
+    $result = $myConDB->prepare($sql);
     $result->execute();
     // if($result =='s_distrinct'){
-    if($point_id == ''){
-        echo "<option selected value=0>เลือกอำเภอ</option>";
+    if ($point_id == '') {
+        echo "<option selected value=0 disabled=\"\">เลือกอำเภอ</option>";
     }
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
-    {
-        echo "<option value =".$row['AD2ID']." ";
-        if($row['AD2ID'] == $point_id && $result !='s_distrinct'){ 
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value =" . $row['AD2ID'] . " ";
+        if ($row['AD2ID'] == $point_id && $result != 's_distrinct') {
             echo " selected='selected' ";
         }
-        echo ">".$row['Distrinct']."</option>";
+        echo ">" . $row['Distrinct'] . "</option>";
     }
 }
-if($result == 'subdistrinct' || $result == 'e_subdistrinct'){
-    if($select_id == 0){
-        echo "<option selected value=0>เลือกตำบล</option>";
+if ($result == 'subdistrinct' || $result == 'e_subdistrinct') {
+    if ($select_id == 0) {
+        echo "<option selected value=0 disabled=\"\">เลือกตำบล</option>";
     }
     $sql = "SELECT * FROM `db-subdistrinct` WHERE `AD2ID` = '$select_id' ORDER BY `db-subdistrinct`.`subDistrinct`  ASC";
-    $result = $myConDB->prepare( $sql ); 
+    $result = $myConDB->prepare($sql);
     $result->execute();
-    if($point_id == ''){        
-     echo "<option selected value=0>เลือกตำบล</option>";
-
+    if ($point_id == '') {
+        echo "<option selected value=0 disabled=\"\">เลือกตำบล</option>";
     }
 
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
-    {
-        echo "<option value =".$row['AD3ID']." ";
-        if($row['AD3ID'] == $point_id){ 
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value =" . $row['AD3ID'] . " ";
+        if ($row['AD3ID'] == $point_id) {
             echo " selected";
         }
-        echo ">".$row['subDistrinct']."</option>";
-
+        echo ">" . $row['subDistrinct'] . "</option>";
     }
 }
-if($result == 'e_province'){
+if ($result == 'e_province') {
     $sql = "SELECT * FROM `db-province` ORDER BY `db-province`.`Province`  ASC";
-    $result = $myConDB->prepare( $sql ); 
+    $result = $myConDB->prepare($sql);
     $result->execute();
-    if($point_id == ''){
+    if ($point_id == '') {
         echo "<option selected value=0>เลือกจังหวัด</option>";
-
     }
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
-    {
-        echo "<option value =".$row['AD1ID']." ";
-        if($row['AD1ID'] == $point_id){ 
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value =" . $row['AD1ID'] . " ";
+        if ($row['AD1ID'] == $point_id) {
             echo " selected";
         }
-        echo ">".$row['Province']."</option>";
-
+        echo ">" . $row['Province'] . "</option>";
     }
 }
-
-?>
+if ($result == 'updateInfoFarm') {
+    $sql = "SELECT * FROM `db-farm`";
+    print_r(json_encode(select($sql)));
+}

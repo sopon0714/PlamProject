@@ -1,5 +1,6 @@
+var dataFarm;
 $(document).ready(function() {
-    // console.log("y");
+    updateInfoFarm();
     $('.tt').tooltip();
 
     $('#add').click(function() {
@@ -63,18 +64,41 @@ $(document).ready(function() {
         xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
     }
     // create by โสภณ โตใหญ่
+    function updateInfoFarm() {
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "data.php",
+            data: {
+                result: 'updateInfoFarm'
+
+            },
+            async: false,
+            success: function(result) {
+                dataFarm = result;
+
+            }
+        });
+    }
     // หน้า แรก ของสวนปาล์ม ตรวจสอบการเพิ่มสวนpalm
     $('.insertFarm').click(function() {
         var namefarm = $("input[name='namefarm']");
         var aliasfarm = $("input[name='aliasfarm']");
         var addfarm = $("input[name='addfarm']");
+        var province = $("select[name='province']");
+        var distrinct = $("select[name='distrinct']");
         var subdistrinct = $("select[name='subdistrinct']");
-        var farmer = $("select[name='id']");
+        var farmer = $("select[name='farmer']");
         let dataNull = [namefarm, aliasfarm, addfarm];
-
-        //if (!checkNull(dataNull)) return;
+        let dataSelectNull = [province, distrinct, subdistrinct, farmer];
+        //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
+        if (!checkNull(dataNull)) return;
+        if (!checkSelectNull(dataSelectNull)) return;
+        //ตรวจสอบว่ามีชื่อซ้ำกันหรือไม่
+        if (!checkSameName(namefarm, -1)) return;
+        if (!checkSameAlias(aliasfarm, -1)) return;
     });
-    //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
+
     function checkNull(selecter) {
         for (i in selecter) {
             if (selecter[i].val() == '') {
@@ -83,6 +107,46 @@ $(document).ready(function() {
             } else selecter[i][0].setCustomValidity('');
         }
         return true;
+    }
+
+    function checkSelectNull(selecter) {
+        for (i in selecter) {
+            if (selecter[i].val() == null) {
+                selecter[i][0].setCustomValidity('กรุณาเลือกข้อมูล');
+                return false;
+            } else selecter[i][0].setCustomValidity('');
+        }
+        return true;
+    }
+
+    function checkSameName(name, id) { // check same name
+
+        for (i in dataFarm) {
+            console.log(dataFarm[i].Name);
+            if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Name && dataFarm[i].FMID != id) {
+                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
+                return false;
+            } else {
+                name[0].setCustomValidity('');
+            }
+        }
+        return true;
+
+    }
+
+    function checkSameAlias(name, id) { // check same Alias
+
+        for (i in dataFarm) {
+            console.log(dataFarm[i].Alias);
+            if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Alias && dataFarm[i].FMID != id) {
+                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
+                return false;
+            } else {
+                name[0].setCustomValidity('');
+            }
+        }
+        return true;
+
     }
 
 });
@@ -111,7 +175,7 @@ function delfunction(_username, _uid) {
 
     swal({
             title: "คุณต้องการลบ",
-            text: `${_username} หรือไม่ ?`,
+            text: `สวน ${_username} หรือไม่ ?`,
             type: "warning",
             showCancelButton: true,
             confirmButtonClass: "btn-danger",
@@ -119,33 +183,34 @@ function delfunction(_username, _uid) {
             confirmButtonText: "ยืนยัน",
             cancelButtonText: "ยกเลิก",
             closeOnConfirm: false,
-            closeOnCancel: function() {
-                $('[data-toggle=tooltip]').tooltip({
-                    boundary: 'window',
-                    trigger: 'hover'
-                });
-                return true;
-            }
+            closeOnCancel: false
         },
         function(isConfirm) {
             if (isConfirm) {
-
                 swal({
 
-                    title: "ลบข้อมูลสำเร็จ",
+                    title: "ดำเนินการลบ",
+                    text: "สวน " + _username + " เรียบร้อย",
                     type: "success",
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "ตกลง",
-                    closeOnConfirm: false,
-
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        delete_1(_uid)
-                    }
+                    showCancelButton: false,
+                    showConfirmButton: false
 
                 });
+                delete_1(_uid)
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
             } else {
-
+                swal({
+                    title: "ยกเลิกการลบ !!",
+                    text: "สวน " + _username,
+                    type: "error",
+                    showCancelButton: false,
+                    showConfirmButton: false
+                });
+                setTimeout(function() {
+                    swal.close();
+                }, 2000);
             }
         });
 
@@ -156,7 +221,6 @@ function delete_1(_fid) {
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            window.location.href = './OilPalmAreaList.php';
 
         }
     };

@@ -377,7 +377,7 @@ function updateLogIcon($ID)
     $t = time();
     $sql = "UPDATE `log-icon` 
     SET `EndT`= $t ,`EndID` = $EndID
-    WHERE `DIMIconID` = $ID AND `EndID` IS NULL;";
+    WHERE `DIMIconID` = $ID AND `log-icon`.`Type` =2 AND `EndID` IS NULL;";
     updateData($sql);
     // echo"---". "updateLogIcon";
 }

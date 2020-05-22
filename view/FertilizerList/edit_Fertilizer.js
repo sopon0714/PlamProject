@@ -981,7 +981,7 @@ $(document).ready(function() {
 
                     });
                     setTimeout(function() {
-                        swal.close();
+                        location.reload();
                     }, 2000);
 
 
