@@ -86,7 +86,6 @@ $FARM = getOwnerFarmer($farmerID);
                                             echo $src = "../../icon/farmer/".$farmerID."/".$PROFILE[1]["Icon"]; 
                                             else
                                             echo $src = "../../picture/default.jpg" 
-                                            
                                             ?> 
                                              alt="User" style="border-radius: 100%;width: 300px;height: 300px;">
                                         </div>
@@ -156,10 +155,9 @@ $FARM = getOwnerFarmer($farmerID);
                                             </div>
                                         </div>
                                        
-                                        <label hidden id="info" la="<?php echo $PROFILE[1]["Latitude"]; ?>" long="<?php echo $PROFILE[1]["Longitude"]; ?>" subDistrinct="<?php echo $PROFILE[1]["subDistrinct"] ?>"></label>
-
+                                        <label hidden id="info" la="<?php echo $PROFILE[1]["Latitude"]; ?>" long="<?php echo $PROFILE[1]["Longitude"]; ?>" 
+                                        subDistrinct="<?php echo $PROFILE[1]["subDistrinct"] ?>"></label>
                                     </div>
-                        
                         </div>
                     </div>
                 </div>
@@ -182,7 +180,6 @@ $FARM = getOwnerFarmer($farmerID);
             </div>
         </div>
 
-
         <div class="row">
         <div class="col-xl-12 col-12">
             <div class="card">
@@ -191,7 +188,7 @@ $FARM = getOwnerFarmer($farmerID);
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-data " id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>ชื่อสวน</th>
@@ -200,7 +197,6 @@ $FARM = getOwnerFarmer($farmerID);
                                     <th>จำนวนแปลง</th>
                                     <th>พื้นที่ปลูก</th>
                                     <th>จำนวนต้นไม้</th>
-                                    
                                 </tr>
                             </thead>
                             <tfoot>
@@ -224,13 +220,12 @@ $FARM = getOwnerFarmer($farmerID);
                                         <td><a href="./../OilPalmAreaList/OilPalmAreaListDetail.php?fmid=<?php echo $FARM[$i]["FMID"]; ?>"><?php echo $FARM[$i]['Name']; ?></a></td>
                                         <td><?php echo $FARM[$i]['Province']; ?></td>
                                         <td><?php echo $FARM[$i]['Distrinct']; ?></td>
-                                        <td class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARM[$i]["subDistrinct"]; ?>" 
-                                        AD3ID="<?php echo $FARM[$i]["AD3ID"]; ?>" la="<?php echo $FARM[$i]["Latitude"]; ?>" 
-                                        long="<?php echo $FARM[$i]["Longitude"]; ?>" ></td>
                                         <td class = "text-right"><?php echo $FARM[$i]['NumSubFarm']; ?> แปลง</td>
                                         <td class = "text-right"><?php echo $FARM[$i]['AreaRai']; ?> ไร่ <?php echo $FARM[$i]['AreaNgan']; ?> งาน</td>
                                         <td class = "text-right"><?php echo $FARM[$i]['NumTree']; ?> ต้น</td>
-                                        
+                                        <label class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARM[$i]["subDistrinct"]; ?>" 
+                                        AD3ID="<?php echo $FARM[$i]["AD3ID"]; ?>" la="<?php echo $FARM[$i]["Latitude"]; ?>" 
+                                        long="<?php echo $FARM[$i]["Longitude"]; ?>" ></label>
                                     </tr>
                                 <?php
                                     }
@@ -243,7 +238,6 @@ $FARM = getOwnerFarmer($farmerID);
             </div>
         </div>
     </div>
-
 
     <?php include_once("../layout/LayoutFooter.php"); ?>
     <script src="FarmerListDetail.js"></script>

@@ -212,8 +212,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist,$fsub);
                                     <td><?php echo $FARMER[$i]['FullName']; ?></td>
                                     <td><?php echo $FARMER[$i]["Province"] ?></td>
                                     <td><?php echo $FARMER[$i]["Distrinct"] ?></td>
-                                    <td class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARMER[$i]["subDistrinct"]; ?>" AD3ID="<?php echo $FARMER[$i]["AD3ID"]; ?>" la="<?php echo $FARMER[$i]["Latitude"]; ?>" 
-                                    long="<?php echo $FARMER[$i]["Longitude"]; ?>" ></td>
+
                                     <td class="text-right"><?php echo $FARMER[$i]['numFarm']; ?> สวน</td>
                                     <td class="text-right"><?php echo $FARMER[$i]['numSubFarm'];; ?> แปลง</td>
                                     <td class="text-right"><?php echo $FARMER[$i]['numArea1']; ?> ไร่
@@ -227,6 +226,8 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist,$fsub);
                                             </button>
                                         </a>
                                     </td>
+                                    <label class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARMER[$i]["subDistrinct"]; ?>" AD3ID="<?php echo $FARMER[$i]["AD3ID"]; ?>" la="<?php echo $FARMER[$i]["Latitude"]; ?>" 
+                                    long="<?php echo $FARMER[$i]["Longitude"]; ?>" ></label>
                                 </tr>
                         <?php
                             }
