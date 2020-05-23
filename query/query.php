@@ -136,7 +136,7 @@ function getCountArea()
 }
 
 //ตารางเกษตรกร (table)
-function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
+function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
 {
     $myConDB = connectDB();
 
@@ -160,25 +160,8 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
         }
     }
 
-    $sql = "SELECT UFID,Title,FirstName,LastName,FormalID,Icon,`Address`,`db-farmer`.`AD3ID`,IsBlock,`db-farmer`.`ModifyDT`,`db-distrinct`.AD2ID,`db-distrinct`.AD1ID,subDistrinct,Distrinct,Province FROM `db-farmer` 
-                INNER JOIN `db-subdistrinct` ON `db-farmer`.`AD3ID`=  `db-subdistrinct`.AD3ID
-                INNER JOIN `db-distrinct` ON `db-subdistrinct`.`AD2ID`=  `db-distrinct`.AD2ID
-                INNER JOIN `db-province` ON `db-distrinct`.`AD1ID`=  `db-province`.AD1ID
-                WHERE 1 ";
-
-    if ($idformal != '') $sql = $sql . " AND FormalID LIKE '%" . $idformal . "%' ";
-    if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
-    if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
-
-    //echo $sql;
-
-    $result2 = $myConDB->prepare($sql);
-    $result2->execute();
-
-
     //INFO
-    $sql = "SELECT `UFID`,`FirstName`,`LastName`,`Distrinct`,`Province`, 
+    $sql = "SELECT `UFID`,`FirstName`,`LastName`,`Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`,
     `dim-user`.`FullName`, `dim-user`.`ID` AS dimFID , `db-farmer`.`FormalID`
      FROM `db-farmer` 
      JOIN `dim-user` ON `dim-user`.`dbID`=`db-farmer`.`UFID`
@@ -190,8 +173,9 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
     if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
+
     $sql = $sql . " ORDER BY  `dim-user`.`FullName`";
-    //echo $sql;
+    // echo $sql;
     $myConDB = connectDB();
     $result = $myConDB->prepare($sql);
     $result->execute();
@@ -206,6 +190,10 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
             $FARMER[$numFermer]['FullName']    = $tmpDATA['FullName'];
             $FARMER[$numFermer]['Province']    = $tmpDATA['Province'];
             $FARMER[$numFermer]['Distrinct']   = $tmpDATA['Distrinct'];
+            $FARMER[$numFermer]['AD3ID']        = $tmpDATA['AD3ID'];
+            $FARMER[$numFermer]['subDistrinct']   = $tmpDATA['subDistrinct'];
+            $FARMER[$numFermer]['Latitude']   = $tmpDATA['Latitude'];
+            $FARMER[$numFermer]['Longitude']   = $tmpDATA['Longitude'];
             $FARMER[$numFermer]['numFarm']     = getCountOwnerFarm($tmpDATA['UFID']);
             $FARMER[$numFermer]['numSubFarm']  = getCountOwnerSubFarm($tmpDATA['UFID']);
             $FARMER[$numFermer]['numTree']     = getCountOwnerTree($tmpDATA['UFID']);
@@ -216,22 +204,6 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
             $numFermer++;
         }
     }
-    // $sql1 = "SELECT `DIMownerID`, `DIMfarmID`, `NumSubFarm`,`NumTree`,`AreaRai`, `AreaNgan`FROM `log-farm`
-    // WHERE `DIMSubfID` IS NULL AND `EndT` IS NULL";
-    // $myConDB = connectDB();
-    // $result1 = $myConDB->prepare($sql1);
-    // $result1->execute();
-    // foreach ($result1 as $tmp => $tmpDATA) {
-    //     $tmpID = $fermerINDEX[$tmpDATA['DIMownerID']];
-    //     if ($tmpID >= 0) {
-    //         //print_r($tmpDATA);
-    //         $FARMER[$tmpID]['numFarm']++;
-    //         $FARMER[$tmpID]['numSubFarm']   += $tmpDATA['NumSubFarm'];
-    //         $FARMER[$tmpID]['numTree']      += $tmpDATA['NumTree'];
-    //         $FARMER[$tmpID]['numArea1']     += $tmpDATA['AreaRai'];
-    //         $FARMER[$tmpID]['numArea2']     += $tmpDATA['AreaNgan'];
-    //     }
-    // }
     if (!is_null($FARMER))
         return $FARMER;
     else return 0;
