@@ -1,6 +1,7 @@
 <?php
 require_once("../../dbConnect.php");
 require_once("../../set-log-login.php");
+include_once("./../../query/query.php");
 session_start(); 
 // connectDB();
 $myConDB = connectDB();
@@ -19,9 +20,6 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
-        // case 'test' :
-        //     echo "test";
-        //     break;
         case 'select' :
             $sql = "SELECT * FROM `db-farmer`";
 
@@ -232,7 +230,7 @@ if(isset($_POST['request'])){
 
             // $st = trim($_POST['e_st']);
             
-                $get_User = getFarmer($uid);
+                $get_User = getFarmerbyID($uid);
 
                 $o_title = $get_User[1]['Title'];
                 $o_fname = $get_User[1]['FirstName'];
@@ -511,7 +509,7 @@ function select_dimAddr(){
    return $DATA;
 
 }
-function getFarmer($uid){
+function getFarmerbyID($uid){
     $sql = "SELECT * FROM `db-farmer` WHERE `UFID`='$uid'";
 
    $DATA = selectData($sql);

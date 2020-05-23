@@ -118,7 +118,7 @@ function getCountArea(){
 }
 
 //ตารางเกษตรกร (table)
-function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
+function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist,&$fsub)
 {
     $myConDB = connectDB();
 
@@ -152,6 +152,8 @@ function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
     if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
+    if ($fsub  != 0)  $sql = $sql . " AND `db-farmer`.AD3ID = '" . $fsub . "' ";
+
 
     //echo $sql;
 
@@ -160,7 +162,7 @@ function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
 
 
     //INFO
-    $sql = "SELECT `UFID`,`FirstName`,`LastName`,`Distrinct`,`Province`, 
+    $sql = "SELECT `UFID`,`FirstName`,`LastName`,`Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`,
     `dim-user`.`FullName`, `dim-user`.`ID` AS dimFID , `db-farmer`.`FormalID`
      FROM `db-farmer` 
      JOIN `dim-user` ON `dim-user`.`dbID`=`db-farmer`.`UFID`
@@ -172,8 +174,10 @@ function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
     if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
+    if ($fsub  != 0)  $sql = $sql . " AND `db-farmer`.AD3ID = '" . $fsub . "' ";
+
     $sql = $sql . " ORDER BY  `dim-user`.`FullName`";
-    //echo $sql;
+    // echo $sql;
     $myConDB = connectDB();
     $result = $myConDB->prepare($sql);
     $result->execute();
@@ -188,6 +192,10 @@ function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
             $FARMER[$numFermer]['FullName']    = $tmpDATA['FullName'];
             $FARMER[$numFermer]['Province']    = $tmpDATA['Province'];
             $FARMER[$numFermer]['Distrinct']   = $tmpDATA['Distrinct'];
+            $FARMER[$numFermer]['AD3ID']        = $tmpDATA['AD3ID'];
+            $FARMER[$numFermer]['subDistrinct']   = $tmpDATA['subDistrinct'];
+            $FARMER[$numFermer]['Latitude']   = $tmpDATA['Latitude'];
+            $FARMER[$numFermer]['Longitude']   = $tmpDATA['Longitude'];
             $FARMER[$numFermer]['numFarm']     = getCountOwnerFarm($tmpDATA['UFID']);
             $FARMER[$numFermer]['numSubFarm']  = getCountOwnerSubFarm($tmpDATA['UFID']);
             $FARMER[$numFermer]['numTree']     = getCountOwnerTree($tmpDATA['UFID']);

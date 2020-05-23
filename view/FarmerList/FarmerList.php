@@ -10,11 +10,12 @@ $idformal = '';
 $fullname = '';
 $fpro = 0;
 $fdist = 0;
+$fsub = 0;
 
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
-$FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
+$FARMER = getFarmer($idformal, $fullname, $fpro, $fdist,$fsub);
 
 ?>
 
@@ -46,7 +47,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
         <?php
         creatCard("card-color-one",   "จำนวนเกษตรกร", getcountFarmer() . " คน", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "format_size");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "dashboard");
         creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");
         ?>
 
@@ -170,6 +171,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
             <h6 class="m-0 font-weight-bold" style="color:#006633;">รายชื่อเกษตรกร</h6>
+            
         </div>
         <div class="card-body">
 
@@ -200,15 +202,18 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
                             <th>จัดการ</th>
                         </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody id="body">
+                        <label id="size" hidden size ="<?php echo sizeof($FARMER); ?>"></label>
                         <?php
                         if ($FARMER != 0) {
                             for ($i = 0; $i < sizeof($FARMER); $i++) {
                         ?>
-                                <tr>
+                                <tr class="<?php echo $i; ?>" test="test<?php echo $i; ?>">
                                     <td><?php echo $FARMER[$i]['FullName']; ?></td>
                                     <td><?php echo $FARMER[$i]["Province"] ?></td>
                                     <td><?php echo $FARMER[$i]["Distrinct"] ?></td>
+                                    <td class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARMER[$i]["Distrinct"]; ?>" AD3ID="<?php echo $FARMER[$i]["AD3ID"]; ?>" la="<?php echo $FARMER[$i]["Latitude"]; ?>" 
+                                    long="<?php echo $FARMER[$i]["Longitude"]; ?>" ></td>
                                     <td class="text-right"><?php echo $FARMER[$i]['numFarm']; ?> สวน</td>
                                     <td class="text-right"><?php echo $FARMER[$i]['numSubFarm'];; ?> แปลง</td>
                                     <td class="text-right"><?php echo $FARMER[$i]['numArea1']; ?> ไร่
@@ -242,7 +247,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
 
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
-
+<!-- <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script> for error r.getClientRects is not a function -->
 <script src="FarmerList.js"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
