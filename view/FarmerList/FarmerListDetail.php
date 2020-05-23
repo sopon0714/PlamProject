@@ -30,7 +30,7 @@ $FARM = getOwnerFarmer($farmerID);
                     <div class="card-header card-bg">
                         <div class="row">
                             <div class="col-12">
-                                <span class="link-active" style="color:<?=$color?>;" >รายละเอียดเกษตรกร</span>
+                                <span class="link-active font-weight-bold"  style="color:<?=$color?>;" >รายละเอียดเกษตรกร</span>
                                 <span style="float:right;">
                                     <i class="fas fa-bookmark"></i>
                                     <a class="link-path" href="#">หน้าแรก</a>
@@ -65,7 +65,7 @@ $FARM = getOwnerFarmer($farmerID);
                         <div class="card">
                             <div class="card-header card-bg" style="height: 55px;">
                                 <div>
-                                <span style="color:<?=$color?>; top: 15px; position: absolute;">โปรไฟล์</span>
+                                <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">โปรไฟล์</h6>
 
                                 <a href='./../Chat/Chat.php?ufid=<?php echo $farmerID; ?>'>
                                 <button style="float:right;" type='button' id='btn_warning' class="btn btn-warning btn-sm btn_edit tt" data-toggle="tooltip" title="แจ้งเตือน">
@@ -166,7 +166,7 @@ $FARM = getOwnerFarmer($farmerID);
             <div class="col-xl-6 col-12 mb-4">
                 <div class="card">
                     <div class="card-header card-bg" style="height: 55px;">
-                        <div style="color:<?=$color?>; top: 15px; position: absolute;">ตำแหน่งสวนปาล์ม</div> 
+                        <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">ตำแหน่งสวนปาล์ม</h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -184,7 +184,7 @@ $FARM = getOwnerFarmer($farmerID);
         <div class="col-xl-12 col-12">
             <div class="card">
                 <div class="card-header card-bg" style="color:<?=$color?>;">
-                 รายชื่อสวน
+                    <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>;">รายชื่อสวน</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
