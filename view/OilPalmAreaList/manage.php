@@ -11,7 +11,7 @@ if (isset($_POST['add'])) {
     $farmer = $_POST['farmer'];
     $sql = "SELECT * FROM `db-subdistrinct` WHERE AD3ID='$subdistrinct'";
     $dataAddress = selectData($sql);
-    $sql = "INSERT INTO `db-farm` ( `Name`, `Alias`, `Icon`, `Address`, `AD3ID`, `UFID`, `IsCoordinate`, `Latitude`, `Longitude`) VALUES ( '$namefarm', '$aliasfarm', 'default', '$addfarm', '$subdistrinct', '$farmer', '0', ' {$dataAddress[1]['Latitude']}', ' {$dataAddress[1]['Longitude']}')";
+    $sql = "INSERT INTO `db-farm` ( `Name`, `Alias`, `Icon`, `Address`, `AD3ID`, `UFID`, `IsCoordinate`, `Latitude`, `Longitude`) VALUES ( '$namefarm', '$aliasfarm', 'default.png', '$addfarm', '$subdistrinct', '$farmer', '0', ' {$dataAddress[1]['Latitude']}', ' {$dataAddress[1]['Longitude']}')";
     $IDFarm = addinsertData($sql);
     $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];
     $Date = getDIMDate();

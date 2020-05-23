@@ -236,7 +236,7 @@ function getFarmerByUFID($ufid)
 {
     $sql = "SELECT * , CASE WHEN `Title` IN ('1') THEN 'นาย'
     WHEN `Title` IN ('2') THEN 'นาง' 
-    WHEN `Title` IN ('3') THEN 'นางสาว' END AS Title                   
+    WHEN `Title` IN ('3') THEN 'นางสาว' END AS Title2                   
     FROM `db-farmer` JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farmer`.`AD3ID` 
     JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID` WHERE `UFID` =$ufid ";
@@ -378,6 +378,16 @@ function getOilPalmAreaListDetail($DIMfarmID)
     return $OilPalmAreaListDetail;
 }
 
+
+function getOilPalmAreaListDetailByIdFarm($fmid)
+{
+    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year 
+    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` INNER JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  
+    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid ORDER BY `db-subfarm`.`Name`";
+    $OilPalmAreaListDetail = selectData($sql);
+    return $OilPalmAreaListDetail;
+}
+
 // ***************** เริ่ม sql หน้า OilPalmAreaListDetail.php *****************
 
 // sql ค่าของ areatotal มีการรับค่า ID ของ logfarmID
@@ -396,6 +406,17 @@ function getLogfarmIDpalm($fmid)
 function getAreatotal($logfarmID)
 {
     $sql = "SELECT * FROM `log-farm`WHERE `ID`='$logfarmID'";
+    $Areatotal = selectData($sql);
+    return $Areatotal;
+}
+function getAreatotalByIdFarm($fmid)
+{
+    $sql = "SELECT `log-farm`.`ID`,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,`log-farm`.`AreaWa` 
+    FROM `log-farm` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-farm`.`DIMfarmID`
+    INNER JOIN `db-farm` ON `db-farm`.`FMID`=`dim-farm`.`dbID` 
+    WHERE `log-farm`.`DIMSubfID`IS  NULL AND `log-farm`.`EndT` IS NULL
+    AND `dim-farm`.`IsFarm`=1 AND `db-farm`.`FMID`=$fmid";
     $Areatotal = selectData($sql);
     return $Areatotal;
 }
@@ -443,7 +464,7 @@ function getAddress($FMID)
 // sql ค่าของ DATAFarm มีการรับค่า fmid
 function getDATAFarmByFMID($fmid)
 {
-    $sql = "SELECT FMID,Name,Alias,Address,UFID, `db-farm`.`AD3ID`,`db-subdistrinct`.`AD2ID`,`db-distrinct`.`AD1ID`
+    $sql = "SELECT FMID,Name,Alias,Address,UFID,Icon, `db-farm`.`AD3ID`,`db-subdistrinct`.`AD2ID`,`db-distrinct`.`AD1ID`
     FROM `db-farm`INNER JOIN `db-subdistrinct`ON `db-farm`.`AD3ID`=`db-subdistrinct`.`AD3ID`
     INNER JOIN `db-distrinct`ON`db-distrinct`.`AD2ID`=`db-subdistrinct`.`AD2ID` WHERE `FMID`='$fmid'";
     $DATAFarm = selectData($sql);

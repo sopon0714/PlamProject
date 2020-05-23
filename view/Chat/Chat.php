@@ -54,6 +54,7 @@ $CurrentMenu = "Chat";
 </style>
 
 
+
 <body onload="hiddenn('0')">
 	<div class="container">
 		<div>
@@ -192,4 +193,5 @@ $CurrentMenu = "Chat";
 </body>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="./Chat.js"></script>

@@ -46,5 +46,3 @@
 
   <!-- NPM Chart 2.8.0 JS -->
   <script src="../../js/npm chart 2.8.0/chart.js"></script>
-
-  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
