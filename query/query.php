@@ -271,6 +271,31 @@ function getCountOwnerTree($ufid)
     return $countownerTree;
 }
 
+//FarmerListDetail
+function getProfile($ufid){
+    $sql = "SELECT * , CASE WHEN `Title` IN ('1') THEN 'นาย'
+    WHEN `Title` IN ('2') THEN 'นาง' 
+    WHEN `Title` IN ('3') THEN 'นางสาว' END AS Title                   
+    FROM `db-farmer` JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farmer`.`AD3ID` 
+    JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
+    JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID` WHERE `UFID` =$ufid ";
+    $data = selectData($sql);
+    return $data;
+}
+function getOwnerFarmer($ufid){
+    $sql = "SELECT `db-farm`.`Name`,`db-province`.`Province`,`db-distrinct`.`Distrinct`,`log-farm`.`NumSubFarm`,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,`log-farm`.`NumTree` FROM `log-farm` 
+    JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+    JOIN `dim-farm` ON  `dim-farm`.`ID` =  `log-farm`.`DIMfarmID`
+    JOIN `db-farm` ON  `db-farm`.`FMID` = `dim-farm`.`dbID`
+    JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farm`.`AD3ID`
+    JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
+    JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`
+    WHERE `dim-user`.`Type` = 'F' AND `log-farm`.`EndT` IS NULL 
+    AND `dim-user`.`dbID` = $ufid AND `log-farm`.`DIMSubfID` IS NULL";
+     $data = selectData($sql);
+     return $data;
+}
+
 //OwnerFarm Table
 function getOwnerFarm($ufid)
 {

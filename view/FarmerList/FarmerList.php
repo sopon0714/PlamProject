@@ -176,7 +176,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist,$fsub);
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-data" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ชื่อ-นามสกุล</th>
@@ -247,7 +247,6 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist,$fsub);
 
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<!-- <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script> for error r.getClientRects is not a function -->
 <script src="FarmerList.js"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>

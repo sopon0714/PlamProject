@@ -168,7 +168,7 @@ $DEPARTMENT = getDepartment();
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-data" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>บัญชีชื่อผู้ใช้</th>
