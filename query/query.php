@@ -289,7 +289,8 @@ function getProfile($ufid){
     return $data;
 }
 function getOwnerFarmer($ufid){
-    $sql = "SELECT `db-farm`.`Name`,`db-province`.`Province`,`db-distrinct`.`Distrinct`,`log-farm`.`NumSubFarm`,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,`log-farm`.`NumTree` FROM `log-farm` 
+    $sql = "SELECT  `db-farm`.`FMID`,`db-farm`.`Name`,`db-province`.`Province`,`db-distrinct`.`Distrinct`,`db-subdistrinct`.`subDistrinct`, `db-farm`.`AD3ID`,
+    `db-farm`.`Latitude`, `db-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,`log-farm`.`NumTree` FROM `log-farm` 
     JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
     JOIN `dim-farm` ON  `dim-farm`.`ID` =  `log-farm`.`DIMfarmID`
     JOIN `db-farm` ON  `db-farm`.`FMID` = `dim-farm`.`dbID`

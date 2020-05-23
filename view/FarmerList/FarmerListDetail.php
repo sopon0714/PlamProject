@@ -63,10 +63,17 @@ $FARM = getOwnerFarmer($farmerID);
                 <div class="row">
                     <div class="col-xl-12 col-12">
                         <div class="card">
-                            <div class="card-header card-bg">
+                            <div class="card-header card-bg" style="height: 55px;">
                                 <div>
-                                <span style="color:<?=$color?>;">โปรไฟล์</span>
-                                
+                                <span style="color:<?=$color?>; top: 15px; position: absolute;">โปรไฟล์</span>
+
+                                <a href='./../Chat/Chat.php?ufid=<?php echo $farmerID; ?>'>
+                                <button style="float:right;" type='button' id='btn_warning' class="btn btn-warning btn-sm btn_edit tt" data-toggle="tooltip" title="แจ้งเตือน">
+                                    <i class='fas fa-bell'></i>
+                                </button></a>                     
+                                </div> 
+                                <div>
+                                           
                                 </div> 
                                 
                             </div>
@@ -148,15 +155,8 @@ $FARM = getOwnerFarmer($farmerID);
                                                 <input type="text" class="form-control" id="province" value="<?php echo $PROFILE[1]["Province"] ?>" disabled>
                                             </div>
                                         </div>
-
-                                        <div class="row mb-4">
-                                            <div class="col-xl-3 col-12 text-right">
-                                            </div>
-                                            <div class="col-xl-9 col-12">
-                                               
-                                            </div>
-                                        </div>
-
+                                       
+                                        <label hidden id="info" la="<?php echo $PROFILE[1]["Latitude"]; ?>" long="<?php echo $PROFILE[1]["Longitude"]; ?>" subDistrinct="<?php echo $PROFILE[1]["subDistrinct"] ?>"></label>
 
                                     </div>
                         
@@ -167,13 +167,13 @@ $FARM = getOwnerFarmer($farmerID);
             
             <div class="col-xl-6 col-12 mb-4">
                 <div class="card">
-                    <div class="card-header card-bg" style="color:<?=$color?>;">
-                        ตำแหน่งสวนปาล์ม
+                    <div class="card-header card-bg" style="height: 55px;">
+                        <div style="color:<?=$color?>; top: 15px; position: absolute;">ตำแหน่งสวนปาล์ม</div> 
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-12 col-12 mb-2">
-                                <div id="map" style="width:auto; height:765px"></div>
+                                <div id="map" style="width:auto; height:742px"></div>
 
                             </div>
                         </div>
@@ -191,7 +191,7 @@ $FARM = getOwnerFarmer($farmerID);
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-data " id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>ชื่อสวน</th>
@@ -214,17 +214,22 @@ $FARM = getOwnerFarmer($farmerID);
                                 </tr>
                             </tfoot>
                             <tbody>
+                            <label id="size" hidden size ="<?php echo sizeof($FARM); ?>"></label>
+
                             <?php
                             if ($FARM != 0) {
                                 for ($i = 1; $i < sizeof($FARM); $i++) {
                             ?>
-                                    <tr>
-                                            <td><?php echo $FARM[$i]['Name']; ?></td>
-                                            <td><?php echo $FARM[$i]['Province']; ?></td>
-                                            <td><?php echo $FARM[$i]['Distrinct']; ?></td>
-                                            <td class = "text-right"><?php echo $FARM[$i]['NumSubFarm']; ?> แปลง</td>
-                                            <td class = "text-right"><?php echo $FARM[$i]['AreaRai']; ?> ไร่ <?php echo $FARM[$i]['AreaNgan']; ?> งาน</td>
-                                            <td class = "text-right"><?php echo $FARM[$i]['NumTree']; ?> ต้น</td>
+                                    <tr class="<?php echo $i; ?>">
+                                        <td><a href="./../OilPalmAreaList/OilPalmAreaListDetail.php?fmid=<?php echo $FARM[$i]["FMID"]; ?>"><?php echo $FARM[$i]['Name']; ?></a></td>
+                                        <td><?php echo $FARM[$i]['Province']; ?></td>
+                                        <td><?php echo $FARM[$i]['Distrinct']; ?></td>
+                                        <td class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARM[$i]["subDistrinct"]; ?>" 
+                                        AD3ID="<?php echo $FARM[$i]["AD3ID"]; ?>" la="<?php echo $FARM[$i]["Latitude"]; ?>" 
+                                        long="<?php echo $FARM[$i]["Longitude"]; ?>" ></td>
+                                        <td class = "text-right"><?php echo $FARM[$i]['NumSubFarm']; ?> แปลง</td>
+                                        <td class = "text-right"><?php echo $FARM[$i]['AreaRai']; ?> ไร่ <?php echo $FARM[$i]['AreaNgan']; ?> งาน</td>
+                                        <td class = "text-right"><?php echo $FARM[$i]['NumTree']; ?> ต้น</td>
                                         
                                     </tr>
                                 <?php
@@ -241,5 +246,8 @@ $FARM = getOwnerFarmer($farmerID);
 
 
     <?php include_once("../layout/LayoutFooter.php"); ?>
+    <script src="FarmerListDetail.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
     
 
