@@ -219,7 +219,7 @@ $result_e2->execute();
                     <div class="form-group divHolder">
                         <div class="" align="center">
                             <div class="UI">
-                                <input id='pic-logo' type='file' class='item-img file center-block' name='icon_insert' />
+                                <input id='pic-logo' type='file' class='item-img file center-block' name='icon_insert' required />
                                 <img id="img-insert" src="https://via.placeholder.com/200x200.png" alt="" width="200" height="200">
                                 <!-- <div id="upload-demo" class="center-block"></div> -->
                             </div>
