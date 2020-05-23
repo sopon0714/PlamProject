@@ -1,0 +1,178 @@
+<?php
+$PROVINCE = getProvince();
+$DISTRINCT = getDistrinctInProvince($INFOFARM[1]['AD1ID']);
+$SUBDISTRINCT = getSubDistrinctInDistrinct($INFOFARM[1]['AD2ID']);
+$FARMER = getAllFarmer();
+?>
+<div class="modal fade" id="editDetailModal">
+    <form action="./manage.php" method="post" enctype="multipart/form-data" id="form-edit-farm">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
+                    <h4 class=" modal-title">แก้ไขสวนปาล์ม</h4>
+                </div>
+                <div class="modal-body" id="addModalBody">
+                    <form action="#" method="post">
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>ชื่อสวนปาล์ม</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" name="namefarm" value=" <?= $INFOFARM[1]['Name'] ?>" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกชื่อสวนปาล์ม">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>ชื่อย่อสวนปาล์ม</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" name="aliasfarm" value=" <?= $INFOFARM[1]['Alias'] ?>" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกชื่อย่อสวนปาล์ม">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>ที่อยู่ </span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" name="addfarm" value=" <?= $INFOFARM[1]['Address'] ?>" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกที่อยู่สวนปาล์ม">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right">
+                                <span>จังหวัด<span class="text-danger"> *</span></span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                                <select id="province" name="province" class="form-control">
+                                    <option selected value='0' disabled=""> เลือกจังหวัด</option>
+                                    <?php
+                                    for ($i = 1; $i < sizeof($PROVINCE); $i++) {
+                                        echo   "<option value='{$PROVINCE[$i]['AD1ID']}'";
+                                        if ($INFOFARM[1]['AD1ID'] == $PROVINCE[$i]['AD1ID']) {
+                                            echo "selected";
+                                        }
+                                        echo ">  {$PROVINCE[$i]['Province']} </option>";
+                                    }
+                                    ?>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>อำเภอ</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <select name="distrinct" class="form-control" id="distrinct">
+                                    <option selected value=0 disabled="">เลือกอำเภอ</option>
+                                    <?php
+                                    for ($i = 1; $i < sizeof($DISTRINCT); $i++) {
+                                        echo   "<option value='{$DISTRINCT[$i]['AD2ID']}'";
+                                        if ($INFOFARM[1]['AD2ID'] == $DISTRINCT[$i]['AD2ID']) {
+                                            echo "selected";
+                                        }
+                                        echo ">  {$DISTRINCT[$i]['Distrinct']} </option>";
+                                    }
+                                    ?>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>ตำบล</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <select name="subdistrinct" id="subdistrinct" class="form-control">
+                                    <option selected value=0 disabled="">เลือกตำบล</option>
+                                    <?php
+                                    for ($i = 1; $i < sizeof($SUBDISTRINCT); $i++) {
+                                        echo   "<option value='{$SUBDISTRINCT[$i]['AD3ID']}'";
+                                        if ($INFOFARM[1]['AD3ID'] == $SUBDISTRINCT[$i]['AD3ID']) {
+                                            echo "selected";
+                                        }
+                                        echo ">  {$SUBDISTRINCT[$i]['subDistrinct']} </option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>เจ้าของสวนปาล์ม</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <select class="form-control" id="farmer" name="farmer">
+                                    <option selected disabled="" value="0">เลือกเจ้าของสวน</option>
+                                    <?php
+                                    for ($i = 1; $i < sizeof($FARMER); $i++) {
+                                        echo "<option value=\"{$FARMER[$i]['UFID']}\" ";
+                                        if ($INFOFARM[1]['UFID'] == $FARMER[$i]['UFID']) {
+                                            echo "selected";
+                                        }
+                                        echo ">{$FARMER[$i]['FirstName']} {$FARMER[$i]['LastName']}</option>";
+                                    }
+                                    ?>
+
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="IDFarm" value="<?= $fmid ?>">
+                        <input type="hidden" name="editFarm">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-md editFarm" style="float:right;">ยืนยัน</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="photoModal" tabindex="-1" role="dialog">
+    <form method="post" id="formPhoto" name="formPhoto" action="./manage.php">
+        <div class=" modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
+                    <h4 class="modal-title">เปลี่ยนรูปไอคอนสวนปาล์ม</h4>
+                </div>
+                <div class="modal-body" id="passModalBody">
+                    <div class="form-group divHolder">
+                        <div class="" align="center">
+                            <div class="UI">
+                                <input id='pic-logo' type='file' class='item-img file center-block' name='icon_insert' />
+                                <img id="img-insert" src="https://via.placeholder.com/200x200.png" alt="" width="200" height="200">
+                                <!-- <div id="upload-demo" class="center-block"></div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group divCrop">
+
+                        <center>
+                            <div id="upload-demo" class="center-block"></div>
+                        </center>
+                    </div>
+                    <input type="text" hidden class="form-control" name="FMID" id="FMID" value="<?= $fmid ?>">
+                    <input type="hidden" id="request" name="action" value="changphotoFarm">
+                    <input type="hidden" id="imagebase64" name="imagebase64">
+                </div>
+                <!-- end  body---------------------------------------------- -->
+                <div class="modal-footer footer-insert">
+                    <div class="buttonSubmit">
+                        <button type="submit" class="btn btn-success waves-effect " id="add-data">ยืนยัน</button>
+                        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">ยกเลิก</button>
+                    </div>
+                    <div class="buttonCrop">
+                        <button type="button" id="cropImageBtn" class="btn btn-primary">Crop</button>
+                        <button type="button" class="btn btn-default" id="cancelCrop">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

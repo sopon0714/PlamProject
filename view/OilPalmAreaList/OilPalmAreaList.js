@@ -7,7 +7,7 @@ $(document).ready(function() {
         $("#addModal").modal();
 
     });
-    $('#s_province').click(function() {
+    $('#s_province').change(function() {
 
         var e = document.getElementById("s_province");
         var select_id = e.options[e.selectedIndex].value;
@@ -17,15 +17,16 @@ $(document).ready(function() {
 
     });
 
-    $('#province').click(function() {
+    $('#province').change(function() {
 
         var e = document.getElementById("province");
         var select_id = e.options[e.selectedIndex].value;
         data_show(select_id, "distrinct", '');
+        $("#subdistrinct").html('<option selected value=0 disabled="">เลือกตำบล</option>');
 
 
     });
-    $('#distrinct').click(function() {
+    $('#distrinct').change(function() {
 
         var e = document.getElementById("distrinct");
         var select_id = e.options[e.selectedIndex].value;

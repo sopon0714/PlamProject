@@ -26,13 +26,13 @@ if (isset($_POST['add'])) {
     addinsertData($sql);
     header("location:./OilPalmAreaList.php");
 }
-if (isset($_POST['edit'])) {
+if (isset($_POST['editFarm'])) {
 
-    $namefarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['namefarm2']));
-    $aliasfarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['aliasfarm2']));
-    $addfarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['addfarm2']));
-    $subdistrinct = $_POST['subdistrinct2'];
-    $farmer = $_POST['farmer2'];
+    $namefarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['namefarm']));
+    $aliasfarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['aliasfarm']));
+    $addfarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['addfarm']));
+    $subdistrinct = $_POST['subdistrinct'];
+    $farmer = $_POST['farmer'];
     $IDFarm = $_POST['IDFarm'];
     $DIMFarm = getDIMFarm($IDFarm);
     $Date = getDIMDate();
@@ -46,7 +46,6 @@ if (isset($_POST['edit'])) {
     $sql = "UPDATE `db-farm` SET `Name` = '$namefarm', `Alias` = '$aliasfarm', `Address` = '$addfarm', `AD3ID` = '$subdistrinct', `UFID` = '$farmer' WHERE `db-farm`.`FMID` = '$IDFarm'";
     updateData($sql);
     $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];
-
     $DIMFarmer = getDIMFarmer($farmer);
     $DIMFarm = getDIMFarm($IDFarm);
     $DIMAddr = getDIMAddr($subdistrinct, $addfarm);
@@ -59,7 +58,7 @@ if (isset($_POST['edit'])) {
     $_SESSION[('fname')] = $DIMFarmer[1]['Alias'];
     $_SESSION[('logid')] = $IDLog;
 
-    header("location:./OilPalmAreaListDetail.php");
+    header("location:./OilPalmAreaListDetail.php?fmid=$IDFarm");
 }
 if (isset($_POST['delete'])) {
 
@@ -144,6 +143,55 @@ if (isset($_POST['search'])) {
     $data = selectAll($sql);
     echo json_encode($data);
 }
+if (isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case "changphotoFarm":
+
+            if (isset($_POST['imagebase64'])) {
+                $fmid = $_POST['FMID'];
+
+
+                $data = $_POST['imagebase64'];
+
+                $img_array = explode(';', $data);
+                $img_array2 = explode(",", $img_array[1]);
+                $data = base64_decode($img_array2[1]);
+
+                $DIMFARM = getDIMFarm($fmid);
+                $id_dim = $DIMFARM[1]['ID'];
+                $time = time();
+                $Icon = $time . '.png';
+                $sql =   "UPDATE `db-farm` SET `Icon` = '$Icon' WHERE `db-farm`.`FMID` = $fmid ";
+                updateData($sql);
+                if (!file_exists("../../icon/farm/$fmid")) {
+                    mkdir("../../icon/farm/$fmid");
+                }
+
+                file_put_contents("../../icon/farm/$fmid/$Icon", $data);
+
+
+                $data_t =  getDIMDate();
+                $id_t = $data_t[1]['ID'];
+                $loglogin = $_SESSION[md5('LOG_LOGIN')];
+                $loglogin_id = $loglogin[1]['ID'];
+                $path = "icon/farm/" . $fmid;
+
+
+                $sql =   "UPDATE `log-icon` SET EndT='$time', EndID='$id_t'
+                WHERE `DIMiconID`='$id_dim' AND EndT IS NULL AND `Type`='4'";
+
+                updateData($sql);
+
+                $sql = "INSERT INTO `log-icon` (`ID`,LOGloginID,StartT,StartID,DIMiconID,`Type`,`FileName`,`Path`) 
+                 VALUES ('','$loglogin_id','$time','$id_t','$id_dim','4','$Icon','$path')";
+
+                addinsertData($sql);
+                header("location:./OilPalmAreaListDetail.php?fmid=$fmid");
+            }
+            break;
+    }
+}
+
 function getDIMFarmer($FID)
 {
     $sql = "SELECT * FROM `db-farmer` WHERE UFID = '$FID' ";
@@ -169,6 +217,7 @@ function getDIMFarmer($FID)
     print_r($DIMFarmer);
     return  $DIMFarmer;
 }
+
 
 function getDIMAddr($AID, $addfarm)
 {

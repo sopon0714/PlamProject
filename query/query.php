@@ -97,13 +97,19 @@ function getProvince()
     return $PROVINCE;
 }
 //อำเภอในจังหวัด ตาม id จังหวัด
-function getDistrinctInProvince($fpro)
+function getDistrinctInProvince($ad1id)
 {
-    $sql = "SELECT * FROM `db-distrinct` WHERE `AD1ID`=$fpro ORDER BY `db-distrinct`.`Distrinct`  ASC";
+    $sql = "SELECT * FROM `db-distrinct` WHERE `AD1ID`=$ad1id ORDER BY `db-distrinct`.`Distrinct`  ASC";
     $DISTRINCT_PROVINCE = selectData($sql);
     return $DISTRINCT_PROVINCE;
 }
-
+//ตำบลในอำเภอ ตาม id อำเภอ
+function getSubDistrinctInDistrinct($ad2id)
+{
+    $sql = "SELECT * FROM `db-subdistrinct` WHERE `db-subdistrinct`.`AD2ID` = $ad2id ORDER BY `db-subdistrinct`.`subDistrinct` ASC";
+    $SUBDISTRINCT_DISTRINCT = selectData($sql);
+    return $SUBDISTRINCT_DISTRINCT;
+}
 //-----------------------FarmerList--------------------------
 
 function getCountFarmer()
