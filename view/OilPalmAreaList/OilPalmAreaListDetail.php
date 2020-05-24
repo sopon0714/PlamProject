@@ -10,7 +10,7 @@ include_once("./../../query/query.php");
 
 $INFOFARM =  getDATAFarmByFMID($fmid);
 $ADDRESSFARM = getAddress($fmid);
-$INFOFARMER = getFarmerByUFID($INFOFARM[1]['FMID']);
+$INFOFARMER = getFarmerByUFID($INFOFARM[1]['UFID']);
 $INFOAREAFARM = getAreatotalByIdFarm($fmid);
 $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
 ?>
@@ -146,7 +146,7 @@ $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
                 <div class="card-header card-bg">
                     <div>
                         <span>รายการแปลงปลูกปาล์มน้ำมัน</span>
-                        <button type="button" id="btn_add_subgarden1" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มแปลง</button>
+                        <button type="button" id="btn_add_subfarm" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มแปลง</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -181,11 +181,15 @@ $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
                             <tbody id="getData2">
                                 <?php
                                 for ($i = 1; $i < count($INFOSUBFARM); $i++) {
+                                    $old = " - ";
+                                    if ($INFOSUBFARM[$i]['year'] != NULL) {
+                                        $old = "{$INFOSUBFARM[$i]['year']}ปี {$INFOSUBFARM[$i]['month']}เดือน {$INFOSUBFARM[$i]['day']}วัน";
+                                    }
                                     echo "<tr>
                                     <td class=\"text-left\">{$INFOSUBFARM[$i]['Name']}</td>
                                     <td class=\"text-right\">{$INFOSUBFARM[$i]['AreaRai']} ไร่ {$INFOSUBFARM[$i]['AreaNgan']} งาน</td>
                                     <td class=\"text-right\">{$INFOSUBFARM[$i]['NumTree']}</td>
-                                    <td class=\"text-right\">{$INFOSUBFARM[$i]['year']}ปี {$INFOSUBFARM[$i]['month']}เดือน {$INFOSUBFARM[$i]['day']}วัน</td>
+                                    <td class=\"text-right\">$old</td>
                                     <td style='text-align:center;'>
                                     <a href='OilPalmAreaListSubDetail.php?FSID={$INFOSUBFARM[$i]['FSID']}&FMID=$fmid'><button type='button' id='btn_info{$INFOSUBFARM[$i]['FSID']}' class='btn btn-info btn-sm'><i class='fas fa-bars'></i></button></a>
                                     <button type='button' FSID='{$INFOSUBFARM[$i]['FSID']}' class='btn btn-danger btn-sm btnDel' ><i class='far fa-trash-alt'></i></button>   

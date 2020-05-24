@@ -11,7 +11,7 @@ $point_id = $_POST["point_id"] ?? '';
 // echo $result;
 // echo $point_id;
 
-if ($result == 'distrinct' || $result == 'e_distrinct' || $result == 's_distrinct') {
+if ($result == 'distrinct' || $result == 'e_distrinct' || $result == 's_distrinct' || $result == 'distrinctSF') {
     if ($select_id == 0) {
         echo "<option selected value=0>เลือกอำเภอ</option>";
     }
@@ -30,7 +30,7 @@ if ($result == 'distrinct' || $result == 'e_distrinct' || $result == 's_distrinc
         echo ">" . $row['Distrinct'] . "</option>";
     }
 }
-if ($result == 'subdistrinct' || $result == 'e_subdistrinct') {
+if ($result == 'subdistrinct' || $result == 'e_subdistrinct' || $result == 'subdistrinctSF') {
     if ($select_id == 0) {
         echo "<option selected value=0 disabled=\"\">เลือกตำบล</option>";
     }
@@ -66,5 +66,9 @@ if ($result == 'e_province') {
 }
 if ($result == 'updateInfoFarm') {
     $sql = "SELECT * FROM `db-farm`";
+    print_r(json_encode(select($sql)));
+}
+if ($result == 'updateInfoSubFarm') {
+    $sql = "SELECT * FROM `db-subfarm`";
     print_r(json_encode(select($sql)));
 }

@@ -136,7 +136,7 @@ function getCountArea()
 }
 
 //ตารางเกษตรกร (table)
-function getFarmer(&$idformal,&$fullname,&$fpro,&$fdist)
+function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
 {
     $myConDB = connectDB();
 
@@ -278,7 +278,8 @@ function getCountOwnerTree($ufid)
 }
 
 //FarmerListDetail
-function getProfile($ufid){
+function getProfile($ufid)
+{
     $sql = "SELECT * , CASE WHEN `Title` IN ('1') THEN 'นาย'
     WHEN `Title` IN ('2') THEN 'นาง' 
     WHEN `Title` IN ('3') THEN 'นางสาว' END AS Title                   
@@ -288,7 +289,8 @@ function getProfile($ufid){
     $data = selectData($sql);
     return $data;
 }
-function getOwnerFarmer($ufid){
+function getOwnerFarmer($ufid)
+{
     $sql = "SELECT  `db-farm`.`FMID`,`db-farm`.`Name`,`db-province`.`Province`,`db-distrinct`.`Distrinct`,`db-subdistrinct`.`subDistrinct`, `db-farm`.`AD3ID`,
     `db-farm`.`Latitude`, `db-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,`log-farm`.`NumTree` FROM `log-farm` 
     JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
@@ -299,8 +301,8 @@ function getOwnerFarmer($ufid){
     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`
     WHERE `dim-user`.`Type` = 'F' AND `log-farm`.`EndT` IS NULL 
     AND `dim-user`.`dbID` = $ufid AND `log-farm`.`DIMSubfID` IS NULL";
-     $data = selectData($sql);
-     return $data;
+    $data = selectData($sql);
+    return $data;
 }
 
 //OwnerFarm Table
@@ -386,7 +388,7 @@ function getOilPalmAreaListDetail($DIMfarmID)
 function getOilPalmAreaListDetailByIdFarm($fmid)
 {
     $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year 
-    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` INNER JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  
+    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
     WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid ORDER BY `db-subfarm`.`Name`";
     $OilPalmAreaListDetail = selectData($sql);
     return $OilPalmAreaListDetail;
