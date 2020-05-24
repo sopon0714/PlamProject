@@ -251,7 +251,7 @@ $(document).ready(function() {
         $('#e_o_danger').text(danger);
 
         $('#pic-logo-edit').on('change', function() {
-            alert('pic-logo-edit');
+            // alert('pic-logo-edit');
             cropImageEdit(this)
             idImg = 'img-pic-logo-edit'
     

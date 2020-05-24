@@ -758,6 +758,7 @@ if ($icon == "default.jpg") {
                 $('#img-insert').attr('src', r);
                 $('#imagebase64').val(r);
                 $('.divCrop').hide()
+                
             });
         $('#upload-demo').croppie('destroy')
 
@@ -775,22 +776,16 @@ if ($icon == "default.jpg") {
 
     $(document).on('click', '.insertSubmit', function(e) { // insert submit
         // console.log('sss');
+        // console.log($("#img-insert").attr('src'));
 
-        let icon = $("#pic-logo");
-
-        if (!checkNull(icon)) return;
-
-        // let form = new FormData($('#formPhoto')[0]);
-        // form.append('imagebase64', $('#img-insert').attr('src'))
-        // insertPh(form); // insert data
-    })
-
-    function checkNull(icon) {
-        if (icon == '') {
-            return false;
+        if($('#img-insert').attr('src') == 'https://via.placeholder.com/200x200.png'){
+            $("#pic-logo").attr("required","");
+            $("#pic-logo")[0].setCustomValidity('กรุณาเพิ่มรูป');
+        }else{
+            $("#pic-logo").removeAttr("required");
+            $("#pic-logo")[0].setCustomValidity('');
         }
-        return true;
-    }
+    })
 
     function insertPh(data) { // function insert data
         $.ajax({

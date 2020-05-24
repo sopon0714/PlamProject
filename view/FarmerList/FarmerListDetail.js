@@ -26,8 +26,15 @@ function initMap() {
     center[0] = center[0]/(size-1);
     center[1] = center[1]/(size-1);
 
+    // console.log(center);
+    // console.log(locations);
+
+    if(size-1 == 0){
+      center[0] = $('#info').attr('la');
+      center[1] = $('#info').attr('long');
+    }
+
     console.log(center);
-    console.log(locations);
 
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 9,
