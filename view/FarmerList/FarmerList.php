@@ -201,11 +201,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                         </tr>
                     </tfoot>
                     <tbody id="body">
-<<<<<<< HEAD
                         <label id="size" hidden size ="<?php if($FARMER == 0) echo 0; else echo sizeof($FARMER); ?>"></label>
-=======
-                        <label id="size" hidden size="<?php echo sizeof($FARMER); ?>"></label>
->>>>>>> 0c23c3d805ce6f103e4bedd11f947352aa060438
                         <?php
                         if ($FARMER != 0) {
                             for ($i = 0; $i < sizeof($FARMER); $i++) {
