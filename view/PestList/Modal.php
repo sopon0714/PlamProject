@@ -15,7 +15,7 @@
                             <div class='col-lg-8 col-md-8 col-sm-9 col-xs-6'>
                                 <div class='form-group'>
                                     <div class='form-line'>
-                                        <input type='text' id='name_insert' name='alias_insert' class='form-control' placeholder="<?php echo $str_placeholder; ?>" required="" oninput="setCustomValidity('')">
+                                        <input type='text' id='name_insert' name='name_insert' class='form-control' placeholder="<?php echo $str_placeholder; ?>" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
                             <div class='col-lg-8 col-md-8 col-sm-9 col-xs-6'>
                                 <div class='form-group'>
                                     <div class='form-line'>
-                                        <input type='text' id='name_insert' name='name_insert' class='form-control' placeholder="ชื่อวิทยาศาสตร์" required="" oninput="setCustomValidity('')">
+                                        <input type='text' id='alias_insert' name='alias_insert' class='form-control' placeholder="ชื่อวิทยาศาสตร์" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                                 <div class='form-group'>
                                     <div class='form-line'>
                                         <input type="text" class="form-control" 
-                                        id="e_alias" name="e_alias" placeholder="<?php echo $str_placeholder; ?>" 
+                                        id="e_name" name="e_name" placeholder="<?php echo $str_placeholder; ?>" 
                                         value="" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
@@ -172,7 +172,7 @@
                                 <div class='form-group'>
                                     <div class='form-line'>
                                         <input type="text" class="form-control" 
-                                        id="e_name" name="e_name" placeholder="ชื่อวิทยาศาสตร์" 
+                                        id="e_alias" name="e_alias" placeholder="ชื่อวิทยาศาสตร์" 
                                         value="" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
