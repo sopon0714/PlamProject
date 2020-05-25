@@ -10,9 +10,11 @@ include_once("./../../query/query.php");
 
 $INFOFARM =  getDATAFarmByFMID($fmid);
 $ADDRESSFARM = getAddress($fmid);
-$INFOFARMER = getFarmerByUFID($INFOFARM[1]['FMID']);
+$INFOFARMER = getFarmerByUFID($INFOFARM[1]['UFID']);
 $INFOAREAFARM = getAreatotalByIdFarm($fmid);
 $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
+$INNFOCOORFRAM = getCoorsFarm($fmid);
+$COUNTCOORFRAM = getCountCoor($fmid);
 ?>
 <link href="./OilPalmAreaListDetail.css" rel="stylesheet" />
 
@@ -146,7 +148,7 @@ $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
                 <div class="card-header card-bg">
                     <div>
                         <span>รายการแปลงปลูกปาล์มน้ำมัน</span>
-                        <button type="button" id="btn_add_subgarden1" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มแปลง</button>
+                        <button type="button" id="btn_add_subfarm" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มแปลง</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -179,18 +181,24 @@ $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
                                 </tr>
                             </tfoot>
                             <tbody id="getData2">
+                                <label id="size" hidden size="<?php echo sizeof($INFOSUBFARM); ?>"></label>
                                 <?php
                                 for ($i = 1; $i < count($INFOSUBFARM); $i++) {
+                                    $old = " - ";
+                                    if ($INFOSUBFARM[$i]['year'] != NULL) {
+                                        $old = "{$INFOSUBFARM[$i]['year']}ปี {$INFOSUBFARM[$i]['month']}เดือน {$INFOSUBFARM[$i]['day']}วัน";
+                                    }
                                     echo "<tr>
                                     <td class=\"text-left\">{$INFOSUBFARM[$i]['Name']}</td>
                                     <td class=\"text-right\">{$INFOSUBFARM[$i]['AreaRai']} ไร่ {$INFOSUBFARM[$i]['AreaNgan']} งาน</td>
                                     <td class=\"text-right\">{$INFOSUBFARM[$i]['NumTree']}</td>
-                                    <td class=\"text-right\">{$INFOSUBFARM[$i]['year']}ปี {$INFOSUBFARM[$i]['month']}เดือน {$INFOSUBFARM[$i]['day']}วัน</td>
+                                    <td class=\"text-right\">$old</td>
                                     <td style='text-align:center;'>
                                     <a href='OilPalmAreaListSubDetail.php?FSID={$INFOSUBFARM[$i]['FSID']}&FMID=$fmid'><button type='button' id='btn_info{$INFOSUBFARM[$i]['FSID']}' class='btn btn-info btn-sm'><i class='fas fa-bars'></i></button></a>
                                     <button type='button' FSID='{$INFOSUBFARM[$i]['FSID']}' class='btn btn-danger btn-sm btnDel' ><i class='far fa-trash-alt'></i></button>   
                                     </button>
                                     </td>
+                                    <label class=\"click-map\" hidden id=\"$i\" nameSubFarm=\"{$INFOSUBFARM[$i]['Name']}\"  la=\"{$INFOSUBFARM[$i]['Latitude']}\" long=\"{$INFOSUBFARM[$i]['Longitude']}\"></label>
                                 </tr>";
                                 }
 
@@ -325,5 +333,81 @@ $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("OilPalmAreaListDetailModal.php"); ?>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
-<script src="../../lib/croppie/croppie.js"></script>
+<!-- <script src="../../lib/croppie/croppie.js"></script> -->
 <script src="./test.js"></script>
+<script>
+    function initMap() {
+        var locations = [];
+        var center = [0, 0];
+        click_map = $('.click-map').html();
+        size = $('#size').attr('size');
+        for (i = 1; i < size; i++) {
+            nameSubFarm = $('#' + i).attr('nameSubFarm');
+            la = parseFloat($('#' + i).attr('la'));
+            long = parseFloat($('#' + i).attr('long'));
+            center[0] += la;
+            center[1] += long;
+            data = [nameSubFarm, la, long];
+            locations.push(data);
+        }
+        center[0] = center[0] / (size - 1);
+        center[1] = center[1] / (size - 1);
+
+        console.log(center);
+
+        console.log(locations);
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: new google.maps.LatLng(center[0], center[1]),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker;
+
+        for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map,
+                icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+
+            });
+        }
+        mapcolor = new google.maps.Map(document.getElementById('map2'), {
+            zoom: 15,
+            center: new google.maps.LatLng(center[0], center[1]),
+            mapTypeId: 'satellite'
+        });
+
+        mapcolor.markers = [];
+
+        <?php
+        for ($i = 1; $i <= count($COUNTCOORFRAM); $i++) {
+            $LatLng = "";
+            echo " var triangleCoords$i = [";
+            for ($j = 1; $j <= count($INNFOCOORFRAM); $j++) {
+                if ($INNFOCOORFRAM[$j]['FSID'] == $COUNTCOORFRAM[$i]['FSID']) {
+                    $LatLng .= "{
+                                    lat:{$INNFOCOORFRAM[$j]['Latitude']}   ,
+                                    lng:{$INNFOCOORFRAM[$j]['Longitude']} 
+                                },";
+                }
+            }
+            echo substr($LatLng, 0, -1);
+            echo "];";
+
+            echo "  var mapPoly$i = new google.maps.Polygon({
+                    paths: triangleCoords$i,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35
+                });
+                mapPoly$i.setMap(mapcolor);";
+        }
+        ?>
+    }
+</script>

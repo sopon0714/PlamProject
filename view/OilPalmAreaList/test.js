@@ -1,12 +1,17 @@
 var dataFarm;
+var dataSubFarm;
 $(document).ready(function() {
     $('.tt').tooltip();
     updateInfoFarm();
+    updateInfoSubFarm();
     $('#btn_edit_detail1').click(function() {
         $("#editDetailModal").modal('show');
     });
     $('#edit_photo').click(function() {
         $("#photoModal").modal('show');
+    });
+    $('#btn_add_subfarm').click(function() {
+        $("#addSubFarmModal").modal('show');
     });
     $('#province').change(function() {
 
@@ -23,8 +28,44 @@ $(document).ready(function() {
         var select_id = e.options[e.selectedIndex].value;
         data_show(select_id, "subdistrinct", '');
 
+    });
+    ////////////////////////////////////////////
+    $('#provinceSF').change(function() {
+
+        var e = document.getElementById("province");
+        var select_id = e.options[e.selectedIndex].value;
+        data_show(select_id, "distrinctSF", '');
+        $("#subdistrinctSF").html('<option selected value=0 disabled="">เลือกตำบล</option>');
+
 
     });
+    $('#distrinctSF').change(function() {
+
+        var e = document.getElementById("distrinct");
+        var select_id = e.options[e.selectedIndex].value;
+        data_show(select_id, "subdistrinctSF", '');
+
+    });
+
+    $('.btn-add-subFarm').click(function() {
+
+        var nameSubfarm = $("#addSubFarmModal input[name='nameSubfarm']");
+        var initialsSubfarm = $("#addSubFarmModal input[name='initialsSubfarm']");
+        var AreaRai = $("#addSubFarmModal input[name='AreaRai']");
+        var AreaNgan = $("#addSubFarmModal input[name='AreaNgan']");
+        var AreaWa = $("#addSubFarmModal input[name='AreaWa']");
+
+        let dataNull = [nameSubfarm, initialsSubfarm];
+        let dataNumNull = [AreaRai, AreaNgan, AreaWa];
+        //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
+        if (!checkNull(dataNull)) return;
+        if (!checkNumNull(dataNumNull)) return;
+
+        //ตรวจสอบว่ามีชื่อซ้ำกันหรือไม่
+        if (!checkSameNameSF(nameSubfarm, -1)) return;
+        if (!checkSameAliasSF(initialsSubfarm, -1)) return;
+    });
+
 
     $('.editFarm').click(function() {
 
@@ -63,6 +104,23 @@ $(document).ready(function() {
         });
     }
 
+    function updateInfoSubFarm() {
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "data.php",
+            data: {
+                result: 'updateInfoSubFarm'
+
+            },
+            async: false,
+            success: function(result) {
+                dataSubFarm = result;
+
+            }
+        });
+    }
+
     function data_show(select_id, result, point_id) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -86,6 +144,19 @@ $(document).ready(function() {
             } else selecter[i][0].setCustomValidity('');
         }
         return true;
+    }
+
+    function checkNumNull(selecter) {
+        for (i in selecter) {
+            if (selecter[i].val() != '0') {
+
+                selecter[0][0].setCustomValidity('');
+
+                return true;
+            }
+        }
+        selecter[0][0].setCustomValidity('ขนาดพื้นที่ห้ามเป็น 0 ไร่ 0 งาน 0 วา');
+        return false;
     }
 
     function checkSelectNull(selecter) {
@@ -118,6 +189,36 @@ $(document).ready(function() {
         for (i in dataFarm) {
             console.log(dataFarm[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Alias && dataFarm[i].FMID != id) {
+                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
+                return false;
+            } else {
+                name[0].setCustomValidity('');
+            }
+        }
+        return true;
+
+    }
+
+    function checkSameNameSF(name, id) { // check same name
+
+        for (i in dataSubFarm) {
+            console.log(dataSubFarm[i].Name);
+            if (name.val().trim().replace(/\s\s+/g, ' ') == dataSubFarm[i].Name && dataSubFarm[i].FSID != id) {
+                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
+                return false;
+            } else {
+                name[0].setCustomValidity('');
+            }
+        }
+        return true;
+
+    }
+
+    function checkSameAliasSF(name, id) { // check same Alias
+
+        for (i in dataSubFarm) {
+            console.log(dataSubFarm[i].Alias);
+            if (name.val().trim().replace(/\s\s+/g, ' ') == dataSubFarm[i].Alias && dataSubFarm[i].FSID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;
             } else {
@@ -199,25 +300,30 @@ $(document).ready(function() {
         $('.buttonCrop').hide()
         $('.buttonSubmit').show()
         $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
-    })
-
+    });
     $(document).on('click', '.insertSubmit', function(e) { // insert submit
+        // console.log('sss');
+        // console.log($("#img-insert").attr('src'));
 
-
-        let icon = $("#pic-logo");
-
-        if (!checkNullPic(icon)) return;
-    })
-
-    function checkNullPic(icon) {
-        if ($('#img-insert').attr('src') == "https://via.placeholder.com/200x200.png") {
-
-            return false;
-
+        if ($('#img-insert').attr('src') == 'https://via.placeholder.com/200x200.png') {
+            $("#pic-logo").attr("required", "");
+            $("#pic-logo")[0].setCustomValidity('กรุณาเพิ่มรูป');
+        } else {
+            $("#pic-logo").removeAttr("required");
+            $("#pic-logo")[0].setCustomValidity('');
         }
+    })
+    $('#photoModal').on('hidden.bs.modal', function() {
+            $('#upload-demo').croppie('destroy')
+            $('.divName').show()
+            $('.divHolder').show()
+            $('.divCrop').hide()
+            $('.buttonCrop').hide()
+            $('.buttonSubmit').show()
+            $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
+        })
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
-        return true;
 
-    }
 
 });

@@ -18,7 +18,7 @@ $FARMER = getAllFarmer();
                                 <span>ชื่อสวนปาล์ม</span>
                             </div>
                             <div class="col-xl-9 col-12">
-                                <input type="text" class="form-control" name="namefarm" value=" <?= $INFOFARM[1]['Name'] ?>" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกชื่อสวนปาล์ม">
+                                <input type="text" class="form-control" name="namefarm" value=" <?= $INFOFARM[1]['Name'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อสวนปาล์ม">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -26,7 +26,7 @@ $FARMER = getAllFarmer();
                                 <span>ชื่อย่อสวนปาล์ม</span>
                             </div>
                             <div class="col-xl-9 col-12">
-                                <input type="text" class="form-control" name="aliasfarm" value=" <?= $INFOFARM[1]['Alias'] ?>" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกชื่อย่อสวนปาล์ม">
+                                <input type="text" class="form-control" name="aliasfarm" value=" <?= $INFOFARM[1]['Alias'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อย่อสวนปาล์ม">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -34,7 +34,7 @@ $FARMER = getAllFarmer();
                                 <span>ที่อยู่ </span>
                             </div>
                             <div class="col-xl-9 col-12">
-                                <input type="text" class="form-control" name="addfarm" value=" <?= $INFOFARM[1]['Address'] ?>" required="" oninput="setCustomValidity(' ')" placeholder="กรุณากรอกที่อยู่สวนปาล์ม">
+                                <input type="text" class="form-control" name="addfarm" value=" <?= $INFOFARM[1]['Address'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกที่อยู่สวนปาล์ม">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -144,7 +144,7 @@ $FARMER = getAllFarmer();
                     <div class="form-group divHolder">
                         <div class="" align="center">
                             <div class="UI">
-                                <input id='pic-logo' type='file' class='item-img file center-block' name='icon_insert' />
+                                <input id='pic-logo' type='file' class='item-img file center-block' name='icon_insert' required />
                                 <img id="img-insert" src="https://via.placeholder.com/200x200.png" alt="" width="200" height="200">
                                 <!-- <div id="upload-demo" class="center-block"></div> -->
                             </div>
@@ -163,7 +163,7 @@ $FARMER = getAllFarmer();
                 <!-- end  body---------------------------------------------- -->
                 <div class="modal-footer footer-insert">
                     <div class="buttonSubmit">
-                        <button type="submit" class="btn btn-success waves-effect " id="add-data">ยืนยัน</button>
+                        <button type="submit" class="btn btn-success waves-effect insertSubmit" id="add-data">ยืนยัน</button>
                         <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">ยกเลิก</button>
                     </div>
                     <div class="buttonCrop">
@@ -175,4 +175,73 @@ $FARMER = getAllFarmer();
             </div>
         </div>
     </form>
+</div>
+<div class="modal fade" id="addSubFarmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form class="form-signin" method="POST" action='./manage.php'>
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
+                    <h4 class="modal-title">เพิ่มแปลง</h4>
+                </div>
+                <div class="modal-body" id="addModalBody">
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>ชื่อแปลง</span>
+                        </div>
+                        <div class="col-xl-5 col-12">
+                            <input type="text" class="form-control" id="nameSubfarm" name="nameSubfarm" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อแปลง">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>ชื่อย่อแปลง</span>
+                        </div>
+                        <div class="col-xl-5 col-12">
+                            <input type="text" class="form-control" id="initialsSubfarm" name="initialsSubfarm" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อย่อแปลง">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>พื้นที่</span>
+                        </div>
+                        <div class="col-xl-8 col-12">
+                            <div class="row">
+                                <div class="col-3">
+                                    <input type="number" class="form-control text-right" id="AreaRai" name="AreaRai" min="0" value="0" required="" oninput="setCustomValidity('')">
+                                </div>
+                                <div class="col-3 mt-1">
+                                    <span>ไร่</span>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">
+                                    <input type="number" class="form-control text-right" id="AreaNgan" name="AreaNgan" min="0" value="0" required="" oninput="setCustomValidity('')">
+                                </div>
+                                <div class="col-3 mt-1">
+                                    <span>งาน</span>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">
+                                    <input type="number" class="form-control text-right" id="AreaWa" name="AreaWa" min="0" value="0" required="" oninput="setCustomValidity('')">
+                                </div>
+                                <div class="col-3 mt-1">
+                                    <span>วา</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <input type="hidden" name="fmid" value="<?= $fmid ?>">
+                <input type="hidden" name="action" value="addSubFarm">
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-md btn-add-subFarm" type="submit">ยืนยัน</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
