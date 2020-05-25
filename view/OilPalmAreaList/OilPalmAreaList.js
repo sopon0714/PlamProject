@@ -153,23 +153,66 @@ $(document).ready(function() {
 });
 
 function initMap() {
-    var startLatLng = new google.maps.LatLng(13.736717, 100.523186);
+    var locations = [];
+    var center = [0, 0];
+    click_map = $('.click-map').html();
+    size = $('#size').attr('size');
+    for (i = 1; i < size; i++) {
+        nameFarm = $('#' + i).attr('nameFarm');
 
-    mapdetail = new google.maps.Map(document.getElementById('map'), {
-        // center: { lat: 13.7244416, lng: 100.3529157 },
-        center: startLatLng,
-        zoom: 8,
+        la = parseFloat($('#' + i).attr('la'));
+        long = parseFloat($('#' + i).attr('long'));
+        AD3ID = parseFloat($('#' + i).attr('AD3ID'));
+        center[0] += la;
+        center[1] += long;
+        data = [nameFarm, la, long, AD3ID];
+        locations.push(data);
+
+    }
+    center[0] = center[0] / (size - 1);
+    center[1] = center[1] / (size - 1);
+
+    console.log(center);
+
+    console.log(locations);
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 6,
+        center: new google.maps.LatLng(center[0], center[1]),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-    mapdetail.markers = [];
-    marker = new google.maps.Marker({
-        position: new google.maps.LatLng(13.736717, 100.523186),
-        //icon: "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png",
-        map: mapdetail,
-        title: "test"
-    });
+    var infowindow = new google.maps.InfoWindow();
 
+    var marker;
+
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map,
+            icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+
+        });
+
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+                for (j = 0; j < size; j++) {
+
+                    if (i == j) {
+                        $('.' + j).show();
+                    } else {
+                        $('.' + j).hide();
+                    }
+                }
+
+            }
+        })(marker, i));
+
+
+    }
 }
 
 function delfunction(_username, _uid) {

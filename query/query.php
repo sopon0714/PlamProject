@@ -359,18 +359,41 @@ function getCountTree()
     return $numTree;
 }
 // ตารางสวนปาล์มน้ำมันในระบบ
-function getOilPalmAreaList()
+function getOilPalmAreaList(&$idformal, &$fullname, &$fpro, &$fdist)
 {
+    $idformal = '';
+    $fpro = 0;
+    $fdist = 0;
+    $fullname = '';
+    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
+    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
+    if (isset($_POST['s_name'])) {
+        $fullname = rtrim($_POST['s_name']);
+        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+        $namef = explode(" ", $fullname);
+        if (isset($namef[1])) {
+            $fnamef = $namef[0];
+            $lnamef = $namef[1];
+        } else {
+            $fnamef = $fullname;
+            $lnamef = $fullname;
+        }
+    }
     $sql = "SELECT `log-farm`.`ID`,`dim-farm`.`dbID` AS FMID ,
-    `dim-address`.`Province`,`dim-address`.`Distrinct`,
+    `dim-address`.`Province`,`dim-address`.`Distrinct`,`dim-address`.`dbsubDID`,`log-farm`.`Latitude`,`log-farm`.`Longitude`,
     `dim-user`.`FullName`, `dim-user`.`Alias`, `dim-farm`.`Name`, `log-farm`.`NumSubFarm`,
     `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`NumTree` 
     FROM `log-farm` 
     INNER JOIN `dim-user`ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
     INNER JOIN `dim-address`ON `dim-address`.`ID` =`log-farm`.`DIMaddrID`
     INNER JOIN `dim-farm`ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-    WHERE `log-farm`.`DIMSubfID` IS NULL AND`log-farm`.`EndT`IS NULL
-    ORDER BY `dim-address`.`Province`,`dim-address`.`Distrinct`,`dim-user`.`Alias`";
+    WHERE `log-farm`.`DIMSubfID` IS NULL AND`log-farm`.`EndT`IS NULL ";
+    if ($idformal != '') $sql .= " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    $sql .= " ORDER BY `dim-address`.`Province`,`dim-address`.`Distrinct`,`dim-user`.`Alias`";
     $OilPalmAreaList = selectData($sql);
     return $OilPalmAreaList;
 }
@@ -387,7 +410,7 @@ function getOilPalmAreaListDetail($DIMfarmID)
 
 function getOilPalmAreaListDetailByIdFarm($fmid)
 {
-    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year 
+    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year ,`log-farm`.`Latitude`,`log-farm`.`Longitude`
     from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
     WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid ORDER BY `db-subfarm`.`Name`";
     $OilPalmAreaListDetail = selectData($sql);
@@ -522,11 +545,11 @@ function getIdFarm($fmid)
 // sql ค่าของ Coorsfarm มีการรับค่า ID ของ logfarmID
 function getCoorsFarm($fmid)
 {
-    $sql = "SELECT `db-coorfarm`.`Latitude`,`db-coorfarm`.`Longitude`,`db-subfarm`.`FSID` FROM `db-coorfarm`
+    $sql = "SELECT `db-coorfarm`.`Latitude`,`db-coorfarm`.`Longitude`,`db-subfarm`.`FSID`,`db-coorfarm`.`Corner` FROM `db-coorfarm`
     INNER JOIN `db-subfarm` ON `db-coorfarm`.`FSID`=`db-subfarm`.`FSID`
     INNER JOIN `db-farm` ON `db-subfarm`.`FMID` = `db-farm`.`FMID`
-    WHERE `db-farm`.`FMID` = '$fmid'";
-    $Coorsfarm = selectData($sql);
+    WHERE `db-farm`.`FMID` =$fmid ORDER BY `db-subfarm`.`FSID`,`db-coorfarm`.`Corner`";
+    $Coorsfarm = select($sql);
     return $Coorsfarm;
 }
 
@@ -537,7 +560,7 @@ function getCountCoor($fmid)
     INNER JOIN `db-subfarm` ON `db-coorfarm`.`FSID`=`db-subfarm`.`FSID` 
     INNER JOIN `db-farm` ON `db-subfarm`.`FMID` = `db-farm`.`FMID` 
     WHERE `db-farm`.`FMID` = '$fmid' GROUP BY `db-subfarm`.`FSID`";
-    $Numcoor = selectData($sql);
+    $Numcoor = select($sql);
     return $Numcoor;
 }
 

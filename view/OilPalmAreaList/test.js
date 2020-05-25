@@ -314,14 +314,15 @@ $(document).ready(function() {
         }
     })
     $('#photoModal').on('hidden.bs.modal', function() {
-        $('#upload-demo').croppie('destroy')
-        $('.divName').show()
-        $('.divHolder').show()
-        $('.divCrop').hide()
-        $('.buttonCrop').hide()
-        $('.buttonSubmit').show()
-        $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
-    })
+            $('#upload-demo').croppie('destroy')
+            $('.divName').show()
+            $('.divHolder').show()
+            $('.divCrop').hide()
+            $('.buttonCrop').hide()
+            $('.buttonSubmit').show()
+            $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
+        })
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

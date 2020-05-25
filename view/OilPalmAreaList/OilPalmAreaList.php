@@ -13,9 +13,9 @@ $fpro = 0;
 $fdist = 0;
 
 $PROVINCE = getProvince();
+$OILPALMAREALIST = getOilPalmAreaList($idformal, $fullname, $fpro, $fdist);
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
-$OILPALMAREALIST = getOilPalmAreaList();
 ?>
 
 
@@ -82,7 +82,14 @@ $OILPALMAREALIST = getOilPalmAreaList();
                         </div>
                     </div>
                 </div>
-                <div id="collapseOne" class="card collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div id="collapseOne" class="card collapse 
+                <?php
+                if (isset($_GET['isSearch']) && $_GET['isSearch'] == 1)
+                    echo "show";
+                else
+                    echo "";
+                ?> 
+                " aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-header card-bg">
                         ตำแหน่งสวนปาล์มน้ำมัน
                     </div>
@@ -163,7 +170,7 @@ $OILPALMAREALIST = getOilPalmAreaList();
                                 </div>
                                 <div class="row mb-2 padding">
                                     <div class="col-12">
-                                        <button type="button" id="btn_search" class="btn btn-success btn-sm form-control">ค้นหา</button>
+                                        <button type="summit" id="btn_search" class="btn btn-success btn-sm form-control">ค้นหา</button>
                                     </div>
                                 </div>
                             </div>
@@ -209,10 +216,11 @@ $OILPALMAREALIST = getOilPalmAreaList();
                         </tr>
                     </tfoot>
                     <tbody>
+                        <label id="size" hidden size="<?php echo sizeof($OILPALMAREALIST); ?>"></label>
                         <?php
                         for ($i = 1; $i < sizeof($OILPALMAREALIST); $i++) {
                         ?>
-                            <tr>
+                            <tr class="<?php echo ($i - 1); ?>">
                                 <td class="text-left"><?php echo $OILPALMAREALIST[$i]['Province']; ?></td>
                                 <td class="text-left"><?php echo $OILPALMAREALIST[$i]['Distrinct']; ?></td>
                                 <td class="text-left"><?php echo $OILPALMAREALIST[$i]['FullName']; ?></td>
@@ -231,6 +239,7 @@ $OILPALMAREALIST = getOilPalmAreaList();
                                         <i class='far fa-trash-alt'></i>
                                     </button>
                                 </td>
+                                <label class="click-map" hidden id="<?php echo $i; ?>" nameFarm="<?php echo $OILPALMAREALIST[$i]["Name"]; ?>" AD3ID="<?php echo $OILPALMAREALIST[$i]["dbsubDID"]; ?>" la="<?php echo $OILPALMAREALIST[$i]["Latitude"]; ?>" long="<?php echo $OILPALMAREALIST[$i]["Longitude"]; ?>"></label>
                             </tr>
                         <?php
                         }
