@@ -42,7 +42,7 @@ if (isset($_POST['editFarm'])) {
     $dataAddress = selectData($sql);
     $sql = "SELECT * FROM `log-farm` WHERE  `log-farm`.`DIMfarmID` = '{$DIMFarm[1]['ID']}' AND `EndT` IS NULL ";
     $LOGFarm = selectData($sql);
-    $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$Date[1]['ID']}' WHERE `log-farm`.`DIMfarmID` = '{$DIMFarm[1]['ID']}'";
+    $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$Date[1]['ID']}' WHERE `log-farm`.`DIMfarmID` = '{$DIMFarm[1]['ID']}' AND `EndT` IS NULL";
     updateData($sql);
     $sql = "UPDATE `db-farm` SET `Name` = '$namefarm', `Alias` = '$aliasfarm', `Address` = '$addfarm', `AD3ID` = '$subdistrinct', `UFID` = '$farmer' WHERE `db-farm`.`FMID` = '$IDFarm'";
     updateData($sql);
@@ -67,17 +67,13 @@ if (isset($_POST['editFarm'])) {
         $sql = "INSERT INTO `log-farm` (`ID`, `LOGloginID`, `StartT`, `StartID`, `EndT`, `EndID`, `DIMownerID`, `DIMfarmID`, `DIMSubfID`, `DIMaddrID`, `IsCoordinate`, `Latitude`, `Longitude`, `NumSubFarm`, `NumTree`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
         VALUES (NULL, '{$LOG_LOGIN[1]['ID']}', '$time', '{$Date[1]['ID']}', NULL, NULL, '{$DIMFarmer[1]['ID']}', '{$DIMFarm[1]['ID']}', ";
         if ($LOGFarm[$i]['DIMSubfID'] == NULL) {
-            $sql .= "NULL";
+            $sql .= "NULL, '{$DIMAddr[1]['ID']}',";
         } else {
-            $sql .= "'{$LOGFarm[$i]['DIMSubfID']}'";
+            $sql .= "'{$LOGFarm[$i]['DIMSubfID']}' ,'{$LOGFarm[$i]['DIMaddrID']}', ";
         }
-        $sql .= ", '{$DIMAddr[1]['ID']}',  ";
-        if ($LOGFarm[$i]['DIMaddrID'] == $DIMAddr[1]['ID']) {
-            $sql .= "'{$LOGFarm[$i]['IsCoordinate']}',' {$LOGFarm[$i]['Latitude']}', ' {$LOGFarm[$i]['Longitude']}', '{$LOGFarm[$i]['NumSubFarm']}', '{$LOGFarm[$i]['NumTree']}', '{$LOGFarm[$i]['AreaRai']}', '{$LOGFarm[$i]['AreaNgan']}', '{$LOGFarm[1]['AreaWa']}', '{$LOGFarm[$i]['AreaTotal']}')";
-        } else {
-            $sql .= "'0',' {$dataAddress[1]['Latitude']}', ' {$dataAddress[1]['Longitude']}', '{$LOGFarm[$i]['NumSubFarm']}', '{$LOGFarm[$i]['NumTree']}', '{$LOGFarm[$i]['AreaRai']}', '{$LOGFarm[$i]['AreaNgan']}', '{$LOGFarm[1]['AreaWa']}', '{$LOGFarm[$i]['AreaTotal']}')";
-            $ChackChangeAddress = True;
-        }
+
+        $sql .= "'{$LOGFarm[$i]['IsCoordinate']}',' {$LOGFarm[$i]['Latitude']}', ' {$LOGFarm[$i]['Longitude']}', '{$LOGFarm[$i]['NumSubFarm']}', '{$LOGFarm[$i]['NumTree']}', '{$LOGFarm[$i]['AreaRai']}', '{$LOGFarm[$i]['AreaNgan']}', '{$LOGFarm[1]['AreaWa']}', '{$LOGFarm[$i]['AreaTotal']}')";
+
         addinsertData($sql);
     }
     if ($ChackChangeAddress) {
@@ -228,20 +224,22 @@ if (isset($_POST['action'])) {
             $AreaRai = $_POST['AreaRai'];
             $AreaNgan = $_POST['AreaNgan'];
             $AreaWa = $_POST['AreaWa'];
+            $AD3ID = $_POST['distrinctSF'];
+            $addfarmSF = preg_replace('/[[:space:]]+/', ' ', trim($_POST['addfarmSF']));;
             $Areatotal = (400 * $AreaRai) + ($AreaNgan * 100) + $AreaWa;
             $fmid = $_POST['fmid'];
             $time = time();
             $sql = "SELECT * FROM `db-farm` WHERE `db-farm`.`FMID`=$fmid";
             $INFOFARM = selectData($sql);
-            $sql = "INSERT INTO `db-subfarm` (`FSID`, `Name`, `Alias`, `Icon`, `FMID`, `IsCoordinate`, `Latitude`, `Longitude`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
-            VALUES (NULL, '$nameSubfarm', '$initialsSubfarm', 'defult.png',  '$fmid', '0', ' {$INFOFARM[1]['Latitude']}', ' {$INFOFARM[1]['Longitude']}', '$AreaRai', '$AreaNgan', '$AreaWa', '$Areatotal')";
+            $sql = "INSERT INTO `db-subfarm` (`FSID`, `Name`, `Alias`, `Icon`, `Address`, `AD3ID`, `FMID`, `IsCoordinate`, `Latitude`, `Longitude`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
+            VALUES (NULL, '$nameSubfarm', '$initialsSubfarm', 'defult.png', '$addfarmSF', '$AD3ID',  '$fmid', '0', ' {$INFOFARM[1]['Latitude']}', ' {$INFOFARM[1]['Longitude']}', '$AreaRai', '$AreaNgan', '$AreaWa', '$Areatotal')";
             $idDBSubfarm = addinsertData($sql);
             $DIMSubfarm = getDIMSubFarm($idDBSubfarm);
             $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];
             $DIMDATE = getDIMDate();
             $DIMFARMER = getDIMFarmer($INFOFARM[1]['UFID']);
             $DIMFARM = getDIMFarm($fmid);
-            $DIMAdderss = getDIMAddr($INFOFARM[1]['AD3ID'], $INFOFARM[1]['Address']);
+            $DIMAdderss = getDIMAddr($AD3ID, $addfarmSF);
             $sql = "INSERT INTO `log-farm` (`ID`, `LOGloginID`, `StartT`, `StartID`, `EndT`, `EndID`, `DIMownerID`, `DIMfarmID`, `DIMSubfID`, `DIMaddrID`, `IsCoordinate`, `Latitude`, `Longitude`, `NumSubFarm`, `NumTree`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
             VALUES (NULL, '{$LOG_LOGIN[1]['ID']}', '$time', '{$DIMDATE[1]['ID']}', NULL, NULL, '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '{$DIMSubfarm[1]['ID']}', '{$DIMAdderss[1]['ID']}', '0', '{$INFOFARM[1]['Latitude']}', '{$INFOFARM[1]['Longitude']}', '1', '0', '$AreaRai', '$AreaNgan', '$AreaWa', '$Areatotal')";
 
@@ -258,6 +256,49 @@ if (isset($_POST['action'])) {
             header("location:./OilPalmAreaListDetail.php?fmid=$fmid");
 
 
+            break;
+        case "editLatLngMapFarm":
+            $fmid = $_POST['fmid'];
+            $lat = $_POST['lat'];
+            $lng = $_POST['lng'];
+            $sql =   "UPDATE `db-farm` SET `IsCoordinate` = '1', `Latitude` = '$lat', `Longitude` = '$lng' 
+            WHERE `db-farm`.`FMID` = $fmid";
+            updateData($sql);
+            $DIMDATE = getDIMDate();
+            $time = time();
+            $DIMFarm = getDIMFarm($fmid);
+            $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];
+            $sql = "SELECT * FROM `log-farm` WHERE  `log-farm`.`DIMfarmID` = '{$DIMFarm[1]['ID']}' AND `EndT` IS NULL AND `log-farm`.`DIMSubfID` IS NULL  ";
+            $LOGFarm = selectData($sql);
+            $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'  WHERE `log-farm`.`ID` IN 
+            (SELECT `log-farm`.`ID` FROM `log-farm` INNER JOIN `dim-farm` ON `log-farm`.`DIMfarmID`=`dim-farm`.`ID` 
+            WHERE`dim-farm`.`dbID`=$fmid AND `dim-farm`.`IsFarm`=1 AND `log-farm`.`EndT`IS NULL AND `log-farm`.`DIMSubfID` IS NULL ) ";
+            updateData($sql);
+            $sql = "INSERT INTO `log-farm` (`ID`, `LOGloginID`, `StartT`, `StartID`, `EndT`, `EndID`, `DIMownerID`, `DIMfarmID`, `DIMSubfID`, `DIMaddrID`, `IsCoordinate`, `Latitude`, `Longitude`, `NumSubFarm`, `NumTree`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
+            VALUES (NULL, '{$LOG_LOGIN[1]['ID']}', '$time', '{$DIMDATE[1]['ID']}', NULL, NULL, '{$LOGFarm[1]['DIMownerID']}', '{$LOGFarm[1]['DIMfarmID']}', NULL, '{$LOGFarm[1]['DIMaddrID']}', '1', '$lat', '$lng', '{$LOGFarm[1]['NumSubFarm']}', '{$LOGFarm[1]['NumTree']}', '{$LOGFarm[1]['AreaRai']}', '{$LOGFarm[1]['AreaNgan']}', '{$LOGFarm[1]['AreaWa']}', '{$LOGFarm[1]['AreaTotal']}')";
+            addinsertData($sql);
+            break;
+        case "deleteSubFarm":
+            $fsid = $_POST['fsid'];
+            $time = time();
+            $DIMDATE = getDIMDate();
+            $sql = "SELECT * FROM `db-subfarm` WHERE `db-subfarm`.`FSID` = $fsid";
+            $INFOSUBFARM = selectData($sql);
+            $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'  WHERE `log-farm`.`ID` IN 
+            (SELECT `log-farm`.`ID` FROM `log-farm` INNER JOIN `dim-farm` ON `log-farm`.`DIMSubfID`=`dim-farm`.`ID` 
+            WHERE`dim-farm`.`dbID`=$fsid AND `dim-farm`.`IsFarm`=0 AND `log-farm`.`EndT`IS NULL) ";
+            updateData($sql);
+            $sql = "UPDATE `log-icon` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'
+            WHERE `log-icon`.`Type`= 3 AND `log-icon`.`EndT` IS NULL AND `log-icon`.`DIMiconID` IN 
+            (SELECT `dim-farm`.`ID` FROM `dim-farm` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID`=`dim-farm`.`dbID`
+             WHERE `dim-farm`.`IsFarm`=0 AND `db-subfarm`.`FSID` = $fsid) ";
+            updateData($sql);
+            $sql = "DELETE FROM `db-coorfarm` WHERE `db-coorfarm`.`FSID`= $fsid";
+            delete($sql);
+            $sql = "DELETE FROM `db-subfarm` WHERE `db-subfarm`.`FSID`= $fsid";
+            delete($sql);
+
+            header("location:./OilPalmAreaListDetail.php?fmid={$INFOSUBFARM[1]['FMID']}");
             break;
     }
 }

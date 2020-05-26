@@ -155,64 +155,80 @@ $(document).ready(function() {
 function initMap() {
     var locations = [];
     var center = [0, 0];
-    click_map = $('.click-map').html();
     size = $('#size').attr('size');
-    for (i = 1; i < size; i++) {
-        nameFarm = $('#' + i).attr('nameFarm');
+    if (size == 1) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 6,
+            center: new google.maps.LatLng(10.667028, 99.201250),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+    } else {
+        click_map = $('.click-map').html();
+        for (i = 1; i < size; i++) {
+            nameFarm = $('#' + i).attr('nameFarm');
 
-        la = parseFloat($('#' + i).attr('la'));
-        long = parseFloat($('#' + i).attr('long'));
-        AD3ID = parseFloat($('#' + i).attr('AD3ID'));
-        center[0] += la;
-        center[1] += long;
-        data = [nameFarm, la, long, AD3ID];
-        locations.push(data);
+            la = parseFloat($('#' + i).attr('la'));
+            long = parseFloat($('#' + i).attr('long'));
+            distrinct = $('#' + i).attr('distrinct');
+            province = $('#' + i).attr('province');
 
-    }
-    center[0] = center[0] / (size - 1);
-    center[1] = center[1] / (size - 1);
 
-    console.log(center);
+            center[0] += la;
+            center[1] += long;
+            data = [nameFarm, la, long, distrinct, province];
+            locations.push(data);
 
-    console.log(locations);
+        }
+        center[0] = center[0] / (size - 1);
+        center[1] = center[1] / (size - 1);
 
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 6,
-        center: new google.maps.LatLng(center[0], center[1]),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
+        console.log(center);
 
-    var infowindow = new google.maps.InfoWindow();
+        console.log(locations);
 
-    var marker;
-
-    for (i = 0; i < locations.length; i++) {
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map,
-            icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 6,
+            center: new google.maps.LatLng(center[0], center[1]),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
+        var infowindow = new google.maps.InfoWindow();
 
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-                for (j = 0; j < size; j++) {
+        var marker;
 
-                    if (i == j) {
-                        $('.' + j).show();
-                    } else {
-                        $('.' + j).hide();
+        for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map,
+                icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+
+            });
+
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    content = "";
+                    content += locations[i][0];
+                    content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                    for (j = 0; j < size; j++) {
+
+                        if (i == j) {
+                            $('.' + j).show();
+                        } else {
+                            $('.' + j).hide();
+                        }
                     }
+
                 }
+            })(marker, i));
 
-            }
-        })(marker, i));
 
+        }
 
     }
+
 }
 
 function delfunction(_username, _uid) {

@@ -15,7 +15,6 @@ $fdist = 0;
 $PROVINCE = getProvince();
 $OILPALMAREALIST = getOilPalmAreaList($idformal, $fullname, $fpro, $fdist);
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
-
 ?>
 
 
@@ -239,7 +238,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                         <i class='far fa-trash-alt'></i>
                                     </button>
                                 </td>
-                                <label class="click-map" hidden id="<?php echo $i; ?>" nameFarm="<?php echo $OILPALMAREALIST[$i]["Name"]; ?>" AD3ID="<?php echo $OILPALMAREALIST[$i]["dbsubDID"]; ?>" la="<?php echo $OILPALMAREALIST[$i]["Latitude"]; ?>" long="<?php echo $OILPALMAREALIST[$i]["Longitude"]; ?>"></label>
+                                <label class="click-map" hidden id="<?php echo $i; ?>" distrinct="<?php echo $OILPALMAREALIST[$i]["Distrinct"]; ?>" province="<?php echo $OILPALMAREALIST[$i]["Province"]; ?>" nameFarm="<?php echo $OILPALMAREALIST[$i]["Name"]; ?>" la="<?php echo $OILPALMAREALIST[$i]["Latitude"]; ?>" long="<?php echo $OILPALMAREALIST[$i]["Longitude"]; ?>"></label>
                             </tr>
                         <?php
                         }
