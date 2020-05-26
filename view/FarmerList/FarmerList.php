@@ -10,15 +10,13 @@ $idformal = '';
 $fullname = '';
 $fpro = 0;
 $fdist = 0;
-$fsub = 0;
 
+$FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
-$FARMER = getFarmer($idformal, $fullname, $fpro, $fdist, $fsub);
-
+// print_r($FARMER);
 ?>
-
 
 <div class="container">
 
@@ -92,7 +90,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist, $fsub);
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-12">
-                                        <select id="s_province" name="s_province" class="form-control">
+                                        <select id="s_province" name="s_province" class="form-control ">
                                             <option selected value=0>เลือกจังหวัด</option>
                                             <?php
                                             for ($i = 1; $i < sizeof($PROVINCE); $i++) {
@@ -203,7 +201,7 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist, $fsub);
                         </tr>
                     </tfoot>
                     <tbody id="body">
-                        <label id="size" hidden size="<?php echo sizeof($FARMER); ?>"></label>
+                        <label id="size" hidden size ="<?php if($FARMER == 0) echo 0; else echo sizeof($FARMER); ?>"></label>
                         <?php
                         if ($FARMER != 0) {
                             for ($i = 0; $i < sizeof($FARMER); $i++) {

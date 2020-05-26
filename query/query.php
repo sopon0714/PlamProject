@@ -1438,3 +1438,69 @@ function getAllFarmer()
     $data = selectData($sql);
     return $data;
 }
+
+//PEST
+function getCountPestAlarm(){
+    $sql = "SELECT COUNT(lp.isDelete) AS totalPestAlarm FROM `log-pestalarm` AS lp WHERE lp.isDelete = 0";
+    $data = selectData($sql)[1]['totalPestAlarm'];
+    return $data;
+}
+
+function getPestType(){
+    $sql = "SELECT * FROM `db-pesttype`";
+    $data = selectData($sql);
+    return $data;
+}
+function getPestById($ptid){
+    $sql = "SELECT * FROM `db-pestlist` WHERE PTID = '$ptid'";
+    $data = selectData($sql);
+    return $data;
+}
+function getPestByPID($pid){
+    $sql = "SELECT * FROM `db-pestlist` WHERE PID = '$pid'";
+    $data = selectData($sql);
+    return $data;
+}
+
+function getPest(&$idformal, &$fullname, &$fpro, &$fdist ,&$fyear , &$ftype){
+
+    if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
+    if (isset($_POST['s_type']))  $ftype = rtrim($_POST['s_type']);
+    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
+    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
+    if (isset($_POST['s_name'])) {
+        $fullname = rtrim($_POST['s_name']);
+        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+    }
+    //INFO
+    $sql = "SELECT `log-pestalarm`.`ID`,`dim-user`.`FullName` , dimfarm.`Name` AS Namefarm,dimfarm.dbID AS FID,
+	dimsubfarm.Name AS Namesubfarm,dimfarm.dbID AS SFID,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,
+    `log-farm`.`NumTree`,`log-pestalarm`.`DIMsubFID`,`dim-pest`.`TypeTH`, `dim-pest`.`dbpestLID`,
+    `dim-time`.`Date`,  `db-pesttype`.`PTID`,`log-pestalarm`.`Note`, `dim-pest`.`Name`,
+    `db-subdistrinct`.`subDistrinct`,`db-subfarm`.`Latitude`,`db-subfarm`.`Longitude`,`db-subdistrinct`.`AD3ID`
+    FROM `log-pestalarm`
+    JOIN `dim-user` ON `dim-user`.`ID` = `log-pestalarm`.`DIMownerID`
+    JOIN `dim-farm` AS dimfarm ON dimfarm.`ID` = `log-pestalarm`.`DIMfarmID`
+    JOIN `dim-farm` AS dimsubfarm ON dimsubfarm.`ID` = `log-pestalarm`.`DIMsubFID`
+    JOIN `log-farm` ON  `log-farm`.`DIMSubfID` =  `log-pestalarm`.`DIMsubFID`
+    JOIN `dim-pest` ON `dim-pest`.`ID` = `log-pestalarm`.`DIMpestID`
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
+    JOIN `db-subfarm` ON `db-subfarm`.`FSID` = dimsubfarm.`dbID`
+    JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-subfarm`.`AD3ID` 
+    JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
+    JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID` 
+    JOIN  `db-pesttype` ON  `db-pesttype`.`TypeTH` = `dim-pest`.`TypeTH`
+    WHERE `log-pestalarm`.isDelete = 0 AND dimsubfarm.`IsFarm` = 0";
+    if ($idformal != '') $sql = $sql . " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
+    if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
+    if ($ftype   != 0)  $sql = $sql . " AND `db-pesttype`.`PTID` = '" . $ftype . "' ";
+    if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
+   
+    $sql = $sql . " ORDER BY  `dim-user`.`FullName`";
+    
+    $data = selectData($sql);
+    return $data;
+}

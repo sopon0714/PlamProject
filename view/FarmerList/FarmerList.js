@@ -12,7 +12,6 @@ function initMap() {
     var locations = [];
     var center = [0, 0];
     click_map = $('.click-map').html();
-    console.log(click_map);
     size = $('#size').attr('size');
     console.log(size);
     for (i = 0; i < size; i++) {
@@ -29,6 +28,11 @@ function initMap() {
     }
     center[0] = center[0] / size;
     center[1] = center[1] / size;
+
+    if(size == 0){
+      center[0] = 13.736717;
+      center[1] = 100.523186;
+    }
 
     console.log(center);
 
