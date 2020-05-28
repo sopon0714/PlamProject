@@ -412,7 +412,7 @@ function getOilPalmAreaListDetailByIdFarm($fmid)
 {
     $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year ,`log-farm`.`Latitude`,`log-farm`.`Longitude`,`dim-address`.`Province`,`dim-address`.`Distrinct`
     from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.DIMaddrID INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
-    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid  AND `log-planting`.`NumGrowth1` IS NOT NULL  ORDER BY `db-subfarm`.`Name`";
+    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid  AND ( `log-planting`.`NumGrowth1` IS NOT NULL OR `dim-time`.`Date` IS NULL ) ORDER BY `db-subfarm`.`Name`";
     $OilPalmAreaListDetail = selectData($sql);
     return $OilPalmAreaListDetail;
 }
@@ -685,9 +685,7 @@ function getDmy($suid)
 // sql ค่าของ Year 
 function getYear()
 {
-    $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM `log-harvest`
-    INNER JOIN `dim-time` on `log-harvest`.`DIMdateID` = `dim-time`.`ID`  
-    ORDER BY `dim-time`.`Year2` DESC";
+    $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM  `dim-time` ORDER BY `dim-time`.`Year2` DESC";
     $Year = selectData($sql);
     return $Year;
 }
@@ -849,7 +847,17 @@ function getSummarizeHarvest($farmID, $year)
     return $SUMMARIZE;
 }
 
-
+function CheckPlantting($fsid)
+{
+    $sql = "SELECT * FROM `log-planting` INNER JOIN `dim-farm` ON `log-planting`.`DIMsubFID`= `dim-farm`.`ID`
+     WHERE `log-planting`.`NumGrowth1` IS NOT NULL AND `log-planting`.`isDelete`=0 AND `dim-farm`.`dbID`=2";
+    $Plantting = selectData($sql);
+    if ($Plantting[0]['numrow'] == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 //แก้ไข
 //ผลผลิตปาร์มแบบมี ID และเป็นแต่ละปีของตารางรายการเก็บผลผลิตต่อแปลง
 function getHarvestYearID($farmID, $year)

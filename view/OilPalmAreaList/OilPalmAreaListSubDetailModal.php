@@ -2,40 +2,60 @@
 $PROVINCE = getProvince();
 $DISTRINCT = getDistrinctInProvince($INFOSUBFARM[1]['AD1ID']);
 $SUBDISTRINCT = getSubDistrinctInDistrinct($INFOSUBFARM[1]['AD2ID']);
-
+$CheckTypeplanting = CheckPlantting($fsid);
 ?>
 
 <div class="modal fade" id="addplant" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form class="form-signin" method="POST" action='updateData.php'>
-                <div class="modal-header header-modal">
+            <form class="form-signin" method="POST" action='manage.php'>
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">เพิ่มข้อมูลการปลูก</h4>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
+                        <div class="col-xl-4 col-12 text-right">
                             <span>ข้อมูลที่จะเพิ่ม</span>
                         </div>
-                        <div class="col-xl-9 col-12">
-                            <select id="aaa" class="form-control" name="">
-                                <option>การปลูก</option>
-                                <option>การซ่อม</option>
-                                <option>การตาย</option>
+                        <div class="col-xl-4 col-12">
+                            <select class="form-control" name="TypePlantting" required="" oninput="setCustomValidity('')">
+                                <option value="0">กรุณาเลือก</option>
+                                <?php
+                                if ($CheckTypeplanting) {
+                                    echo "<option value=\"1\">การปลูก</option>";
+                                } else {
+                                    echo "  <option value=\"2\">การซ่อม</option>
+                                            <option value=\"3\">การตาย</option>";
+                                }
+                                ?>
+
                             </select>
                         </div>
                     </div>
                     <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>วันที่ทำ</span>
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>วันที่ทำกิจกกรม</span>
                         </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="date" class="form-control" id="" name="" value="">
+                        <div class="col-xl-4 col-12">
+                            <input type="date" class="form-control" name="dateActive" value="" required="" oninput="setCustomValidity('')">
                         </div>
                     </div>
-
+                    <div class=" row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>จำนวนต้นปาล์ม</span>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" class="form-control text-right" id="PalmTree" name="PalmTree" value="0" min="0" value="0" required="" oninput="setCustomValidity('')">
+                        </div>
+                        <div class="col-3 mt-1">
+                            <span>ต้น</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="fmid" value="<?= $fmid ?>">
+                    <input type="hidden" name="fsid" value="<?= $fsid ?>">
+                    <input type="hidden" name="action" value="addPlantting">
                     <div class="modal-footer">
-                        <button class="btn btn-success btn-md" type="submit">ยืนยัน</button>
+                        <button class="btn btn-success btn-md  btn-submit-plantting" type="submit">ยืนยัน</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
                     </div>
                 </div>

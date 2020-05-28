@@ -16,6 +16,14 @@ $INFOAREASUBFARM = getAreatotalByIdSubFarm($fsid);
 $INNFOCOORSUBFRAM = getCoorsSubFarm($fsid);
 $OLDPALMSUBFARM = getOldPalmByIdSubFarm($fsid);
 $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
+$YEAR = getYear();
+$sumng1 = 1;
+$sumng2 = 0;
+$sumdead = 0;
+$sum = 0;
+$sumng1Pers = 0;
+$sumng2Pers = 0;
+$sumdeadPers = 0;
 ?>
 <link href="./OilPalmAreaListDetail.css" rel="stylesheet" />
 <style>
@@ -196,16 +204,11 @@ $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
                     <div class="row">
                         <div class="col-xl-5 col-12 scrollber">
                             <?php
-                            // $n = 1;
-                            // $m = 1;
-                            $sumng1 = 0;
-                            $sumng2 = 0;
-                            $sumdead = 0;
-                            $sum = 0;
+
                             if ($LOGPLANTTING[0]['numrow'] == 0) {
                                 echo "ไม่มีข้อมูล";
                             } else {
-
+                                $sumng1 = 0;
                                 for ($i = 1; $i < count($LOGPLANTTING); $i++) {
                                     if ($LOGPLANTTING[$i]['NumGrowth1'] > 0) {
                                         $sumng1 += $LOGPLANTTING[$i]['NumGrowth1'];
@@ -304,10 +307,11 @@ $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
                             </a>
                         </div>
                         <div class="col-6">
+                            <div id="maxyear" hidden maxyear="<?= $YEAR[1]['Year2'] ?>"></div>
                             <select id="year" class="form-control" style="width:20%; float:right;">
                                 <?php
-                                for ($i = 1; $i <= $year[0]['numrow']; $i++) {
-                                    echo "<option value='{$year[$i]['Year2']}'>{$year[$i]['Year2']}</option>";
+                                for ($i = 1; $i <= $YEAR[0]['numrow']; $i++) {
+                                    echo "<option value='{$YEAR[$i]['Year2']}'>{$YEAR[$i]['Year2']}</option>";
                                 }
                                 ?>
                             </select>
@@ -315,20 +319,6 @@ $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
                     </div>
                 </div>
                 <div class="card-body">
-                    <?php
-                    if ($maxyear[1]['max'] != null) {
-                        echo "<div class=\"row\">
-                        <div class=\"col-xl-6 col-12 PDY\">
-                            <canvas id=\"productYear\" style=\"height:250px;\"></canvas>
-                        </div>
-                        <div class=\"col-xl-6 col-12 PDM\">
-                            <canvas id=\"productMonth\" style=\"height:250px;\"></canvas>
-                        </div>
-                    </div>";
-                    } else {
-                        echo "<h4>ไม่มีข้อมูล</h4>";
-                    }
-                    ?>
                     <div class="row">
                         <div class="col-xl-6 col-12 PDY">
                             <canvas id="productYear" style="height:250px;"></canvas>
@@ -337,6 +327,7 @@ $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
                             <canvas id="productMonth" style="height:250px;"></canvas>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

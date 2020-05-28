@@ -323,9 +323,17 @@ if (isset($_POST['action'])) {
         case "deleteSubFarm":
             $fsid = $_POST['fsid'];
             $time = time();
-            $DIMDATE = getDIMDate();
             $sql = "SELECT * FROM `db-subfarm` WHERE `db-subfarm`.`FSID` = $fsid";
             $INFOSUBFARM = selectData($sql);
+            $DIMDATE = getDIMDate();
+            $DIMFarm = getDIMFarm($INFOSUBFARM[1]['FMID']);
+            $DIMSUBFARM  = getDIMSubFarm($fsid);
+
+            $sql = "SELECT * FROM `log-farm` WHERE  `log-farm`.`DIMfarmID` = '{$DIMFarm[1]['ID']}' AND `EndT` IS NULL AND `log-farm`.`DIMSubfID` IS NULL ";
+            $LOGFarm = selectData($sql);
+            $sql = "SELECT * FROM `log-farm` WHERE  `log-farm`.`DIMfarmID` = '{$DIMFarm[1]['ID']}' AND `EndT` IS NULL AND `log-farm`.`DIMSubfID` ={$DIMSUBFARM[1]['ID']}";
+            $LOGSubFarm = selectData($sql);
+
             $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'  WHERE `log-farm`.`ID` IN 
             (SELECT `log-farm`.`ID` FROM `log-farm` INNER JOIN `dim-farm` ON `log-farm`.`DIMSubfID`=`dim-farm`.`ID` 
             WHERE`dim-farm`.`dbID`=$fsid AND `dim-farm`.`IsFarm`=0 AND `log-farm`.`EndT`IS NULL) ";
@@ -335,11 +343,20 @@ if (isset($_POST['action'])) {
             (SELECT `dim-farm`.`ID` FROM `dim-farm` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID`=`dim-farm`.`dbID`
              WHERE `dim-farm`.`IsFarm`=0 AND `db-subfarm`.`FSID` = $fsid) ";
             updateData($sql);
+
             $sql = "DELETE FROM `db-coorfarm` WHERE `db-coorfarm`.`FSID`= $fsid";
             delete($sql);
             $sql = "DELETE FROM `db-subfarm` WHERE `db-subfarm`.`FSID`= $fsid";
             delete($sql);
+            $DiffNumTree = $LOGFarm[1]['NumTree'] - $LOGSubFarm[1]['NumTree'];
+            $DiffRai = $LOGFarm[1]['AreaRai'] - $LOGSubFarm[1]['AreaRai'];
+            $DiffNgan = $LOGFarm[1]['AreaNgan'] - $LOGSubFarm[1]['AreaNgan'];
+            $DiffWa = $LOGFarm[1]['AreaWa'] - $LOGSubFarm[1]['AreaWa'];
+            $Difftotal = $LOGFarm[1]['AreaTotal'] - $LOGSubFarm[1]['AreaTotal'];
+            $DiffNumSubFarm  =  $LOGFarm[1]['NumSubFarm'] - 1;
 
+            $sql = "UPDATE `log-farm` SET `NumSubFarm` = '$DiffNumSubFarm', `NumTree` = '$DiffNumTree', `AreaRai` = '$DiffRai', `AreaNgan` = '$DiffNgan', `AreaWa` = '$DiffWa', `AreaTotal` = '$Difftotal' WHERE `log-farm`.`ID` = {$LOGFarm[1]['ID']}";
+            updateData($sql);
             header("location:./OilPalmAreaListDetail.php?fmid={$INFOSUBFARM[1]['FMID']}");
             break;
         case "editSubFarm":
@@ -447,6 +464,41 @@ if (isset($_POST['action'])) {
             $sql = "INSERT INTO `log-farm` (`ID`, `LOGloginID`, `StartT`, `StartID`, `EndT`, `EndID`, `DIMownerID`, `DIMfarmID`, `DIMSubfID`, `DIMaddrID`, `IsCoordinate`, `Latitude`, `Longitude`, `NumSubFarm`, `NumTree`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
             VALUES (NULL, '{$LOG_LOGIN[1]['ID']}', '$time', '{$DIMDATE[1]['ID']}', NULL, NULL, '{$LOGSubFarm[1]['DIMownerID']}', '{$LOGSubFarm[1]['DIMfarmID']}', '{$LOGSubFarm[1]['DIMSubfID']}', '{$LOGSubFarm[1]['DIMaddrID']}', '1', '$LatAvg', '$LongAvg', '{$LOGSubFarm[1]['NumSubFarm']}', '{$LOGSubFarm[1]['NumTree']}', '{$LOGSubFarm[1]['AreaRai']}', '{$LOGSubFarm[1]['AreaNgan']}', '{$LOGSubFarm[1]['AreaWa']}', '{$LOGSubFarm[1]['AreaTotal']}')";
             addinsertData($sql);
+            break;
+        case "addPlantting":
+            $fmid = $_POST['fmid'];
+            $fsid = $_POST['fsid'];
+            $TypePlantting = $_POST['TypePlantting'];
+            $dateActive = $_POST['dateActive'];
+            $PalmTree = $_POST['PalmTree'];
+            $DIMSubfarm = getDIMSubFarm($fsid);
+            $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];
+            $DIMDATE = getDIMDate($dateActive);
+            $time = time();
+            $sql = "SELECT * FROM `db-farm` WHERE `db-farm`.`FMID`=$fmid";
+            $INFOFARM = selectData($sql);
+            $DIMFARMER = getDIMFarmer($INFOFARM[1]['UFID']);
+            $DIMFARM = getDIMFarm($fmid);
+            $timestemp = strtotime($dateActive);
+            $NUM1  = "NULL";
+            $NUM2  = "NULL";
+            $NUM3  = "NULL";
+            if ($TypePlantting == 1) {
+                $NUM1  = "'$PalmTree'";
+            } else if ($TypePlantting == 2) {
+                $NUM2  = "'$PalmTree'";
+            } else  if ($TypePlantting == 3) {
+                $NUM3  = "'$PalmTree'";
+            }
+
+            $sql = "INSERT INTO `log-planting` (`ID`, `isDelete`, `Modify`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `NumGrowth1`, `NumGrowth2`, `NumDead`, `PICs`) VALUES (NULL, '0', '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '{$DIMSubfarm[1]['ID']}', $NUM1, $NUM2, $NUM3, 'test')";
+            echo  $sql . "<br>";
+            $id = addinsertData($sql);
+
+            $sql = "UPDATE `log-planting` SET `PICs` = 'picture/activities/planting/$id' WHERE `log-planting`.`ID` = '$id'";
+            echo  $sql;
+            updateData($sql);
+            header("location:./OilPalmAreaListSubDetail.php?FSID=$fsid&FMID=$fmid");
             break;
     }
 }
