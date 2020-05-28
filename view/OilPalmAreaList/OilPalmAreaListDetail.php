@@ -211,8 +211,9 @@ $COUNTCOORFRAM = getCountCoor($fmid);
         </div>
     </div>
 </div>
+
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<?php include_once("OilPalmAreaListDetailModal.php"); ?>
+<?php include_once("./OilPalmAreaListDetailModal.php"); ?>
 <script>
     function initMap() {
         var locations = [];
