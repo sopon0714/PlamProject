@@ -4,6 +4,11 @@ connectDB();
 session_start(); 
 require_once("../../set-log-login.php");
 include_once("./../../query/query.php");
+$folder = "../../picture/activities/pest/";
+$folder_use = "picture/activities/pest/";
+$loglogin = $_SESSION[md5('LOG_LOGIN')];
+$loglogin_id = $loglogin[1]['ID'];
+$startID = $loglogin[1]['StartID'];
 
 if(isset($_POST['request'])){
     $request = $_POST['request'];
@@ -22,76 +27,20 @@ if(isset($_POST['request'])){
               $pid = $_POST['pid'];
               print_r(json_encode(getPestByPID($pid)));
           break;
-        case 'insert' :
-            $department = trim($_POST['department']);
-            $alias = trim($_POST['alias']);
-            $note = trim($_POST['note']);
-            $time = time();
-            
-                    // echo $time;
-                    $department = preg_replace('/[[:space:]]+/', ' ', trim($department));
-                    $alias = preg_replace('/[[:space:]]+/', ' ', trim($alias));
-                    $note = preg_replace('/[[:space:]]+/', ' ', trim($note));
-                    
-                    $i = 1;
-
-                    $last_id = last_id();
-
-                    $array = check_de_du($department,$alias,$note);
-                    $check_dim = $array[0];
-                    $id_data = $array[1];
-                    $id_de = $array[2];
-                    if($check_dim == 1){
-                        $id_d = $last_id+1;
-                    }else{
-                        $id_d = $id_de;
-                    }
-                    echo   "<br>check_dim = ".$check_dim;
-                    echo   "<br>id_d = ".$id_d;
-
-                            $sql = "INSERT INTO `db-department` (DID,Department,Alias,Note) 
-                            VALUES ('$id_d','$department','$alias','$note')";
-        
-                            $did = addinsertData($sql);
-                    echo   "<br>did add = ".$did;
-
-                    $array = check_de_du($department,$alias,$note);
-                    $check_dim = $array[0];
-                    $id_data = $array[1];
-                    $id_de = $array[2];
-
-                    if($check_dim){
-                        $sql = "INSERT INTO `dim-department` (ID,`dbID`,Department,Alias,Note) 
-                        VALUES ('','$did','$department','$alias','$note')";  
-    
-                        $id_d = addinsertData($sql);
-                        // echo $id_d;
-                        
-                    }else{
-                        $id_d = $id_data;
-                    }
-                    $data_t =  getDIMDate();
-                        $id_t = $data_t[1]['ID'];
-                        // echo $id_t;
-
-                        // echo $id_t[1]['ID'];
-                        $loglogin = $_SESSION[md5('LOG_LOGIN')];
-                        $loglogin_id = $loglogin[1]['ID'];
-                        echo   "<script>
-                            console.log($loglogin_id );
-                            </script>";
-                        $sql = "INSERT INTO `log-department` (ID,DIMdeptID,LOGloginID,StartT,StartID) 
-                        VALUES ('','$id_d','$loglogin_id','$time','$id_t')";
-
-                        $did = addinsertData($sql);
-                    
-                
-                    header("location:DepartmentList.php");
-
-
- 
+        case 'scanDir';
+            $pid = $_POST['pid'];
+            $path = $_POST['path'];
+            $folder = $path.$pid;
+            $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
+            $arr = array();
+            foreach($objScan as $obj){
+                $type= strrchr($obj,".");
+                if($type == '.png' || $type == '.jpg' ){            
+                    $arr[]= $obj;
+                }
+            } 
+            print_r(json_encode($arr));
             break;
-        
         case 'delete' ;
             $id = $_POST['id'];
             echo 'id = '.$id;
@@ -99,94 +48,266 @@ if(isset($_POST['request'])){
                         SET isDelete='1'
                         WHERE ID='$id' ";
             $o_did = updateData($sql);
-            
+          
             break;
             
-        case 'update' :
-            echo   "<script>
-            console.log('sfdsf');
-            </script>";
-            $did = $_POST['e_did'];
-            $department = trim($_POST['e_department']);
-            $alias = trim($_POST['e_alias']);
-            $note = trim($_POST['e_note']);
+        case 'insert':
+            $date = $_POST['date'];
+            $farm = $_POST['farm'];
+            $subfarm = $_POST['subfarm'];
+            $pesttype = $_POST['pesttype'];
+            $pest = $_POST['pest'];
+            $note = $_POST['note'];
+            
+            $dataPic = explode('manu20', $_POST['pic']);
+            $countfiles = sizeof($dataPic) - 1;
+            $extension = ".png";
 
-            $department = preg_replace('/[[:space:]]+/', ' ', trim($department));
-            $alias = preg_replace('/[[:space:]]+/', ' ', trim($alias));
-            $note = preg_replace('/[[:space:]]+/', ' ', trim($note));
+            echo 'date = '.$date.'<br>';
+            // echo 'farm = '.$farm.'<br>';
+            // echo 'subfarm = '.$subfarm.'<br>';
+            // echo 'pesttype = '.$pesttype.'<br>';
+            // echo 'pest = '.$pest.'<br>';
+            // echo 'note = '.$note.'<br>';
+            // echo 'dataPic = <br>';
+            // print_r($dataPic);
+            // echo 'countfiles = '.$countfiles.'<br>';
+            $time = time();
+            $id_t =  getIDDIMdate($date)[1]['ID'];
 
-            $o_department = trim($_POST['e_o_department']);
-            $o_alias = trim($_POST['e_o_alias']);
-            $o_note = trim($_POST['e_o_note']);
-            // echo   "<script>
-            // console.log('$o_department $o_alias $o_note');
-            // </script>";
-            $dim=getDIM($did,$o_department,$o_alias,$o_note);
-            $dim_id = $dim[1]['ID'];
+            $id_owner = getIDowner($farm);
+            $dim_owner_id = getIDDIMfarmer($id_owner);
+            $dim_farm_id = getIDDIMfarm($farm);
+            $dim_subfarm_id = getIDDIMsubfarm($subfarm);
+            $dim_pest_id = getIDDIMpest($pest);
 
-            $o_log=getLog($dim_id);
-            $o_log_id = $o_log[1]['ID'];
-            // echo   "<script>
-            //             console.log('$o_log_id');
-            //             </script>";
+            echo '$id_owner = '.$id_owner."<br>";
+            echo '$dim_owner_id = '.$dim_owner_id."<br>";
 
-            echo "$did";
-                $sql=   "UPDATE `db-department` 
-                        SET Department='$department', Alias='$alias', Note='$note'
-                        WHERE DID='$did' ";
+            echo '$dim_farm_id = '.$dim_farm_id."<br>";
+            echo '$dim_subfarm_id = '.$dim_subfarm_id."<br>";
+            echo '$dim_pest_id = '.$dim_pest_id."<br>";
 
-                $re = updateData($sql);
-                $DATA = select_dimDepartment();
-                $i = 1;
-                $check_dim = 1;
-                for($i = 1;$i <= $DATA[0]['numrow'];$i++){
-                    if($DATA[$i]['Department'] == $department && $DATA[$i]['Alias'] == $alias  && $DATA[$i]['Note'] == $note ){
-                        $id_d=$DATA[$i]['ID'];
-                        $check_dim = 0;
-                        break;
+            $sql = "INSERT INTO `log-pestalarm` (`isDelete`, `Modify`, `LOGloginID`, `DIMdateID`, 
+            `DIMownerID`, `DIMfarmID`, `DIMsubFID` , `DIMpestID`, `Note`)
+            VALUES ('0','$time','$loglogin_id','$id_t',
+            '$dim_owner_id','$dim_farm_id','$dim_subfarm_id','$dim_pest_id','$note')";
+            //echo $sql;
+            $id = addinsertData($sql);
+            echo 'add id = '.$id.'<br>';
+
+            $path = $folder_use.$id;
+
+            $sql="UPDATE `log-pestalarm` 
+            SET PICs='$path'
+            WHERE `log-pestalarm`.ID = '$id'";
+            updateData($sql);
+
+            $path = $folder.$id;
+
+            if (!file_exists($folder.$id)) {
+              mkdir($path);
+            }
+            if ($countfiles > 0) {
+              for ($i = 0; $i < $countfiles; $i++) {
+                echo '$extension = '.$extension.'<br>';
+                $Pic = getImgPest($dataPic[$i]);
+                file_put_contents($folder.$id."/".$i.$extension, $Pic);
+              }
+            }
+            break;
+        
+        case 'update':
+          $id = $_POST['e_pestAlarmID'];
+          $date = $_POST['e_date'];
+          $farm = $_POST['e_farm'];
+          $subfarm = $_POST['e_subfarm'];
+          $pesttype = $_POST['e_pesttype'];
+          $pest = $_POST['e_pest'];
+          $note = $_POST['e_note'];
+          echo 'date = '.$date.'<br>';
+
+          echo 'subfarm = '.$subfarm.'<br>';
+          
+          $dataPic = explode('manu20', $_POST['pic-edit']);
+          $countfiles = sizeof($dataPic) - 1;
+
+          $extension = ".png";
+          $time = time();
+          $id_t =  getIDDIMdate($date)[1]["ID"];
+          echo 'dim date = '.$id_t.'<br>';
+
+          $id_owner = getIDowner($farm);
+          $dim_owner_id = getIDDIMfarmer($id_owner);
+          $dim_farm_id = getIDDIMfarm($farm);
+          $dim_subfarm_id = getIDDIMsubfarm($subfarm);
+          $dim_pest_id = getIDDIMpest($pest);
+
+          $old_path = $folder.$id;
+
+          $sql="UPDATE `log-pestalarm` 
+            SET isDelete='1'
+            WHERE `log-pestalarm`.ID = '$id'";
+          updateData($sql);
+
+          $sql = "INSERT INTO `log-pestalarm` (`isDelete`, `Modify`, `LOGloginID`, `DIMdateID`, 
+          `DIMownerID`, `DIMfarmID`, `DIMsubFID` , `DIMpestID`, `Note`)
+          VALUES ('0','$time','$loglogin_id','$id_t',
+          '$dim_owner_id','$dim_farm_id','$dim_subfarm_id','$dim_pest_id','$note')";
+          //echo $sql;
+          $id = addinsertData($sql);
+          echo 'add id = '.$id.'<br>';
+          
+          $path = $folder_use.$id;
+
+          $sql="UPDATE `log-pestalarm` 
+          SET PICs='$path'
+          WHERE `log-pestalarm`.ID = '$id'";
+          updateData($sql);
+          
+          $new_path = $folder.$id;
+          $copy = recurse_copy($old_path,$new_path);
+          echo 'copy = ';
+          print_r($copy);
+          echo '<br>';          
+          $checkPic = check_Pic($old_path,$dataPic);
+          echo 'checkPic = ';
+          print_r($checkPic);
+          echo '<br>';
+
+          del_Pic($new_path,$checkPic); //del pic
+
+          if ($countfiles > 0) {
+            for ($j = $countfiles-1; $j >= 0; $j--) {
+              echo 'j = '.$j.'<br>';
+  
+              if($dataPic[$j] != ''){
+  
+                echo 'dataPic j '.$j.'= '.$dataPic[$j].'<br>';
+                $pic = substr($dataPic[$j], 31);
+                $pic= strrchr($pic,"/");
+                $pic= substr($pic,1);
+                echo 'pic = '.$pic.'<br>';
+  
+                if(!isset($checkPic[$pic]) || $checkPic[$pic] == 0){
+                    for ($i = 0; $i < $countfiles; $i++) {
+                      $check_dup_pic = check_dup_name_picture($folder.$id,$i.$extension);
+                      if(!$check_dup_pic){
+                          echo 'push i = '.$i.'<br>';
+                          $Pic2 = getImgPest($dataPic[$j]);
+                          echo $folder.$id."/".$i.$extension.'<br>';
+                          file_put_contents($folder.$id."/".$i.$extension, $Pic2);
+                          break;
+                      }
                     }
                 }
-// ------------------------------------- if DIM don't duplicated ----------------------------
-                if($check_dim){
-                    $sql = "INSERT INTO `dim-department` (ID,`dbID`,Department,Alias,Note) 
-                    VALUES ('','$did','$department','$alias','$note')";  
+              }
+            }
+          }
 
-                    $id_d = addinsertData($sql);
-                    
-                   
-                }
-                $time = time();
-                $data_t =  getDIMDate();
-                $id_t = $data_t[1]['ID'];
-                $loglogin = $_SESSION[md5('LOG_LOGIN')];
-                $loglogin_id = $loglogin[1]['ID'];
-
-                if($o_department == $department && $o_alias ==$alias && $o_note == $note){
-
-                }else{
-                    echo $o_log_id;
-                    $sql="UPDATE `log-department` 
-                    SET EndT='$time', EndID='$id_t'
-                    WHERE ID='$o_log_id' AND EndT IS NULL";
-    
-                    $o_did = updateData($sql);
-    
-                    $sql = "INSERT INTO `log-department` (ID,DIMdeptID,LOGloginID,StartT,StartID) 
-                    VALUES ('','$id_d','$loglogin_id','$time','$id_t')";
-    
-                    $did = addinsertData($sql);
-                }
-              
-
-
-                header("location:DepartmentList.php");
-            break;
-
-           
+          
+          break;
     }
-    
-   
-    
-}
+  }
+  function recurse_copy($src,$dst) { 
+    $dir = opendir($src); 
+    @mkdir($dst); 
+    while(false !== ( $file = readdir($dir)) ) { 
+        if (( $file != '.' ) && ( $file != '..' )) { 
+            if ( is_dir($src . '/' . $file) ) { 
+                recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+            } 
+            else { 
+                copy($src . '/' . $file,$dst . '/' . $file); 
+            } 
+        } 
+    } 
+    closedir($dir); 
+} 
 
-?>
+  function getIDDIMfarmer($id){
+    $sql = "SELECT  MAX(`log-farmer`.`ID`) AS ID FROM `dim-user`
+    JOIN `log-farmer` ON  `log-farmer`.`DIMuserID` = `dim-user`.`ID`
+    WHERE `dim-user`.`dbID` = '$id'";
+    $data = selectData($sql)[1]["ID"];
+
+    $sql = "SELECT `log-farmer`.`DIMuserID`  FROM `log-farmer` 
+    WHERE `log-farmer`.`ID` = $data";
+    
+    $data = selectData($sql)[1]["DIMuserID"];
+    return $data; 
+  }
+
+  function getIDDIMfarm($id){
+    $sql = "SELECT  MAX(`log-farm`.`ID`) AS ID FROM `dim-farm`
+    JOIN `log-farm` ON  `log-farm`.`DIMfarmID` = `dim-farm`.`ID`
+    WHERE `dim-farm`.`dbID` = '$id' AND `dim-farm`.`IsFarm` = 1";
+    $data = selectData($sql)[1]["ID"];
+
+    $sql = "SELECT `log-farm`.`DIMfarmID`  FROM `log-farm` 
+    WHERE `log-farm`.`ID` = $data";
+    
+    $data = selectData($sql)[1]["DIMfarmID"];
+    return $data; 
+  }
+  function getIDDIMsubfarm($id){
+    $sql = "SELECT  MAX(`log-farm`.`ID`) AS ID FROM `dim-farm`
+    JOIN `log-farm` ON  `log-farm`.`DIMsubFID` = `dim-farm`.`ID`
+    WHERE `dim-farm`.`dbID` = '$id' AND `dim-farm`.`IsFarm` = 0";
+    $data = selectData($sql)[1]["ID"];
+
+    $sql = "SELECT `log-farm`.`DIMsubFID`  FROM `log-farm` 
+    WHERE `log-farm`.`ID` = $data";
+    
+    $data = selectData($sql)[1]["DIMsubFID"];
+    return $data; 
+  }
+  function getIDDIMpest($id){
+    $sql = "SELECT  MAX(`log-pest`.`ID`) AS ID FROM `dim-pest`
+    JOIN `log-pest` ON  `log-pest`.`DIMpestID` = `dim-pest`.`ID`
+    WHERE `dim-pest`.`dbpestLID` = '$id'";
+    $data = selectData($sql)[1]["ID"];
+
+    $sql = "SELECT `log-pest`.`DIMpestID`  FROM `log-pest` 
+    WHERE `log-pest`.`ID` = $data";
+    
+    $data = selectData($sql)[1]["DIMpestID"];
+    return $data; 
+  }
+
+  function getIDowner($fid){
+    $sql = "SELECT  `db-farm`.`UFID` FROM `db-farm` WHERE `db-farm`.`FMID` = $fid";
+    $data = selectData($sql)[1]["UFID"];
+    return $data; 
+  }
+
+  function getIDDIMdate($date){
+    $sql = "SELECT * FROM `dim-time` WHERE Date = '$date'";
+    $DIMTIME = selectData($sql);
+    if ($DIMTIME[0]['numrow'] == 0) {
+        $yearQuarter = ceil(date("n") / 3);
+        date_default_timezone_set("Asia/Bangkok");
+        $today = date("m-d");
+        $summer = date("m-d", strtotime($date));
+        $rainy = date("m-d", strtotime($date));
+        $winter = date("m-d", strtotime($date));
+        switch (true) {
+            case $today >= $summer && $today < $rainy:
+                $Season = 3;
+                break;
+            case $today >= $rainy && $today < $winter:
+                $Season = 1;
+                break;
+            default:
+                $Season = 2;
+        }
+        date_default_timezone_set("Asia/Bangkok");
+        $yearQuarter = ceil(date("n") / 3);
+        $sql = "INSERT INTO `dim-time`(`Date`,`dd`,`Day`,`Week`,`Season`,`Month`,`Quarter`,`Year1`,`Year2`) 
+        VALUES ('$date','" . date("j") . "','" . date("w") . "','" . date("W") . "','" . $Season . "','" . date("n") . "','" . $yearQuarter . "','" . date("Y") . "','" . (date("Y") + 543) . "')";
+        $idinsert = addinsertData($sql);
+        $sql = "SELECT * FROM `dim-time` WHERE ID = '" . $idinsert . "'";
+        $DIMTIME = selectData($sql);
+    }
+    return $DIMTIME;
+}

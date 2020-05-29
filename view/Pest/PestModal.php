@@ -96,8 +96,7 @@
                                     <span>ลักษณะ</span>
                                 </div>
                                 <div class="col-xl-8 col-10">
-                                    <textarea name="note" class="form-control" id="note" cols="30" rows="5"
-                                        required></textarea>
+                                    <textarea name="note" class="form-control" id="note" cols="30" rows="5"></textarea>
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -105,12 +104,10 @@
                                     <span>รูปภาพ<span class="text-danger"> *</span></span>
                                 </div>
                                 <div class="col-xl-8 col-10">
-                                    <div class="grid-img-multiple" id="p_insert_img">
+                                    <div class="grid-img-multiple" id="grid-pic-style-char">
                                         <div class="img-reletive">
-                                            <img src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg"
-                                                width="50px" height="50px" alt="">
-                                            <input type="file" class="form-control" id="p_photo" name="p_photo[]"
-                                                accept=".jpg,.png" multiple>
+                                            <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
+                                            <input type="file" id="pic-style-char" name="picstyle_insert[]" accept=".jpg,.png" multiple>
                                         </div>
                                     </div>
                                 </div>
@@ -119,16 +116,18 @@
                         </div>
                         <div class="crop-img">
                             <center>
-                                <div id="upload-demo" class="center-block"></div>
+                                <div class="center-block upload-demo2"></div>
                             </center>
                         </div>
+                        <input type="hidden" id="pic" name="pic" value="">
+
                         <input type="hidden" id="request" name="request" value="insert" />
                         <div class="modal-footer normal-button">
-                            <button id="success" type="submit" class="btn btn-success">ยืนยัน</button>
+                            <button id="save" name="save" type="submit" class="btn btn-success">ยืนยัน</button>
                             <button id="cancel" type="button" class="btn btn-danger"
                                 data-dismiss="modal">ยกเลิก</button>
                         </div>
-                        <div class="modal-footer crop-button" hidden>
+                        <div class="modal-footer crop-button">
                             <button type="button" class="btn btn-success btn-crop">ยืนยัน</button>
                             <button type="button" class="btn btn-danger btn-cancel-crop">ยกเลิก</button>
                         </div>
@@ -149,7 +148,7 @@
                     </button>
                     </div>
                     <div class="modal-body">
-                        <div class="main">
+                        <div class="main-edit" >
                             <div class="row mb-4">
                                 <div class="col-xl-3 col-12 text-right">
                                     <span>วันที่<span class="text-danger"> *</span></span>
@@ -157,14 +156,14 @@
                                 <div class="col-xl-8 col-10">
 
                                     <div class="input-group">
-                                        <input type="date" class="form-control" data-toggle="datepicker" id="e_date"
+                                        <input type="date" class="form-control" id="e_date"
                                             name="e_date" required>
-                                        <div class="input-group-append">
+                                        <!-- <div class="input-group-append">
                                             <button type="button"
                                                 class="btn btn-outline-secondary docs-datepicker-trigger" disabled>
                                                 <i class="fa fa-calendar" aria-hidden="true"></i>
                                             </button>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                 </div>
@@ -237,32 +236,38 @@
                                     <span>รูปภาพ<span class="text-danger"> *</span></span>
                                 </div>
                                 <div class="col-xl-8 col-10">
-                                    <div class="grid-img-multiple" id="e_insert_img">
+                                    <div class="grid-img-multiple" id="grid-pic-style-char-edit">
                                         <div class="img-reletive">
-                                            <img src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg"
-                                                width="50px" height="50px" alt="">
-                                            <input type="file" class="form-control" id="p_photo" name="p_photo[]"
-                                                accept=".jpg,.png" multiple>
+                                            <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
+                                            <input type="file" id="pic-style-char-edit" name="picstyle_insert[]" accept=".jpg,.png" multiple>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" id="pic-edit" name="pic-edit" value="">
                             <input type="hidden" name="e_pestAlarmID" id="e_pestAlarmID" value="0" />
+                            <!-- <input type="hidden" name="old_date" id="old_date" value="" />
+                            <input type="hidden" name="old_farm" id="old_farm" value="" />
+                            <input type="hidden" name="old_subfarm" id="old_subfarm" value="" />
+                            <input type="hidden" name="old_note" id="old_note" value="" />
+                            <input type="hidden" name="old_pest" id="old_pest" value="" />
+                            <input type="hidden" name="old_pesttype" id="old_pesttype" value="" /> -->
+
                         </div>
-                        <div class="crop-img">
+                        <div class="crop-img-edit">
                             <center>
-                                <div id="upload-demo" class="center-block"></div>
+                                <div class="center-block upload-demo2-edit"></div>
                             </center>
                         </div>
                         <input type="hidden" id="request" name="request" value="update" />
-                        <div class="modal-footer normal-button">
-                            <button id="e_success" type="submit" class="btn btn-success">ยืนยัน</button>
+                        <div class="modal-footer normal-button-edit">
+                            <button id="edit" type="submit" class="btn btn-success">ยืนยัน</button>
                             <button id="e_cancel" type="button" class="btn btn-danger"
                                 data-dismiss="modal">ยกเลิก</button>
                         </div>
-                        <div class="modal-footer crop-button" hidden>
-                            <button type="button" class="btn btn-success btn-crop">ยืนยัน</button>
-                            <button type="button" class="btn btn-danger btn-cancel-crop">ยกเลิก</button>
+                        <div class="modal-footer crop-button-edit">
+                            <button type="button" class="btn btn-success btn-crop-edit">ยืนยัน</button>
+                            <button type="button" class="btn btn-danger btn-cancel-crop-edit">ยกเลิก</button>
                         </div>
                     </div>
                 </div>
@@ -298,31 +303,8 @@
                                     <!-- <br> -->
                                     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel"
                                         id="silder">
-                                        <div class="carousel-inner">
-                                            <div id="data_char1" class="carousel-item active">
-                                                <?php   $folder = $path_style.$DATAPEST['info'][1]["PID"];;
-                                                $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-                                                $arr = array();
-                                                foreach($objScan as $obj){
-                                                    $type= strrchr($obj,".");
-                                                    if($type == '.png' || $type == '.jpg' ){            
-                                                        $arr[]= $obj;
-                                                    }
-                                                } 
-                                                ?>
-                                                <img class="d-block w-100"
-                                                    src='<?php echo $path_style . $DATAPEST['info'][1]["PID"] . "/". $arr[0]; ?>'
-                                                    style="height:200px;">
-
-                                            </div>
-                                            <?php for ($i = 1; $i < $DATAPEST['info'][1]["NumPicChar"]; $i++) { ?>
-                                            <div id="data_char2"  class="carousel-item">
-
-                                                <img class="d-block w-100"
-                                                    src='<?php echo $path_style . $DATAPEST['info'][1]["PID"] . "/" . $arr[$i]; ?>'
-                                                    style="height:200px;">
-                                            </div>
-                                            <?php } ?>
+                                        <div id="data_char1" class="carousel-inner">
+                                            
                                         </div>
                                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
                                             data-slide="prev">
@@ -337,8 +319,7 @@
                                     </div>
                                     <br>
                                     <h6 class="m-0 font-weight-bold" style="color:#006664">ลักษณะทั่วไป</h6><br>
-                                    <span class="more">
-                                        <?= $DATAPEST['info'][1]["Charactor"]; ?>
+                                    <span id="data_char2" class="more">
                                     </span>
                                     <br>
                                 </div>
@@ -347,29 +328,7 @@
                                     <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel"
                                         id="silder">
                                         <div id="data_dang1"  class="carousel-inner">
-                                            <div class="carousel-item active">
-                                                <?php   $folder = $path_danger.$DATAPEST['info'][1]["PID"];;
-                                                $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-                                                $arr = array();
-                                                foreach($objScan as $obj){
-                                                    $type= strrchr($obj,".");
-                                                    if($type == '.png' || $type == '.jpg' ){            
-                                                        $arr[]= $obj;
-                                                    }
-                                                } 
-                                        ?>
-                                                <img class="d-block w-100"
-                                                    src='<?php echo $path_danger . $DATAPEST['info'][1]["PID"] . "/". $arr[0]; ?> '
-                                                    style="height:200px;">
-                                            </div>
-                                            <?php for ($i = 1; $i < $DATAPEST['info'][1]["NumPicDanger"]; $i++) { ?>
-                                            <div id="data_dang2"  class="carousel-item">
-
-                                                <img class="d-block w-100"
-                                                    src='<?php echo $path_danger . $DATAPEST['info'][1]["PID"] . "/" . $arr[$i]; ?>'
-                                                    style="height:200px;">
-                                            </div>
-                                            <?php } ?>
+                                                
                                         </div>
                                         <a class="carousel-control-prev" href="#carouselExampleControls2" role="button"
                                             data-slide="prev">
@@ -383,10 +342,9 @@
                                         </a>
                                     </div>
                                     <br>
-                                    <h6 class="m-0 font-weight-bold" style="color:#006664"><?php echo $str_danger; ?>
+                                    <h6 class="m-0 font-weight-bold" style="color:#006664">อันตราย
                                     </h6><br>
-                                    <span class="more">
-                                        <?= $DATAPEST['info'][1]["Danger"]; ?>
+                                    <span id="data_dang2" class="more">
                                     </span>
                                     <br>
                                 </div>
@@ -406,6 +364,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                     <h4 class="modal-title">รูปภาพศัตรูพืช</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="container">
@@ -426,6 +387,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                     <h4 class="modal-title">ข้อมูลสำคัญของศัตรูพืช</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="noteModalBody">
                     <span id="n_note"></span>

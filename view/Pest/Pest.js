@@ -18,6 +18,7 @@ $( document ).ready(function() {
 
     $('.btn-edit').click(function(){
       $("#editModal").modal();
+      lid = $(this).attr('lid');
       date = $(this).attr('date');
       farm_id = $(this).attr('farm');
       subfarm_id = $(this).attr('subfarm');
@@ -29,12 +30,20 @@ $( document ).ready(function() {
       $('#e_farm').val(farm_id);
       $('#e_pesttype').val(pesttype_id);
       $('#e_note').val(note);
-
+      $('#e_pestAlarmID').val(lid);
       idSetHtml = '#e_subfarm';
       selectSubfarm(idSetHtml,farm_id,subfarm_id);
       idSetHtml = '#e_pest';
-      console.log('pestid = '+pest_id);
       selectPest(idSetHtml,pesttype_id,pest_id);
+      console.log('lid = '+lid);
+
+      footer = `<div class="img-reletive">
+      <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
+      <input type="file" id="pic-style-char-edit" name="picstyle_insert-edit[]" accept=".jpg,.png" multiple>
+      </div>`
+
+      path = `../../picture/activities/pest/`;
+      setImgEdit(lid, footer,path);
 
     });
 
@@ -69,22 +78,282 @@ $( document ).ready(function() {
 
     $('.btn-pest').click(function(){
       $('#pest_data').modal();
+      DATA_DB = [];
+      arr = [];
+
       pid = $(this).attr('pest');
+      ptid = $(this).attr('pesttype');
       $.post("manage.php", {request: "selectPestByPID",pid: pid}, function(result){
         DATA_DB = JSON.parse(result);
-        console.log(DATA_DB)
+        // console.log(DATA_DB)
         path = "../../icon/pest/" + DATA_DB[1]['PID'] + "/" + DATA_DB[1]['Icon'];
         $('#data_icon').attr('src',path);
         $('#data_name').html('ชื่อ : '+DATA_DB[1]["Name"]);
         $('#data_name').html('ชื่อทางการ : '+DATA_DB[1]["Alias"]);
+
+        if(ptid == 1){
+          subpath = "insect";
+        }else if(ptid == 2){
+          subpath = "disease";
+        }else if(ptid == 3){
+          subpath = "other";
+        }else if(ptid == 4){
+          subpath = "weed";
+        }
+        path_style = "../../picture/pest/"+subpath+"/style/";
+        path_danger = "../../picture/pest/"+subpath+"/danger/";
+
+        $.post("manage.php", {request: "scanDir",pid: pid ,path:path_style}, function(result1){
+          arr = JSON.parse(result1);
+          // console.log(arr)
+  
+          html = "<div class='carousel-item active'>"+
+                    "<img class='d-block w-100'"+
+                    "src='"+path_style+pid+"/"+ arr[0]+"'"+
+                    "style='height:200px;'>"+
+                  "</div>";
+          for (i = 1; i < DATA_DB[1]["NumPicChar"]; i++) {
+            html += "<div class='carousel-item'>"+
+              "<img class='d-block w-100'"+
+              "src='"+path_style+pid+"/"+ arr[i]+"'"+
+              "style='height:200px;'>"+
+              "</div>";
+          }
+  
+          $('#data_char1').html(html);
+          $('#data_char2').html(DATA_DB[1]["Charactor"]);
+        });
+        $.post("manage.php", {request: "scanDir",pid: pid ,path:path_danger}, function(result1){
+          arr = JSON.parse(result1);
+          console.log(arr)
+  
+          html = "<div class='carousel-item active'>"+
+                    "<img class='d-block w-100'"+
+                    "src='"+path_danger+pid+"/"+ arr[0]+"'"+
+                    "style='height:200px;'>"+
+                  "</div>";
+          for (i = 1; i < DATA_DB[1]["NumPicDanger"]; i++) {
+            html += "<div class='carousel-item'>"+
+              "<img class='d-block w-100'"+
+              "src='"+path_danger+pid+"/"+ arr[i]+"'"+
+              "style='height:200px;'>"+
+              "</div>";
+          }
+  
+          $('#data_dang1').html(html);
+          $('#data_dang2').html(DATA_DB[1]["Danger"]);
+          showmore();
+
+        });
       });
+
+      
     });
 
+    $('.btn-photo').click(function(){
+      $('#picture').modal();
+      lid = $(this).attr("lid");
+      path = "../../picture/activities/pest/";
+      loadPhoto_LogPestAlarm(path,lid);
+    });
+
+    $('#save').click(function(){
+      let pic_sc = new Array()
+      $('.pic-SC').each(function(i, obj) {
+        pic_sc.push($(this).attr('src') + 'manu20')
+      });
+      $('#pic').val(pic_sc);
+
+      var PIC_SC = $(".pic-SC");
+
+      if(PIC_SC.length == 0){
+          // console.log('PIC_SC.length == 0');
+          $("#pic-style-char").attr("required","");
+          $("#pic-style-char")[0].setCustomValidity('กรุณาเพิ่มรูป');
+
+      }else{
+          $("#pic-style-char").removeAttr("required");
+          $("#pic-style-char")[0].setCustomValidity('');
+      }
+
+    });
+    $('#edit').click(function(){
+      let pic_sc = new Array()
+      $('.pic-SC-edit').each(function(i, obj) {
+        pic_sc.push($(this).attr('src') + 'manu20')
+      });
+      $('#pic-edit').val(pic_sc);
+
+      var PIC_SC = $(".pic-SC-edit");
+
+      if(PIC_SC.length == 0){
+          // console.log('PIC_SC.length == 0');
+          $("#pic-style-char-edit").attr("required","");
+          $("#pic-style-char-edit")[0].setCustomValidity('กรุณาเพิ่มรูป');
+
+      }else{
+          $("#pic-style-char-edit").removeAttr("required");
+          $("#pic-style-char-edit")[0].setCustomValidity('');
+      }
+
+      // if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
+
+    });
+ 
 });
+// function check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger) {
+//   if (o_name == name && o_alias == alias && o_charstyle == charstyle && o_danger == danger) {
+//       return false;
+//   }
+//   return true;
+// }
+
+function setImgEdit(id, footer,path) {
+  // console.log('setIMG')
+  $.post("manage.php", {request: 'scanDir',path: path ,pid: id}, function(result){
+       console.log(result);
+      arr = JSON.parse(result);
+
+      console.log(arr);
+      var textPicChar = ''
+
+      for (i = 0;i < arr.length ;i++) {
+          textPicChar += `<div class="card" width="70px" hight="70px">
+                              <div class="card-body" style="padding:0;">
+       `
+          // console.log('arr[i] = '+arr[i]);
+          // path = `../../picture/pest/${folder}/${type}/${pid}/${arr[i]}`
+          textPicChar += `<img class="pic-SC-edit" src = "${path}${id}/${arr[i]}" id="img${i}-${(+new Date)}" width="100%" hight="100%" />`
+          textPicChar += `</div>
+          <div class="card-footer">
+              <button  type="button" class="btn btn-warning edit-img-edit">แก้ไข</button>
+              <button  type="button" class="btn btn-danger delete-img">ลบ</button>
+          </div>
+      </div>`
+      }
+      textPicChar += footer
+          $('#grid-pic-style-char-edit').html(textPicChar);
+  
+          $('#pic-style-char-edit').on('change', function() {
+              // alert('change')
+              imagesPreview(this, '#grid-pic-style-char-edit', 'pic-style-char-edit', 'pic-SC-edit','edit-img-edit');
+            });
+  
+          $(document).on('click', '.edit-img-edit', function() {
+              let url = $(this).parent().prev().children().attr('src')
+              // console.log('url = '.url);
+              idImg = $(this).parent().prev().children().attr('id')
+              cropImgEdit(url, 'square')
+          })
+
+          function cropImgEdit(url, type) {
+              // console.log('url = '+url);
+              // console.log('type = '+type);
+              // console.log('crop-img-edit');
+              $('.main-edit').hide()
+              $('.normal-button-edit').hide()
+              $('.crop-img-edit').show()
+              $('.crop-button-edit').show()
+      
+              let UC = $('.upload-demo2-edit').croppie({
+                  viewport: {
+                      width: 300,
+                      height: 200,
+                      type: type
+                  },
+                  enforceBoundary: false,
+                  enableExif: true
+              });
+              UC.croppie('bind', {
+                  url: url
+              }).then(function() {
+                  // console.log('jQuery bind edit complete');
+              });
+          }
+
+          $('.crop-img-edit').hide()
+          $('.crop-button-edit').hide()
+
+
+  });
+
+}
+
+function showmore(){
+  // Configure/customize these variables.
+  console.log('showmore');
+  var showChar = 180; // How many characters are shown by default
+  var ellipsestext = "...";
+  var moretext = "Show more";
+  var lesstext = "Show less";
+  $('.more').each(function() {
+      var content = $(this).html();
+      content = content.trim();
+      content += ' ';
+      console.log(content);
+      // console.log('lenght = '+content.length);
+
+      for(i = showChar ; i<content.length; i++){
+          if(content[i] == ' '){
+              showChar = i;
+              break;
+          }
+      }
+
+      if ((content.length-1) > showChar) {
+          
+          var c = content.substr(0, showChar);
+          var h = content.substr(showChar, content.length - showChar);
+
+          var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h +
+              '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+          
+          $(this).html(html);
+      }
+
+  });
+  $(".morelink").click(function() {
+         if ($(this).hasClass("less")) {
+             $(this).removeClass("less");
+             $(this).html(moretext);
+         } else {
+             $(this).addClass("less");
+             $(this).html(lesstext);
+         }
+         $(this).parent().prev().toggle();
+         $(this).prev().toggle();
+         return false;
+ 
+     });
+
+}
+
+function loadPhoto_LogPestAlarm(path,id) {
+  console.log(path);
+  console.log(id);
+
+  $.post("manage.php", {request: "scanDir",path: path,pid: id}, function(result){
+    // console.log(result);
+    let data1 = JSON.parse(result);
+    console.log(data1);
+
+    let text = "";
+    PICS = path+id;
+    for (i in data1) {
+        text += `<a href="${PICS+"/"+data1[i]}" class="col-xl-3 col-3 margin-photo" target="_blank">
+                    <img src="${PICS+"/"+data1[i]}"" class="img-gal">
+                </a>`
+    }
+    $("#fetchPhoto").html(text);
+  
+  });
+}
 
 function selectSubfarm(idSetHtml,fmid,set){
   $.post("manage.php", {request: "selectSubfarm",fmid: fmid}, function(result){
     DATA_DB = JSON.parse(result);
+    console.log('set subfarm id = '+set)
+    console.log(DATA_DB);
     html = "<option selected value=''>เลือกแปลง</option>";
     for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
       html +='<option value='+DATA_DB[i]['fsid']+'>'+DATA_DB[i]['namesub']+'</option>';

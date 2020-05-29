@@ -5,6 +5,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: #006664;">
                     <h4 class="modal-title" id="largeModalLabel" style="color:white"><?php echo $str_title_add; ?></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="main">
@@ -146,6 +149,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: #006664;">
                     <h4 class="modal-title" id="largeModalLabel" style="color:white"><?php echo $str_title_edit; ?></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="main-edit">

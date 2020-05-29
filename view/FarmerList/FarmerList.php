@@ -45,7 +45,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
         <?php
         creatCard("card-color-one",   "จำนวนเกษตรกร", getcountFarmer() . " คน", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "dashboard");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่ ".getAreaNgan()." งาน", "dashboard");
         creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");
         ?>
 

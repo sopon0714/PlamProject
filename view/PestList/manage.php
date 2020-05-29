@@ -110,7 +110,7 @@
           mkdir($path);
         }
         $path = $folderStyle.$pid;
-        if (!file_exists($folderDanger.$pid)) {
+        if (!file_exists($folderStyle.$pid)) {
           mkdir($path);
         }
         $path = $folderDanger.$pid;
@@ -253,7 +253,7 @@
         echo '<br>';
         echo $folderIcon.$pid."/".$PESTLIST[1]['Icon'].'<br>';
         //if old icon
-        if($_POST['e_pic1'] !=$folderIcon.$pid."/".$PESTLIST[1]['Icon']){
+        if($_POST['e_pic1'] != $folderIcon.$pid."/".$PESTLIST[1]['Icon']){
           echo 'not eq';
           $dataLogo = getImgPest($logo);
         }else{
@@ -478,71 +478,5 @@
       $DATA = selectData($sql);
       return $DATA;
     }
-    function delAllFileInfolder($folder=''){
-      if (is_dir($folder)&&$folder!='') {
-        //Get a list of all of the file names in the folder.
-        $files = glob($folder . '/*');
-         
-        //Loop through the file list.
-        foreach($files as $file){
-          //Make sure that this is a file and not a directory.
-          if(is_file($file)){
-            //Use the unlink function to delete the file.
-            unlink($file);
-          }
-        }
-      }
-    }
-    function check_Pic($folder,$dataPic){
-      $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-      print_r($objScan);
 
-      $checkPic = array();
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        if($type == '.png' || $type == '.jpg' ){
-          $checkPic[$obj] = 0;
-        }
-      }
-
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        echo 'type ='.$type;
-        if($type == '.png' || $type == '.jpg' ){
-          foreach($dataPic as $pic){
-            echo 'pic  = '.$pic.'<br>';
-            if($folder."/".$obj == $pic || ",".$folder."/".$obj == $pic ){
-              $checkPic[$obj]++;
-            }
-          }
-        }
-      }
-      return $checkPic;
-
-    }
-    function del_Pic($folder,$checkPic){
-      $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        if($type == '.png' || $type == '.jpg' ){            
-          if($checkPic[$obj] == 0){
-            echo 'del pho'.$obj;
-            unlink($folder."/".$obj);
-          }
-        }
-      }
-    }
-
-    function check_dup_name_picture($folder,$namePic){
-      $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        if($type == '.png' || $type == '.jpg' ){            
-          if($obj == $namePic){
-            return true;
-          }
-        }
-      }
-      return false;
-    }
 

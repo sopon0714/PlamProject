@@ -5,6 +5,9 @@
         <div class="modal-content">
             <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                 <h4 class="modal-title" style="color:white">เพิ่มหน่วยงาน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body" id="addModalBody">
                 <div class="container">
@@ -59,6 +62,9 @@
         <div class="modal-content">
             <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                 <h4 class="modal-title" style="color:white">แก้ไขหน่วยงาน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
             </div>
             <div class="modal-body" id="addModalBody">
                 <div class="container">

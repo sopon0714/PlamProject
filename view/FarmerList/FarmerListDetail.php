@@ -52,7 +52,7 @@ $FARM = getOwnerFarmer($farmerID);
             <?php
             creatCard("card-color-one",   "จำนวนสวน", $countOwnerFarm . " สวน", "waves");
             creatCard("card-color-two",   "จำนวนแปลง", $countOwnerSubFarm . " แปลง", "group");
-            creatCard("card-color-three",   "พื้นที่ทั้งหมด", $countOwnerAreaRai . " ไร่", "dashboard");
+            creatCard("card-color-three",   "พื้นที่ทั้งหมด", $countOwnerAreaRai . " ไร่ ".$countOwnerAreaNgan." งาน", "dashboard");
             creatCard("card-color-four",   "จำนวนต้นไม้", $countOwnerTree . " ต้น", "format_size");
             ?>
 

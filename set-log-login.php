@@ -49,7 +49,8 @@ function getDIMDate()
         }
         date_default_timezone_set("Asia/Bangkok");
         $yearQuarter = ceil(date("n") / 3);
-        $sql = "INSERT INTO `dim-time`(`Date`,`dd`,`Day`,`Week`,`Season`,`Month`,`Quarter`,`Year1`,`Year2`) VALUES ('" . date("Y-m-d") . "','" . date("j") . "','" . date("w") . "','" . date("W") . "','" . $Season . "','" . date("n") . "','" . $yearQuarter . "','" . date("Y") . "','" . (date("Y") + 543) . "')";
+        $sql = "INSERT INTO `dim-time`(`Date`,`dd`,`Day`,`Week`,`Season`,`Month`,`Quarter`,`Year1`,`Year2`)
+        VALUES ('" . date("Y-m-d") . "','" . date("j") . "','" . date("w") . "','" . date("W") . "','" . $Season . "','" . date("n") . "','" . $yearQuarter . "','" . date("Y") . "','" . (date("Y") + 543) . "')";
         $idinsert = addinsertData($sql);
         $sql = "SELECT * FROM `dim-time` WHERE ID = '" . $idinsert . "'";
         $DIMTIME = selectData($sql);
