@@ -231,8 +231,57 @@ $FARMER = getAllFarmer();
                             </div>
                         </div>
                     </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>ที่อยู่ </span>
+                        </div>
+                        <div class="col-xl-5 col-12">
+                            <input type="text" class="form-control" name="addfarmSF" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกที่อยู่แปลง">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-right">
+                            <span>จังหวัด</span>
+                        </div>
+                        <div class="col-lg-5 col-md-8 col-sm-12 col-xs-12">
+                            <select id="provinceSF" name="provinceSF" class="form-control" required="" oninput="setCustomValidity('')">
+                                <option selected value='0' disabled=""> เลือกจังหวัด</option>
+                                <?php
+                                for ($i = 1; $i < sizeof($PROVINCE); $i++) {
+                                ?>
+                                    <option value="<?php echo $PROVINCE[$i]["AD1ID"]; ?>"> <?php echo $PROVINCE[$i]["Province"]; ?> </option>
+                                <?php
+                                }
+                                ?>
+                            </select>
 
+                        </div>
 
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>อำเภอ</span>
+                        </div>
+                        <div class="col-xl-5 col-12">
+                            <select name="distrinctSF" class="form-control" id="distrinctSF" required="" oninput="setCustomValidity('')">
+                                <option selected value=0 disabled="">เลือกอำเภอ</option>
+
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-12 text-right">
+                            <span>ตำบล</span>
+                        </div>
+                        <div class="col-xl-5 col-12">
+                            <select name="subdistrinctSF" id="subdistrinctSF" class="form-control" required="" oninput="setCustomValidity('')">
+                                <option selected value=0 disabled="">เลือกตำบล</option>
+
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <input type="hidden" name="fmid" value="<?= $fmid ?>">
@@ -242,6 +291,35 @@ $FARMER = getAllFarmer();
                     <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMapModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header header-modal" style="background-color: <?= $color ?>">
+                <h4 class=" modal-title">แก้ไขตำแหน่งสวน</h4>
+            </div>
+            <div class="modal-body" id="addModalBody">
+
+                <div class="row mb-4">
+                    <div id="map_area_edit" style="width:100%; height:300px;"></div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-8 text-right">
+                        <label style="color: red" id="erormap"> </label>
+
+                    </div>
+                </div>
+                <input type="hidden" id="la" name="la" value="0">
+                <input type="hidden" id="long" name="long" value="0">
+                <input type="hidden" name="FMIDmap" id="FMIDmap" value="<?= $fmid ?>">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btn_submit_editMap">ยืนยัน</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

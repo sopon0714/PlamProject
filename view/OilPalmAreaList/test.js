@@ -1,20 +1,66 @@
-var dataFarm;
 var dataSubFarm;
+var FSID = $('#FSIDmap').val();
+var maxyear = $('#maxyear').attr("maxyear");
 $(document).ready(function() {
-    $('.tt').tooltip();
-    updateInfoFarm();
-    updateInfoSubFarm();
-    $('#btn_edit_detail1').click(function() {
-        $("#editDetailModal").modal('show');
+    $("#btn_remove_mark").click(function() {
+        for (let i = 0; i < mapedit.markers.length; i++) {
+            mapedit.markers[i].setMap(null);
+        }
+        numCoor = 0;
+        mapedit.markers = [];
+        $('#erormap').html(" ")
     });
+    $("#btn_submit_editMap").click(function() {
+        if (mapedit.markers.length <= 2) {
+            $('#erormap').html("กรุณามาค์จุดอย่างน้อย 3 ตำแหน่งรอบพื้นที่แปลง")
+        } else {
+            var lat = [];
+            var lng = [];
+            var id = $('#FSIDmap').val();
+            var idf = $('#FMIDmap').val();
+            for (i = 0; i < mapedit.markers.length; i++) {
+                lat.push(mapedit.markers[i].position.lat())
+                lng.push(mapedit.markers[i].position.lng())
+            }
+            console.log(JSON.stringify(lat));
+            $.ajax({
+                type: "POST",
+                url: "./manage.php",
+                data: {
+                    resultlat: JSON.stringify(lat),
+                    resultlng: JSON.stringify(lng),
+                    FSID: id,
+                    action: "editlocationMap"
+
+                },
+                async: false,
+                success: function(result) {
+                    window.location = "./OilPalmAreaListSubDetail.php?FSID=" + id + "&FMID=" + idf;
+                }
+            });
+        }
+    });
+    $("#map_area_edit").click(function() {
+        $('#erormap').html("")
+    });
+    updateInfoSubFarm();
+    $("#plantingmodal").click(function() {
+        $("#addplant").modal('show');
+    });
+
     $('#edit_photo').click(function() {
         $("#photoModal").modal('show');
     });
-    $('#btn_add_subfarm').click(function() {
-        $("#addSubFarmModal").modal('show');
+    $('#btn_edit_subfarm').click(function() {
+        $("#editSubFarmModal").modal('show');
+    });
+    $(document).on('change', '.item-img', function() {
+        readFile(this);
+    });
+    $("#btn_edit_map").click(function() {
+        $("#editMapModal").modal('show');
     });
     $('#province').change(function() {
-
         var e = document.getElementById("province");
         var select_id = e.options[e.selectedIndex].value;
         data_show(select_id, "distrinct", '');
@@ -29,80 +75,6 @@ $(document).ready(function() {
         data_show(select_id, "subdistrinct", '');
 
     });
-    ////////////////////////////////////////////
-    $('#provinceSF').change(function() {
-
-        var e = document.getElementById("province");
-        var select_id = e.options[e.selectedIndex].value;
-        data_show(select_id, "distrinctSF", '');
-        $("#subdistrinctSF").html('<option selected value=0 disabled="">เลือกตำบล</option>');
-
-
-    });
-    $('#distrinctSF').change(function() {
-
-        var e = document.getElementById("distrinct");
-        var select_id = e.options[e.selectedIndex].value;
-        data_show(select_id, "subdistrinctSF", '');
-
-    });
-
-    $('.btn-add-subFarm').click(function() {
-
-        var nameSubfarm = $("#addSubFarmModal input[name='nameSubfarm']");
-        var initialsSubfarm = $("#addSubFarmModal input[name='initialsSubfarm']");
-        var AreaRai = $("#addSubFarmModal input[name='AreaRai']");
-        var AreaNgan = $("#addSubFarmModal input[name='AreaNgan']");
-        var AreaWa = $("#addSubFarmModal input[name='AreaWa']");
-
-        let dataNull = [nameSubfarm, initialsSubfarm];
-        let dataNumNull = [AreaRai, AreaNgan, AreaWa];
-        //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
-        if (!checkNull(dataNull)) return;
-        if (!checkNumNull(dataNumNull)) return;
-
-        //ตรวจสอบว่ามีชื่อซ้ำกันหรือไม่
-        if (!checkSameNameSF(nameSubfarm, -1)) return;
-        if (!checkSameAliasSF(initialsSubfarm, -1)) return;
-    });
-
-
-    $('.editFarm').click(function() {
-
-        var IDFarm = $("#form-edit-farm input[name='IDFarm']");
-        var namefarm = $("#form-edit-farm input[name='namefarm']");
-        var aliasfarm = $("#form-edit-farm input[name='aliasfarm']");
-        var addfarm = $("#form-edit-farm input[name='addfarm']");
-        var province = $("#form-edit-farm select[name='province']");
-        var distrinct = $("#form-edit-farm select[name='distrinct']");
-        var subdistrinct = $("#form-edit-farm select[name='subdistrinct']");
-        var farmer = $("#form-edit-farm select[name='farmer']");
-        let dataNull = [namefarm, aliasfarm, addfarm];
-        let dataSelectNull = [province, distrinct, subdistrinct, farmer];
-        //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
-        if (!checkNull(dataNull)) return;
-        if (!checkSelectNull(dataSelectNull)) return;
-        //ตรวจสอบว่ามีชื่อซ้ำกันหรือไม่
-        if (!checkSameName(namefarm, IDFarm.val())) return;
-        if (!checkSameAlias(aliasfarm, IDFarm.val())) return;
-    });
-
-    function updateInfoFarm() {
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: "data.php",
-            data: {
-                result: 'updateInfoFarm'
-
-            },
-            async: false,
-            success: function(result) {
-                dataFarm = result;
-
-            }
-        });
-    }
 
     function updateInfoSubFarm() {
         $.ajax({
@@ -125,8 +97,6 @@ $(document).ready(function() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                // console.log(result);
                 document.getElementById(result).innerHTML = xhttp.responseText;
 
             };
@@ -135,6 +105,72 @@ $(document).ready(function() {
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
     }
+
+    ////////////////////////////////////////////
+    $('.btn-edit-subFarm').click(function() {
+
+        var fsid = $("#editSubFarmModal input[name='fsid']");
+        var nameSubfarm = $("#editSubFarmModal input[name='nameSubfarm']");
+        var initialsSubfarm = $("#editSubFarmModal input[name='initialsSubfarm']");
+        var AreaRai = $("#editSubFarmModal input[name='AreaRai']");
+        var AreaNgan = $("#editSubFarmModal input[name='AreaNgan']");
+        var AreaWa = $("#editSubFarmModal input[name='AreaWa']");
+        var addfarmSF = $("#editSubFarmModal input[name='addfarmSF']");
+        var provinceSF = $("#editSubFarmModal select[name='province']");
+        var distrinctSF = $("#editSubFarmModal select[name='distrinct']");
+        var subdistrinctSF = $("#editSubFarmModal select[name='subdistrinct']");
+        let dataNull = [nameSubfarm, initialsSubfarm];
+        let dataNull2 = [addfarmSF];
+        let dataNumNull = [AreaRai, AreaNgan, AreaWa];
+        let dataSelectNull = [provinceSF, distrinctSF, subdistrinctSF];
+        //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
+        if (!checkNull(dataNull)) return;
+
+        if (!checkNumNull(dataNumNull)) return;
+
+        if (!checkNull(dataNull2)) return;
+
+        if (!checkSelectNull(dataSelectNull)) return;
+
+
+        //ตรวจสอบว่ามีชื่อซ้ำกันหรือไม่
+        if (!checkSameNameSF(nameSubfarm, fsid.val.val())) return;
+        if (!checkSameAliasSF(initialsSubfarm, fsid.val())) return;
+
+    });
+    $('.btn-submit-plantting').click(function() {
+
+        var TypePlantting = $("#addplant select[name='TypePlantting']");
+        var dateActive = $("#addplant input[name='dateActive']");
+        var PalmTree = $("#addplant input[name='PalmTree']");
+        let dataSelectNull = [TypePlantting];
+        var varDate = new Date(dateActive.val()); //dd-mm-YYYY
+        var today = new Date();
+        // console.log(varDate);
+        //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
+        if (!checkSelectNull(dataSelectNull)) return;
+        if (dateActive.val() == "") {
+            dateActive[0].setCustomValidity('กรุณาเลิอกวันที่')
+            return;
+        } else {
+            dateActive[0].setCustomValidity('');
+        }
+        if (PalmTree.val() == "0") {
+            PalmTree[0].setCustomValidity('จำนวนต้นไม้ห้ามเป็น 0 ต้น')
+            return;
+        } else {
+            PalmTree[0].setCustomValidity('');
+        }
+
+        if (varDate > today) {
+            dateActive[0].setCustomValidity('ไม่สามารถเลือกวันที่นี้ได้')
+            return;
+        } else {
+            dateActive[0].setCustomValidity('');
+        }
+
+
+    });
 
     function checkNull(selecter) {
         for (i in selecter) {
@@ -161,7 +197,7 @@ $(document).ready(function() {
 
     function checkSelectNull(selecter) {
         for (i in selecter) {
-            if (selecter[i].val() == null) {
+            if (selecter[i].val() == null || selecter[i].val() == '0') {
                 selecter[i][0].setCustomValidity('กรุณาเลือกข้อมูล');
                 return false;
             } else selecter[i][0].setCustomValidity('');
@@ -169,40 +205,8 @@ $(document).ready(function() {
         return true;
     }
 
-    function checkSameName(name, id) { // check same name
-
-        for (i in dataFarm) {
-            console.log(dataFarm[i].Name);
-            if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Name && dataFarm[i].FMID != id) {
-                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
-                return false;
-            } else {
-                name[0].setCustomValidity('');
-            }
-        }
-        return true;
-
-    }
-
-    function checkSameAlias(name, id) { // check same Alias
-
-        for (i in dataFarm) {
-            console.log(dataFarm[i].Alias);
-            if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Alias && dataFarm[i].FMID != id) {
-                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
-                return false;
-            } else {
-                name[0].setCustomValidity('');
-            }
-        }
-        return true;
-
-    }
-
     function checkSameNameSF(name, id) { // check same name
-
         for (i in dataSubFarm) {
-            console.log(dataSubFarm[i].Name);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataSubFarm[i].Name && dataSubFarm[i].FSID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
                 return false;
@@ -217,8 +221,8 @@ $(document).ready(function() {
     function checkSameAliasSF(name, id) { // check same Alias
 
         for (i in dataSubFarm) {
-            console.log(dataSubFarm[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataSubFarm[i].Alias && dataSubFarm[i].FSID != id) {
+                // alert(name.val().trim().replace(/\s\s+/g, ' ') + "->" + dataSubFarm[i].Alias + "/" + dataSubFarm[i].FSID + "->" + id);
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;
             } else {
@@ -229,11 +233,6 @@ $(document).ready(function() {
 
     }
 
-    // --------------------------------------- crop photo ------------------------------------------------------
-
-    $(document).on('change', '.item-img', function() {
-        readFile(this);
-    });
 
     function readFile(input) {
         if (input.files && input.files[0]) {
@@ -302,8 +301,7 @@ $(document).ready(function() {
         $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
     });
     $(document).on('click', '.insertSubmit', function(e) { // insert submit
-        // console.log('sss');
-        // console.log($("#img-insert").attr('src'));
+
 
         if ($('#img-insert').attr('src') == 'https://via.placeholder.com/200x200.png') {
             $("#pic-logo").attr("required", "");
@@ -314,15 +312,225 @@ $(document).ready(function() {
         }
     })
     $('#photoModal').on('hidden.bs.modal', function() {
-            $('#upload-demo').croppie('destroy')
-            $('.divName').show()
-            $('.divHolder').show()
-            $('.divCrop').hide()
-            $('.buttonCrop').hide()
-            $('.buttonSubmit').show()
-            $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
-        })
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        $('#upload-demo').croppie('destroy')
+        $('.divName').show()
+        $('.divHolder').show()
+        $('.divCrop').hide()
+        $('.buttonCrop').hide()
+        $('.buttonSubmit').show()
+        $('#img-insert').attr('src', "https://via.placeholder.com/200x200.png");
+    });
+    // ส่วนของกราฟ////////////////////////////////////////////////////////////////////////////////////////////////
+    load_year(maxyear, FSID);
+    load_month(maxyear, FSID);
+    $("#year").change(function() {
+
+        var year = $("#year").val();
+
+        if (year != '') {
+            load_year(year, FSID);
+            load_month(year, FSID);
+        }
+    });
+
+    function load_year(year, fsid) {
+        $.ajax({
+            url: "data.php",
+            method: "POST",
+            data: {
+                year: year,
+                fsid: fsid,
+                result: "getYearProdect"
+            },
+            dataType: "JSON",
+            success: function(data) {
+                chartyear(data);
+            }
+        });
+
+    }
+
+    function load_month(year, fsid) {
+        $.ajax({
+            url: "data.php",
+            method: "POST",
+            data: {
+                year: year,
+                fsid: fsid,
+                result: "getMProdect"
+            },
+            dataType: "JSON",
+            success: function(data) {
+                chartmonth(data);
+            }
+        });
+    }
+    // ผลผลิตต่อเดือน/ ///////////////////////////////////////////////////////
+    function chartmonth(chart_data) {
+        $('.PDM').empty()
+        $('.PDM').html(` <canvas id="productMonth" style="height:250px;"></canvas>`)
+        console.table(chart_data);
+        let data2 = []
+        var i, j = 0;
+
+        for (i = 0; i < 12; i++) {
+            if (chart_data[j] != null) {
+                if (i == chart_data[j].Month - 1) {
+                    data2.push(parseFloat(chart_data[j].Weight).toFixed(4))
+                    j++;
+                } else {
+                    data2.push(0)
+                }
+            } else {
+                data2.push(0)
+            }
+        }
+
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+                position: 'top',
+                labels: {
+                    boxWidth: 80,
+                    fontColor: 'black'
+                }
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'ผลผลิต (ก.ก.)'
+                    },
+                    gridLines: {
+                        display: true
+                    },
+                    ticks: {
+                        min: 0
+
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'รายเดือน'
+                    },
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        min: 0
+
+                    }
+                }],
+            }
+        };
+        var speedData = {
+            labels: ["ม.ค.", "ก.พ.", "มี.ค.",
+                "เม.ย", "พ.ค.", "มิ.ย.",
+                "ก.ค.", "ส.ค.", "ก.ย.",
+                "ต.ค.", "พ.ย.", "ธ.ค."
+            ],
+            datasets: [{
+                data: data2,
+                backgroundColor: '#05acd3'
+            }]
+        };
+
+        var ctx = $("#productMonth");
+        var plantPie = new Chart(ctx, {
+            type: 'bar',
+            data: speedData,
+            options: chartOptions
+        });
+
+
+    }
+    // ผลผลิตต่ปี///////////////////////////////////////////////////
+    function chartyear(chart_data) {
+        $('.PDY').empty();
+        $('.PDY').html(` <canvas id="productYear" style="height:250px;"></canvas>`);
+        let labelData = [];
+        let data2 = [];
+        var year = $("#year").val();
+        var thisYear;
+        var j = 0;
+        for (i = 0; i < 3; i++) {
+            j = 0;
+            thisYear = year - 2 + i;
+            for (j = 0; j < chart_data.length; j++) {
+                if (chart_data[j].Year2 == thisYear) {
+                    labelData.push(chart_data[j].Year2);
+                    data2.push(parseFloat(chart_data[j].Weight).toFixed(4));
+                    break;
+                }
+            }
+            if (j == chart_data.length) {
+                if (thisYear < year) {
+                    continue;
+                }
+                labelData.push(thisYear);
+                data2.push(0);
+            }
+        }
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+                position: 'top',
+                labels: {
+                    boxWidth: 60,
+                    fontColor: 'black'
+                }
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'ผลผลิต (ก.ก.)'
+                    },
+                    gridLines: {
+                        display: true
+                    },
+                    ticks: {
+                        min: 0
+
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'รายปี'
+                    },
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        min: 0
+
+                    }
+                }],
+            }
+        };
+        var speedData = {
+            labels: labelData,
+            datasets: [{
+                data: data2,
+                backgroundColor: '#00ce68'
+            }]
+        };
+
+        var ctx = $("#productYear");
+        var plantPie = new Chart(ctx, {
+            type: 'bar',
+            data: speedData,
+            options: chartOptions
+        });
+    }
+
 
 
 

@@ -131,7 +131,7 @@ function getCountAllArea()
 //จำนวนพื้นที่ทั้งหมด
 function getCountArea()
 {
-    $sql = "SELECT SUM(`AreaRai`) AS countArea FROM `db-subfarm`";
+    $sql = "SELECT IF(SUM(`AreaRai`) IS NULL ,0,SUM(`AreaRai`)) AS countArea FROM `db-subfarm`";
     return selectData($sql)[1]['countArea'];
 }
 
@@ -368,7 +368,7 @@ function getAreaNgan()
 // จำนวนต้นไม้
 function getCountTree()
 {
-    $sql = "SELECT sum(`log-farm`.`NumTree`) as numTree FROM `log-farm` where `log-farm`.`EndT` is null AND `log-farm`.`DIMSubfID` is null";
+    $sql = "SELECT IF(sum(`log-farm`.`NumTree`) IS NULL,0,sum(`log-farm`.`NumTree`) )as numTree FROM `log-farm` where `log-farm`.`EndT` is null AND `log-farm`.`DIMSubfID` is null";
     $numTree = selectData($sql)[1]['numTree'];
     return $numTree;
 }
@@ -424,12 +424,22 @@ function getOilPalmAreaListDetail($DIMfarmID)
 
 function getOilPalmAreaListDetailByIdFarm($fmid)
 {
-    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year ,`log-farm`.`Latitude`,`log-farm`.`Longitude`
-    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
-    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid ORDER BY `db-subfarm`.`Name`";
+    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year ,`log-farm`.`Latitude`,`log-farm`.`Longitude`,`dim-address`.`Province`,`dim-address`.`Distrinct`
+    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.DIMaddrID INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
+    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid  AND ( `log-planting`.`NumGrowth1` IS NOT NULL OR `dim-time`.`Date` IS NULL ) ORDER BY `db-subfarm`.`Name`";
     $OilPalmAreaListDetail = selectData($sql);
     return $OilPalmAreaListDetail;
 }
+
+function getOldPalmByIdSubFarm($fsid)
+{
+    $sql = "SELECT `db-subfarm`.`FSID` ,`log-farm`.`NumTree`, FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year 
+    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.DIMaddrID INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
+    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FSID`= $fsid AND `log-planting`.`NumGrowth1` IS NOT NULL";
+    $OilPalmAreaListDetail = selectData($sql);
+    return $OilPalmAreaListDetail;
+}
+
 
 // ***************** เริ่ม sql หน้า OilPalmAreaListDetail.php *****************
 
@@ -460,6 +470,17 @@ function getAreatotalByIdFarm($fmid)
     INNER JOIN `db-farm` ON `db-farm`.`FMID`=`dim-farm`.`dbID` 
     WHERE `log-farm`.`DIMSubfID`IS  NULL AND `log-farm`.`EndT` IS NULL
     AND `dim-farm`.`IsFarm`=1 AND `db-farm`.`FMID`=$fmid";
+    $Areatotal = selectData($sql);
+    return $Areatotal;
+}
+function getAreatotalByIdSubFarm($fsid)
+{
+    $sql = "SELECT `log-farm`.`ID`,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,`log-farm`.`AreaWa` 
+    FROM `log-farm` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-farm`.`DIMSubfID`
+    INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID`=`dim-farm`.`dbID` 
+    WHERE  `log-farm`.`EndT` IS NULL
+    AND `dim-farm`.`IsFarm`=0 AND `db-subfarm`.`FSID`=$fsid";
     $Areatotal = selectData($sql);
     return $Areatotal;
 }
@@ -507,7 +528,7 @@ function getAddress($FMID)
 // sql ค่าของ DATAFarm มีการรับค่า fmid
 function getDATAFarmByFMID($fmid)
 {
-    $sql = "SELECT FMID,Name,Alias,Address,UFID,Icon, `db-farm`.`AD3ID`,`db-subdistrinct`.`AD2ID`,`db-distrinct`.`AD1ID`
+    $sql = "SELECT FMID,Name,Alias,Address,UFID,Icon, `db-farm`.`AD3ID`,`db-subdistrinct`.`AD2ID`,`db-distrinct`.`AD1ID`,`db-farm`.`Latitude`,`db-farm`.`Longitude`
     FROM `db-farm`INNER JOIN `db-subdistrinct`ON `db-farm`.`AD3ID`=`db-subdistrinct`.`AD3ID`
     INNER JOIN `db-distrinct`ON`db-distrinct`.`AD2ID`=`db-subdistrinct`.`AD2ID` WHERE `FMID`='$fmid'";
     $DATAFarm = selectData($sql);
@@ -563,7 +584,7 @@ function getCoorsFarm($fmid)
     INNER JOIN `db-subfarm` ON `db-coorfarm`.`FSID`=`db-subfarm`.`FSID`
     INNER JOIN `db-farm` ON `db-subfarm`.`FMID` = `db-farm`.`FMID`
     WHERE `db-farm`.`FMID` =$fmid ORDER BY `db-subfarm`.`FSID`,`db-coorfarm`.`Corner`";
-    $Coorsfarm = select($sql);
+    $Coorsfarm = selectData($sql);
     return $Coorsfarm;
 }
 
@@ -574,8 +595,15 @@ function getCountCoor($fmid)
     INNER JOIN `db-subfarm` ON `db-coorfarm`.`FSID`=`db-subfarm`.`FSID` 
     INNER JOIN `db-farm` ON `db-subfarm`.`FMID` = `db-farm`.`FMID` 
     WHERE `db-farm`.`FMID` = '$fmid' GROUP BY `db-subfarm`.`FSID`";
-    $Numcoor = select($sql);
+    $Numcoor = selectData($sql);
     return $Numcoor;
+}
+
+function getCoorsSubFarm($fsid)
+{
+    $sql = "SELECT * FROM `db-coorfarm` WHERE `db-coorfarm`.`FSID` =$fsid ORDER BY `db-coorfarm`.`Corner`";
+    $Coorsfarm = selectData($sql);
+    return $Coorsfarm;
 }
 
 
@@ -595,22 +623,21 @@ function getLogfarmID($suid)
 }
 
 // sql ค่าของ DataFarm มีการรับค่า ID ของ FSID
-function getDataFarmByFSID($suid)
+function getDataSubFarmByFSID($suid)
 {
     $sql = "SELECT 	`db-subfarm`.* ,`db-subdistrinct`.`AD2ID`,`db-distrinct`.`AD1ID` FROM `db-subfarm` INNER JOIN `db-subdistrinct`ON `db-subfarm`.`AD3ID`=`db-subdistrinct`.`AD3ID`
     INNER JOIN `db-distrinct`ON`db-distrinct`.`AD2ID`=`db-subdistrinct`.`AD2ID` WHERE `FSID`='$suid'";
-    $DataFarm = selectData($sql);
-    return $DataFarm;
+    $DataSubFarm = selectData($sql);
+    return $DataSubFarm;
 }
 
 // sql ค่าของ AddressSubDetail มีการรับค่า ID ของ FSID
 function getAddressSubDetail($suid)
 {
-    $sql = "SELECT Address , subDistrinct , Distrinct , Province FROM `db-farm`
-    inner join `db-subdistrinct` on `db-subdistrinct`.`AD3ID` = `db-farm`.`AD3ID`
-    inner join `db-distrinct` on `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
+    $sql = "SELECT Address , subDistrinct , Distrinct , Province FROM `db-subfarm` 
+    inner join `db-subdistrinct` on `db-subdistrinct`.`AD3ID` = `db-subfarm`.`AD3ID` 
+    inner join `db-distrinct` on `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID` 
     inner join `db-province` on `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`
-    INNER JOIN `db-subfarm` on `db-subfarm`.`FMID` = `db-farm`.`FMID`
     where `db-subfarm`.`FSID` = '$suid'";
     $AddressSubDetail = selectData($sql);
     return $AddressSubDetail;
@@ -644,7 +671,18 @@ function getTree($logfarmID)
     $Tree = selectData($sql);
     return $Tree;
 }
-
+function getLogPlantingBySubfarmId($fsid)
+{
+    $sql = "SELECT `log-planting`.`ID` ,`dim-time`.`Day`,`dim-time`.`Month`,`dim-time`.`Year2`,IFNULL(`log-planting`.`NumGrowth1`,0) as NumGrowth1,IFNULL(`log-planting`.`NumGrowth2`,0) as NumGrowth2 ,IFNULL(`log-planting`.`NumDead`,0) as  NumDead
+    FROM `log-planting` 
+    INNER JOIN  `dim-farm` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID`
+    INNER JOIN `db-subfarm` ON `dim-farm`.`dbID`=`db-subfarm`.`FSID`
+    INNER JOIN `dim-time` ON `log-planting`.`DIMdateID`= `dim-time`.`ID`
+    WHERE `db-subfarm`.`FSID`=$fsid AND `log-planting`.`isDelete`=0
+    ORDER BY `log-planting`.`DIMdateID`";
+    $LogPlanting = selectData($sql);
+    return $LogPlanting;
+}
 // sql ค่าของ Tree มีการรับค่า ID ของ logfarmID
 function getDmy($suid)
 {
@@ -661,9 +699,7 @@ function getDmy($suid)
 // sql ค่าของ Year 
 function getYear()
 {
-    $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM `log-harvest`
-    INNER JOIN `dim-time` on `log-harvest`.`DIMdateID` = `dim-time`.`ID`  
-    ORDER BY `dim-time`.`Year2` DESC";
+    $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM  `dim-time` ORDER BY `dim-time`.`Year2` DESC";
     $Year = selectData($sql);
     return $Year;
 }
@@ -825,7 +861,17 @@ function getSummarizeHarvest($farmID, $year)
     return $SUMMARIZE;
 }
 
-
+function CheckPlantting($fsid)
+{
+    $sql = "SELECT * FROM `log-planting` INNER JOIN `dim-farm` ON `log-planting`.`DIMsubFID`= `dim-farm`.`ID`
+     WHERE `log-planting`.`NumGrowth1` IS NOT NULL AND `log-planting`.`isDelete`=0 AND `dim-farm`.`dbID`=2";
+    $Plantting = selectData($sql);
+    if ($Plantting[0]['numrow'] == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 //แก้ไข
 //ผลผลิตปาร์มแบบมี ID และเป็นแต่ละปีของตารางรายการเก็บผลผลิตต่อแปลง
 function getHarvestYearID($farmID, $year)
@@ -1525,29 +1571,34 @@ function getAllFarmer()
 }
 
 //PEST
-function getCountPestAlarm(){
+function getCountPestAlarm()
+{
     $sql = "SELECT COUNT(lp.isDelete) AS totalPestAlarm FROM `log-pestalarm` AS lp WHERE lp.isDelete = 0";
     $data = selectData($sql)[1]['totalPestAlarm'];
     return $data;
 }
 
-function getPestType(){
+function getPestType()
+{
     $sql = "SELECT * FROM `db-pesttype`";
     $data = selectData($sql);
     return $data;
 }
-function getPestById($ptid){
+function getPestById($ptid)
+{
     $sql = "SELECT * FROM `db-pestlist` WHERE PTID = '$ptid'";
     $data = selectData($sql);
     return $data;
 }
-function getPestByPID($pid){
+function getPestByPID($pid)
+{
     $sql = "SELECT * FROM `db-pestlist` WHERE PID = '$pid'";
     $data = selectData($sql);
     return $data;
 }
 
-function getPest(&$idformal, &$fullname, &$fpro, &$fdist ,&$fyear , &$ftype){
+function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
+{
 
     if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
     if (isset($_POST['s_type']))  $ftype = rtrim($_POST['s_type']);
@@ -1579,9 +1630,9 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist ,&$fyear , &$ftype){
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
     if ($ftype   != 0)  $sql = $sql . " AND `db-pesttype`.`PTID` = '" . $ftype . "' ";
     if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
-   
+
     $sql = $sql . " ORDER BY  `dim-user`.`FullName`";
-    
+
     $data = selectData($sql);
     return $data;
 }

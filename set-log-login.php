@@ -26,14 +26,17 @@ function getUserIpAddr()
     }
     return $ip;
 }
-function getDIMDate()
+function getDIMDate($date = 1) //yyyy-mm-dd
 {
-    $sql = "SELECT * FROM `dim-time` WHERE Date = '" . date('Y-m-d') . "'";
+    if ($date == 1) {
+        $date = date('Y-m-d');
+    }
+    $sql = "SELECT * FROM `dim-time` WHERE Date = '$date'";
     $DIMTIME = selectData($sql);
     if ($DIMTIME[0]['numrow'] == 0) {
         $yearQuarter = ceil(date("n") / 3);
         date_default_timezone_set("Asia/Bangkok");
-        $today = date("m-d");
+        $today = date("m-d", strtotime($date));
         $summer = date("m-d", strtotime("2019-02-15"));
         $rainy = date("m-d", strtotime("2019-05-15"));
         $winter = date("m-d", strtotime("2019-10-15"));
@@ -48,9 +51,8 @@ function getDIMDate()
                 $Season = 2;
         }
         date_default_timezone_set("Asia/Bangkok");
-        $yearQuarter = ceil(date("n") / 3);
-        $sql = "INSERT INTO `dim-time`(`Date`,`dd`,`Day`,`Week`,`Season`,`Month`,`Quarter`,`Year1`,`Year2`)
-        VALUES ('" . date("Y-m-d") . "','" . date("j") . "','" . date("w") . "','" . date("W") . "','" . $Season . "','" . date("n") . "','" . $yearQuarter . "','" . date("Y") . "','" . (date("Y") + 543) . "')";
+        $yearQuarter = ceil(date("n", strtotime($date)) / 3);
+        $sql = "INSERT INTO `dim-time`(`Date`,`dd`,`Day`,`Week`,`Season`,`Month`,`Quarter`,`Year1`,`Year2`) VALUES ('" . date("Y-m-d", strtotime($date)) . "','" . date("j", strtotime($date)) . "','" . date("w", strtotime($date)) . "','" . date("W", strtotime($date)) . "','" . $Season . "','" . date("n", strtotime($date)) . "','" . $yearQuarter . "','" . date("Y", strtotime($date)) . "','" . (date("Y", strtotime($date)) + 543) . "')";
         $idinsert = addinsertData($sql);
         $sql = "SELECT * FROM `dim-time` WHERE ID = '" . $idinsert . "'";
         $DIMTIME = selectData($sql);

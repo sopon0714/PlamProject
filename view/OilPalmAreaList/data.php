@@ -91,3 +91,27 @@ if ($result == 'updateInfoSubFarm') {
     $sql = "SELECT * FROM `db-subfarm`";
     print_r(json_encode(select($sql)));
 }
+if ($result == 'getYearProdect') {
+    $year = $_POST['year'];
+    $fsid = $_POST['fsid'];
+    $sql = "SELECT `dim-time`.`Year2`,SUM(`log-harvest`.`Weight`) AS Weight 
+    FROM `log-harvest` INNER JOIN `dim-time` on `log-harvest`.`DIMdateID` = `dim-time`.`ID`
+     INNER JOIN `dim-farm` on `dim-farm`.`ID` = `log-harvest`.`DIMsubFID` 
+     INNER JOIN `db-subfarm` on `db-subfarm`.`FSID` = `dim-farm`.`dbID` 
+     WHERE`dim-farm`.`dbID` = $fsid AND (`dim-time`.`Year2` = $year OR`dim-time`.`Year2`=" . ($year - 1) . " OR `dim-time`.`Year2`=" . ($year - 2) . " ) 
+    GROUP BY `dim-time`.`Year2` ORDER BY `dim-time`.`Year2` ASC";
+    $data = selectAll($sql);
+    echo json_encode($data);
+}
+if ($result == 'getMProdect') {
+    $year = $_POST['year'];
+    $fsid = $_POST['fsid'];
+    $sql = "SELECT `dim-time`.`Month`,SUM(`log-harvest`.`Weight`) AS Weight FROM `log-harvest` 
+    INNER JOIN `dim-time` on `log-harvest`.`DIMdateID` = `dim-time`.`ID` 
+    INNER JOIN `dim-farm` on `dim-farm`.`ID` = `log-harvest`.`DIMsubFID` 
+    WHERE `dim-farm`.`dbID` = $fsid AND `dim-time`.`Year2`=$year
+    GROUP BY  `dim-time`.`Month`
+    ORDER BY `dim-time`.`Year2` ASC";
+    $data = selectAll($sql);
+    echo json_encode($data);
+}
