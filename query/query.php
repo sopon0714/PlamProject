@@ -410,10 +410,32 @@ function getOilPalmAreaListDetail($DIMfarmID)
 
 function getOilPalmAreaListDetailByIdFarm($fmid)
 {
-    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` , FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year ,`log-farm`.`Latitude`,`log-farm`.`Longitude`,`dim-address`.`Province`,`dim-address`.`Distrinct`
-    from `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID` INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.DIMaddrID INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`  LEFT JOIN `log-planting` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID` LEFT JOIN `dim-time` on `log-planting`.`DIMdateID` = `dim-time`.`ID` 
-    WHERE `log-farm`.`EndID`IS NULL AND  `db-subfarm`.`FMID`= $fmid  AND ( `log-planting`.`NumGrowth1` IS NOT NULL OR `dim-time`.`Date` IS NULL ) ORDER BY `db-subfarm`.`Name`";
+    $sql = "SELECT `db-subfarm`.`FSID`,`db-subfarm`.`Name`,`db-subfarm`.`AreaRai`,`db-subfarm`.`AreaNgan`,`log-farm`.`NumTree` ,`log-farm`.`Latitude`,`log-farm`.`Longitude`,`dim-address`.`Province`,`dim-address`.`Distrinct`
+    FROM  `db-subfarm` INNER JOIN `dim-farm` ON `db-subfarm`.`FSID`=`dim-farm`.`dbID` 
+    INNER JOIN `log-farm` ON `log-farm`.`DIMSubfID`=`dim-farm`.`ID`
+    INNER JOIN `dim-address` ON `dim-address`.`ID`=`log-farm`.`DIMaddrID`
+    WHERE `dim-farm`.`IsFarm`=0  AND `log-farm`.`EndT`IS NULL AND `db-subfarm`.`FMID` = $fmid";
     $OilPalmAreaListDetail = selectData($sql);
+    $sql = "SELECT `db-subfarm`.`FSID`, FLOOR(TIMESTAMPDIFF(DAY,`dim-time`.`Date`,CURRENT_TIME)% 30.4375 )as day, FLOOR(TIMESTAMPDIFF( MONTH,`dim-time`.`Date`,CURRENT_TIME)% 12 )as month, FLOOR(TIMESTAMPDIFF( YEAR,`dim-time`.`Date`,CURRENT_TIME))as year 
+    FROM `log-planting`
+    INNER JOIN  `dim-farm` ON `dim-farm`.`ID`=`log-planting`.`DIMsubFID`
+    INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` =`dim-farm`.`dbID`
+    INNER JOIN `dim-time` ON `dim-time`.`ID`= `log-planting`.`DIMdateID`
+    WHERE `dim-farm`.`IsFarm`=0 AND `log-planting`.`isDelete`=0 AND `db-subfarm`.`FMID`=$fmid AND `log-planting`.`NumGrowth1` IS NOT NULL";
+    $OldOilPalmDetail = selectData($sql);
+    for ($i = 1; $i < count($OilPalmAreaListDetail); $i++) {
+        for ($j = 1; $j < count($OldOilPalmDetail); $j++) {
+            if ($OldOilPalmDetail[$j]['FSID'] == $OilPalmAreaListDetail[$i]['FSID']) {
+                $OilPalmAreaListDetail[$i]['day'] = $OldOilPalmDetail[$j]['day'];
+                $OilPalmAreaListDetail[$i]['month'] = $OldOilPalmDetail[$j]['month'];
+                $OilPalmAreaListDetail[$i]['year'] = $OldOilPalmDetail[$j]['year'];
+                break;
+            }
+        }
+        if ($j == count($OldOilPalmDetail)) {
+            $OilPalmAreaListDetail[$i]['year'] = null;
+        }
+    }
     return $OilPalmAreaListDetail;
 }
 
@@ -659,13 +681,13 @@ function getTree($logfarmID)
 }
 function getLogPlantingBySubfarmId($fsid)
 {
-    $sql = "SELECT `log-planting`.`ID` ,`dim-time`.`Day`,`dim-time`.`Month`,`dim-time`.`Year2`,IFNULL(`log-planting`.`NumGrowth1`,0) as NumGrowth1,IFNULL(`log-planting`.`NumGrowth2`,0) as NumGrowth2 ,IFNULL(`log-planting`.`NumDead`,0) as  NumDead
+    $sql = "SELECT `log-planting`.`ID` ,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,IFNULL(`log-planting`.`NumGrowth1`,0) as NumGrowth1,IFNULL(`log-planting`.`NumGrowth2`,0) as NumGrowth2 ,IFNULL(`log-planting`.`NumDead`,0) as  NumDead
     FROM `log-planting` 
     INNER JOIN  `dim-farm` ON `dim-farm`.`ID` =`log-planting`.`DIMsubFID`
     INNER JOIN `db-subfarm` ON `dim-farm`.`dbID`=`db-subfarm`.`FSID`
     INNER JOIN `dim-time` ON `log-planting`.`DIMdateID`= `dim-time`.`ID`
     WHERE `db-subfarm`.`FSID`=$fsid AND `log-planting`.`isDelete`=0
-    ORDER BY `log-planting`.`DIMdateID`";
+    ORDER BY `dim-time`.`Date`";
     $LogPlanting = selectData($sql);
     return $LogPlanting;
 }
@@ -778,6 +800,43 @@ function getIdfarmSubDetail($suid)
     $IdfarmSubDetail = selectData($sql);
     return $IdfarmSubDetail;
 }
+function getVolFertilising($fsid)
+{
+
+    $sql = "SELECT * FROM `db-fertilizer` ORDER BY `db-fertilizer`.`Name`";
+    $INFOFERT = selectData($sql);
+    for ($i = 1; $i < count($INFOFERT); $i++) {
+        $INFOFERT[$i]['dataVol'] = getVolFertYear($fsid, $INFOFERT[$i]['FID']);
+    }
+    return  $INFOFERT;
+}
+function getVolFertYear($fsid, $fid)
+{
+    $MaxYear = ((int) date("Y")) + 543;
+    $dataVol = [];
+    for ($i = 2; $i >= 0; $i--) {
+        $thisYear =  $MaxYear - $i;
+        $sql = "SELECT `dim-time`.`Year2`,`dim-farm`.`dbID` as FSID,`dim-fertilizer`.`dbID`AS FID,SUM(`log-fertilising`.`Vol`) as Vol
+        FROM `log-fertilising` INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-fertilising`.`DIMdateID`
+        INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-fertilising`.`DIMsubFID`
+        INNER JOIN `dim-fertilizer` ON `dim-fertilizer`.`ID` =`log-fertilising`.`DIMferID`
+        WHERE  `log-fertilising`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-fertilizer`.`dbID`=$fid AND `dim-time`.`Year2`= $thisYear
+        GROUP BY    `dim-time`.`Year2`,`dim-farm`.`dbID`,`dim-fertilizer`.`dbID`";
+        $VOL = selectData($sql);
+        if ($VOL[0]['numrow'] != 0) {
+            array_push($dataVol, round($VOL[1]['Vol'], 2));
+        } else {
+            array_push($dataVol, 0);
+        }
+    }
+    $dataFormat = "[";
+    for ($i = 0; $i < count($dataVol); $i++) {
+        $dataFormat .= "{$dataVol[$i]},";
+    }
+    $dataFormat = substr($dataFormat, 0, -1);
+    $dataFormat .= "]";
+    return $dataFormat;
+}
 
 //--------------------------------OilPalmAreaVol-------------------------------------
 //ผลผลิตปาล์มทั้งหมด
@@ -850,7 +909,7 @@ function getSummarizeHarvest($farmID, $year)
 function CheckPlantting($fsid)
 {
     $sql = "SELECT * FROM `log-planting` INNER JOIN `dim-farm` ON `log-planting`.`DIMsubFID`= `dim-farm`.`ID`
-     WHERE `log-planting`.`NumGrowth1` IS NOT NULL AND `log-planting`.`isDelete`=0 AND `dim-farm`.`dbID`=2";
+     WHERE `log-planting`.`NumGrowth1` IS NOT NULL AND `log-planting`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid";
     $Plantting = selectData($sql);
     if ($Plantting[0]['numrow'] == 0) {
         return true;

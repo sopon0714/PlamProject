@@ -378,7 +378,7 @@ $(document).ready(function() {
     $(".btnDel").click(function() {
         var username = $(this).attr('NameSubfarm');
         var fsid = $(this).attr('fsid');
-
+        var FMIDmap = $('#FMIDmap').val();
         swal({
                 title: "คุณต้องการลบ",
                 text: `แปลง ${username} หรือไม่ ?`,
@@ -404,7 +404,7 @@ $(document).ready(function() {
                     });
                     delete_1(fsid)
                     setTimeout(function() {
-                        location.reload();
+                        window.location = './OilPalmAreaListDetail.php?fmid=' + FMIDmap;
                     }, 2000);
                 } else {
                     swal({
