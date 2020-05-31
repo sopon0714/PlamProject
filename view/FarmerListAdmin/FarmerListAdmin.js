@@ -103,8 +103,7 @@ $( document ).ready(function() {
             xhttp.send(`request=select`);
     }
     
-
-    $('.btn_edit').click(function(){
+    $(document).on("click", ".btn_edit", function() {
         $("#editModal").modal();
         var uid = $(this).attr('uid');
         var title = $(this).attr('titles');

@@ -44,8 +44,7 @@ $(document).ready(function() {
 
     }
 
-
-    $('.pass_edit').click(function() {
+    $(document).on("click", ".pass_edit", function() {
 
         $("#passModal").modal();
         var uid = $(this).attr('uid');
@@ -74,7 +73,7 @@ $(document).ready(function() {
 
     });
 
-    $('#edit_cancel').click(function() {
+    $(document).on("click", "#edit_cancel", function() {
         // console.log("fff");
         $('#old_pwd').val("");
         $('#e_pwd').val("");
@@ -94,8 +93,7 @@ $(document).ready(function() {
         $('#hide_3').addClass("fa-eye-slash");
 
     });
-
-    $('.btn_edit').click(function() {
+    $(document).on("click", ".btn_edit", function() {
         $("#editModal").modal();
         var uid = $(this).attr('uid');
 
@@ -153,8 +151,7 @@ $(document).ready(function() {
     });
 
     // ------------------------------------------ insert data ------------------------------------------
-
-    $('#save').click(function() {
+    $(document).on("click", "#save", function() {
         let title = $("select[name = 'title']");
         let fname = $("input[name = 'fname']");
         let lname = $("input[name = 'lname']");

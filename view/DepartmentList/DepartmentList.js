@@ -24,7 +24,7 @@ $( document ).ready(function() {
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(`request=select`);
     }
-    $('.btn_edit').click(function(){
+    $(document).on("click", ".btn_edit'", function() {
         $("#editModal").modal();
         var did = $(this).attr('did');
         var department = $(this).attr('department');

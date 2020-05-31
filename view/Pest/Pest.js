@@ -15,8 +15,7 @@ $( document ).ready(function() {
       $("#addModal").modal();
 
     });
-
-    $('.btn-edit').click(function(){
+    $(document).on("click", ".btn-edit", function() {
       $("#editModal").modal();
       lid = $(this).attr('lid');
       date = $(this).attr('date');
@@ -68,15 +67,13 @@ $( document ).ready(function() {
       idSetHtml = '#e_pest';
       selectPest(idSetHtml,ptid,-1);
     });
-    
-    $('.btn-note').click(function(){
+    $(document).on("click", ".btn-note", function() {
       $('#data').modal();
       note = $(this).attr('note');
       console.log('note = '+note);
       $('#n_note').html(note);
     });
-
-    $('.btn-pest').click(function(){
+    $(document).on("click", ".btn-pest", function() {
       $('#pest_data').modal();
       DATA_DB = [];
       arr = [];
@@ -92,7 +89,7 @@ $( document ).ready(function() {
         path = "../../icon/pest/" + DATA_DB[1]['dbpestLID'] + "/" + DATA_DB[1]['Icon'];
         $('#data_icon').attr('src',path);
         $('#data_name').html('ชื่อ : '+DATA_DB[1]["Name"]);
-        $('#data_name').html('ชื่อทางการ : '+DATA_DB[1]["Alias"]);
+        $('#data_alias').html('ชื่อทางการ : '+DATA_DB[1]["Alias"]);
 
         if(ptid == 1){
           subpath = "insect";
@@ -155,8 +152,7 @@ $( document ).ready(function() {
 
       
     });
-
-    $('.btn-photo').click(function(){
+    $(document).on("click", ".btn-photo", function() {
       $('#picture').modal();
       lid = $(this).attr("lid");
       path = "../../picture/activities/pest/";
@@ -331,7 +327,7 @@ function showmore(){
       }
 
   });
-  $(".morelink").click(function() {
+  $(document).on("click", ".morelink", function() {
          if ($(this).hasClass("less")) {
              $(this).removeClass("less");
              $(this).html(moretext);
