@@ -14,7 +14,9 @@
 {
 <script>
     $(document).ready(function() {
-        $('.tableSearch').DataTable();
+        $('.tableSearch').DataTable({
+            "ordering": false
+        });
     });
 </script>
 }

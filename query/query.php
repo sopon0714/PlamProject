@@ -5,9 +5,9 @@ $myConDB = connectDB();
 $currentYear = date("Y") + 543;
 $backYear = $currentYear - 1;
 
-function creatCard($styleC, $headC, $textC, $iconC)
+function creatCard($styleC, $headC, $textC, $iconC, $size = 3)
 {
-    echo "<div class='col-xl-3 col-12 mb-4'>
+    echo "<div class='col-xl-$size col-12 mb-4'>
         <div class='card border-left-primary $styleC shadow h-100 py-2'>
             <div class='card-body'>
                 <div class='row no-gutters align-items-center'>
@@ -23,6 +23,7 @@ function creatCard($styleC, $headC, $textC, $iconC)
         </div>
     </div>";
 }
+
 //-----------------Department.php---------------------
 //จำนวนหน่วยงานทั้งหมด
 function getCountDepartment()
@@ -839,14 +840,49 @@ function getVolFertYear($fsid, $fid)
 }
 
 //--------------------------------OilPalmAreaVol-------------------------------------
+
 //ผลผลิตปาล์มทั้งหมด
 function getHarvest()
 {
-    $sql = "SELECT * FROM `log-harvest` WHERE `isDelete` = 0";
+    $sql = "SELECT `log-harvest`.* ,`dim-time`.`Year2` FROM `log-harvest` INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-harvest`.`DIMdateID` WHERE `isDelete` = 0";
     $HARVEST = selectData($sql);
     return $HARVEST;
 }
+function getDetailLogFarm($fmid)
+{
+    $sql = "SELECT `dim-farm`.`dbID` AS FMID  ,`dim-farm`.`ID` AS DIMfarmID ,`dim-user`.`dbID`AS UFID,
+    `dim-user`.`ID` AS DIMownerID ,`dim-user`.`Title`,`dim-user`.`FullName`,`dim-farm`.`Name` as NameFarm ,
+     `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`, `log-farm`.`NumSubFarm`,`log-farm`.`NumTree`
+      FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID`
+       INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` 
+       INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID` 
+       WHERE `log-farm`.`ID` IN (SELECT MAX(`log-farm`.`ID`) as ID FROM `log-farm` 
+       INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+    WHERE `log-farm`.`DIMSubfID` IS NULL AND `dim-farm`.`dbID` = $fmid ) ";
+    $INFOFARM = selectData($sql);
+    $sql = "SELECT * FROM  `log-icon` WHERE `log-icon`.`ID` =
+    (SELECT MAX(`log-icon`.`ID`) AS  ID FROM `log-icon` 
+    WHERE `log-icon`.`DIMiconID`={$INFOFARM[1]['DIMfarmID']} AND `log-icon`.`Type`=4)";
+    $logiconFarm =  selectData($sql);
+    $sql = "SELECT * FROM  `log-icon` WHERE `log-icon`.`ID` =
+    (SELECT MAX(`log-icon`.`ID`) AS  ID FROM `log-icon` 
+    WHERE `log-icon`.`DIMiconID`={$INFOFARM[1]['DIMownerID']} AND `log-icon`.`Type`=5)";
+    $logiconFarmmer =  selectData($sql);
+    if ($logiconFarm[0]['numrow'] == 0) {
+        $INFOFARM[1]['iconFarm'] = "default.png";
+    } else {
+        $INFOFARM[1]['iconFarm'] = $logiconFarm[1]['FileName'];
+    }
+    if ($logiconFarmmer[0]['numrow'] == 0) {
+        $INFOFARM[1]['iconFarmmer'] = "default.png";
+    } else {
+        $INFOFARM[1]['iconFarmmer'] = $logiconFarmmer[1]['FileName'];
+    }
 
+
+    return $INFOFARM;
+}
+///////////////////////////////////////////////////////////////////////////////////
 //ผลผลิตปาร์มแบบมี ID
 function getHarvestID($farmID)
 {
@@ -1243,36 +1279,20 @@ function getLogfertilising()
 }
 
 //การ์ด - ผลผลิตปาล์มปีนี้
-function getHarvestCurrentYear()
+function getHarvestYear($year)
 {
-    $currentYear = date("Y") + 543;
-    $backYear = $currentYear - 1;
     $HARVEST = getHarvest();
-    $harvestCurrentYear = 0;
-    $x = count($HARVEST);
-    for ($i = 1; $i < $x; $i++) {
-        if ((int) date('Y', $HARVEST[$i]["Modify"]) + 543 == $currentYear) {
-            $harvestCurrentYear = $harvestCurrentYear + (int) $HARVEST[$i]["Weight"];
+    $harvestYear = 0.0;
+    for ($i = 1; $i < count($HARVEST); $i++) {
+        if ($HARVEST[$i]["Year2"] == $year) {
+            $harvestYear = $harvestYear +  $HARVEST[$i]["Weight"];
         }
     }
-    return $harvestCurrentYear;
+    return $harvestYear;
 }
 
 //การ์ด - ผลผลิตปาล์มปีที่แล้ว
-function getHarvestBackYear()
-{
-    $currentYear = date("Y") + 543;
-    $backYear = $currentYear - 1;
-    $HARVEST = getHarvest();
-    $harvestBackYear = 0;
-    $x = count($HARVEST);
-    for ($i = 1; $i < $x; $i++) {
-        if ((int) date('Y', $HARVEST[$i]["Modify"]) + 543 == $backYear) {
-            $harvestBackYear = $harvestBackYear + (int) $HARVEST[$i]["Weight"];
-        }
-    }
-    return $harvestBackYear;
-}
+
 
 //การ์ด - ต้นไม้ทั้งหมด
 function getAllTree()
@@ -1323,49 +1343,71 @@ function getYearFer()
 }
 
 //ตารางผลผลิตสวนปาล์มน้ำมันในระบบ หน้า OilPalmAreaVol.php
-function getTableAllHarvest()
+function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist)
 {
-    $FARM = getFarm();
-    $x = count($FARM);
-    //นับจำนวนฟาร์มทั้งหมดแล้วเอาแต่ ID
-    for ($i = 1; $i < $x; $i++) {
-        $FARMIDNOTUNIQUE[$i] = $FARM[$i]['FMID'];
-    }
-    $FARMID = array_unique($FARMIDNOTUNIQUE);
-    rsort($FARMID);
-    $x = count($FARMID);
-    $ALLHARVEST = null;
-
-    //กำหนดค่าให้อาเรย์ของตาราง
-    for ($i = 1; $i < $x; $i++) {
-        $ALLHARVEST["$FARM[$i]"]["farmID"] = 0;
-        $ALLHARVEST["$FARM[$i]"]["ownerName"] = "";
-        $ALLHARVEST["$FARM[$i]"]["farmName"] = "";
-        $ALLHARVEST["$FARM[$i]"]["subFarm"] = 0;
-        $ALLHARVEST["$FARM[$i]"]["area"] = 0;
-        $ALLHARVEST["$FARM[$i]"]["tree"] = 0;
-        $ALLHARVEST["$FARM[$i]"]["weight"] = 0;
+    $idformal = '';
+    $fpro = 0;
+    $fdist = 0;
+    $fullname = '';
+    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
+    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
+    if (isset($_POST['s_name'])) {
+        $fullname = rtrim($_POST['s_name']);
+        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+        $namef = explode(" ", $fullname);
+        if (isset($namef[1])) {
+            $fnamef = $namef[0];
+            $lnamef = $namef[1];
+        } else {
+            $fnamef = $fullname;
+            $lnamef = $fullname;
+        }
     }
 
-    //query ข้อมูลลงในอาเรย์ตาราง
-    for ($i = 0; $i < $x; $i++) {
-        $FMID = $FARMID[$i];
-        $countSubFarm = (int) getCountSubFarmID($FMID);
-        $countArea = (int) getAreaRai($FMID);
-        $countTree = (int) getTreeID($FMID);
-        $countWeight = (int) getHarvestID($FMID);
-        $ownerName = (string) getOwnerName($FMID)[1]["FirstName"];
-        $farmName = (string) getFarmFMID($FMID)[1]["Alias"];
-        $ALLHARVEST[$i]["farmID"] = $FMID;
-        $ALLHARVEST[$i]["ownerName"] = $ownerName;
-        $ALLHARVEST[$i]["farmName"] = (string) $farmName;
-        $ALLHARVEST[$i]["subFarm"] = (int) $countSubFarm;
-        $ALLHARVEST[$i]["area"] = (int) $countArea;
-        $ALLHARVEST[$i]["tree"] = (int) $countTree;
-        $ALLHARVEST[$i]["weight"] = (int) $countWeight;
+    $sql = "SELECT `dim-farm`.`dbID` AS FMID ,`dim-user`.`FullName`,`dim-farm`.`Name` as NameFarm ,
+      `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`, `log-farm`.`NumSubFarm`,`log-farm`.`Latitude`,
+      `log-farm`.`Longitude`,`log-farm`.`NumTree`,`dim-address`.`Distrinct`,`dim-address`.`Province`,
+       0  as VolHarvest
+    FROM `log-farm`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+    INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+    INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+    WHERE  `log-farm`.`ID` IN
+    (SELECT MAX(`log-farm`.`ID`)  as ID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+    WHERE `log-farm`.`DIMSubfID` IS NULL
+    GROUP BY `dim-farm`.`dbID` ) ";
+    if ($idformal != '') $sql .= " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    $sql .= " ORDER BY `dim-user`.`FullName`";
+    $INFOFARM = selectData($sql);
+    $FarmHarvest = null;
+    for ($i = 1; $i < count($INFOFARM); $i++) {
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['FMID'] = $INFOFARM[$i]['FMID'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['FullName'] = $INFOFARM[$i]['FullName'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['NameFarm'] = $INFOFARM[$i]['NameFarm'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['NumSubFarm'] = $INFOFARM[$i]['NumSubFarm'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['AreaRai'] = $INFOFARM[$i]['AreaRai'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['AreaNgan'] = $INFOFARM[$i]['AreaNgan'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['NumTree'] = $INFOFARM[$i]['NumTree'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['Latitude'] = $INFOFARM[$i]['Latitude'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['Longitude'] = $INFOFARM[$i]['Longitude'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['Distrinct'] = $INFOFARM[$i]['Distrinct'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['Province'] = $INFOFARM[$i]['Province'];
+        $FarmHarvest[$INFOFARM[$i]['FMID']]['VolHarvest'] = 0;
     }
-
-    return $ALLHARVEST;
+    $sql = "SELECT `dim-farm`.`dbID` AS FMID ,SUM(`log-harvest`.`Weight`) as Weight  FROM `log-harvest` 
+    INNER JOIN   `dim-time` ON `dim-time`.`ID`=`log-harvest`.`DIMdateID`
+    INNER JOIN `dim-farm`  ON   `dim-farm`.`ID` = `log-harvest`.`DIMfarmID`
+    WHERE  `log-harvest`.`isDelete`=0 AND `dim-time`.`Year2`=" . (date("Y") + 543) . "
+    GROUP BY  `dim-farm`.`dbID`";
+    $VOLHarvest = selectData($sql);
+    for ($i = 1; $i < count($VOLHarvest); $i++) {
+        $FarmHarvest[$VOLHarvest[$i]['FMID']]['VolHarvest'] += round($VOLHarvest[$i]['Weight'], 2);
+    }
+    return  $FarmHarvest;
 }
 
 //  start - หน้าการจัดการศีตรูพืช
@@ -1613,4 +1655,23 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
 
     $data = selectData($sql);
     return $data;
+}
+function getLogHarvest($fmid)
+{
+    $sql = "SELECT `log-harvest`.*, RS1.`Name`,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2` FROM `log-harvest` 
+    INNER JOIN `dim-time`  ON `dim-time`.`ID`=`log-harvest`.`DIMdateID`
+    INNER JOIN `dim-farm` as dimfarm1 ON dimfarm1.`ID` = `log-harvest`.`DIMfarmID`
+    INNER JOIN `dim-farm` as dimfarm2 ON dimfarm2.`ID` = `log-harvest`.`DIMsubFID`
+   INNER JOIN (SELECT  `dim-farm`.`dbID`, `dim-farm`.`Name`  FROM `log-farm`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-farm`.`DIMSubfID`
+    WHERE `log-farm`.`ID` IN 
+    (SELECT MAX(`log-farm`.`ID`) as logFarmID FROM `log-farm` 
+    INNER JOIN `dim-farm`  as t1 ON  t1.`ID` =`log-farm` .`DIMfarmID` 
+    INNER JOIN `dim-farm` as t2  ON t2.`ID` = `log-farm`.`DIMSubfID`
+    WHERE  t1.`dbID` = $fmid
+    GROUP BY t2.`dbID`)) as RS1 ON RS1.`dbID` = dimfarm2.`dbID`
+    WHERE `log-harvest`.`isDelete`=0 AND dimfarm1.`dbID`=$fmid  
+    ORDER BY `dim-time`.`Date` DESC";
+    $LogHarvest = selectData($sql);
+    return   $LogHarvest;
 }

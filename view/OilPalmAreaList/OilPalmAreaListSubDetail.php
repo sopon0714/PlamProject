@@ -553,4 +553,4 @@ $sumdeadPers = 0;
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
-<script src="test.js"></script>
+<script src="OilPalmAreaListSubDetail.js"></script>

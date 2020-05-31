@@ -4,16 +4,20 @@ $(document).ready(function() {
     $('.tt').tooltip();
     updateInfoFarm();
     updateInfoSubFarm();
-    $('#btn_edit_detail1').click(function() {
+
+    $(document).on("click", "#btn_edit_detail1", function() {
         $("#editDetailModal").modal('show');
     });
-    $('#edit_photo').click(function() {
+
+    $(document).on("click", "#edit_photo", function() {
         $("#photoModal").modal('show');
     });
-    $('#btn_add_subfarm').click(function() {
+
+    $(document).on("click", "#btn_add_subfarm", function() {
         $("#addSubFarmModal").modal('show');
     });
-    $('#province').change(function() {
+
+    $(document).on("change", "#province", function() {
 
         var e = document.getElementById("province");
         var select_id = e.options[e.selectedIndex].value;
@@ -22,7 +26,8 @@ $(document).ready(function() {
 
 
     });
-    $('#distrinct').change(function() {
+
+    $(document).on("change", "#distrinct", function() {
 
         var e = document.getElementById("distrinct");
         var select_id = e.options[e.selectedIndex].value;
@@ -30,7 +35,8 @@ $(document).ready(function() {
 
     });
     ////////////////////////////////////////////
-    $('#provinceSF').change(function() {
+
+    $(document).on("change", "#provinceSF", function() {
 
         var e = document.getElementById("province");
         var select_id = e.options[e.selectedIndex].value;
@@ -39,7 +45,8 @@ $(document).ready(function() {
 
 
     });
-    $('#distrinctSF').change(function() {
+
+    $(document).on("change", "#distrinctSF", function() {
 
         var e = document.getElementById("distrinct");
         var select_id = e.options[e.selectedIndex].value;
@@ -47,7 +54,7 @@ $(document).ready(function() {
 
     });
 
-    $('.btn-add-subFarm').click(function() {
+    $(document).on("click", ".btn-add-subFarm", function() {
 
         var nameSubfarm = $("#addSubFarmModal input[name='nameSubfarm']");
         var initialsSubfarm = $("#addSubFarmModal input[name='initialsSubfarm']");
@@ -74,7 +81,7 @@ $(document).ready(function() {
     });
 
 
-    $('.editFarm').click(function() {
+    $(document).on("click", ".editFarm", function() {
 
         var IDFarm = $("#form-edit-farm input[name='IDFarm']");
         var namefarm = $("#form-edit-farm input[name='namefarm']");
@@ -333,10 +340,12 @@ $(document).ready(function() {
         })
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-    $("#btn_edit_map").click(function() {
+
+    $(document).on("click", "#btn_edit_map", function() {
         $("#editMapModal").modal('show');
     });
-    $("#btn_submit_editMap").click(function() {
+
+    $(document).on("click", "#btn_submit_editMap", function() {
         var FMIDmap = $('#FMIDmap').val();
         var la = $('#la').val();
         var long = $('#long').val();
@@ -375,7 +384,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".btnDel").click(function() {
+    $(document).on("click", ".btnDel", function() {
         var username = $(this).attr('NameSubfarm');
         var fsid = $(this).attr('fsid');
         var FMIDmap = $('#FMIDmap').val();

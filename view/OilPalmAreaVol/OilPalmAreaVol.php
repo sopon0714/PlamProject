@@ -17,9 +17,10 @@ $currentYear = date("Y") + 543;
 $backYear = date("Y") + 543 - 1;
 
 $PROVINCE = getProvince();
+$OILPALMAREAVOL = getTableAllHarvest($idformal, $fullname, $fpro, $fdist);
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
-$OILPALMAREAVOL = getTableAllHarvest();
+
 ?>
 
 <div class="container">
@@ -47,14 +48,14 @@ $OILPALMAREAVOL = getTableAllHarvest();
     <div class="row">
 
         <?php
-        creatCard("card-color-one",   "ผลผลิตปี " . $currentYear, number_format(getHarvestCurrentYear(), 0, '.', ',') . " ก.ก.", "waves");
-        creatCard("card-color-two",   "ผลผลิตปี" . $backYear, number_format(getHarvestBackYear(), 0, '.', ',') . " ก.ก.", "dashboard");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "format_size");
+        creatCard("card-color-one",   "ผลผลิตปี " . $currentYear, number_format(getHarvestYear($currentYear), 2, '.', ',') . " ก.ก.", "waves");
+        creatCard("card-color-two",   "ผลผลิตปี" . $backYear, number_format(getHarvestYear($backYear), 2, '.', ',') . " ก.ก.", "waves");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "dashboard");
         creatCard("card-color-four", "จำนวนต้นไม้",  getCountTree() . " ต้น", "format_size");
         ?>
     </div>
 
-    <form action="OilPalmAreaList.php?isSearch=1" method="post">
+    <form action="OilPalmAreaVol.php?isSearch=1" method="post">
         <div class="row">
             <div class="col-xl-12 col-12 mb-4">
                 <div id="accordion">
@@ -68,7 +69,14 @@ $OILPALMAREAVOL = getTableAllHarvest();
                         </div>
                     </div>
                 </div>
-                <div id="collapseOne" class="card collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div id="collapseOne" class="card collapse 
+                <?php
+                if (isset($_GET['isSearch']) && $_GET['isSearch'] == 1)
+                    echo "show";
+                else
+                    echo "";
+                ?> 
+                " aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-header card-bg">
                         ตำแหน่งสวนปาล์มน้ำมัน
                     </div>
@@ -149,7 +157,7 @@ $OILPALMAREAVOL = getTableAllHarvest();
                                 </div>
                                 <div class="row mb-2 padding">
                                     <div class="col-12">
-                                        <button type="button" id="btn_search" class="btn btn-success btn-sm form-control">ค้นหา</button>
+                                        <button type="summit" id="btn_search" class="btn btn-success btn-sm form-control">ค้นหา</button>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +177,7 @@ $OILPALMAREAVOL = getTableAllHarvest();
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-data" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ชื่อเกษตรกร</th>
@@ -193,23 +201,30 @@ $OILPALMAREAVOL = getTableAllHarvest();
                         </tr>
                     </tfoot>
                     <tbody>
+                        <label id="size" hidden size="<?php echo sizeof($OILPALMAREAVOL); ?>"></label>
                         <?php
-                        for ($i = 0; $i < sizeof($OILPALMAREAVOL); $i++) { ?>
-                            <tr>
-                                <td><?php echo $OILPALMAREAVOL[$i]["ownerName"]; ?></td>
-                                <td><?php echo $OILPALMAREAVOL[$i]["farmName"]; ?></td>
-                                <td style="text-align:right;"><?php echo $OILPALMAREAVOL[$i]["subFarm"]; ?> แปลง</td>
-                                <td style="text-align:right;"><?php echo $OILPALMAREAVOL[$i]["area"]; ?> ไร่</td>
-                                <td style="text-align:right;"><?php echo $OILPALMAREAVOL[$i]["tree"]; ?> ต้น</td>
-                                <td style="text-align:right;"><?php echo $OILPALMAREAVOL[$i]["weight"]; ?> ก.ก.</td>
-                                <td style="text-align:center;">
-                                    <form method="post" id="ID" name="formID" action="OilPalmAreaVolDetail.php">
-                                        <input type="text" hidden class="form-control" name="farmID" id="farmID" value="<?php echo $OILPALMAREAVOL[$i]["farmID"] ?>">
-                                        <button type="submit" id="btn_info" class="btn btn-info btn-sm" data-toggle="tooltip" title="รายละเอียด"><i class="fas fa-bars"></i></button></a>
-                                    </form>
-                                </td>
-                            </tr>
+                        $i = 1;
+                        if ($OILPALMAREAVOL != null) {
+                            foreach ($OILPALMAREAVOL as $SUBDATA) {
+
+                        ?>
+                                <tr class="<?php echo $i - 1 ?>">
+                                    <td><?php echo $SUBDATA["FullName"]; ?></td>
+                                    <td><?php echo $SUBDATA["NameFarm"]; ?></td>
+                                    <td style="text-align:right;"><?php echo $SUBDATA["NumSubFarm"]; ?> แปลง</td>
+                                    <td style="text-align:right;"><?php echo $SUBDATA["AreaRai"]; ?> ไร่ <?php echo $SUBDATA["AreaNgan"]; ?> วา</td>
+                                    <td style="text-align:right;"><?php echo $SUBDATA["NumTree"]; ?> ต้น</td>
+                                    <td style="text-align:right;"><?php echo  number_format($SUBDATA["VolHarvest"], 2, '.', ','); ?> ก.ก.</td>
+                                    <td style="text-align:center;">
+                                        <form method="post" id="ID" name="formID" action="./OilPalmAreaVolDetail.php?FMID=<?php echo $SUBDATA["FMID"]; ?>">
+                                            <button type="submit" id="btn_info" class="btn btn-info btn-sm" data-toggle="tooltip" title="รายละเอียด"><i class="fas fa-bars"></i></button></a>
+                                        </form>
+                                    </td>
+                                    <label class="click-map" id="<?php echo $i ?>" distrinct="<?php echo $SUBDATA["Distrinct"]; ?>" province="<?php echo $SUBDATA["Province"]; ?>" nameFarm="<?php echo $SUBDATA["NameFarm"]; ?>" la="<?php echo $SUBDATA["Latitude"]; ?>" long="<?php echo $SUBDATA["Longitude"]; ?>">ss</label>
+                                </tr>
                         <?php
+                                $i++;
+                            }
                         }
 
                         ?>
