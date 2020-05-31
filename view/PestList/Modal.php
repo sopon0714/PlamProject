@@ -5,6 +5,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: #006664;">
                     <h4 class="modal-title" id="largeModalLabel" style="color:white"><?php echo $str_title_add; ?></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="main">
@@ -15,7 +18,7 @@
                             <div class='col-lg-8 col-md-8 col-sm-9 col-xs-6'>
                                 <div class='form-group'>
                                     <div class='form-line'>
-                                        <input type='text' id='name_insert' name='name_insert' class='form-control' placeholder="<?php echo $str_placeholder; ?>" required="" oninput="setCustomValidity('')">
+                                        <input type='text' id='alias_insert' name='alias_insert' class='form-control' placeholder="<?php echo $str_placeholder; ?>" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -28,7 +31,7 @@
                             <div class='col-lg-8 col-md-8 col-sm-9 col-xs-6'>
                                 <div class='form-group'>
                                     <div class='form-line'>
-                                        <input type='text' id='alias_insert' name='alias_insert' class='form-control' placeholder="ชื่อวิทยาศาสตร์" required="" oninput="setCustomValidity('')">
+                                        <input type='text' id='name_insert' name='name_insert' class='form-control' placeholder="ชื่อวิทยาศาสตร์" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
                             </div>
@@ -146,6 +149,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: #006664;">
                     <h4 class="modal-title" id="largeModalLabel" style="color:white"><?php echo $str_title_edit; ?></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="main-edit">
@@ -157,7 +163,7 @@
                                 <div class='form-group'>
                                     <div class='form-line'>
                                         <input type="text" class="form-control" 
-                                        id="e_name" name="e_name" placeholder="<?php echo $str_placeholder; ?>" 
+                                        id="e_alias" name="e_alias" placeholder="<?php echo $str_placeholder; ?>" 
                                         value="" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
@@ -172,7 +178,7 @@
                                 <div class='form-group'>
                                     <div class='form-line'>
                                         <input type="text" class="form-control" 
-                                        id="e_alias" name="e_alias" placeholder="ชื่อวิทยาศาสตร์" 
+                                        id="e_name" name="e_name" placeholder="ชื่อวิทยาศาสตร์" 
                                         value="" required="" oninput="setCustomValidity('')">
                                     </div>
                                 </div>
@@ -277,6 +283,10 @@
                     <input type="hidden" id="e_pic1" name="e_pic1" value="">
                     <input type="hidden" id="e_pic2" name="e_pic2" value="">
                     <input type="hidden" id="e_pic3" name="e_pic3" value="">
+                    
+                    <input type="hidden" id="o_e_pic1" name="o_e_pic1" value="">
+                    <input type="hidden" id="o_e_pic2" name="o_e_pic2" value="">
+                    <input type="hidden" id="o_e_pic3" name="o_e_pic3" value="">
 
 
                     <div class="modal-footer normal-button-edit">

@@ -43,9 +43,9 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     <div class="row">
 
         <?php
-        creatCard("card-color-one",   "จำนวนเกษตรกร", getcountFarmer() . " คน", "waves");
+        creatCard("card-color-one",   "จำนวนเกษตรกร", getCountFarmer() . " คน", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "dashboard");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่ ".getAreaNgan()." งาน", "dashboard");
         creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");
         ?>
 
@@ -75,7 +75,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                 " aria-labelledby="headingOne" data-parent="#accordion">
 
                     <div class="card-header card-bg">
-                        ตำแหน่งสวนปาล์มน้ำมัน
+                        ตำแหน่งที่อยู่ของเกษตรกร
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -224,7 +224,8 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                             </button>
                                         </a>
                                     </td>
-                                    <label class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARMER[$i]["subDistrinct"]; ?>" AD3ID="<?php echo $FARMER[$i]["AD3ID"]; ?>" la="<?php echo $FARMER[$i]["Latitude"]; ?>" long="<?php echo $FARMER[$i]["Longitude"]; ?>"></label>
+                                    <label class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARMER[$i]["subDistrinct"]; ?>" 
+                                    AD3ID="<?php echo $FARMER[$i]["AD3ID"]; ?>" la="<?php echo $FARMER[$i]["Latitude"]; ?>" long="<?php echo $FARMER[$i]["Longitude"]; ?>"></label>
                                 </tr>
                         <?php
                             }

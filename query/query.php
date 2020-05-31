@@ -115,8 +115,7 @@ function getSubDistrinctInDistrinct($ad2id)
 
 function getCountFarmer()
 {
-    $sql = "SELECT COUNT(*) AS countFarmer 
-    FROM (SELECT `UFID`FROM `db-farmer` JOIN `dim-user` ON `dim-user`.`dbID`=`db-farmer`.`UFID`WHERE `dim-user`.`Type`='F') AS farmer";
+    $sql = "SELECT COUNT(*) AS countFarmer FROM `db-farmer`";
     $countFarmer = selectData($sql)[1]['countFarmer'];
     return $countFarmer;
 }
@@ -162,20 +161,22 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
     }
 
     //INFO
-    $sql = "SELECT `UFID`,`FirstName`,`LastName`,`Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`,
-    `dim-user`.`FullName`, `dim-user`.`ID` AS dimFID , `db-farmer`.`FormalID`
+    $sql = "SELECT `db-farmer`.`UFID`,
+    CASE WHEN  `db-farmer`.`Title` IN ('1') THEN 'นาย'
+    WHEN  `db-farmer`.`Title` IN ('2') THEN 'นาง' 
+    WHEN  `db-farmer`.`Title` IN ('3') THEN 'นางสาว' END AS Title,
+    `db-farmer`.`FirstName`, `db-farmer`.`LastName`, `db-farmer`.`FormalID`,
+     `Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`
      FROM `db-farmer` 
-     JOIN `dim-user` ON `dim-user`.`dbID`=`db-farmer`.`UFID`
      JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farmer`.`AD3ID` 
      JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
-     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID` 
-     WHERE `dim-user`.`Type`='F' ";
+     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`";
     if ($idformal != '') $sql = $sql . " AND `db-farmer`.`FormalID` LIKE '%" . $idformal . "%' ";
     if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
 
-    $sql = $sql . " ORDER BY  `dim-user`.`FullName`";
+    $sql = $sql . " ORDER BY `db-farmer`.`FirstName`";
     // echo $sql;
     $myConDB = connectDB();
     $result = $myConDB->prepare($sql);
@@ -187,8 +188,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
         //print_r($tmpDATA);
         if ($tmpDATA['UFID'] > 0) {
             $FARMER[$numFermer]['dbID']        = $tmpDATA['UFID'];
-            $FARMER[$numFermer]['dimID']       = $tmpDATA['dimFID'];
-            $FARMER[$numFermer]['FullName']    = $tmpDATA['FullName'];
+            $FARMER[$numFermer]['FullName']    = $tmpDATA['Title']." ".$tmpDATA['FirstName']." ".$tmpDATA['LastName'];
             $FARMER[$numFermer]['Province']    = $tmpDATA['Province'];
             $FARMER[$numFermer]['Distrinct']   = $tmpDATA['Distrinct'];
             $FARMER[$numFermer]['AD3ID']        = $tmpDATA['AD3ID'];
@@ -201,7 +201,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
             $FARMER[$numFermer]['numArea1']    = getCountOwnerAreaRai($tmpDATA['UFID']);
             $FARMER[$numFermer]['numArea2']    = getCountOwnerAreaNgan($tmpDATA['UFID']);
             $FARMER[$numFermer]['FormalID']    = $tmpDATA['FormalID'];
-            $fermerINDEX[$tmpDATA['dimFID']]   = $numFermer;
+            $fermerINDEX[$tmpDATA['UFID']]   = $numFermer;
             $numFermer++;
         }
     }
@@ -346,11 +346,25 @@ function getCountSubfarm()
     return $countSubfarm;
 }
 // จำนวนไร่ 
+function getAreaRaiLog()
+{
+    $sql = "SELECT SUM(AreaRai) AS AreaRai, SUM(AreaNgan) AS AreaNgan 
+    FROM `log-farm` WHERE DIMSubfID IS null";
+    $data = selectData($sql);
+    return $data;
+}
+// จำนวนไร่ 
 function getAreaRai()
 {
     $sql = "SELECT SUM(`AreaRai`)AS AreaRai FROM `db-subfarm`";
     $areaRai = selectData($sql)[1]['AreaRai'];
     return $areaRai;
+}
+function getAreaNgan()
+{
+    $sql = "SELECT SUM(`AreaNgan`)AS AreaNgan FROM `db-subfarm`";
+    $data= selectData($sql)[1]['AreaNgan'];
+    return $data;
 }
 // จำนวนต้นไม้
 function getCountTree()
@@ -1555,6 +1569,77 @@ function getImgPest($img)
     } else return null;
 }
 
+function check_dup_name_picture($folder,$namePic){
+    $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
+    foreach($objScan as $obj){
+      $type= strrchr($obj,".");
+      if($type == '.png' || $type == '.jpg' ){            
+        if($obj == $namePic){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  function check_Pic($folder,$dataPic){
+    $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
+    print_r($objScan);
+
+    $checkPic = array();
+    foreach($objScan as $obj){
+      $type= strrchr($obj,".");
+      if($type == '.png' || $type == '.jpg' ){
+        $checkPic[$obj] = 0;
+      }
+    }
+
+    foreach($objScan as $obj){
+      $type= strrchr($obj,".");
+      echo 'type ='.$type.'<br>';
+      if($type == '.png' || $type == '.jpg' ){
+        foreach($dataPic as $pic){
+          echo 'pic  = '.$pic.'<br>';
+          echo '$folder."/".$obj  = '.$folder."/".$obj.'<br>';
+          if($folder."/".$obj == $pic || ",".$folder."/".$obj == $pic ){
+            echo '$checkPic[$obj]  = '.$checkPic[$obj].'<br>';
+
+            $checkPic[$obj]++;
+          }
+        }
+      }
+    }
+    return $checkPic;
+
+  }
+  function del_Pic($folder,$checkPic){
+    $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
+    foreach($objScan as $obj){
+      $type= strrchr($obj,".");
+      if($type == '.png' || $type == '.jpg' ){            
+        if($checkPic[$obj] == 0){
+          echo 'del pho'.$obj;
+          unlink($folder."/".$obj);
+        }
+      }
+    }
+  }
+  function delAllFileInfolder($folder=''){
+    if (is_dir($folder)&&$folder!='') {
+      //Get a list of all of the file names in the folder.
+      $files = glob($folder . '/*');
+       
+      //Loop through the file list.
+      foreach($files as $file){
+        //Make sure that this is a file and not a directory.
+        if(is_file($file)){
+          //Use the unlink function to delete the file.
+          unlink($file);
+        }
+      }
+    }
+  }
+
+
 function last_idPest()
 {
     $sql = "SELECT MAX(`PID`)as max FROM `db-pestlist`";
@@ -1612,6 +1697,26 @@ function getPestByPID($pid)
     $data = selectData($sql);
     return $data;
 }
+function getPestLogByPID($dpid){
+    $sql = "SELECT * FROM (
+        SELECT `log-pest`.`DIMpestID`,MAX(`log-pest`.`ID`) FROM `dim-pest`
+        JOIN `log-pest` ON `log-pest`.`DIMpestID` =`dim-pest`.`ID`
+        WHERE `dim-pest`.`ID` = $dpid)AS t1
+        JOIN `dim-pest` ON `dim-pest`.`ID` =  t1.`DIMpestID`";
+    $data1 = selectData($sql);
+    $DIMiconID = $data1[1]['DIMpestID'];
+    
+    $sql = "SELECT `log-icon`.`FileName` AS Icon FROM (
+        SELECT `log-icon`.`ID`,MAX(`log-icon`.`ID`) FROM `log-icon`
+        WHERE  `log-icon`.`DIMiconID` = $DIMiconID AND Type = 1)AS t1
+        JOIN `log-icon` ON `log-icon`.`ID` =  t1.`ID`";
+     $data2 = selectData($sql);
+
+    $data1[1]['Icon'] = $data2[1]['Icon'];
+
+    return $data1;
+
+}
 
 function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
 {
@@ -1627,10 +1732,10 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     }
     //INFO
     $sql = "SELECT `log-pestalarm`.`ID`,`dim-user`.`FullName` , dimfarm.`Name` AS Namefarm,dimfarm.dbID AS FID,
-	dimsubfarm.Name AS Namesubfarm,dimfarm.dbID AS SFID,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,
-    `log-farm`.`NumTree`,`log-pestalarm`.`DIMsubFID`,`dim-pest`.`TypeTH`, `dim-pest`.`dbpestLID`,
-    `dim-time`.`Date`,  `db-pesttype`.`PTID`,`log-pestalarm`.`Note`, `dim-pest`.`Name`,
-    `db-subdistrinct`.`subDistrinct`,`db-subfarm`.`Latitude`,`db-subfarm`.`Longitude`,`db-subdistrinct`.`AD3ID`
+	dimsubfarm.Name AS Namesubfarm,dimsubfarm.dbID AS SFID,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,
+    `log-farm`.`NumTree`,`log-pestalarm`.`DIMsubFID`,`dim-pest`.`TypeTH`, `dim-pest`.`dbpestLID`,`dim-pest`.`ID` AS dpid,
+    `dim-time`.`Date`,  `dim-pest`.`dbpestTID` AS PTID,`log-pestalarm`.`Note`, `dim-pest`.`Name`,
+    `dim-address`.`SubDistrinct`,`log-farm`.`Latitude`,`log-farm`.`Longitude`,`dim-address`.`dbsubDID` AS AD3ID
     FROM `log-pestalarm`
     JOIN `dim-user` ON `dim-user`.`ID` = `log-pestalarm`.`DIMownerID`
     JOIN `dim-farm` AS dimfarm ON dimfarm.`ID` = `log-pestalarm`.`DIMfarmID`
@@ -1638,11 +1743,7 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     JOIN `log-farm` ON  `log-farm`.`DIMSubfID` =  `log-pestalarm`.`DIMsubFID`
     JOIN `dim-pest` ON `dim-pest`.`ID` = `log-pestalarm`.`DIMpestID`
     JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
-    JOIN `db-subfarm` ON `db-subfarm`.`FSID` = dimsubfarm.`dbID`
-    JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-subfarm`.`AD3ID` 
-    JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
-    JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID` 
-    JOIN  `db-pesttype` ON  `db-pesttype`.`TypeTH` = `dim-pest`.`TypeTH`
+    JOIN `dim-address` ON `dim-address`.`ID`= `log-farm`.`DIMaddrID`
     WHERE `log-pestalarm`.isDelete = 0 AND dimsubfarm.`IsFarm` = 0";
     if ($idformal != '') $sql = $sql . " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
     if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";

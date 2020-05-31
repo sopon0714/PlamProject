@@ -9,6 +9,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                     <h4 class="modal-title" style="color:white">เพิ่มบัญชีผู้ใช้</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="container">
@@ -197,6 +200,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                     <h4 class="modal-title" style="color:white">แก้ไขบัญชีผู้ใช้</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="container">
@@ -357,6 +363,9 @@
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?=$color?>;">
                     <h4 class="modal-title">เปลี่ยนรหัสผ่าน</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="passModalBody">
                     <div class="row mb-4">

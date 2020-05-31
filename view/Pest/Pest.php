@@ -20,6 +20,9 @@ $PESTTYPE = getPestType();
 
 ?>
 
+<link rel="stylesheet" href="../../css/insect admin/readmore.css">
+<link rel="stylesheet" href="../../css/insect admin/stylePest.css">
+
 <style>
         textarea {
             overflow-y: scroll;
@@ -43,6 +46,11 @@ $PESTTYPE = getPestType();
         .upload-demo2  {
             width: 350px;
             height: 250px;
+        }
+        .img-gal {
+            width: 150px;
+            height: 100px;
+            z-index: 5;
         }
     </style>
 
@@ -73,7 +81,7 @@ $PESTTYPE = getPestType();
         <?php
         creatCard("card-color-one",   "จำนวนครั้งพบศัตรูพืช", getCountPestAlarm() . " ครั้ง", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "dashboard");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaRaiLog()[1]["AreaRai"] . " ไร่ ".getAreaRaiLog()[1]["AreaNgan"] . " งาน", "dashboard");
         creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");
         ?>
 
@@ -103,7 +111,7 @@ $PESTTYPE = getPestType();
                 " aria-labelledby="headingOne" data-parent="#accordion">
 
                     <div class="card-header card-bg">
-                        ตำแหน่งศัตรูพืชสวนปาล์มน้ำมัน
+                        ตำแหน่งแปลงการตรวจพบศัตรูพืช
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -302,11 +310,11 @@ $PESTTYPE = getPestType();
                                         <button type="button" id='edit<?php echo $i; ?>' class="btn btn-warning btn-sm btn-edit tt" data-toggle="tooltip" title="แก้ไข"
                                         date = "<?php echo $DATA[$i]['Date']; ?>" farm="<?php echo $DATA[$i]['FID']; ?>"
                                         subfarm = "<?php echo $DATA[$i]['SFID']; ?>" pesttype = "<?php echo $DATA[$i]['PTID']; ?>"
-                                        pest = "<?php echo $DATA[$i]['dbpestLID']; ?>" note = "<?php echo $DATA[$i]['Note']; ?>">
+                                        pest = "<?php echo $DATA[$i]['dbpestLID']; ?>" note = "<?php echo $DATA[$i]['Note']; ?>" lid = "<?php echo $DATA[$i]['ID']; ?>">
                                         <i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
-                                        data-toggle="tooltip" title="ลักษณะ"><i class="fas fa-bars"></i></button>
-                                        <button type="button" class="btn btn-info btn-sm btn-photo tt"
+                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" dimpest = "<?php echo $DATA[$i]['dpid']; ?>" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
+                                        pesttype = "<?php echo $DATA[$i]['PTID']; ?>" data-toggle="tooltip" title="ลักษณะ"><i class="fas fa-bars"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm btn-photo tt" lid="<?php echo $DATA[$i]['ID']; ?>"
                                         data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i class="far fa-images"></i></button>
                                         <button type="button" class="btn btn-primary btn-sm btn-note tt" note = "<?php echo $DATA[$i]['Note']; ?>"
                                         data-toggle="tooltip" title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
@@ -337,6 +345,7 @@ $PESTTYPE = getPestType();
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php  include_once("PestModal.php"); ?>
+<?php include_once("../../cropImage/cropImage.php");?>
 
 <script src="Pest.js"></script>
 

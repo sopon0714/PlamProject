@@ -152,6 +152,11 @@ $(document).ready(function() {
             textPicChar += footer
             if(type == 'style'){
                 $('#grid-pic-style-char-edit').html(textPicChar);
+                let pic_sc = new Array()
+                $('.pic-SC-edit').each(function(i, obj) {
+                    pic_sc.push($(this).attr('src') + 'manu20')
+                });
+                $('#o_e_pic2').val(pic_sc);
             }else if (type == 'danger'){
                 $('#grid-p_photo-edit').html(textPicChar);
 
@@ -200,7 +205,11 @@ $(document).ready(function() {
                 $('.crop-img-edit').hide()
                 $('.crop-button-edit').hide()
             
-                
+                let pic_photo = new Array()
+                $('.pic-photo-edit').each(function(i, obj) {
+                    pic_photo.push($(this).attr('src') + 'manu20')
+                });
+                $('#o_e_pic3').val(pic_photo);
             }
 
         });
@@ -218,7 +227,6 @@ $(document).ready(function() {
         var numPicDanger = $(this).attr('numPicDanger')
         var icon = $(this).attr('data-icon')
         var footer;
-
         // console.log("icon = " + icon)
 
         $('#img-pic-logo-edit').attr('src', "../../icon/pest/" + pid + "/" + icon)
@@ -420,10 +428,12 @@ $(document).ready(function() {
             var c = content.substr(0, showChar);
             var h = content.substr(showChar, content.length - showChar);
 
+            console.log(h);
             var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h +
                 '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
 
             $(this).html(html);
+
         }
 
     });

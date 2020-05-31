@@ -24,7 +24,7 @@ $( document ).ready(function() {
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(`request=select`);
     }
-    $('.btn_edit').click(function(){
+    $(document).on("click", ".btn_edit'", function() {
         $("#editModal").modal();
         var did = $(this).attr('did');
         var department = $(this).attr('department');
@@ -208,7 +208,7 @@ function delfunction(_department,_did,_department,_alias,_note) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             window.location.href = 'DepartmentList.php';
-            // alert(this.responseText);
+            // console.log(this.responseText);
         }
     };
     xhttp.open("POST", "manage.php", true);
@@ -217,4 +217,3 @@ function delfunction(_department,_did,_department,_alias,_note) {
     
     }
     
- 

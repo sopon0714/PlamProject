@@ -110,7 +110,7 @@
           mkdir($path);
         }
         $path = $folderStyle.$pid;
-        if (!file_exists($folderDanger.$pid)) {
+        if (!file_exists($folderStyle.$pid)) {
           mkdir($path);
         }
         $path = $folderDanger.$pid;
@@ -205,24 +205,24 @@
         $sql = "DELETE FROM `db-pestlist` WHERE `PID`='" . $pid . "'";
         delete($sql);
 
-        //delete all file and folder icon pid
-        $folder = $folderIcon.$pid;
-        delAllFileInfolder($folder);
-        if (is_dir($folder)&&$folder!='') {
-          rmdir($folder);
-        }
-        //delete all file and folder style pid
-        $folder = $folderStyle.$pid;
-        delAllFileInfolder($folder);
-        if (is_dir($folder)&&$folder!='') {
-          rmdir($folder);
-        }
-        //delete all file and folder danger pid
-        $folder = $folderDanger.$pid;
-        delAllFileInfolder($folder);
-        if (is_dir($folder)&&$folder!='') {
-          rmdir($folder);
-        }
+        // //delete all file and folder icon pid
+        // $folder = $folderIcon.$pid;
+        // delAllFileInfolder($folder);
+        // if (is_dir($folder)&&$folder!='') {
+        //   rmdir($folder);
+        // }
+        // //delete all file and folder style pid
+        // $folder = $folderStyle.$pid;
+        // delAllFileInfolder($folder);
+        // if (is_dir($folder)&&$folder!='') {
+        //   rmdir($folder);
+        // }
+        // //delete all file and folder danger pid
+        // $folder = $folderDanger.$pid;
+        // delAllFileInfolder($folder);
+        // if (is_dir($folder)&&$folder!='') {
+        //   rmdir($folder);
+        // }
 
         break;
 
@@ -253,7 +253,7 @@
         echo '<br>';
         echo $folderIcon.$pid."/".$PESTLIST[1]['Icon'].'<br>';
         //if old icon
-        if($_POST['e_pic1'] !=$folderIcon.$pid."/".$PESTLIST[1]['Icon']){
+        if($_POST['e_pic1'] != $folderIcon.$pid."/".$PESTLIST[1]['Icon']){
           echo 'not eq';
           $dataLogo = getImgPest($logo);
         }else{
@@ -270,14 +270,21 @@
         print_r($_POST['e_pic3']);
         echo '<br>';
 
+        $style_pic = $_POST['e_pic2'];
+        $old_style_pic = $_POST['o_e_pic2'];
         $dataPic2 = explode('manu20', $_POST['e_pic2']);
         $countfiles_style = sizeof($dataPic2) - 1;
         print_r($dataPic2);
         echo '<br>';
         echo "num pic2 = ".$countfiles_style."<br>";
+        echo "old - style = ".$old_style_pic."<br>";
+
+        $danger_pic = $_POST['e_pic3'];
+        $old_danger_pic = $_POST['o_e_pic3'];
         $dataPic3 = explode('manu20', $_POST['e_pic3']);
         $countfiles_danger = sizeof($dataPic3) - 1;
         echo "num pic3 = ".$countfiles_danger."<br>";
+        echo "old - danger = ".$old_danger_pic."<br>";
         
         $folder = $folderStyle.$pid;
         $checkPic2 = check_Pic($folder,$dataPic2);
@@ -404,7 +411,8 @@
           echo 'img1 = '.$nameImg1.'<br>';
           print_r($PESTLIST);
           if($PESTLIST[1]['Name'] == $Name && $PESTLIST[1]['Alias'] == $Alias && $PESTLIST[1]['Charactor'] == $Charactor && $PESTLIST[1]['Danger'] == $Danger
-          && $PESTLIST[1]['Icon'] == $nameImg1 && $PESTLIST[1]['NumPicChar'] == $countfiles_style && $PESTLIST[1]['NumPicDanger'] == $countfiles_danger){
+          && $PESTLIST[1]['Icon'] == $nameImg1 && $PESTLIST[1]['NumPicChar'] == $countfiles_style && 
+          $PESTLIST[1]['NumPicDanger'] == $countfiles_danger && $old_style_pic == $style_pic && $old_danger_pic == $danger_pic ){
 
           }else{
 
@@ -478,71 +486,5 @@
       $DATA = selectData($sql);
       return $DATA;
     }
-    function delAllFileInfolder($folder=''){
-      if (is_dir($folder)&&$folder!='') {
-        //Get a list of all of the file names in the folder.
-        $files = glob($folder . '/*');
-         
-        //Loop through the file list.
-        foreach($files as $file){
-          //Make sure that this is a file and not a directory.
-          if(is_file($file)){
-            //Use the unlink function to delete the file.
-            unlink($file);
-          }
-        }
-      }
-    }
-    function check_Pic($folder,$dataPic){
-      $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-      print_r($objScan);
 
-      $checkPic = array();
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        if($type == '.png' || $type == '.jpg' ){
-          $checkPic[$obj] = 0;
-        }
-      }
-
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        echo 'type ='.$type;
-        if($type == '.png' || $type == '.jpg' ){
-          foreach($dataPic as $pic){
-            echo 'pic  = '.$pic.'<br>';
-            if($folder."/".$obj == $pic || ",".$folder."/".$obj == $pic ){
-              $checkPic[$obj]++;
-            }
-          }
-        }
-      }
-      return $checkPic;
-
-    }
-    function del_Pic($folder,$checkPic){
-      $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        if($type == '.png' || $type == '.jpg' ){            
-          if($checkPic[$obj] == 0){
-            echo 'del pho'.$obj;
-            unlink($folder."/".$obj);
-          }
-        }
-      }
-    }
-
-    function check_dup_name_picture($folder,$namePic){
-      $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-      foreach($objScan as $obj){
-        $type= strrchr($obj,".");
-        if($type == '.png' || $type == '.jpg' ){            
-          if($obj == $namePic){
-            return true;
-          }
-        }
-      }
-      return false;
-    }
 

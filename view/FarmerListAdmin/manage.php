@@ -19,9 +19,6 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
-        // case 'test' :
-        //     echo "test";
-        //     break;
         case 'select' :
             $sql = "SELECT * FROM `db-farmer`";
 
@@ -86,8 +83,6 @@ if(isset($_POST['request'])){
                 updateData($sql);
             }
            
-            
-
             $array = check_dim_user_du($title,$fname,$lname);
             $check_dim = $array[0];
             $id_data  =$array[1];
@@ -143,29 +138,30 @@ if(isset($_POST['request'])){
             break;
         
         case 'delete' ;
-            $uid = $_POST['uid'];
-            
+            $uid = $_POST['uid'];           
             // echo "uid = ".$uid."<br>";
-            
-
             $get_idDim = getDIMf($uid);
-
-            // echo "dim id = ".$get_idDim."<br>";
-
+            echo "dim id = ".$get_idDim."<br>";
             $time = time();
                 $data_t =  getDIMDate();
             $id_t = $data_t[1]['ID'];
-
-            $sql="UPDATE `log-farmer` 
+            //set end log-farmer
+            $sql="UPDATE `log-farmer`
             SET EndT='$time', EndID='$id_t'
-            WHERE DIMuserID='$get_idDim' AND EndT IS NULL ";
-            $o_did = updateData($sql);
-
-            // echo $get_idDim;
-            $sql="UPDATE `log-icon` 
+            WHERE DIMuserID='$get_idDim' ";
+            updateData($sql);
+            //set end log-icon
+            $sql="UPDATE `log-icon`
             SET EndT='$time', EndID='$id_t'
-            WHERE DIMiconID='$get_idDim' AND EndT IS NULL AND `Type`='5' ";
-            $o_did = updateData($sql);
+            WHERE DIMiconID='$get_idDim' ";
+            updateData($sql);
+
+            $sql = "SELECT * FROM `db-farm` WHERE `UFID`= '$uid'";
+            $FARM = selectData($sql);
+
+            for($i = 1 ; $i <= $FARM[0]['numrow'] ; $i++){
+                delFarm($FARM[1]['FMID']);
+            }
 
             $sql = "DELETE FROM `db-farmer` WHERE `UFID`='".$uid."'";  
             delete($sql);
@@ -177,34 +173,6 @@ if(isset($_POST['request'])){
             $uid = $_POST['uid'];
 
             $get_idDim = getDIMf($uid);
-
-            // $time = time();
-            //     $data_t =  getDIMDate();
-            // $id_t = $data_t[1]['ID'];
-            //     $loglogin = $_SESSION[md5('LOG_LOGIN')];
-            // $loglogin_id = $loglogin[1]['ID'];
-
-            // $sql = "SELECT * FROM `log-user`  WHERE DIMuserID='$get_idDim' AND EndT IS NULL ";
-            // $DATA = selectData($sql);
-            // $id_old = $DATA[1]['ID'];
-
-            // $id_dim = $DATA[1]['DIMuserID'];
-            // $dimd_id = $DATA[1]['DIMdeptID'];
-            // $admin = $DATA[1]['IsAdmin'];
-            // $research = $DATA[1]['IsResearch'];
-            // $operator = $DATA[1]['IsOperator'];
-            // $farmer = $DATA[1]['IsFarmer'];
-
-            // $sql = "INSERT INTO `log-user` (ID,DIMuserID,DIMdeptID,LOGloginID,StartT,StartID,IsAdmin,IsResearch,IsOperator,IsFarmer,IsBlock) 
-            //         VALUES ('','$id_dim','$dimd_id','$loglogin_id','$time','$id_t','$admin','$research','$operator','$farmer','$val')";
-            // $did = addinsertData($sql);
-         
-                        
-            // $sql="UPDATE `log-user` 
-            //     SET EndT='$time', EndID='$id_t'
-            //     WHERE ID='$id_old'";
-            // $o_did = updateData($sql);
-                       
             $sql=   "UPDATE `db-farmer` SET IsBlock=$val
                 WHERE `UFID`='$uid' ";
             $re = updateData($sql);
@@ -319,15 +287,12 @@ if(isset($_POST['request'])){
                                     $set=0;
                                 }else{
                                     $set=1;
-                                }
-                                
+                                }  
                     }
                 }
                
 
-                if($set == 1){
-                    echo " เข้ามา ";
-                       
+                if($set == 1){                       
                             $sql = "SELECT * FROM `log-icon` WHERE DIMiconID='$get_idDim' AND EndT IS NULL AND `Type`='5'" ;
                             $LogIcon = selectData($sql);
                         
@@ -368,17 +333,47 @@ if(isset($_POST['request'])){
                  $did = addinsertData($sql);
                 }
                 
-                // $data_u =$_SESSION[md5('user')];
+                $sql = "SELECT * FROM `log-farm` 
+                WHERE `log-farm`.`DIMownerID` = '$get_idDim' AND EndT IS NULL ";
+                $LOGFARM = selectData($sql);
 
-                // if($data_u[1]['UID'] == $uid){
-                //     $sql = "SELECT * FROM `db-user` WHERE `UID` = $uid ";
-                //     $USER = selectData($sql);
-                //     $_SESSION[md5('user')] = selectData($sql);
-                // }
+                print_r($LOGFARM);
+                $sql="UPDATE `log-farm` 
+                    SET EndT='$time', EndID='$id_t'
+                    WHERE DIMownerID='$get_idDim' AND EndT IS NULL ";
+                $o_did = updateData($sql);
+
+                for($i = 1 ;$i <= $LOGFARM[0]['numrow'] ;$i++){
+                    $dim_farm_id = $LOGFARM[$i]['DIMfarmID'];
+                    $dim_subfarm_id = $LOGFARM[$i]['DIMSubfID'];
+                    $dim_addr_id = $LOGFARM[$i]['DIMaddrID'];
+                    $iscoor = $LOGFARM[$i]['IsCoordinate'];
+                    $la = $LOGFARM[$i]['Latitude'];
+                    $long = $LOGFARM[$i]['Longitude'];
+                    $num_sub = $LOGFARM[$i]['NumSubFarm'];
+                    $num_tree = $LOGFARM[$i]['NumTree'];
+                    $rai = $LOGFARM[$i]['AreaRai'];
+                    $ngan = $LOGFARM[$i]['AreaNgan'];
+                    $wa = $LOGFARM[$i]['AreaWa'];
+                    $total = $LOGFARM[$i]['AreaTotal'];
+
+                    $sql = "INSERT INTO `log-farm` (LOGloginID,StartT,StartID,DIMownerID,DIMfarmID,DIMSubfID,
+                    DIMaddrID,IsCoordinate,Latitude,Longitude,NumSubFarm,NumTree,AreaRai,AreaNgan,AreaWa,AreaTotal) 
+                    VALUES ('$loglogin_id','$time','$id_t','$id_dim','$dim_farm_id','$dim_subfarm_id'
+                    ,'$dim_addr_id','$iscoor','$la','$long','$num_sub','$num_tree','$rai','$ngan','$wa','$total')";
+                    $did = addinsertData($sql);
+
+                    if($dim_subfarm_id == 0 || $dim_subfarm_id == NULL){
+                        $dim_subfarm_id == NULL;
+                        $sql = "UPDATE `log-farm` 
+                        SET DIMSubfID = NULL
+                        WHERE `log-farm`.ID ='$did'";
+                        updateData($sql);
+
+                    }
+                }
                 
-                
-                   header("location:FarmerListAdmin.php");
-                
+                header("location:FarmerListAdmin.php");
                
             break;
 
@@ -435,6 +430,39 @@ function check_dim_user_du($title,$fname,$lname){
                 }
             return $array;
 }
+function delFarm($FID){
+    $time = time();
+    $DIMDATE = getDIMDate();
+    // update log-farm
+    $sql = "UPDATE `log-farm` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'  WHERE `log-farm`.`ID` IN 
+    (SELECT `log-farm`.`ID` FROM `log-farm` INNER JOIN `dim-farm` ON `log-farm`.`DIMfarmID`=`dim-farm`.`ID` 
+    WHERE`dim-farm`.`dbID`=$FID AND `dim-farm`.`IsFarm`=1 AND `log-farm`.`EndT`IS NULL) ";
+    updateData($sql);
+    //update log-icon subfarm
+    $sql = "UPDATE `log-icon` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'
+      WHERE `log-icon`.`Type`= 3 AND `log-icon`.`EndT` IS NULL AND `log-icon`.`DIMiconID` IN 
+      (SELECT `dim-farm`.`ID` FROM `dim-farm` INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID`=`dim-farm`.`dbID`
+       WHERE `dim-farm`.`IsFarm`=0 AND `db-subfarm`.`FMID` = $FID) ";
+    updateData($sql);
+    // update log-iconfarm
+    $sql = "UPDATE `log-icon` SET `EndT` = '$time', `EndID` = '{$DIMDATE[1]['ID']}'
+      WHERE `log-icon`.`Type`= 4 AND `log-icon`.`EndT` IS NULL AND `log-icon`.`DIMiconID` IN 
+      (SELECT `dim-farm`.`ID` FROM `dim-farm` INNER JOIN `db-farm`ON `db-farm`.`FMID` = `dim-farm`.`dbID`
+       WHERE `dim-farm`.`IsFarm`=1 AND `db-farm`.`FMID` =$FID) ";
+    updateData($sql);
+
+    $sql = "DELETE FROM `db-coorfarm` WHERE `db-coorfarm`.`FCID`IN 
+    (SELECT `db-coorfarm`.`FCID` FROM `db-coorfarm` INNER JOIN `db-subfarm`
+     ON  `db-coorfarm`.`FSID` = `db-subfarm`.`FSID` WHERE `db-subfarm`.`FMID` = '$FID')";
+    delete($sql);
+    $sql = "DELETE FROM `db-subfarm` WHERE `db-subfarm`.`FMID`='$FID'";
+    delete($sql);
+
+    echo $sql . "<br/>";
+    $sql = "DELETE FROM`db-farm` WHERE `db-farm`.`FMID`='$FID'";
+    delete($sql);
+    echo $sql . "<br/>";
+}
 function last_id(){
     $sql = "SELECT MAX(`dbID`)as max FROM `dim-user` WHERE `Type`='F'";
     $max = selectData($sql);
@@ -444,7 +472,6 @@ function last_id(){
 function getDIMf($uid){
     $sql = "SELECT * FROM `db-farmer` WHERE `UFID`='$uid'";
     $DATA = selectData($sql);
-    
     $title = $DATA[1]['Title'];
     // echo "title = ".$title."<br>";
     if($title == 1){
@@ -458,11 +485,8 @@ function getDIMf($uid){
     $lname = $DATA[1]['LastName'];
     $fullname = $fullname.$fname." ".$lname;
     // echo "fullname = ".$fullname."<br>";
-
     $sql = "SELECT * FROM `dim-user` WHERE Title='$title' AND FullName='$fullname' AND Alias='$fname' AND `Type`='F'";
-
     $DATA = selectData($sql);
-    
     if(isset($DATA[1]['ID'])){
         $IDdim_user = $DATA[1]['ID'];
     }else{
