@@ -173,34 +173,6 @@ if(isset($_POST['request'])){
             $uid = $_POST['uid'];
 
             $get_idDim = getDIMf($uid);
-
-            // $time = time();
-            //     $data_t =  getDIMDate();
-            // $id_t = $data_t[1]['ID'];
-            //     $loglogin = $_SESSION[md5('LOG_LOGIN')];
-            // $loglogin_id = $loglogin[1]['ID'];
-
-            // $sql = "SELECT * FROM `log-user`  WHERE DIMuserID='$get_idDim' AND EndT IS NULL ";
-            // $DATA = selectData($sql);
-            // $id_old = $DATA[1]['ID'];
-
-            // $id_dim = $DATA[1]['DIMuserID'];
-            // $dimd_id = $DATA[1]['DIMdeptID'];
-            // $admin = $DATA[1]['IsAdmin'];
-            // $research = $DATA[1]['IsResearch'];
-            // $operator = $DATA[1]['IsOperator'];
-            // $farmer = $DATA[1]['IsFarmer'];
-
-            // $sql = "INSERT INTO `log-user` (ID,DIMuserID,DIMdeptID,LOGloginID,StartT,StartID,IsAdmin,IsResearch,IsOperator,IsFarmer,IsBlock) 
-            //         VALUES ('','$id_dim','$dimd_id','$loglogin_id','$time','$id_t','$admin','$research','$operator','$farmer','$val')";
-            // $did = addinsertData($sql);
-         
-                        
-            // $sql="UPDATE `log-user` 
-            //     SET EndT='$time', EndID='$id_t'
-            //     WHERE ID='$id_old'";
-            // $o_did = updateData($sql);
-                       
             $sql=   "UPDATE `db-farmer` SET IsBlock=$val
                 WHERE `UFID`='$uid' ";
             $re = updateData($sql);
@@ -361,7 +333,8 @@ if(isset($_POST['request'])){
                  $did = addinsertData($sql);
                 }
                 
-                $sql = "SELECT * FROM `log-farm` WHERE `log-farm`.`DIMownerID` = '$get_idDim'";
+                $sql = "SELECT * FROM `log-farm` 
+                WHERE `log-farm`.`DIMownerID` = '$get_idDim' AND EndT IS NULL ";
                 $LOGFARM = selectData($sql);
 
                 print_r($LOGFARM);
@@ -399,17 +372,8 @@ if(isset($_POST['request'])){
 
                     }
                 }
-                // $data_u =$_SESSION[md5('user')];
-
-                // if($data_u[1]['UID'] == $uid){
-                //     $sql = "SELECT * FROM `db-user` WHERE `UID` = $uid ";
-                //     $USER = selectData($sql);
-                //     $_SESSION[md5('user')] = selectData($sql);
-                // }
                 
-                
-                //    header("location:FarmerListAdmin.php");
-                
+                header("location:FarmerListAdmin.php");
                
             break;
 
