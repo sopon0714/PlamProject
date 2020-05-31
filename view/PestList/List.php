@@ -109,8 +109,8 @@
                                 <img src='<?php echo "../../icon/pest/" . $DATAPEST['info'][1]["PID"] . "/" . $DATAPEST['info'][1]["Icon"]; ?>' width="120" height="120" alt="User" style="border-radius: 100px;">
                                 <br><br>
                             </div>
-                            <h6 class="m-0 font-weight-bold" style="color:#006664">ชื่อ : <?= $DATAPEST['info'][1]["Name"]; ?></h6>
-                            <h6 class="m-0 font-weight-bold" style="color:#006664">ชื่อทางการ : <?= $DATAPEST['info'][1]["Alias"]; ?> </h6>
+                            <h6 class="m-0 font-weight-bold" style="color:#006664">ชื่อ : <?= $DATAPEST['info'][1]["Alias"]; ?></h6>
+                            <h6 class="m-0 font-weight-bold" style="color:#006664">ชื่อทางการ : <?= $DATAPEST['info'][1]["Name"]; ?> </h6>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <!-- <h6 class="m-0 font-weight-bold" style="color:#006664">ลักษณะทั่วไป</h6> -->

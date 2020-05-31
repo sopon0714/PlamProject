@@ -27,12 +27,12 @@
                                     <div class="input-group">
                                         <input type="date" class="form-control" data-toggle="datepicker" id="date"
                                             name="date" required>
-                                        <div class="input-group-append">
+                                        <!-- <div class="input-group-append">
                                             <button type="button"
                                                 class="btn btn-outline-secondary docs-datepicker-trigger" disabled>
                                                 <i class="fa fa-calendar" aria-hidden="true"></i>
                                             </button>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                 </div>
@@ -156,7 +156,7 @@
                                 <div class="col-xl-8 col-10">
 
                                     <div class="input-group">
-                                        <input type="date" class="form-control" id="e_date"
+                                        <input type="date" class="form-control" data-toggle="datepicker" id="e_date"
                                             name="e_date" required>
                                         <!-- <div class="input-group-append">
                                             <button type="button"
@@ -245,6 +245,7 @@
                                 </div>
                             </div>
                             <input type="hidden" id="pic-edit" name="pic-edit" value="">
+                            <input type="hidden" id="old_pic-edit" name="old_pic-edit" value="">
                             <input type="hidden" name="e_pestAlarmID" id="e_pestAlarmID" value="0" />
                             <!-- <input type="hidden" name="old_date" id="old_date" value="" />
                             <input type="hidden" name="old_farm" id="old_farm" value="" />

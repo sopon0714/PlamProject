@@ -166,7 +166,8 @@ $FARM = getOwnerFarmer($farmerID);
             <div class="col-xl-6 col-12 mb-4">
                 <div class="card">
                     <div class="card-header card-bg" style="height: 55px;">
-                        <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">ตำแหน่งสวนปาล์ม</h6>
+                        <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">
+                        ตำแหน่งที่อยู่และสวนของเกษตรกร</h6>
                     </div>
                     <div class="card-body">
                         <div class="row">

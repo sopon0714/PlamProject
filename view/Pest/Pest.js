@@ -82,11 +82,14 @@ $( document ).ready(function() {
       arr = [];
 
       pid = $(this).attr('pest');
+      dpid = $(this).attr('dimpest');
       ptid = $(this).attr('pesttype');
-      $.post("manage.php", {request: "selectPestByPID",pid: pid}, function(result){
+      $.post("manage.php", {request: "selectPestByPID",dpid: dpid}, function(result){
+        // console.log(result)
+
         DATA_DB = JSON.parse(result);
         // console.log(DATA_DB)
-        path = "../../icon/pest/" + DATA_DB[1]['PID'] + "/" + DATA_DB[1]['Icon'];
+        path = "../../icon/pest/" + DATA_DB[1]['dbpestLID'] + "/" + DATA_DB[1]['Icon'];
         $('#data_icon').attr('src',path);
         $('#data_name').html('ชื่อ : '+DATA_DB[1]["Name"]);
         $('#data_name').html('ชื่อทางการ : '+DATA_DB[1]["Alias"]);
@@ -96,14 +99,17 @@ $( document ).ready(function() {
         }else if(ptid == 2){
           subpath = "disease";
         }else if(ptid == 3){
-          subpath = "other";
-        }else if(ptid == 4){
           subpath = "weed";
+        }else if(ptid == 4){
+          subpath = "other";
         }
         path_style = "../../picture/pest/"+subpath+"/style/";
         path_danger = "../../picture/pest/"+subpath+"/danger/";
 
         $.post("manage.php", {request: "scanDir",pid: pid ,path:path_style}, function(result1){
+          // console.log('pid = '+pid)
+          // console.log(result1)
+
           arr = JSON.parse(result1);
           // console.log(arr)
   
@@ -125,7 +131,7 @@ $( document ).ready(function() {
         });
         $.post("manage.php", {request: "scanDir",pid: pid ,path:path_danger}, function(result1){
           arr = JSON.parse(result1);
-          console.log(arr)
+          // console.log(arr)
   
           html = "<div class='carousel-item active'>"+
                     "<img class='d-block w-100'"+
@@ -195,7 +201,7 @@ $( document ).ready(function() {
           $("#pic-style-char-edit").removeAttr("required");
           $("#pic-style-char-edit")[0].setCustomValidity('');
       }
-
+      if(!check_dup_pic($('#pic-edit').attr('src'),$('#old_pic-edit').attr('src'))) return;
       // if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
 
     });
@@ -207,6 +213,12 @@ $( document ).ready(function() {
 //   }
 //   return true;
 // }
+function check_dup_pic(pic, old_pic) {
+  if (pic == old_pic) {
+      return false;
+  }
+  return true;
+}
 
 function setImgEdit(id, footer,path) {
   // console.log('setIMG')
@@ -274,6 +286,11 @@ function setImgEdit(id, footer,path) {
           $('.crop-img-edit').hide()
           $('.crop-button-edit').hide()
 
+          let pic_sc = new Array()
+          $('.pic-SC-edit').each(function(i, obj) {
+            pic_sc.push($(this).attr('src') + 'manu20')
+          });
+          $('#old_pic-edit').val(pic_sc);
 
   });
 
@@ -290,7 +307,8 @@ function showmore(){
       var content = $(this).html();
       content = content.trim();
       content += ' ';
-      console.log(content);
+      html = '';
+      // console.log(content);
       // console.log('lenght = '+content.length);
 
       for(i = showChar ; i<content.length; i++){
@@ -301,7 +319,7 @@ function showmore(){
       }
 
       if ((content.length-1) > showChar) {
-          
+          console.log('set more text');
           var c = content.substr(0, showChar);
           var h = content.substr(showChar, content.length - showChar);
 
@@ -309,6 +327,7 @@ function showmore(){
               '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
           
           $(this).html(html);
+          console.log(html);
       }
 
   });

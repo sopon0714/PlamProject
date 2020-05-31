@@ -111,7 +111,7 @@ $PESTTYPE = getPestType();
                 " aria-labelledby="headingOne" data-parent="#accordion">
 
                     <div class="card-header card-bg">
-                        ตำแหน่งศัตรูพืชสวนปาล์มน้ำมัน
+                        ตำแหน่งแปลงการตรวจพบศัตรูพืช
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -312,7 +312,7 @@ $PESTTYPE = getPestType();
                                         subfarm = "<?php echo $DATA[$i]['SFID']; ?>" pesttype = "<?php echo $DATA[$i]['PTID']; ?>"
                                         pest = "<?php echo $DATA[$i]['dbpestLID']; ?>" note = "<?php echo $DATA[$i]['Note']; ?>" lid = "<?php echo $DATA[$i]['ID']; ?>">
                                         <i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
+                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" dimpest = "<?php echo $DATA[$i]['dpid']; ?>" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
                                         pesttype = "<?php echo $DATA[$i]['PTID']; ?>" data-toggle="tooltip" title="ลักษณะ"><i class="fas fa-bars"></i></button>
                                         <button type="button" class="btn btn-info btn-sm btn-photo tt" lid="<?php echo $DATA[$i]['ID']; ?>"
                                         data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i class="far fa-images"></i></button>

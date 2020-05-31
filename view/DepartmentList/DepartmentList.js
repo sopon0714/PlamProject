@@ -208,7 +208,7 @@ function delfunction(_department,_did,_department,_alias,_note) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             window.location.href = 'DepartmentList.php';
-            // alert(this.responseText);
+            // console.log(this.responseText);
         }
     };
     xhttp.open("POST", "manage.php", true);

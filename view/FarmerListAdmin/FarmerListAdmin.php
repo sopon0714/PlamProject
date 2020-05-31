@@ -48,7 +48,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
     <div class="row">
         <?php
-        creatCard("card-color-one",   "จำนวนเกษตรกร", getcountFarmer() . " คน", "waves");
+        creatCard("card-color-one",   "จำนวนเกษตรกร", getCountFarmer() . " คน", "waves");
         ?>
 
         <div class="col-xl-3 col-12 mb-4">

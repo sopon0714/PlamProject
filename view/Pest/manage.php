@@ -24,8 +24,8 @@ if(isset($_POST['request'])){
               print_r(json_encode(getPestById($ptid)));
             break;
         case 'selectPestByPID';
-              $pid = $_POST['pid'];
-              print_r(json_encode(getPestByPID($pid)));
+              $dpid = $_POST['dpid'];
+              print_r(json_encode(getPestLogByPID($dpid)));
           break;
         case 'scanDir';
             $pid = $_POST['pid'];
@@ -73,7 +73,7 @@ if(isset($_POST['request'])){
             // print_r($dataPic);
             // echo 'countfiles = '.$countfiles.'<br>';
             $time = time();
-            $id_t =  getIDDIMdate($date)[1]['ID'];
+            $id_t =  getDIMDate($date)[1]['ID'];
 
             $id_owner = getIDowner($farm);
             $dim_owner_id = getIDDIMfarmer($id_owner);
@@ -115,6 +115,8 @@ if(isset($_POST['request'])){
                 file_put_contents($folder.$id."/".$i.$extension, $Pic);
               }
             }
+            header("location:Pest.php");
+
             break;
         
         case 'update':
@@ -125,16 +127,21 @@ if(isset($_POST['request'])){
           $pesttype = $_POST['e_pesttype'];
           $pest = $_POST['e_pest'];
           $note = $_POST['e_note'];
+
+          $sql = "SELECT * FROM `log-pestalarm` WHERE `ID`='" . $id . "'";
+          $LOGPESTALARM = selectData($sql); //get old data
           echo 'date = '.$date.'<br>';
 
           echo 'subfarm = '.$subfarm.'<br>';
-          
+          $pic_edit = $_POST["pic-edit"];
+          $old_pic_edit = $_POST["old_pic-edit"];
+
           $dataPic = explode('manu20', $_POST['pic-edit']);
           $countfiles = sizeof($dataPic) - 1;
 
           $extension = ".png";
           $time = time();
-          $id_t =  getIDDIMdate($date)[1]["ID"];
+          $id_t =  getDIMDate($date)[1]["ID"];
           echo 'dim date = '.$id_t.'<br>';
 
           $id_owner = getIDowner($farm);
@@ -143,69 +150,77 @@ if(isset($_POST['request'])){
           $dim_subfarm_id = getIDDIMsubfarm($subfarm);
           $dim_pest_id = getIDDIMpest($pest);
 
-          $old_path = $folder.$id;
+          if($LOGPESTALARM[1]['ID'] == $id && $LOGPESTALARM[1]['DIMdateID'] == $id_t && $LOGPESTALARM[1]['DIMownerID'] == $dim_owner_id &&
+          $LOGPESTALARM[1]['DIMfarmID'] == $dim_farm_id && $LOGPESTALARM[1]['DIMsubFID'] == $dim_subfarm_id && 
+          $LOGPESTALARM[1]['DIMpestID'] == $dim_pest_id && $LOGPESTALARM[1]['Note'] == $note && $pic_edit == $old_pic_edit ){
 
-          $sql="UPDATE `log-pestalarm` 
-            SET isDelete='1'
+          }else{
+            $old_path = $folder.$id;
+
+            $sql="UPDATE `log-pestalarm` 
+              SET isDelete='1'
+              WHERE `log-pestalarm`.ID = '$id'";
+            updateData($sql);
+  
+            $sql = "INSERT INTO `log-pestalarm` (`isDelete`, `Modify`, `LOGloginID`, `DIMdateID`, 
+            `DIMownerID`, `DIMfarmID`, `DIMsubFID` , `DIMpestID`, `Note`)
+            VALUES ('0','$time','$loglogin_id','$id_t',
+            '$dim_owner_id','$dim_farm_id','$dim_subfarm_id','$dim_pest_id','$note')";
+            //echo $sql;
+            $id = addinsertData($sql);
+            echo 'add id = '.$id.'<br>';
+            
+            $path = $folder_use.$id;
+  
+            $sql="UPDATE `log-pestalarm` 
+            SET PICs='$path'
             WHERE `log-pestalarm`.ID = '$id'";
-          updateData($sql);
-
-          $sql = "INSERT INTO `log-pestalarm` (`isDelete`, `Modify`, `LOGloginID`, `DIMdateID`, 
-          `DIMownerID`, `DIMfarmID`, `DIMsubFID` , `DIMpestID`, `Note`)
-          VALUES ('0','$time','$loglogin_id','$id_t',
-          '$dim_owner_id','$dim_farm_id','$dim_subfarm_id','$dim_pest_id','$note')";
-          //echo $sql;
-          $id = addinsertData($sql);
-          echo 'add id = '.$id.'<br>';
-          
-          $path = $folder_use.$id;
-
-          $sql="UPDATE `log-pestalarm` 
-          SET PICs='$path'
-          WHERE `log-pestalarm`.ID = '$id'";
-          updateData($sql);
-          
-          $new_path = $folder.$id;
-          $copy = recurse_copy($old_path,$new_path);
-          echo 'copy = ';
-          print_r($copy);
-          echo '<br>';          
-          $checkPic = check_Pic($old_path,$dataPic);
-          echo 'checkPic = ';
-          print_r($checkPic);
-          echo '<br>';
-
-          del_Pic($new_path,$checkPic); //del pic
-
-          if ($countfiles > 0) {
-            for ($j = $countfiles-1; $j >= 0; $j--) {
-              echo 'j = '.$j.'<br>';
+            updateData($sql);
+            
+            $new_path = $folder.$id;
+            $copy = recurse_copy($old_path,$new_path);
+            echo 'copy = ';
+            print_r($copy);
+            echo '<br>';          
+            $checkPic = check_Pic($old_path,$dataPic);
+            echo 'checkPic = ';
+            print_r($checkPic);
+            echo '<br>';
   
-              if($dataPic[$j] != ''){
+            del_Pic($new_path,$checkPic); //del pic
   
-                echo 'dataPic j '.$j.'= '.$dataPic[$j].'<br>';
-                $pic = substr($dataPic[$j], 31);
-                $pic= strrchr($pic,"/");
-                $pic= substr($pic,1);
-                echo 'pic = '.$pic.'<br>';
-  
-                if(!isset($checkPic[$pic]) || $checkPic[$pic] == 0){
-                    for ($i = 0; $i < $countfiles; $i++) {
-                      $check_dup_pic = check_dup_name_picture($folder.$id,$i.$extension);
-                      if(!$check_dup_pic){
-                          echo 'push i = '.$i.'<br>';
-                          $Pic2 = getImgPest($dataPic[$j]);
-                          echo $folder.$id."/".$i.$extension.'<br>';
-                          file_put_contents($folder.$id."/".$i.$extension, $Pic2);
-                          break;
+            if ($countfiles > 0) {
+              for ($j = $countfiles-1; $j >= 0; $j--) {
+                echo 'j = '.$j.'<br>';
+    
+                if($dataPic[$j] != ''){
+    
+                  echo 'dataPic j '.$j.'= '.$dataPic[$j].'<br>';
+                  $pic = substr($dataPic[$j], 31);
+                  $pic= strrchr($pic,"/");
+                  $pic= substr($pic,1);
+                  echo 'pic = '.$pic.'<br>';
+    
+                  if(!isset($checkPic[$pic]) || $checkPic[$pic] == 0){
+                      for ($i = 0; $i < $countfiles; $i++) {
+                        $check_dup_pic = check_dup_name_picture($folder.$id,$i.$extension);
+                        if(!$check_dup_pic){
+                            echo 'push i = '.$i.'<br>';
+                            $Pic2 = getImgPest($dataPic[$j]);
+                            echo $folder.$id."/".$i.$extension.'<br>';
+                            file_put_contents($folder.$id."/".$i.$extension, $Pic2);
+                            break;
+                        }
                       }
-                    }
+                  }
                 }
               }
             }
+  
           }
 
-          
+          header("location:Pest.php");
+
           break;
     }
   }
@@ -281,33 +296,3 @@ if(isset($_POST['request'])){
     return $data; 
   }
 
-  function getIDDIMdate($date){
-    $sql = "SELECT * FROM `dim-time` WHERE Date = '$date'";
-    $DIMTIME = selectData($sql);
-    if ($DIMTIME[0]['numrow'] == 0) {
-        $yearQuarter = ceil(date("n") / 3);
-        date_default_timezone_set("Asia/Bangkok");
-        $today = date("m-d");
-        $summer = date("m-d", strtotime($date));
-        $rainy = date("m-d", strtotime($date));
-        $winter = date("m-d", strtotime($date));
-        switch (true) {
-            case $today >= $summer && $today < $rainy:
-                $Season = 3;
-                break;
-            case $today >= $rainy && $today < $winter:
-                $Season = 1;
-                break;
-            default:
-                $Season = 2;
-        }
-        date_default_timezone_set("Asia/Bangkok");
-        $yearQuarter = ceil(date("n") / 3);
-        $sql = "INSERT INTO `dim-time`(`Date`,`dd`,`Day`,`Week`,`Season`,`Month`,`Quarter`,`Year1`,`Year2`) 
-        VALUES ('$date','" . date("j") . "','" . date("w") . "','" . date("W") . "','" . $Season . "','" . date("n") . "','" . $yearQuarter . "','" . date("Y") . "','" . (date("Y") + 543) . "')";
-        $idinsert = addinsertData($sql);
-        $sql = "SELECT * FROM `dim-time` WHERE ID = '" . $idinsert . "'";
-        $DIMTIME = selectData($sql);
-    }
-    return $DIMTIME;
-}

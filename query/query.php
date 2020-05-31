@@ -114,8 +114,7 @@ function getSubDistrinctInDistrinct($ad2id)
 
 function getCountFarmer()
 {
-    $sql = "SELECT COUNT(*) AS countFarmer 
-    FROM (SELECT `UFID`FROM `db-farmer` JOIN `dim-user` ON `dim-user`.`dbID`=`db-farmer`.`UFID`WHERE `dim-user`.`Type`='F') AS farmer";
+    $sql = "SELECT COUNT(*) AS countFarmer FROM `db-farmer`";
     $countFarmer = selectData($sql)[1]['countFarmer'];
     return $countFarmer;
 }
@@ -161,20 +160,22 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
     }
 
     //INFO
-    $sql = "SELECT `UFID`,`FirstName`,`LastName`,`Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`,
-    `dim-user`.`FullName`, `dim-user`.`ID` AS dimFID , `db-farmer`.`FormalID`
+    $sql = "SELECT `db-farmer`.`UFID`,
+    CASE WHEN  `db-farmer`.`Title` IN ('1') THEN 'นาย'
+    WHEN  `db-farmer`.`Title` IN ('2') THEN 'นาง' 
+    WHEN  `db-farmer`.`Title` IN ('3') THEN 'นางสาว' END AS Title,
+    `db-farmer`.`FirstName`, `db-farmer`.`LastName`, `db-farmer`.`FormalID`,
+     `Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`
      FROM `db-farmer` 
-     JOIN `dim-user` ON `dim-user`.`dbID`=`db-farmer`.`UFID`
      JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farmer`.`AD3ID` 
      JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
-     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID` 
-     WHERE `dim-user`.`Type`='F' ";
+     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`";
     if ($idformal != '') $sql = $sql . " AND `db-farmer`.`FormalID` LIKE '%" . $idformal . "%' ";
     if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
 
-    $sql = $sql . " ORDER BY  `dim-user`.`FullName`";
+    $sql = $sql . " ORDER BY `db-farmer`.`FirstName`";
     // echo $sql;
     $myConDB = connectDB();
     $result = $myConDB->prepare($sql);
@@ -186,8 +187,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
         //print_r($tmpDATA);
         if ($tmpDATA['UFID'] > 0) {
             $FARMER[$numFermer]['dbID']        = $tmpDATA['UFID'];
-            $FARMER[$numFermer]['dimID']       = $tmpDATA['dimFID'];
-            $FARMER[$numFermer]['FullName']    = $tmpDATA['FullName'];
+            $FARMER[$numFermer]['FullName']    = $tmpDATA['Title']." ".$tmpDATA['FirstName']." ".$tmpDATA['LastName'];
             $FARMER[$numFermer]['Province']    = $tmpDATA['Province'];
             $FARMER[$numFermer]['Distrinct']   = $tmpDATA['Distrinct'];
             $FARMER[$numFermer]['AD3ID']        = $tmpDATA['AD3ID'];
@@ -200,7 +200,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
             $FARMER[$numFermer]['numArea1']    = getCountOwnerAreaRai($tmpDATA['UFID']);
             $FARMER[$numFermer]['numArea2']    = getCountOwnerAreaNgan($tmpDATA['UFID']);
             $FARMER[$numFermer]['FormalID']    = $tmpDATA['FormalID'];
-            $fermerINDEX[$tmpDATA['dimFID']]   = $numFermer;
+            $fermerINDEX[$tmpDATA['UFID']]   = $numFermer;
             $numFermer++;
         }
     }
@@ -1596,6 +1596,26 @@ function getPestByPID($pid)
     $data = selectData($sql);
     return $data;
 }
+function getPestLogByPID($dpid){
+    $sql = "SELECT * FROM (
+        SELECT `log-pest`.`DIMpestID`,MAX(`log-pest`.`ID`) FROM `dim-pest`
+        JOIN `log-pest` ON `log-pest`.`DIMpestID` =`dim-pest`.`ID`
+        WHERE `dim-pest`.`ID` = $dpid)AS t1
+        JOIN `dim-pest` ON `dim-pest`.`ID` =  t1.`DIMpestID`";
+    $data1 = selectData($sql);
+    $DIMiconID = $data1[1]['DIMpestID'];
+    
+    $sql = "SELECT `log-icon`.`FileName` AS Icon FROM (
+        SELECT `log-icon`.`ID`,MAX(`log-icon`.`ID`) FROM `log-icon`
+        WHERE  `log-icon`.`DIMiconID` = $DIMiconID AND Type = 1)AS t1
+        JOIN `log-icon` ON `log-icon`.`ID` =  t1.`ID`";
+     $data2 = selectData($sql);
+
+    $data1[1]['Icon'] = $data2[1]['Icon'];
+
+    return $data1;
+
+}
 
 function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
 {
@@ -1612,7 +1632,7 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     //INFO
     $sql = "SELECT `log-pestalarm`.`ID`,`dim-user`.`FullName` , dimfarm.`Name` AS Namefarm,dimfarm.dbID AS FID,
 	dimsubfarm.Name AS Namesubfarm,dimsubfarm.dbID AS SFID,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,
-    `log-farm`.`NumTree`,`log-pestalarm`.`DIMsubFID`,`dim-pest`.`TypeTH`, `dim-pest`.`dbpestLID`,
+    `log-farm`.`NumTree`,`log-pestalarm`.`DIMsubFID`,`dim-pest`.`TypeTH`, `dim-pest`.`dbpestLID`,`dim-pest`.`ID` AS dpid,
     `dim-time`.`Date`,  `dim-pest`.`dbpestTID` AS PTID,`log-pestalarm`.`Note`, `dim-pest`.`Name`,
     `dim-address`.`SubDistrinct`,`log-farm`.`Latitude`,`log-farm`.`Longitude`,`dim-address`.`dbsubDID` AS AD3ID
     FROM `log-pestalarm`

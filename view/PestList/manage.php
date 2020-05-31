@@ -205,24 +205,24 @@
         $sql = "DELETE FROM `db-pestlist` WHERE `PID`='" . $pid . "'";
         delete($sql);
 
-        //delete all file and folder icon pid
-        $folder = $folderIcon.$pid;
-        delAllFileInfolder($folder);
-        if (is_dir($folder)&&$folder!='') {
-          rmdir($folder);
-        }
-        //delete all file and folder style pid
-        $folder = $folderStyle.$pid;
-        delAllFileInfolder($folder);
-        if (is_dir($folder)&&$folder!='') {
-          rmdir($folder);
-        }
-        //delete all file and folder danger pid
-        $folder = $folderDanger.$pid;
-        delAllFileInfolder($folder);
-        if (is_dir($folder)&&$folder!='') {
-          rmdir($folder);
-        }
+        // //delete all file and folder icon pid
+        // $folder = $folderIcon.$pid;
+        // delAllFileInfolder($folder);
+        // if (is_dir($folder)&&$folder!='') {
+        //   rmdir($folder);
+        // }
+        // //delete all file and folder style pid
+        // $folder = $folderStyle.$pid;
+        // delAllFileInfolder($folder);
+        // if (is_dir($folder)&&$folder!='') {
+        //   rmdir($folder);
+        // }
+        // //delete all file and folder danger pid
+        // $folder = $folderDanger.$pid;
+        // delAllFileInfolder($folder);
+        // if (is_dir($folder)&&$folder!='') {
+        //   rmdir($folder);
+        // }
 
         break;
 
@@ -270,14 +270,21 @@
         print_r($_POST['e_pic3']);
         echo '<br>';
 
+        $style_pic = $_POST['e_pic2'];
+        $old_style_pic = $_POST['o_e_pic2'];
         $dataPic2 = explode('manu20', $_POST['e_pic2']);
         $countfiles_style = sizeof($dataPic2) - 1;
         print_r($dataPic2);
         echo '<br>';
         echo "num pic2 = ".$countfiles_style."<br>";
+        echo "old - style = ".$old_style_pic."<br>";
+
+        $danger_pic = $_POST['e_pic3'];
+        $old_danger_pic = $_POST['o_e_pic3'];
         $dataPic3 = explode('manu20', $_POST['e_pic3']);
         $countfiles_danger = sizeof($dataPic3) - 1;
         echo "num pic3 = ".$countfiles_danger."<br>";
+        echo "old - danger = ".$old_danger_pic."<br>";
         
         $folder = $folderStyle.$pid;
         $checkPic2 = check_Pic($folder,$dataPic2);
@@ -404,7 +411,8 @@
           echo 'img1 = '.$nameImg1.'<br>';
           print_r($PESTLIST);
           if($PESTLIST[1]['Name'] == $Name && $PESTLIST[1]['Alias'] == $Alias && $PESTLIST[1]['Charactor'] == $Charactor && $PESTLIST[1]['Danger'] == $Danger
-          && $PESTLIST[1]['Icon'] == $nameImg1 && $PESTLIST[1]['NumPicChar'] == $countfiles_style && $PESTLIST[1]['NumPicDanger'] == $countfiles_danger){
+          && $PESTLIST[1]['Icon'] == $nameImg1 && $PESTLIST[1]['NumPicChar'] == $countfiles_style && 
+          $PESTLIST[1]['NumPicDanger'] == $countfiles_danger && $old_style_pic == $style_pic && $old_danger_pic == $danger_pic ){
 
           }else{
 

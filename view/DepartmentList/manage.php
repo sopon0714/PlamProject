@@ -111,15 +111,31 @@ if(isset($_POST['request'])){
             $time = time();
             $data_t =  getDIMDate();
             $id_t = $data_t[1]['ID'];
-            $sql="UPDATE `log-department` 
-                        SET EndT='$time', EndID='$id_t'
-                        WHERE ID='$o_log_id' ";
-            $o_did = updateData($sql);
+
+            setEndTLog('log-department',$time,$id_t,$o_log_id);
+
+            $sql = "SELECT * FROM `db-user` WHERE `DID`='$did'";
+            $USER= selectData($sql);
+
+            for($i = 1 ; $i <= $USER[0]['numrow'] ; $i++){
+                $uid = $USER[$i]['UID'];
+                $id_log_user = getDIMlogUserBydbID($uid);
+                setEndTLog('log-user',$time,$id_t,$id_log_user);
+                $id_log_icon = getDIMlogIconBydbID($uid);
+                setEndTLog('log-icon',$time,$id_t,$id_log_icon);
+                $id_log_password = getDIMlogPasswordBydbID($uid);
+                setEndTLog('log-password',$time,$id_t,$id_log_password);
+                $id_log_email = getDIMlogEmailBydbID($uid);
+                setEndTLog('log-email',$time,$id_t,$id_log_email);
+            }            
             $sql = "DELETE FROM `db-user` WHERE `DID`='".$did."'";  
             delete($sql);
+
             $sql = "DELETE FROM `db-department` WHERE `DID`='".$did."'";  
             delete($sql);
-            
+
+            // print_r($USER);
+                        
             break;
             
         case 'update' :
@@ -207,6 +223,50 @@ if(isset($_POST['request'])){
     
    
     
+}
+
+function setEndTLog($log,$time,$id_t,$o_log_id){
+    // echo 'log = '.$log.'<br>';
+    $sql="UPDATE `$log`
+        SET EndT='$time', EndID='$id_t'
+        WHERE ID='$o_log_id' ";
+    updateData($sql);
+}
+function getDIMlogEmailBydbID($dbid){
+    $sql = "SELECT `log-email`.`ID` ,`log-email`.`DIMuserID` FROM(
+        SELECT MAX(`log-email`.`ID`) AS ID FROM `dim-user`
+        JOIN `log-email` ON `dim-user`.`ID` = `log-email`.`DIMuserID`
+        WHERE `dim-user`.`dbID`= $dbid)AS t1
+        JOIN  `log-email` ON  `log-email`.`ID` = t1.ID";
+    $data = selectData($sql);
+    return $data[1]['ID'];
+}
+function getDIMlogPasswordBydbID($dbid){
+    $sql = "SELECT `log-password`.`ID` ,`log-password`.`DIMuserID` FROM(
+        SELECT MAX(`log-password`.`ID`) AS ID FROM `dim-user`
+        JOIN `log-password` ON `dim-user`.`ID` = `log-password`.`DIMuserID`
+        WHERE `dim-user`.`dbID`= $dbid)AS t1
+        JOIN  `log-password` ON  `log-password`.`ID` = t1.ID";
+    $data = selectData($sql);
+    return $data[1]['ID'];
+}
+function getDIMlogIconBydbID($dbid){
+    $sql = "SELECT `log-icon`.`ID` ,`log-icon`.`DIMiconID` FROM(
+        SELECT MAX(`log-icon`.`ID`) AS ID FROM `dim-user`
+        JOIN `log-icon` ON `dim-user`.`ID` = `log-icon`.`DIMiconID`
+        WHERE `dim-user`.`dbID`= $dbid)AS t1
+        JOIN  `log-icon` ON  `log-icon`.`ID` = t1.ID";
+    $data = selectData($sql);
+    return $data[1]['ID'];
+}
+function getDIMlogUserBydbID($dbid){
+    $sql = "SELECT `log-user`.`ID` ,`log-user`.`DIMuserID` FROM(
+        SELECT MAX(`log-user`.`ID`) AS ID FROM `dim-user`
+        JOIN `log-user` ON `dim-user`.`ID` = `log-user`.`DIMuserID`
+        WHERE `dim-user`.`dbID`= $dbid)AS t1
+        JOIN  `log-user` ON  `log-user`.`ID` = t1.ID";
+    $data = selectData($sql);
+    return $data[1]['ID'];
 }
 function last_id(){
     $sql = "SELECT MAX(`dbID`)as max FROM `dim-department`";
