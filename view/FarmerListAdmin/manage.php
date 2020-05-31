@@ -315,8 +315,7 @@ if(isset($_POST['request'])){
                                     $set=0;
                                 }else{
                                     $set=1;
-                                }
-                                
+                                }  
                     }
                 }
                
@@ -362,6 +361,44 @@ if(isset($_POST['request'])){
                  $did = addinsertData($sql);
                 }
                 
+                $sql = "SELECT * FROM `log-farm` WHERE `log-farm`.`DIMownerID` = '$get_idDim'";
+                $LOGFARM = selectData($sql);
+
+                print_r($LOGFARM);
+                $sql="UPDATE `log-farm` 
+                    SET EndT='$time', EndID='$id_t'
+                    WHERE DIMownerID='$get_idDim' AND EndT IS NULL ";
+                $o_did = updateData($sql);
+
+                for($i = 1 ;$i <= $LOGFARM[0]['numrow'] ;$i++){
+                    $dim_farm_id = $LOGFARM[$i]['DIMfarmID'];
+                    $dim_subfarm_id = $LOGFARM[$i]['DIMSubfID'];
+                    $dim_addr_id = $LOGFARM[$i]['DIMaddrID'];
+                    $iscoor = $LOGFARM[$i]['IsCoordinate'];
+                    $la = $LOGFARM[$i]['Latitude'];
+                    $long = $LOGFARM[$i]['Longitude'];
+                    $num_sub = $LOGFARM[$i]['NumSubFarm'];
+                    $num_tree = $LOGFARM[$i]['NumTree'];
+                    $rai = $LOGFARM[$i]['AreaRai'];
+                    $ngan = $LOGFARM[$i]['AreaNgan'];
+                    $wa = $LOGFARM[$i]['AreaWa'];
+                    $total = $LOGFARM[$i]['AreaTotal'];
+
+                    $sql = "INSERT INTO `log-farm` (LOGloginID,StartT,StartID,DIMownerID,DIMfarmID,DIMSubfID,
+                    DIMaddrID,IsCoordinate,Latitude,Longitude,NumSubFarm,NumTree,AreaRai,AreaNgan,AreaWa,AreaTotal) 
+                    VALUES ('$loglogin_id','$time','$id_t','$id_dim','$dim_farm_id','$dim_subfarm_id'
+                    ,'$dim_addr_id','$iscoor','$la','$long','$num_sub','$num_tree','$rai','$ngan','$wa','$total')";
+                    $did = addinsertData($sql);
+
+                    if($dim_subfarm_id == 0 || $dim_subfarm_id == NULL){
+                        $dim_subfarm_id == NULL;
+                        $sql = "UPDATE `log-farm` 
+                        SET DIMSubfID = NULL
+                        WHERE `log-farm`.ID ='$did'";
+                        updateData($sql);
+
+                    }
+                }
                 // $data_u =$_SESSION[md5('user')];
 
                 // if($data_u[1]['UID'] == $uid){
@@ -371,7 +408,7 @@ if(isset($_POST['request'])){
                 // }
                 
                 
-                   header("location:FarmerListAdmin.php");
+                //    header("location:FarmerListAdmin.php");
                 
                
             break;
