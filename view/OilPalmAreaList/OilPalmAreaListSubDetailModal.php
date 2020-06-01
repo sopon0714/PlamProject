@@ -12,6 +12,9 @@ $CheckTypeplanting = CheckPlantting($fsid);
             <form class="form-signin" method="POST" action='manage.php'>
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">เพิ่มข้อมูลการปลูก</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="row mb-4">
@@ -70,6 +73,9 @@ $CheckTypeplanting = CheckPlantting($fsid);
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">เปลี่ยนรูปไอคอนแปลง</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="passModalBody">
                     <div class="form-group divHolder">
@@ -114,6 +120,9 @@ $CheckTypeplanting = CheckPlantting($fsid);
             <form class="form-signin" method="POST" action='./manage.php'>
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">แก้ไขข้อมูลแปลง</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="row mb-4">
@@ -250,6 +259,9 @@ $CheckTypeplanting = CheckPlantting($fsid);
         <div class="modal-content">
             <div class="modal-header header-modal" style="background-color: <?= $color ?>">
                 <h4 class=" modal-title">แก้ไขตำแหน่งแปลง</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body" id="addModalBody">
 

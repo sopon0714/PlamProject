@@ -188,7 +188,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
         //print_r($tmpDATA);
         if ($tmpDATA['UFID'] > 0) {
             $FARMER[$numFermer]['dbID']        = $tmpDATA['UFID'];
-            $FARMER[$numFermer]['FullName']    = $tmpDATA['Title']." ".$tmpDATA['FirstName']." ".$tmpDATA['LastName'];
+            $FARMER[$numFermer]['FullName']    = $tmpDATA['Title'] . " " . $tmpDATA['FirstName'] . " " . $tmpDATA['LastName'];
             $FARMER[$numFermer]['Province']    = $tmpDATA['Province'];
             $FARMER[$numFermer]['Distrinct']   = $tmpDATA['Distrinct'];
             $FARMER[$numFermer]['AD3ID']        = $tmpDATA['AD3ID'];
@@ -363,7 +363,7 @@ function getAreaRai()
 function getAreaNgan()
 {
     $sql = "SELECT SUM(`AreaNgan`)AS AreaNgan FROM `db-subfarm`";
-    $data= selectData($sql)[1]['AreaNgan'];
+    $data = selectData($sql)[1]['AreaNgan'];
     return $data;
 }
 // จำนวนต้นไม้
@@ -720,10 +720,28 @@ function getDmy($suid)
 }
 
 // sql ค่าของ Year 
-function getYear()
+function getYear($id, $isFarm)
 {
-    $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM  `dim-time` ORDER BY `dim-time`.`Year2` DESC";
-    $Year = selectData($sql);
+    if ($isFarm) {
+        $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM  `dim-time`
+        WHERE  `dim-time`.`Year2` >= (SELECT `dim-time`.`Year2` FROM `log-farm`
+        INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`StartID`
+        INNER JOIN `dim-farm`   ON `dim-farm` .`ID` = `log-farm`.`DIMfarmID`      
+        WHERE `dim-farm` .`dbID` = $id
+        GROUP BY `dim-farm` .`dbID`)
+        ORDER BY `dim-time`.`Year2` DESC";
+        $Year = selectData($sql);
+    } else {
+        $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM  `dim-time`
+        WHERE  `dim-time`.`Year2` >= (SELECT `dim-time`.`Year2` FROM `log-farm`
+        INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`StartID`
+        INNER JOIN `dim-farm`   ON `dim-farm` .`ID` = `log-farm`.`DIMSubfID`      
+        WHERE `dim-farm` .`dbID` = $id
+        GROUP BY `dim-farm` .`dbID`)
+        ORDER BY `dim-time`.`Year2` DESC";
+        $Year = selectData($sql);
+    }
+
     return $Year;
 }
 
@@ -1569,75 +1587,78 @@ function getImgPest($img)
     } else return null;
 }
 
-function check_dup_name_picture($folder,$namePic){
+function check_dup_name_picture($folder, $namePic)
+{
     $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-    foreach($objScan as $obj){
-      $type= strrchr($obj,".");
-      if($type == '.png' || $type == '.jpg' ){            
-        if($obj == $namePic){
-          return true;
+    foreach ($objScan as $obj) {
+        $type = strrchr($obj, ".");
+        if ($type == '.png' || $type == '.jpg') {
+            if ($obj == $namePic) {
+                return true;
+            }
         }
-      }
     }
     return false;
-  }
-  function check_Pic($folder,$dataPic){
+}
+function check_Pic($folder, $dataPic)
+{
     $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
     print_r($objScan);
 
     $checkPic = array();
-    foreach($objScan as $obj){
-      $type= strrchr($obj,".");
-      if($type == '.png' || $type == '.jpg' ){
-        $checkPic[$obj] = 0;
-      }
+    foreach ($objScan as $obj) {
+        $type = strrchr($obj, ".");
+        if ($type == '.png' || $type == '.jpg') {
+            $checkPic[$obj] = 0;
+        }
     }
 
-    foreach($objScan as $obj){
-      $type= strrchr($obj,".");
-      echo 'type ='.$type.'<br>';
-      if($type == '.png' || $type == '.jpg' ){
-        foreach($dataPic as $pic){
-          echo 'pic  = '.$pic.'<br>';
-          echo '$folder."/".$obj  = '.$folder."/".$obj.'<br>';
-          if($folder."/".$obj == $pic || ",".$folder."/".$obj == $pic ){
-            echo '$checkPic[$obj]  = '.$checkPic[$obj].'<br>';
+    foreach ($objScan as $obj) {
+        $type = strrchr($obj, ".");
+        echo 'type =' . $type . '<br>';
+        if ($type == '.png' || $type == '.jpg') {
+            foreach ($dataPic as $pic) {
+                echo 'pic  = ' . $pic . '<br>';
+                echo '$folder."/".$obj  = ' . $folder . "/" . $obj . '<br>';
+                if ($folder . "/" . $obj == $pic || "," . $folder . "/" . $obj == $pic) {
+                    echo '$checkPic[$obj]  = ' . $checkPic[$obj] . '<br>';
 
-            $checkPic[$obj]++;
-          }
+                    $checkPic[$obj]++;
+                }
+            }
         }
-      }
     }
     return $checkPic;
-
-  }
-  function del_Pic($folder,$checkPic){
+}
+function del_Pic($folder, $checkPic)
+{
     $objScan = scandir($folder); // Scan folder ว่ามีไฟล์อะไรบ้าง
-    foreach($objScan as $obj){
-      $type= strrchr($obj,".");
-      if($type == '.png' || $type == '.jpg' ){            
-        if($checkPic[$obj] == 0){
-          echo 'del pho'.$obj;
-          unlink($folder."/".$obj);
+    foreach ($objScan as $obj) {
+        $type = strrchr($obj, ".");
+        if ($type == '.png' || $type == '.jpg') {
+            if ($checkPic[$obj] == 0) {
+                echo 'del pho' . $obj;
+                unlink($folder . "/" . $obj);
+            }
         }
-      }
     }
-  }
-  function delAllFileInfolder($folder=''){
-    if (is_dir($folder)&&$folder!='') {
-      //Get a list of all of the file names in the folder.
-      $files = glob($folder . '/*');
-       
-      //Loop through the file list.
-      foreach($files as $file){
-        //Make sure that this is a file and not a directory.
-        if(is_file($file)){
-          //Use the unlink function to delete the file.
-          unlink($file);
+}
+function delAllFileInfolder($folder = '')
+{
+    if (is_dir($folder) && $folder != '') {
+        //Get a list of all of the file names in the folder.
+        $files = glob($folder . '/*');
+
+        //Loop through the file list.
+        foreach ($files as $file) {
+            //Make sure that this is a file and not a directory.
+            if (is_file($file)) {
+                //Use the unlink function to delete the file.
+                unlink($file);
+            }
         }
-      }
     }
-  }
+}
 
 
 function last_idPest()
@@ -1697,7 +1718,8 @@ function getPestByPID($pid)
     $data = selectData($sql);
     return $data;
 }
-function getPestLogByPID($dpid){
+function getPestLogByPID($dpid)
+{
     $sql = "SELECT * FROM (
         SELECT `log-pest`.`DIMpestID`,MAX(`log-pest`.`ID`) FROM `dim-pest`
         JOIN `log-pest` ON `log-pest`.`DIMpestID` =`dim-pest`.`ID`
@@ -1705,17 +1727,16 @@ function getPestLogByPID($dpid){
         JOIN `dim-pest` ON `dim-pest`.`ID` =  t1.`DIMpestID`";
     $data1 = selectData($sql);
     $DIMiconID = $data1[1]['DIMpestID'];
-    
+
     $sql = "SELECT `log-icon`.`FileName` AS Icon FROM (
         SELECT `log-icon`.`ID`,MAX(`log-icon`.`ID`) FROM `log-icon`
         WHERE  `log-icon`.`DIMiconID` = $DIMiconID AND Type = 1)AS t1
         JOIN `log-icon` ON `log-icon`.`ID` =  t1.`ID`";
-     $data2 = selectData($sql);
+    $data2 = selectData($sql);
 
     $data1[1]['Icon'] = $data2[1]['Icon'];
 
     return $data1;
-
 }
 
 function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
@@ -1775,4 +1796,20 @@ function getLogHarvest($fmid)
     ORDER BY `dim-time`.`Date` DESC";
     $LogHarvest = selectData($sql);
     return   $LogHarvest;
+}
+function CheckHaveFarm($fmid)
+{
+    $sql = "SELECT * FROM `db-subfarm` WHERE `db-subfarm`.`FMID` = $fmid";
+    $INFO = selectData($sql);
+    if ($INFO[0]['numrow'] > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function getNameSubfarm($fmid)
+{
+    $sql = "SELECT * FROM `db-subfarm` WHERE `db-subfarm`.`FMID` = $fmid ORDER BY `db-subfarm`.`Name`";
+    $SUBFARM = selectData($sql);
+    return $SUBFARM;
 }

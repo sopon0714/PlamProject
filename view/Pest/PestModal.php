@@ -10,10 +10,10 @@
         <form method="post" id="formAdd" name="formAdd" action="manage.php">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header header-modal" style="background-color: <?=$color?>;">
+                    <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                         <h4 class="modal-title">เพิ่มการตรวจพบศัตรูพืช</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -25,8 +25,7 @@
                                 <div class="col-xl-8 col-10">
 
                                     <div class="input-group">
-                                        <input type="date" class="form-control" data-toggle="datepicker" id="date"
-                                            name="date" required>
+                                        <input type="date" class="form-control" data-toggle="datepicker" id="date" name="date" required>
                                         <!-- <div class="input-group-append">
                                             <button type="button"
                                                 class="btn btn-outline-secondary docs-datepicker-trigger" disabled>
@@ -44,13 +43,13 @@
                                 <div class="col-xl-8 col-10">
                                     <select class="form-control" id="farm" name="farm" required>
                                         <option selected value=''>เลือกสวน</option>
-                                        <?php 
-                                        for($i=1;$i<sizeof($FARM);$i++){  ?>
-                                        <option value=<?php echo $FARM[$i]["FMID"]; ?>><?php echo $FARM[$i]["Name"]; ?>
-                                        </option>
+                                        <?php
+                                        for ($i = 1; $i < sizeof($FARM); $i++) {  ?>
+                                            <option value=<?php echo $FARM[$i]["FMID"]; ?>><?php echo $FARM[$i]["Name"]; ?>
+                                            </option>
                                         <?php
                                         }
-                                    ?>
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -71,18 +70,18 @@
                                 <div class="col-xl-8 col-10">
                                     <select class="form-control" id="pesttype" name="pesttype" required>
                                         <option selected value=''>เลือกชนิดศัตรูพืช</option>
-                                        <?php 
-                                        for($i=1;$i<sizeof($PESTTYPE);$i++){  ?>
-                                        <option value=<?php echo $PESTTYPE[$i]["PTID"]; ?>>
-                                            <?php echo $PESTTYPE[$i]["TypeTH"]; ?></option>
+                                        <?php
+                                        for ($i = 1; $i < sizeof($PESTTYPE); $i++) {  ?>
+                                            <option value=<?php echo $PESTTYPE[$i]["PTID"]; ?>>
+                                                <?php echo $PESTTYPE[$i]["TypeTH"]; ?></option>
                                         <?php
                                         }
-                                    ?>
+                                        ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <div class="col-xl-3 col-12 text-right">
+                                <div class="col-xl-3 col-12 tex t-right">
                                     <span>ศัตรูพืช<span class="text-danger"> *</span></span>
                                 </div>
                                 <div class="col-xl-8 col-10">
@@ -124,8 +123,7 @@
                         <input type="hidden" id="request" name="request" value="insert" />
                         <div class="modal-footer normal-button">
                             <button id="save" name="save" type="submit" class="btn btn-success">ยืนยัน</button>
-                            <button id="cancel" type="button" class="btn btn-danger"
-                                data-dismiss="modal">ยกเลิก</button>
+                            <button id="cancel" type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
                         </div>
                         <div class="modal-footer crop-button">
                             <button type="button" class="btn btn-success btn-crop">ยืนยัน</button>
@@ -141,14 +139,14 @@
         <form method="post" id="formEdit" name="formEdit" action="manage.php">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header header-modal" style="background-color: <?=$color?>;">
+                    <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                         <h4 class="modal-title">แก้ไขการตรวจพบศัตรูพืช</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <div class="main-edit" >
+                        <div class="main-edit">
                             <div class="row mb-4">
                                 <div class="col-xl-3 col-12 text-right">
                                     <span>วันที่<span class="text-danger"> *</span></span>
@@ -156,8 +154,7 @@
                                 <div class="col-xl-8 col-10">
 
                                     <div class="input-group">
-                                        <input type="date" class="form-control" data-toggle="datepicker" id="e_date"
-                                            name="e_date" required>
+                                        <input type="date" class="form-control" data-toggle="datepicker" id="e_date" name="e_date" required>
                                         <!-- <div class="input-group-append">
                                             <button type="button"
                                                 class="btn btn-outline-secondary docs-datepicker-trigger" disabled>
@@ -175,13 +172,13 @@
                                 <div class="col-xl-8 col-10">
                                     <select class="form-control" id="e_farm" name="e_farm" required>
                                         <option selected value=''>เลือกสวน</option>
-                                        <?php 
-                                        for($i=1;$i<sizeof($FARM);$i++){  ?>
-                                        <option value=<?php echo $FARM[$i]["FMID"]; ?>><?php echo $FARM[$i]["Name"]; ?>
-                                        </option>
+                                        <?php
+                                        for ($i = 1; $i < sizeof($FARM); $i++) {  ?>
+                                            <option value=<?php echo $FARM[$i]["FMID"]; ?>><?php echo $FARM[$i]["Name"]; ?>
+                                            </option>
                                         <?php
                                         }
-                                    ?>
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -202,13 +199,13 @@
                                 <div class="col-xl-8 col-10">
                                     <select class="form-control" id="e_pesttype" name="e_pesttype" required>
                                         <option selected value=''>เลือกชนิดศัตรูพืช</option>
-                                        <?php 
-                                        for($i=1;$i<sizeof($PESTTYPE);$i++){  ?>
-                                        <option value=<?php echo $PESTTYPE[$i]["PTID"]; ?>>
-                                            <?php echo $PESTTYPE[$i]["TypeTH"]; ?></option>
+                                        <?php
+                                        for ($i = 1; $i < sizeof($PESTTYPE); $i++) {  ?>
+                                            <option value=<?php echo $PESTTYPE[$i]["PTID"]; ?>>
+                                                <?php echo $PESTTYPE[$i]["TypeTH"]; ?></option>
                                         <?php
                                         }
-                                    ?>
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -227,8 +224,7 @@
                                     <span>ลักษณะ</span>
                                 </div>
                                 <div class="col-xl-8 col-10">
-                                    <textarea name="e_note" class="form-control" id="e_note" cols="30"
-                                        rows="5"></textarea>
+                                    <textarea name="e_note" class="form-control" id="e_note" cols="30" rows="5"></textarea>
                                 </div>
                             </div>
                             <div class="row mb-4">
@@ -263,8 +259,7 @@
                         <input type="hidden" id="request" name="request" value="update" />
                         <div class="modal-footer normal-button-edit">
                             <button id="edit" type="submit" class="btn btn-success">ยืนยัน</button>
-                            <button id="e_cancel" type="button" class="btn btn-danger"
-                                data-dismiss="modal">ยกเลิก</button>
+                            <button id="e_cancel" type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
                         </div>
                         <div class="modal-footer crop-button-edit">
                             <button type="button" class="btn btn-success btn-crop-edit">ยืนยัน</button>
@@ -280,7 +275,7 @@
         <div class="modal-dialog modal-xl " role="document">
             <!-- modal-dialog-scrollable -->
             <div class="modal-content">
-                <div class="modal-header header-modal" style="background-color: <?=$color?>;">
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">ข้อมูลลักษณะทั่วไปของศัตรูพืช</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -292,8 +287,7 @@
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 " style="text-align: center;">
                                     <div style="text-align: center;">
-                                        <img id='data_icon' src=''
-                                            width="120" height="120" alt="User" style="border-radius: 100px;">
+                                        <img id='data_icon' src='' width="120" height="120" alt="User" style="border-radius: 100px;">
                                         <br><br>
                                     </div>
                                     <h6 id="data_name" class="m-0 font-weight-bold" style="color:#006664"></h6>
@@ -302,18 +296,15 @@
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                     <!-- <h6 class="m-0 font-weight-bold" style="color:#006664">ลักษณะทั่วไป</h6> -->
                                     <!-- <br> -->
-                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel"
-                                        id="silder">
+                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" id="silder">
                                         <div id="data_char1" class="carousel-inner">
-                                            
+
                                         </div>
-                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                                            data-slide="prev">
+                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                             <span class="sr-only">Previous</span>
                                         </a>
-                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                                            data-slide="next">
+                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
                                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                             <span class="sr-only">Next</span>
                                         </a>
@@ -326,18 +317,15 @@
                                 </div>
 
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel"
-                                        id="silder">
-                                        <div id="data_dang1"  class="carousel-inner">
-                                                
+                                    <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" id="silder">
+                                        <div id="data_dang1" class="carousel-inner">
+
                                         </div>
-                                        <a class="carousel-control-prev" href="#carouselExampleControls2" role="button"
-                                            data-slide="prev">
+                                        <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                             <span class="sr-only">Previous</span>
                                         </a>
-                                        <a class="carousel-control-next" href="#carouselExampleControls2" role="button"
-                                            data-slide="next">
+                                        <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next">
                                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                             <span class="sr-only">Next</span>
                                         </a>
@@ -363,7 +351,7 @@
     <div class="modal fade" id="picture" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header header-modal" style="background-color: <?=$color?>;">
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">รูปภาพศัตรูพืช</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -386,7 +374,7 @@
     <div class="modal fade" id="data" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header header-modal" style="background-color: <?=$color?>;">
+                <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">ข้อมูลสำคัญของศัตรูพืช</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>

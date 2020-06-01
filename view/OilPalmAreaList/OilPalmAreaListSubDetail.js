@@ -150,7 +150,7 @@ $(document).ready(function() {
         //ตรวจสอบข้อมูลว่าเป็นช่องว่างหรือไม่
         if (!checkSelectNull(dataSelectNull)) return;
         if (dateActive.val() == "") {
-            dateActive[0].setCustomValidity('กรุณาเลิอกวันที่')
+            dateActive[0].setCustomValidity('กรุณาเลือกวันที่')
             return;
         } else {
             dateActive[0].setCustomValidity('');

@@ -13,6 +13,92 @@ $(document).ready(function() {
             load_infoHarvest(year, FMID);
         }
     });
+    $(document).on('click', '#btn_add_product', function() {
+        $("#addProductModal").modal('show');
+    });
+    $(document).on('click', '#weight', function() {
+        $("#weight").select();
+    });
+    $(document).on('click', '#UnitPrice', function() {
+        $("#UnitPrice").select();
+    });
+    $(document).on("click", ".btn-photo", function() {
+        $('#picture').modal();
+        lid = $(this).attr("lid");
+        path = "../../picture/activities/harvest/";
+        loadPhoto_LogHarvest(path, lid);
+    });
+
+    function loadPhoto_LogHarvest(path, id) {
+        $.post("manage.php", { action: "scanDir", path: path, lid: id }, function(result) {
+
+            let data1 = JSON.parse(result);
+            console.log(data1);
+
+            let text = "";
+            PICS = path + id;
+            for (i in data1) {
+                text += `<a href="${PICS+"/"+data1[i]}" class="col-xl-3 col-3 margin-photo" target="_blank">
+                        <img src="${PICS+"/"+data1[i]}"" class="img-gal">
+                    </a>`
+            }
+            $("#fetchPhoto").html(text);
+
+        });
+    }
+    $('#save').click(function() {
+        var subFarmID = $("#addProductModal select[name='SubFarmID']");
+        var date = $("#addProductModal input[name='date']");
+        var weight = $("#addProductModal input[name='weight']");
+        var UnitPrice = $("#addProductModal input[name='UnitPrice']");
+        let dataSelectNull = [subFarmID];
+        let pic_sc = new Array()
+        $('.pic-SC').each(function(i, obj) {
+            pic_sc.push($(this).attr('src') + 'manu20')
+        });
+        $('#pic').val(pic_sc);
+
+        var PIC_SC = $(".pic-SC");
+        if (!checkSelectNull(dataSelectNull)) return;
+        if (date.val() == "") {
+            date[0].setCustomValidity('กรุณาเลือกวันที่')
+            return;
+        } else {
+            date[0].setCustomValidity('');
+        }
+        if (weight.val() == "0") {
+            weight[0].setCustomValidity('ผลผลิตห้ามเป็น 0 กิโลกรัม')
+            return;
+        } else {
+            weight[0].setCustomValidity('');
+        }
+        if (UnitPrice.val() == "0") {
+            UnitPrice[0].setCustomValidity('ราคาต่อหน่วยห้ามเป็น 0 บาท')
+            return;
+        } else {
+            UnitPrice[0].setCustomValidity('');
+        }
+        if (PIC_SC.length == 0) {
+            // console.log('PIC_SC.length == 0');
+            $("#pic-style-char").attr("required", "");
+            $("#pic-style-char")[0].setCustomValidity('กรุณาเพิ่มรูป');
+
+        } else {
+            $("#pic-style-char").removeAttr("required");
+            $("#pic-style-char")[0].setCustomValidity('');
+        }
+
+    });
+
+    function checkSelectNull(selecter) {
+        for (i in selecter) {
+            if (selecter[i].val() == null || selecter[i].val() == '0') {
+                selecter[i][0].setCustomValidity('กรุณาเลือกข้อมูล');
+                return false;
+            } else selecter[i][0].setCustomValidity('');
+        }
+        return true;
+    }
 
     function load_infoHarvest(year, FMID) {
         $.ajax({
