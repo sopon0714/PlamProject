@@ -1629,6 +1629,15 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
+    $sql = "SELECT `log-farmer`.`DIMuserID`, t1.FullName FROM (
+        SELECT `log-pestalarm`.`ID`,`log-pestalarm`.`DIMownerID`, dim_user2.FullName,MAX(`log-farmer`.`ID`) AS logID FROM `log-pestalarm`
+        JOIN `dim-user`AS dim_user1 ON  dim_user1.`ID` = `log-pestalarm`.`DIMownerID`
+        JOIN `dim-user` AS dim_user2 ON  dim_user2.`dbID` = dim_user1.`dbID`
+        JOIN  `log-farmer` ON `log-farmer`.`DIMuserID` = dim_user2.ID
+        WHERE  `log-pestalarm`.`isDelete` = 0 AND dim_user2.Type = 'F'
+        GROUP BY `log-pestalarm`.`ID`,`log-pestalarm`.`DIMownerID` ) AS t1
+        JOIN  `log-farmer` ON `log-farmer`.`ID` = t1.logID";
+    
     //INFO
     $sql = "SELECT `log-pestalarm`.`ID`,`dim-user`.`FullName` , dimfarm.`Name` AS Namefarm,dimfarm.dbID AS FID,
 	dimsubfarm.Name AS Namesubfarm,dimsubfarm.dbID AS SFID,`log-farm`.`AreaRai`,`log-farm`.`AreaNgan`,
