@@ -3,11 +3,12 @@ $(document).ready(function() {
     updateInfoFarm();
     $('.tt').tooltip();
 
-    $('#add').click(function() {
+    $(document).on("click", "#add", function() {
         $("#addModal").modal();
 
     });
-    $('#s_province').change(function() {
+
+    $(document).on("change", "#s_province", function() {
 
         var e = document.getElementById("s_province");
         var select_id = e.options[e.selectedIndex].value;
@@ -17,7 +18,7 @@ $(document).ready(function() {
 
     });
 
-    $('#province').change(function() {
+    $(document).on("change", "#province", function() {
 
         var e = document.getElementById("province");
         var select_id = e.options[e.selectedIndex].value;
@@ -26,7 +27,8 @@ $(document).ready(function() {
 
 
     });
-    $('#distrinct').change(function() {
+
+    $(document).on("change", "#distrinct", function() {
 
         var e = document.getElementById("distrinct");
         var select_id = e.options[e.selectedIndex].value;
@@ -50,20 +52,6 @@ $(document).ready(function() {
         xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
     }
     // -------------------------------------------------------------
-    function data_show(select_id, result, point_id) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                // console.log(this.responseText);
-                // console.log(result);
-                document.getElementById(result).innerHTML = xhttp.responseText;
-
-            };
-        }
-        xhttp.open("POST", "data.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
-    }
     // create by โสภณ โตใหญ่
     function updateInfoFarm() {
         $.ajax({
@@ -82,7 +70,8 @@ $(document).ready(function() {
         });
     }
     // หน้า แรก ของสวนปาล์ม ตรวจสอบการเพิ่มสวนpalm
-    $('.insertFarm').click(function() {
+
+    $(document).on("click", ".insertFarm", function() {
         var namefarm = $("input[name='namefarm']");
         var aliasfarm = $("input[name='aliasfarm']");
         var addfarm = $("input[name='addfarm']");
@@ -158,7 +147,7 @@ function initMap() {
     size = $('#size').attr('size');
     if (size == 1) {
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 6,
+            zoom: 7,
             center: new google.maps.LatLng(10.667028, 99.201250),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
@@ -187,7 +176,7 @@ function initMap() {
         console.log(locations);
 
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 6,
+            zoom: 7,
             center: new google.maps.LatLng(center[0], center[1]),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });

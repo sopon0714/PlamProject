@@ -16,6 +16,7 @@ $INFOAREASUBFARM = getAreatotalByIdSubFarm($fsid);
 $INNFOCOORSUBFRAM = getCoorsSubFarm($fsid);
 $OLDPALMSUBFARM = getOldPalmByIdSubFarm($fsid);
 $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
+$INFOFERT = getVolFertilising($fsid);
 $YEAR = getYear();
 $sumng1 = 1;
 $sumng2 = 0;
@@ -50,7 +51,6 @@ $sumdeadPers = 0;
 </style>
 
 <div class="container">
-    <!-- <?php echo "{$maxyear[1]['max']}" ?> -->
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">
             <div class="card">
@@ -217,7 +217,7 @@ $sumdeadPers = 0;
                                                         <span>ปลูก :  </span>
                                                     </div>
                                                     <div class=\"col-xl-4 \">
-                                                        <span>{$LOGPLANTTING[$i]['Day']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                                        <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
                                                     </div>
                                                     <div class=\"col-xl-3 \">
                                                         <span>{$LOGPLANTTING[$i]['NumGrowth1']} ต้น</span>
@@ -230,7 +230,7 @@ $sumdeadPers = 0;
                                             <span>ปลูกซ่อม :  </span>
                                         </div>
                                         <div class=\"col-xl-4 \">
-                                            <span>{$LOGPLANTTING[$i]['Day']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                            <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
                                         </div>
                                         <div class=\"col-xl-3 \">
                                             <span>{$LOGPLANTTING[$i]['NumGrowth2']} ต้น</span>
@@ -243,7 +243,7 @@ $sumdeadPers = 0;
                                            <span>ตาย :  </span>
                                        </div>
                                        <div class=\"col-xl-4 \">
-                                           <span>{$LOGPLANTTING[$i]['Day']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                           <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
                                        </div>
                                        <div class=\"col-xl-3 \">
                                            <span>{$LOGPLANTTING[$i]['NumDead']} ต้น</span>
@@ -343,11 +343,20 @@ $sumdeadPers = 0;
                         <div class="col-xl-12 col-12">
                             <div class="row">
                                 <?php
-                                if ($namevol[0]['numrow'] != 0) {
-                                    for ($i = 1; $i <= $namevol[0]['numrow']; $i++) {
+                                if ($INFOFERT[0]['numrow'] != 0) {
+                                    for ($i = 1; $i <= $INFOFERT[0]['numrow']; $i++) {
                                         echo "
-                                <div class=\"col-4\">
-                                    <canvas id=\"ferYear" . $i . "\" style=\"height:250px;\"></canvas>
+                                <div class=\"col-4 \" style=\"margin: 25px 0px 25px 0px;\">
+                                    <div class=\"row\">
+                                        <div class=\"col-12\">
+                                            <canvas id=\"ferYear" . $i . "\" style=\"height:250px;\"></canvas>
+                                        </div> 
+                                    </div> 
+                                    <div class=\"row\">
+                                        <div class=\"col-12 text-center\">
+                                            <span   style=\"margin-left: 17%; align: center\">" . $INFOFERT[$i]['Name'] . "</span>
+                                        </div> 
+                                    </div>
                                 </div>";
                                     }
                                 } else {
@@ -355,21 +364,7 @@ $sumdeadPers = 0;
                                 }
                                 ?>
                             </div>
-                            <div class="row">
-                                <?php
-                                if ($namevol[0]['numrow'] != 0) {
-                                    for ($i = 1; $i <= $namevol[0]['numrow']; $i++) {
-                                        echo "
-                                    <div class=\"col-4 text-center\">
-                                    <span style=\"margin-left: 17%;\">" . $namevol[$i]['namevol'] . "</span>
-                                </div>";
-                                    }
-                                }
-
-
-
-                                ?>
-                            </div>
+                            <!-- <span style=\"margin-left: 17%;\">" . $INFOFERT[$i]['Name'] . "</span> -->
                         </div>
                     </div>
                 </div>
@@ -411,6 +406,76 @@ $sumdeadPers = 0;
             data: speedData,
             options: chartOptions
         });
+
+        // //Fer section////////////////////////////////////////////////////////
+        <?php
+
+
+
+        $MaxYear = ((int) date("Y")) + 543;
+        for ($i = 1; $i <= $INFOFERT[0]['numrow']; $i++) {
+            if ($INFOFERT[$i]['Unit'] == 1) {
+                $unit = "ก.ก";
+            } else {
+                $unit = "กรัม";
+            }
+            echo "  var chartOptions$i = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 80,
+                                fontColor: 'black'
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'ปริมาณปุ๋ย ($unit)'
+                                },
+                                gridLines: {
+                                    display: true
+                                },
+                                ticks: {
+                                    min: 0
+                                }
+                            }]
+                            ,
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'รายปี'
+                                },
+                                gridLines: {
+                                    display: false
+                                }
+                            }],
+                        }
+                    };
+
+                    var speedData$i = {
+                        labels: [\"" . ($MaxYear - 2) . "\", \"" . ($MaxYear - 1) . "\", \"$MaxYear\"],
+                        datasets: [
+                            {
+                                label: \"ปริมาณปุ๋ยที่ใส่ ($unit)\",
+                                data: {$INFOFERT[$i]['dataVol']},
+                                backgroundColor: '#05acd3'
+                            }
+                        ]
+                    };
+
+                    var ctx = $(\"#ferYear$i\");
+                    var plantPie = new Chart(ctx, {
+                        type: 'bar',
+                        data: speedData$i,
+                        options: chartOptions$i
+                    });";
+        }
+
+        ?>
 
     });
 
@@ -488,4 +553,4 @@ $sumdeadPers = 0;
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
-<script src="test.js"></script>
+<script src="OilPalmAreaListSubDetail.js"></script>

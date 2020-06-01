@@ -3,6 +3,7 @@ $PROVINCE = getProvince();
 $DISTRINCT = getDistrinctInProvince($INFOSUBFARM[1]['AD1ID']);
 $SUBDISTRINCT = getSubDistrinctInDistrinct($INFOSUBFARM[1]['AD2ID']);
 $CheckTypeplanting = CheckPlantting($fsid);
+
 ?>
 
 <div class="modal fade" id="addplant" tabindex="-1" role="dialog">
@@ -120,7 +121,7 @@ $CheckTypeplanting = CheckPlantting($fsid);
                             <span>ชื่อแปลง</span>
                         </div>
                         <div class="col-xl-5 col-12">
-                            <input type="text" class="form-control" id="nameSubfarm" name="nameSubfarm" value="<?php echo $INFOSUBFARM[$i]['Name'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อแปลง">
+                            <input type="text" class="form-control" id="nameSubfarm" name="nameSubfarm" value="<?php echo $INFOSUBFARM[1]['Name'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อแปลง">
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -128,7 +129,7 @@ $CheckTypeplanting = CheckPlantting($fsid);
                             <span>ชื่อย่อแปลง</span>
                         </div>
                         <div class="col-xl-5 col-12">
-                            <input type="text" class="form-control" id="initialsSubfarm" name="initialsSubfarm" value="<?php echo $INFOSUBFARM[$i]['Alias'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อย่อแปลง">
+                            <input type="text" class="form-control" id="initialsSubfarm" name="initialsSubfarm" value="<?php echo $INFOSUBFARM[1]['Alias'] ?>" required="" oninput="setCustomValidity('')" placeholder="กรุณากรอกชื่อย่อแปลง">
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -167,7 +168,7 @@ $CheckTypeplanting = CheckPlantting($fsid);
                             <span>ที่อยู่ </span>
                         </div>
                         <div class="col-xl-5 col-12">
-                            <input type="text" class="form-control" name="addfarmSF" required="" value="<?php echo $INFOSUBFARM[$i]['Address'] ?>" oninput="setCustomValidity('')" placeholder="กรุณากรอกที่อยู่แปลง">
+                            <input type="text" class="form-control" name="addfarmSF" required="" value="<?php echo $INFOSUBFARM[1]['Address'] ?>" oninput="setCustomValidity('')" placeholder="กรุณากรอกที่อยู่แปลง">
                         </div>
                     </div>
                     <div class="row mb-4">
