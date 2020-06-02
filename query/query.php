@@ -1813,7 +1813,7 @@ function getNameSubfarm($fmid)
     $SUBFARM = selectData($sql);
     return $SUBFARM;
 }
-function getAearLogFarm()
+function getAreaLogFarm()
 {
 
     $sql = "SELECT 
