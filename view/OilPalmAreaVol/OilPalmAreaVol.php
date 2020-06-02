@@ -19,6 +19,7 @@ $backYear = date("Y") + 543 - 1;
 $PROVINCE = getProvince();
 $OILPALMAREAVOL = getTableAllHarvest($idformal, $fullname, $fpro, $fdist);
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
+$AREA = getAreaLogFarm();
 
 
 ?>
@@ -50,8 +51,8 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
         <?php
         creatCard("card-color-one",   "ผลผลิตปี " . $currentYear, number_format(getHarvestYear($currentYear), 2, '.', ',') . " ก.ก.", "waves");
         creatCard("card-color-two",   "ผลผลิตปี" . $backYear, number_format(getHarvestYear($backYear), 2, '.', ',') . " ก.ก.", "waves");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่", "dashboard");
-        creatCard("card-color-four", "จำนวนต้นไม้",  getCountTree() . " ต้น", "format_size");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", "{$AREA[1]['AreaRai']} ไร่ {$AREA[1]['AreaNgan']} งาน", "dashboard");
+        creatCard("card-color-four", "จำนวนต้นไม้", "{$AREA[1]['NumTree']} ต้น", "format_size");
         ?>
     </div>
 

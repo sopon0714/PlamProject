@@ -27,7 +27,7 @@ switch ($action) {
           $DIMFARM = getDIMFarm($fmid);
           $DIMSUBFARM = getDIMSubFarm($fsid);
           $sql = "INSERT INTO `log-harvest` (`ID`, `isDelete`, `GuessFrom`, `Modify`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Weight`, `UnitPrice`, `TotalPrice`, `PICs`) 
-          VALUES (NULL, '0', NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMTIME[1]['ID']}', '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '{$DIMFARM[1]['ID']}', '$weight', '$UnitPrice', ' $total', 'xxxxx')";
+          VALUES (NULL, '0', NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMTIME[1]['ID']}', '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '{$DIMSUBFARM[1]['ID']}', '$weight', '$UnitPrice', ' $total', 'xxxxx')";
           $IDLog = addinsertData($sql);
           $sql = "UPDATE `log-harvest` SET `PICs` = 'picture/activities/harvest/$IDLog' WHERE `log-harvest`.`ID` = $IDLog";
           updateData($sql);
