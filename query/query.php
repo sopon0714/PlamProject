@@ -524,7 +524,8 @@ function getSubfarm($fmid)
     $Subfarm = selectData($sql);
     return $Subfarm;
 }
-function getSubfarmByModify($dim_farm,$modify){
+function getSubfarmByModify($dim_farm, $modify)
+{
     $sql = "SELECT * FROM `log-farm` 
     JOIN `dim-farm` ON `log-farm`.`DIMSubfID` = `dim-farm`.`ID`
     WHERE '$modify' >= `log-farm`.`StartT` AND ( '$modify' <= `log-farm`.`EndT`
@@ -1721,7 +1722,8 @@ function getPestById($ptid)
     $data = selectData($sql);
     return $data;
 }
-function getPestByModify($typeID,$modify){
+function getPestByModify($typeID, $modify)
+{
     $sql = "SELECT * FROM `log-pest` 
     JOIN `dim-pest` ON `log-pest`.`DIMpestID` = `dim-pest`.`ID`
     WHERE '$modify' >= `log-pest`.`StartT` AND ( '$modify' <= `log-pest`.`EndT`
@@ -1730,7 +1732,8 @@ function getPestByModify($typeID,$modify){
     $data = selectData($sql);
     return $data;
 }
-function getPestLogByDIMpestID($DIMpestID){
+function getPestLogByDIMpestID($DIMpestID)
+{
     $sql = "SELECT * FROM
     (SELECT MAX(`log-icon`.`ID`) AS ID FROM `dim-pest`
     JOIN `log-icon` ON `dim-pest`.`ID` = `log-icon`.`DIMiconID`
@@ -1752,7 +1755,7 @@ function getPestByTID($ptid)
     $data = selectData($sql);
     return $data;
 }
-function getPestLogByPID($dpid){
+function getPestLogByPID($dpid)
 {
     $sql = "SELECT * FROM (
         SELECT `log-pest`.`DIMpestID`,MAX(`log-pest`.`ID`) FROM `dim-pest`
@@ -1802,12 +1805,12 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
 
     $LOG = selectData($sql);
-    
-    for($i = 1 ; $i <= $LOG[0]['numrow'] ; $i++){
+
+    for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
         $dim_user = $LOG[$i]['DIMownerID'];
         $dim_farm = $LOG[$i]['DIMfarmID'];
         $dim_subfarm = $LOG[$i]['DIMsubFID'];
-        $dim_pest= $LOG[$i]['DIMpestID'];
+        $dim_pest = $LOG[$i]['DIMpestID'];
 
         $sql = "SELECT `dim-user`.`ID`, `dim-user`.`FullName`,`dim-user`.`FormalID` FROM(
             SELECT `log-farmer`.`DIMuserID` FROM (
@@ -1820,13 +1823,13 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN `log-farmer` ON `log-farmer`.`DIMuserID` = t2.ID) AS t3
             JOIN `log-farmer` ON `log-farmer`.`ID` = t3.ID) AS t4
             JOIN  `dim-user` ON  `dim-user`.`ID` = t4.DIMuserID";
-            if ($idformal != '') $sql = $sql . " WHERE `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
-            if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
+        if ($idformal != '') $sql = $sql . " WHERE `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+        if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
 
         $DATA = selectData($sql);
         $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
         $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
-            
+
         $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
             SELECT `log-farm`.`DIMfarmID` FROM (
             SELECT MAX(`log-farm`.`ID`)AS ID FROM (
@@ -1869,7 +1872,7 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN `log-pest` ON `log-pest`.`DIMpestID` = t2.ID) AS t3
             JOIN `log-pest` ON `log-pest`.`ID` = t3.ID) AS t4
             JOIN  `dim-pest` ON  `dim-pest`.`ID` = t4.DIMpestID";
-        
+
         if ($ftype   != 0)  $sql = $sql . " WHERE `dim-pest`.`dbpestTID` = '" . $ftype . "' ";
 
         $DATA = selectData($sql);
@@ -1900,7 +1903,8 @@ function getLogHarvest($fmid)
     $LogHarvest = selectData($sql);
     return   $LogHarvest;
 }
-function getFarmByModify($modify){
+function getFarmByModify($modify)
+{
     $sql = "SELECT * FROM `log-farm` 
     JOIN `dim-farm` ON `log-farm`.`DIMfarmID` = `dim-farm`.`ID`
     WHERE '$modify' >= `log-farm`.`StartT` AND ( '$modify' <= `log-farm`.`EndT`
