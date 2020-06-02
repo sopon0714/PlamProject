@@ -1813,3 +1813,18 @@ function getNameSubfarm($fmid)
     $SUBFARM = selectData($sql);
     return $SUBFARM;
 }
+function getAearLogFarm()
+{
+
+    $sql = "SELECT 
+      SUM(`log-farm`.`AreaRai`) AS AreaRai, SUM(`log-farm`.`AreaNgan`) AS AreaNgan,SUM(`log-farm`.`NumTree`) AS NumTree
+    FROM `log-farm`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+    INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+    INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+    WHERE  `log-farm`.`ID` IN
+    (SELECT MAX(`log-farm`.`ID`)  as ID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+    WHERE `log-farm`.`DIMSubfID` IS NULL GROUP BY `dim-farm`.`dbID` ) ";
+    $INFOFARM = selectData($sql);
+    return $INFOFARM;
+}

@@ -41,7 +41,7 @@ switch ($action) {
                     file_put_contents($path . "/" . $i . $extension, $Pic);
                }
           }
-          header("OilPalmAreaVolDetail.php?FMID=$fmid");
+          header("location:./OilPalmAreaVolDetail.php?FMID=$fmid");
           break;
      case 'scanDir';
           $lid = $_POST['lid'];
@@ -55,7 +55,6 @@ switch ($action) {
                     $arr[] = $obj;
                }
           }
-          print_r(json_encode($arr));
           break;
      case 'delete';
           $id = $_POST['id'];
@@ -77,22 +76,19 @@ function getDIMFarmer($FID)
           $title = "นางสาว";
      }
      $sql = "SELECT * FROM `dim-user` WHERE`dbID`='$FID' AND `Type`='F' AND `Title`='{$DataFarmer[1]['Title']}'  AND `FullName` ='$title {$DataFarmer[1]['FirstName']} {$DataFarmer[1]['LastName']}' AND `Alias`='{$DataFarmer[1]['FirstName']}' AND `FormalID`='{$DataFarmer[1]['FormalID']}'";
-     //echo $sql . "<br/>";
      $DIMFarmer = selectData($sql);
      if ($DIMFarmer[0]['numrow'] == 0) {
           $sql = "INSERT INTO `dim-user` (`ID`, `dbID`, `Type`, `Title`, `FullName`, `Alias`, `FormalID`) VALUES (NULL, '$FID', 'F', '{$DataFarmer[1]['Title']}', '$title {$DataFarmer[1]['FirstName']} {$DataFarmer[1]['LastName']}', '{$DataFarmer[1]['FirstName']}', '{$DataFarmer[1]['FormalID']}');";
           $IDDIMF = addinsertData($sql);
           $sql = "SELECT * FROM `dim-user` WHERE`ID`='$IDDIMF'";
-          //echo $sql . "<br/>";
           $DIMFarmer = selectData($sql);
      }
-     print_r($DIMFarmer);
      return  $DIMFarmer;
 }
 function getDIMFarm($FID)
 {
      $sql = "SELECT * FROM `db-farm` WHERE FMID = '$FID' ";
-     echo $sql . "<br/>";
+
      $DataFarm = selectData($sql);
      $sql = "SELECT * FROM `dim-farm` WHERE `IsFarm`='1' AND `dbID`='{$DataFarm[1]['FMID']}' AND `Name` ='{$DataFarm[1]['Name']}' AND `Alias`='{$DataFarm[1]['Alias']}'";
      //echo $sql . "<br/>";
@@ -101,7 +97,6 @@ function getDIMFarm($FID)
           $sql = "INSERT INTO `dim-farm` (`ID`, `IsFarm`, `dbID`, `Name`, `Alias`) VALUES (NULL, '1', '{$DataFarm[1]['FMID']}', '{$DataFarm[1]['Name']}', '{$DataFarm[1]['Alias']}')";
           $IDDIMF = addinsertData($sql);
           $sql = "SELECT * FROM `dim-farm` WHERE`ID`='$IDDIMF'";
-          //echo $sql . "<br/>";
           $DIMFarm = selectData($sql);
      }
      return  $DIMFarm;
