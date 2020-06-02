@@ -747,8 +747,15 @@ function getYear($id, $isFarm)
         WHERE  `dim-time`.`Year2` >= (SELECT `dim-time`.`Year2` FROM `log-farm`
         INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`StartID`
         INNER JOIN `dim-farm`   ON `dim-farm` .`ID` = `log-farm`.`DIMSubfID`      
-        WHERE `dim-farm` .`dbID` = $id
+        WHERE `dim-farm` .`dbID` =$id
         GROUP BY `dim-farm` .`dbID`)
+        AND `dim-time`.`Year2`<=(SELECT  IFNULL(`dim-time`.`Year2`,9999) AS  Year2  FROM `log-farm`
+	LEFT JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`EndID`
+    WHERE `log-farm`.`ID` IN 
+    (SELECT MAX(`log-farm`.`ID`) as logFarmID FROM `log-farm` 
+    INNER JOIN `dim-farm`   ON `dim-farm`.`ID` =`log-farm` .`DIMfarmID` 
+    WHERE `dim-farm`.`dbID` = $id AND `log-farm`.`DIMSubfID` IS NULL
+   ))
         ORDER BY `dim-time`.`Year2` DESC";
         $Year = selectData($sql);
     }
