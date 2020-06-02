@@ -83,80 +83,80 @@ $(document).ready(function() {
         console.log('note = ' + note);
         $('#n_note').html(note);
     });
-    
+
+    $(document).on("click", ".btn-photo", function() {
+      $('#picture').modal();
+      lid = $(this).attr("lid");
+      path = "../../picture/activities/pest/";
+      loadPhoto_LogPestAlarm(path, lid);
+    });
+
+    $('#save').click(function() {
+        let pic_sc = new Array()
+        $('.pic-SC').each(function(i, obj) {
+            pic_sc.push($(this).attr('src') + 'manu20')
+        });
+        $('#pic').val(pic_sc);
+
+        var PIC_SC = $(".pic-SC");
+
+        if (PIC_SC.length == 0) {
+            // console.log('PIC_SC.length == 0');
+            $("#pic-style-char").attr("required", "");
+            $("#pic-style-char")[0].setCustomValidity('กรุณาเพิ่มรูป');
+
+        } else {
+            $("#pic-style-char").removeAttr("required");
+            $("#pic-style-char")[0].setCustomValidity('');
+        }
+
+    });
+
+    $('#edit').click(function() {
+        let pic_sc = new Array()
+        $('.pic-SC-edit').each(function(i, obj) {
+            pic_sc.push($(this).attr('src') + 'manu20')
+        });
+        $('#pic-edit').val(pic_sc);
+
+        var PIC_SC = $(".pic-SC-edit");
+
+        if (PIC_SC.length == 0) {
+            // console.log('PIC_SC.length == 0');
+            $("#pic-style-char-edit").attr("required", "");
+            $("#pic-style-char-edit")[0].setCustomValidity('กรุณาเพิ่มรูป');
+
+        } else {
+            $("#pic-style-char-edit").removeAttr("required");
+            $("#pic-style-char-edit")[0].setCustomValidity('');
+        }
+        if (!check_dup_pic($('#pic-edit').attr('src'), $('#old_pic-edit').attr('src'))) return;
+        // if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
+
+    });
+
+    $(document).on("click", ".morelink", function() {
+      if ($(this).hasClass("less")) {
+          $(this).removeClass("less");
+          $(this).html(moretext);
+      } else {
+          $(this).addClass("less");
+          $(this).html(lesstext);
+      }
+      $(this).parent().prev().toggle();
+      $(this).prev().toggle();
+      return false;
+
+    });
+
     $(document).on("click", ".btn-pest", function() {
         $('#pest_data').modal();
         DATA_DB = [];
         arr = [];
 
         pid = $(this).attr('pest');
-        dpid = $(this).attr('dimpest');
+        dim_pest = $(this).attr('dimpest');
         ptid = $(this).attr('pesttype');
-        $.post("manage.php", { request: "selectPestByPID", dpid: dpid }, function(result) {
-            // console.log(result)
-
-            DATA_DB = JSON.parse(result);
-            // console.log(DATA_DB)
-            path = "../../icon/pest/" + DATA_DB[1]['dbpestLID'] + "/" + DATA_DB[1]['Icon'];
-            $('#data_icon').attr('src', path);
-            $('#data_name').html('ชื่อ : ' + DATA_DB[1]["Name"]);
-            $('#data_alias').html('ชื่อทางการ : ' + DATA_DB[1]["Alias"]);
-
-            if (ptid == 1) {
-                subpath = "insect";
-            } else if (ptid == 2) {
-                subpath = "disease";
-            } else if (ptid == 3) {
-                subpath = "weed";
-            } else if (ptid == 4) {
-                subpath = "other";
-            }
-            path_style = "../../picture/pest/" + subpath + "/style/";
-            path_danger = "../../picture/pest/" + subpath + "/danger/";
-
-            $.post("manage.php", { request: "scanDir", pid: pid, path: path_style }, function(result1) {
-                // console.log('pid = '+pid)
-                // console.log(result1)
-
-                arr = JSON.parse(result1);
-                // console.log(arr)
-
-                html = "<div class='carousel-item active'>" +
-                    "<img class='d-block w-100'" +
-                    "src='" + path_style + pid + "/" + arr[0] + "'" +
-                    "style='height:200px;'>" +
-                    "</div>";
-                for (i = 1; i < DATA_DB[1]["NumPicChar"]; i++) {
-                    html += "<div class='carousel-item'>" +
-                        "<img class='d-block w-100'" +
-                        "src='" + path_style + pid + "/" + arr[i] + "'" +
-                        "style='height:200px;'>" +
-                        "</div>";
-                }
-
-                $('#data_char1').html(html);
-                $('#data_char2').html(DATA_DB[1]["Charactor"]);
-            });
-            $.post("manage.php", { request: "scanDir", pid: pid, path: path_danger }, function(result1) {
-                arr = JSON.parse(result1);
-                // console.log(arr)
-
-                html = "<div class='carousel-item active'>" +
-                    "<img class='d-block w-100'" +
-                    "src='" + path_danger + pid + "/" + arr[0] + "'" +
-                    "style='height:200px;'>" +
-                    "</div>";
-                for (i = 1; i < DATA_DB[1]["NumPicDanger"]; i++) {
-                    html += "<div class='carousel-item'>" +
-                        "<img class='d-block w-100'" +
-                        "src='" + path_danger + pid + "/" + arr[i] + "'" +
-                        "style='height:200px;'>" +
-                        "</div>";
-                }
-
-      pid = $(this).attr('pest');
-      dim_pest = $(this).attr('dimpest');
-      ptid = $(this).attr('pesttype');
       $.post("manage.php", {request: "selectPestByPID",dim_pest: dim_pest}, function(result){
         // console.log(result)
 
@@ -206,90 +206,31 @@ $(document).ready(function() {
           $('#data_char1').html(html);
         });
         $.post("manage.php", {request: "scanDir",pid: pid ,path:path_danger}, function(result1){
-          arr = JSON.parse(result1);
-          // console.log(arr)
-  
-          html = "<div class='carousel-item active'>"+
-                    "<img class='d-block w-100'"+
-                    "src='"+path_danger+pid+"/"+ arr[0]+"'"+
-                    "style='height:200px;'>"+
+              arr = JSON.parse(result1);
+              // console.log(arr)
+      
+              html = "<div class='carousel-item active'>"+
+                        "<img class='d-block w-100'"+
+                        "src='"+path_danger+pid+"/"+ arr[0]+"'"+
+                        "style='height:200px;'>"+
+                      "</div>";
+              for (i = 1; i < DATA_DB[1]["NumPicDanger"]; i++) {
+                html += "<div class='carousel-item'>"+
+                  "<img class='d-block w-100'"+
+                  "src='"+path_danger+pid+"/"+ arr[i]+"'"+
+                  "style='height:200px;'>"+
                   "</div>";
-          for (i = 1; i < DATA_DB[1]["NumPicDanger"]; i++) {
-            html += "<div class='carousel-item'>"+
-              "<img class='d-block w-100'"+
-              "src='"+path_danger+pid+"/"+ arr[i]+"'"+
-              "style='height:200px;'>"+
-              "</div>";
-          }
-  
-          $('#data_dang1').html(html);
-          showmore();
+              }
+      
+              $('#data_dang1').html(html);
+              showmore();
 
 
-    });
-    $(document).on("click", ".btn-photo", function() {
-        $('#picture').modal();
-        lid = $(this).attr("lid");
-        path = "../../picture/activities/pest/";
-        loadPhoto_LogPestAlarm(path, lid);
-    });
-
-    $('#save').click(function() {
-        let pic_sc = new Array()
-        $('.pic-SC').each(function(i, obj) {
-            pic_sc.push($(this).attr('src') + 'manu20')
         });
-        $('#pic').val(pic_sc);
-
-        var PIC_SC = $(".pic-SC");
-
-        if (PIC_SC.length == 0) {
-            // console.log('PIC_SC.length == 0');
-            $("#pic-style-char").attr("required", "");
-            $("#pic-style-char")[0].setCustomValidity('กรุณาเพิ่มรูป');
-
-        } else {
-            $("#pic-style-char").removeAttr("required");
-            $("#pic-style-char")[0].setCustomValidity('');
-        }
+      
+      });
 
     });
-    $('#edit').click(function() {
-        let pic_sc = new Array()
-        $('.pic-SC-edit').each(function(i, obj) {
-            pic_sc.push($(this).attr('src') + 'manu20')
-        });
-        $('#pic-edit').val(pic_sc);
-
-        var PIC_SC = $(".pic-SC-edit");
-
-        if (PIC_SC.length == 0) {
-            // console.log('PIC_SC.length == 0');
-            $("#pic-style-char-edit").attr("required", "");
-            $("#pic-style-char-edit")[0].setCustomValidity('กรุณาเพิ่มรูป');
-
-        } else {
-            $("#pic-style-char-edit").removeAttr("required");
-            $("#pic-style-char-edit")[0].setCustomValidity('');
-        }
-        if (!check_dup_pic($('#pic-edit').attr('src'), $('#old_pic-edit').attr('src'))) return;
-        // if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
-
-    });
-    $(document).on("click", ".morelink", function() {
-      if ($(this).hasClass("less")) {
-          $(this).removeClass("less");
-          $(this).html(moretext);
-      } else {
-          $(this).addClass("less");
-          $(this).html(lesstext);
-      }
-      $(this).parent().prev().toggle();
-      $(this).prev().toggle();
-      return false;
-
-});
- 
 });
 // function check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger) {
 //   if (o_name == name && o_alias == alias && o_charstyle == charstyle && o_danger == danger) {
@@ -297,6 +238,7 @@ $(document).ready(function() {
 //   }
 //   return true;
 // }
+
 function check_dup_pic(pic, old_pic) {
     if (pic == old_pic) {
         return false;
@@ -650,3 +592,4 @@ function delete_1(_id) {
     xhttp.send(`request=delete&id=${_id}`);
 
 }
+

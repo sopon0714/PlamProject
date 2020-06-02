@@ -1889,7 +1889,7 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $LOG[$i]['dbpestTID'] = $DATA[1]['dbpestTID'];
         $LOG[$i]['TypeTH'] = $DATA[1]['TypeTH'];
     }
-    print_r($LOG);
+    // print_r($LOG);
     return $LOG;
 }
 function getLogHarvest($fmid)
