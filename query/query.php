@@ -732,6 +732,7 @@ function getDmy($suid)
 // sql ค่าของ Year 
 function getYear($id, $isFarm)
 {
+    $time = time();
     if ($isFarm) {
         $sql = "SELECT DISTINCT `dim-time`.`Year2` FROM  `dim-time`
         WHERE  `dim-time`.`Year2` >= (SELECT `dim-time`.`Year2` FROM `log-farm`
@@ -1932,14 +1933,15 @@ function getAreaLogFarm()
 {
 
     $sql = "SELECT 
-      SUM(`log-farm`.`AreaRai`) AS AreaRai, SUM(`log-farm`.`AreaNgan`) AS AreaNgan,SUM(`log-farm`.`NumTree`) AS NumTree
-    FROM `log-farm`
-    INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
-    INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
-    INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
-    WHERE  `log-farm`.`ID` IN
-    (SELECT MAX(`log-farm`.`ID`)  as ID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
-    WHERE `log-farm`.`DIMSubfID` IS NULL GROUP BY `dim-farm`.`dbID` ) ";
+    SUM(`log-farm`.`AreaRai`) AS AreaRai, SUM(`log-farm`.`AreaNgan`) AS AreaNgan,SUM(`log-farm`.`NumTree`) AS NumTree,
+    COUNT(*) AS NumFarm ,  SUM(`log-farm`.`NumSubFarm`) AS NumSubFarm
+  FROM `log-farm`
+  INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+  INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+  INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+  WHERE  `log-farm`.`ID` IN
+  (SELECT MAX(`log-farm`.`ID`)  as ID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMfarmID` 
+  WHERE `log-farm`.`DIMSubfID` IS NULL GROUP BY `dim-farm`.`dbID` ) ";
     $INFOFARM = selectData($sql);
     return $INFOFARM;
 }
