@@ -16,8 +16,8 @@ $(document).ready(function() {
         $("#addModal").modal();
 
     });
+
     $(document).on("click", ".btn-edit", function() {
-<<<<<<< HEAD
       $("#editModal").modal();
       lid = $(this).attr('lid');
       date = $(this).attr('date');
@@ -43,29 +43,6 @@ $(document).ready(function() {
       console.log('lid = '+lid);
 
       footer = `<div class="img-reletive">
-=======
-        $("#editModal").modal();
-        lid = $(this).attr('lid');
-        date = $(this).attr('date');
-        farm_id = $(this).attr('farm');
-        subfarm_id = $(this).attr('subfarm');
-        pesttype_id = $(this).attr('pesttype');
-        pest_id = $(this).attr('pest');
-        note = $(this).attr('note');
-
-        $('#e_date').val(date);
-        $('#e_farm').val(farm_id);
-        $('#e_pesttype').val(pesttype_id);
-        $('#e_note').val(note);
-        $('#e_pestAlarmID').val(lid);
-        idSetHtml = '#e_subfarm';
-        selectSubfarm(idSetHtml, farm_id, subfarm_id);
-        idSetHtml = '#e_pest';
-        selectPest(idSetHtml, pesttype_id, pest_id);
-        console.log('lid = ' + lid);
-
-        footer = `<div class="img-reletive">
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
       <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
       <input type="file" id="pic-style-char-edit" name="picstyle_insert-edit[]" accept=".jpg,.png" multiple>
       </div>`
@@ -76,11 +53,11 @@ $(document).ready(function() {
     });
 
     $('#farm').click(function() {
-<<<<<<< HEAD
       fmid = $('#farm').val();
       idSetHtml = '#subfarm';
       selectSubfarm(idSetHtml,fmid,-1,0);
     });
+
     $('#pesttype').click(function() {
       ptid = $('#pesttype').val();
       idSetHtml = '#pest';
@@ -93,38 +70,20 @@ $(document).ready(function() {
       idSetHtml = '#e_subfarm';
       selectSubfarm(idSetHtml,DIMfarmID,-1,modify_check);
     });
+
     $('#e_pesttype').click(function() {
       ptid = $('#e_pesttype').val();
       idSetHtml = '#e_pest';
       selectPest(idSetHtml,ptid,-1,modify_check);
-=======
-        fmid = $('#farm').val();
-        idSetHtml = '#subfarm';
-        selectSubfarm(idSetHtml, fmid, -1);
-    });
-    $('#pesttype').click(function() {
-        ptid = $('#pesttype').val();
-        idSetHtml = '#pest';
-        selectPest(idSetHtml, ptid, -1);
     });
 
-    $('#e_farm').click(function() {
-        fmid = $('#e_farm').val();
-        idSetHtml = '#e_subfarm';
-        selectSubfarm(idSetHtml, fmid, -1);
-    });
-    $('#e_pesttype').click(function() {
-        ptid = $('#e_pesttype').val();
-        idSetHtml = '#e_pest';
-        selectPest(idSetHtml, ptid, -1);
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
-    });
     $(document).on("click", ".btn-note", function() {
         $('#data').modal();
         note = $(this).attr('note');
         console.log('note = ' + note);
         $('#n_note').html(note);
     });
+    
     $(document).on("click", ".btn-pest", function() {
         $('#pest_data').modal();
         DATA_DB = [];
@@ -317,7 +276,6 @@ $(document).ready(function() {
         // if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
 
     });
-<<<<<<< HEAD
     $(document).on("click", ".morelink", function() {
       if ($(this).hasClass("less")) {
           $(this).removeClass("less");
@@ -332,9 +290,6 @@ $(document).ready(function() {
 
 });
  
-=======
-
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
 });
 // function check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger) {
 //   if (o_name == name && o_alias == alias && o_charstyle == charstyle && o_danger == danger) {
@@ -349,7 +304,6 @@ function check_dup_pic(pic, old_pic) {
     return true;
 }
 
-<<<<<<< HEAD
 function setImgEdit(id, footer,path) {
   // console.log('setIMG')
   $.post("manage.php", {request: 'scanDir',path: path ,pid: id}, function(result){
@@ -358,16 +312,6 @@ function setImgEdit(id, footer,path) {
 
       // console.log(arr);
       var textPicChar = ''
-=======
-function setImgEdit(id, footer, path) {
-    // console.log('setIMG')
-    $.post("manage.php", { request: 'scanDir', path: path, pid: id }, function(result) {
-        console.log(result);
-        arr = JSON.parse(result);
-
-        console.log(arr);
-        var textPicChar = ''
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
 
         for (i = 0; i < arr.length; i++) {
             textPicChar += `<div class="card" width="70px" hight="70px">
@@ -436,7 +380,6 @@ function setImgEdit(id, footer, path) {
 
 }
 
-<<<<<<< HEAD
 function showmore(){
   // Configure/customize these variables.
   console.log('showmore');
@@ -483,67 +426,6 @@ function loadPhoto_LogPestAlarm(path,id) {
     // console.log(result);
     let data1 = JSON.parse(result);
     // console.log(data1);
-=======
-function showmore() {
-    // Configure/customize these variables.
-    console.log('showmore');
-    var showChar = 180; // How many characters are shown by default
-    var ellipsestext = "...";
-    var moretext = "Show more";
-    var lesstext = "Show less";
-    $('.more').each(function() {
-        var content = $(this).html();
-        content = content.trim();
-        content += ' ';
-        html = '';
-        // console.log(content);
-        // console.log('lenght = '+content.length);
-
-        for (i = showChar; i < content.length; i++) {
-            if (content[i] == ' ') {
-                showChar = i;
-                break;
-            }
-        }
-
-        if ((content.length - 1) > showChar) {
-            console.log('set more text');
-            var c = content.substr(0, showChar);
-            var h = content.substr(showChar, content.length - showChar);
-
-            var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h +
-                '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-
-            $(this).html(html);
-            console.log(html);
-        }
-
-    });
-    $(document).on("click", ".morelink", function() {
-        if ($(this).hasClass("less")) {
-            $(this).removeClass("less");
-            $(this).html(moretext);
-        } else {
-            $(this).addClass("less");
-            $(this).html(lesstext);
-        }
-        $(this).parent().prev().toggle();
-        $(this).prev().toggle();
-        return false;
-
-    });
-
-}
-
-function loadPhoto_LogPestAlarm(path, id) {
-    console.log(path);
-    console.log(id);
-
-    $.post("manage.php", { request: "scanDir", path: path, pid: id }, function(result) {
-        // console.log(result);
-        let data1 = JSON.parse(result);
-        console.log(data1);
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
 
         let text = "";
         PICS = path + id;
@@ -556,7 +438,6 @@ function loadPhoto_LogPestAlarm(path, id) {
 
     });
 }
-<<<<<<< HEAD
 function selectFarm(idSetHtml,modify,set){
   $.post("manage.php", {request: "selectFarm",modify: modify}, function(result){
     DATA_DB = JSON.parse(result);
@@ -611,37 +492,6 @@ function selectPest(idSetHtml,type_id,set,modify_num){
       $('#e_pest').val(set);
     }
   });
-=======
-
-function selectSubfarm(idSetHtml, fmid, set) {
-    $.post("manage.php", { request: "selectSubfarm", fmid: fmid }, function(result) {
-        DATA_DB = JSON.parse(result);
-        console.log('set subfarm id = ' + set)
-        console.log(DATA_DB);
-        html = "<option selected value=''>เลือกแปลง</option>";
-        for (i = 1; i <= DATA_DB[0]['numrow']; i++) {
-            html += '<option value=' + DATA_DB[i]['fsid'] + '>' + DATA_DB[i]['namesub'] + '</option>';
-        }
-        $(idSetHtml).html(html);
-        if (set != -1) {
-            $('#e_subfarm').val(set);
-        }
-    });
-}
-
-function selectPest(idSetHtml, ptid, set) {
-    $.post("manage.php", { request: "selectPest", ptid: ptid }, function(result) {
-        DATA_DB = JSON.parse(result);
-        html = "<option selected value=''>เลือกศัตรูพืช</option>";
-        for (i = 1; i <= DATA_DB[0]['numrow']; i++) {
-            html += '<option value=' + DATA_DB[i]['PID'] + '>' + DATA_DB[i]['Alias'] + '</option>';
-        }
-        $(idSetHtml).html(html);
-        if (set != -1) {
-            $('#e_pest').val(set);
-        }
-    });
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
 }
 
 function initMap() {
@@ -657,7 +507,6 @@ function initMap() {
     size = $('#size').attr('size');
     // console.log(size);
 
-<<<<<<< HEAD
     for(i = 1 ; i < size ; i++){
       namesubfarm = $('#'+i).attr('namesubfarm');
       // console.log(namesubfarm);
@@ -668,18 +517,6 @@ function initMap() {
       center[1] += long;
       data = [namesubfarm,la,long,AD3ID];
       locations.push(data);
-=======
-    for (i = 1; i < size; i++) {
-        namesubfarm = $('#' + i).attr('namesubfarm');
-        console.log(namesubfarm);
-        la = parseFloat($('#' + i).attr('la'));
-        long = parseFloat($('#' + i).attr('long'));
-        AD3ID = parseFloat($('#' + i).attr('AD3ID'));
-        center[0] += la;
-        center[1] += long;
-        data = [namesubfarm, la, long, AD3ID];
-        locations.push(data);
->>>>>>> 1e8152f53a9035d70d2b036699a294ea4e81fcc7
 
     }
     center[0] = center[0] / (size - 1);

@@ -1752,7 +1752,7 @@ function getPestByTID($ptid)
     $data = selectData($sql);
     return $data;
 }
-function getPestLogByPID($dpid){
+function getPestLogByPID($dpid)
 {
     $sql = "SELECT * FROM (
         SELECT `log-pest`.`DIMpestID`,MAX(`log-pest`.`ID`) FROM `dim-pest`

@@ -81,8 +81,8 @@ $PESTTYPE = getPestType();
         <?php
         creatCard("card-color-one",   "จำนวนครั้งพบศัตรูพืช", getCountPestAlarm() . " ครั้ง", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaRaiLog()[1]["AreaRai"] . " ไร่ ".getAreaRaiLog()[1]["AreaNgan"] . " งาน", "dashboard");
-        creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");
+        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaLogFarm()[1]["AreaRai"] . " ไร่ ".getAreaLogFarm()[1]["AreaNgan"] . " งาน", "dashboard");
+        creatCard("card-color-four",   "จำนวนต้นไม้", getAreaLogFarm()[1]['NumTree'] . " ต้น", "format_size");
         ?>
 
     </div>
