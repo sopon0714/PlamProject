@@ -1,5 +1,56 @@
 var FMID = $('#FMID').attr("FMID");
 var maxyear = $('#maxyear').attr("maxyear");
+
+function delfunction(_id, _subfarm, _date) {
+    // alert(_did);
+    swal({
+            title: "คุณต้องการลบผลผลิต",
+            text: `แปลง ${_subfarm} วันที่ ${_date} หรือไม่ ?`,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            cancelButtonClass: "btn-secondary",
+            confirmButtonText: "ยืนยัน",
+            cancelButtonText: "ยกเลิก",
+            closeOnConfirm: false,
+            closeOnCancel: function() {
+                $('[data-toggle=tooltip]').tooltip({
+                    boundary: 'window',
+                    trigger: 'hover'
+                });
+                return true;
+            }
+        },
+        function(isConfirm) {
+            if (isConfirm) {
+                // console.log(1)
+                swal({
+                    title: "ลบข้อมูลสำเร็จ",
+                    type: "success",
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "ตกลง",
+                    closeOnConfirm: false,
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        delete_1(_id)
+                    } else {}
+                });
+            } else {}
+        });
+}
+
+function delete_1(_id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            window.location.href = "OilPalmAreaVolDetail.php?FMID=" + FMID;
+        }
+    };
+    xhttp.open("POST", "manage.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(`action=delete&id=${_id}`);
+
+}
 $(document).ready(function() {
     $('.tt').tooltip();
     load_year(maxyear, FMID);

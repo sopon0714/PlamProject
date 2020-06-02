@@ -388,6 +388,7 @@ $(document).ready(function() {
         var username = $(this).attr('NameSubfarm');
         var fsid = $(this).attr('fsid');
         var FMIDmap = $('#FMIDmap').val();
+
         swal({
                 title: "คุณต้องการลบ",
                 text: `แปลง ${username} หรือไม่ ?`,
@@ -398,45 +399,40 @@ $(document).ready(function() {
                 confirmButtonText: "ยืนยัน",
                 cancelButtonText: "ยกเลิก",
                 closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnCancel: function() {
+                    $('[data-toggle=tooltip]').tooltip({
+                        boundary: 'window',
+                        trigger: 'hover'
+                    });
+                    return true;
+                }
             },
             function(isConfirm) {
                 if (isConfirm) {
+                    // console.log(1)
                     swal({
-
-                        title: "ดำเนินการลบ",
-                        text: "แปลง " + username + " เรียบร้อย",
+                        title: "ลบข้อมูลสำเร็จ",
                         type: "success",
-                        showCancelButton: false,
-                        showConfirmButton: false
-
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "ตกลง",
+                        closeOnConfirm: false,
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            delete_1(fsid, FMIDmap)
+                        } else {}
                     });
-                    delete_1(fsid)
-                    setTimeout(function() {
-                        window.location = './OilPalmAreaListDetail.php?fmid=' + FMIDmap;
-                    }, 2000);
-                } else {
-                    swal({
-                        title: "ยกเลิกการลบ !!",
-                        text: "แปลง " + username,
-                        type: "error",
-                        showCancelButton: false,
-                        showConfirmButton: false
-                    });
-                    setTimeout(function() {
-                        swal.close();
-                    }, 2000);
-                }
+                } else {}
             });
+
 
     });
 
-    function delete_1(fsid) {
+    function delete_1(fsid, FMIDmap) {
         var xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-
+                window.location = './OilPalmAreaListDetail.php?fmid=' + FMIDmap;
             }
         };
         xhttp.open("POST", "manage.php", true);

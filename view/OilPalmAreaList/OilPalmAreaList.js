@@ -221,7 +221,6 @@ function initMap() {
 }
 
 function delfunction(_username, _uid) {
-
     swal({
             title: "คุณต้องการลบ",
             text: `สวน ${_username} หรือไม่ ?`,
@@ -232,37 +231,30 @@ function delfunction(_username, _uid) {
             confirmButtonText: "ยืนยัน",
             cancelButtonText: "ยกเลิก",
             closeOnConfirm: false,
-            closeOnCancel: false
+            closeOnCancel: function() {
+                $('[data-toggle=tooltip]').tooltip({
+                    boundary: 'window',
+                    trigger: 'hover'
+                });
+                return true;
+            }
         },
         function(isConfirm) {
             if (isConfirm) {
+                // console.log(1)
                 swal({
-
-                    title: "ดำเนินการลบ",
-                    text: "สวน " + _username + " เรียบร้อย",
+                    title: "ลบข้อมูลสำเร็จ",
                     type: "success",
-                    showCancelButton: false,
-                    showConfirmButton: false
-
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "ตกลง",
+                    closeOnConfirm: false,
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        delete_1(_uid)
+                    } else {}
                 });
-                delete_1(_uid)
-                setTimeout(function() {
-                    location.reload();
-                }, 2000);
-            } else {
-                swal({
-                    title: "ยกเลิกการลบ !!",
-                    text: "สวน " + _username,
-                    type: "error",
-                    showCancelButton: false,
-                    showConfirmButton: false
-                });
-                setTimeout(function() {
-                    swal.close();
-                }, 2000);
-            }
+            } else {}
         });
-
 }
 
 function delete_1(_fid) {
@@ -270,7 +262,7 @@ function delete_1(_fid) {
 
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-
+            window.location = './OilPalmAreaList.php';
         }
     };
     xhttp.open("POST", "manage.php", true);

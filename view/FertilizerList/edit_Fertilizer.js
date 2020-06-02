@@ -942,7 +942,6 @@ $(document).ready(function() {
         let id = me.attr('id');
         let name = me.attr('data-name')
         let dimid = me.attr('DIMID')
-
         swal({
                 title: "คุณต้องการลบ",
                 text: "ปุ๋ย " + name + " หรือไม่?",
@@ -953,51 +952,42 @@ $(document).ready(function() {
                 confirmButtonText: "ยืนยัน",
                 cancelButtonText: "ยกเลิก",
                 closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnCancel: function() {
+                    $('[data-toggle=tooltip]').tooltip({
+                        boundary: 'window',
+                        trigger: 'hover'
+                    });
+                    return true;
+                }
             },
             function(isConfirm) {
                 if (isConfirm) {
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            request: 'delete',
-                            id: id,
-                            dimid: dimid
-                        },
-                        async: false,
-                        url: "dbF.php",
-                        success: function(result) {
-                            // alert(result)
-                            loadDataF(result)
-                                // alert("sss")
-                        }
-                    });
+                    // console.log(1)
                     swal({
-                        title: "ดำเนินการลบ",
-                        text: "ปุ๋ย " + me.attr('data-name') + " เรียบร้อย",
+                        title: "ลบข้อมูลสำเร็จ",
                         type: "success",
-                        showCancelButton: false,
-                        showConfirmButton: false
-
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "ตกลง",
+                        closeOnConfirm: false,
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    request: 'delete',
+                                    id: id,
+                                    dimid: dimid
+                                },
+                                async: false,
+                                url: "dbF.php",
+                                success: function(result) {
+                                    loadDataF(result)
+                                    window.location = './FertilizerList.php';
+                                }
+                            });
+                        } else {}
                     });
-                    setTimeout(function() {
-                        location.reload();
-                    }, 2000);
-
-
-                } else {
-                    swal({
-                        title: "ยกเลิกการลบ !!",
-                        text: "ปุ๋ย " + me.attr('data-name'),
-                        type: "error",
-                        showCancelButton: false,
-                        showConfirmButton: false
-                    });
-                    setTimeout(function() {
-                        swal.close();
-                    }, 2000);
-
-                }
+                } else {}
             });
 
     }

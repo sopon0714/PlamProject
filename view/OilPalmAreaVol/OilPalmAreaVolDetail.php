@@ -258,7 +258,7 @@ $Check = CheckHaveFarm($fmid)
                                                                         <td class=\"text-right\">" . number_format($LOGHarvest[$i]['TotalPrice'], 2, '.', ',') . "</td>
                                                                         <td style=\"text-align:center;\">
                                                                             <button type=\"button\" class=\"btn btn-info btn-sm btn-photo tt \"  lid=\"{$LOGHarvest[$i]['ID']}\" title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
-                                                                            <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   lid=\"{$LOGHarvest[$i]['ID']}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                                                                            <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   onclick=\"delfunction(' {$LOGHarvest[$i]['ID']}',' {$LOGHarvest[$i]['Name']}','{$LOGHarvest[$i]['dd']} {$strMonthCut[$LOGHarvest[$i]['Month']]} {$LOGHarvest[$i]['Year2']}')\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
                                                                         </td>
                                                                     </tr>";
                                                         }

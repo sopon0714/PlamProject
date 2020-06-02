@@ -57,6 +57,12 @@ switch ($action) {
           }
           print_r(json_encode($arr));
           break;
+     case 'delete';
+          $id = $_POST['id'];
+
+          $sql = "UPDATE `log-harvest` SET `isDelete` = '1' WHERE `log-harvest`.`ID` = $id ";
+          $o_did = updateData($sql);
+          break;
 }
 function getDIMFarmer($FID)
 {
