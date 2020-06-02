@@ -8,9 +8,46 @@ include_once("./../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
 $fmid = $_GET['FMID'] ?? "";
 $INFOFARM =  getDetailLogFarm($fmid);
-$YEAR = getYear();
+$YEAR = getYear($fmid, true);
 $LOGHarvest = getLogHarvest($fmid);
+$Check = CheckHaveFarm($fmid)
 ?>
+<link rel="stylesheet" href="../../css/insect admin/readmore.css">
+<link rel="stylesheet" href="../../css/insect admin/stylePest.css">
+<style>
+    textarea {
+        overflow-y: scroll;
+        height: 100px;
+        resize: vertical;
+    }
+
+    .img-reletive input[type=file] {
+        cursor: pointer;
+        width: 100px;
+        height: 100px;
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .croppie-container .cr-boundary {
+        width: 350px;
+        height: 220px;
+    }
+
+    .upload-demo2 {
+        width: 350px;
+        height: 250px;
+    }
+
+    .img-gal {
+        width: 150px;
+        height: 100px;
+        z-index: 5;
+    }
+</style>
 
 <div class="container">
     <div class="row">
@@ -170,7 +207,12 @@ $LOGHarvest = getLogHarvest($fmid);
                                         <div class="card-header card-bg">
                                             <div>
                                                 <span>รายการเก็บผลผลิตต่อแปลง</span>
-                                                <button type="button" id="btn_add_product" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มผลผลิต</button>
+                                                <?php
+                                                if ($Check) {
+                                                    echo "<button type=\"button\" id=\"btn_add_product\" style=\"float:right;\" class=\"btn btn-success btn-sm\"><i class=\"fas fa-plus\"></i> เพิ่มผลผลิต</button>";
+                                                }
+                                                ?>
+
                                             </div>
                                         </div>
                                         <div class="card-body">
@@ -182,14 +224,14 @@ $LOGHarvest = getLogHarvest($fmid);
                                                 </div>
                                             </div>
                                             <div class="table-responsive">
-                                                <table class="table table-bordered  table-hover table-data  tableSearch " width="100%">
+                                                <table class="table table-bordered table-data  tableSearch " width="100%">
                                                     <thead>
                                                         <tr>
                                                             <th>ชื่อแปลง</th>
                                                             <th>วันที่เก็บผลผลิต</th>
                                                             <th>ผลผลิต (ก.ก.)</th>
                                                             <th>ราคาต่อหน่วย(บาท)</th>
-                                                            <th>ราคาสุทธิ์</th>
+                                                            <th>ราคาสุทธิ์ (บาท)</th>
                                                             <th>จัดการ</th>
 
                                                         </tr>
@@ -200,7 +242,7 @@ $LOGHarvest = getLogHarvest($fmid);
                                                             <th>วันที่เก็บผลผลิต</th>
                                                             <th>ผลผลิต (ก.ก.)</th>
                                                             <th>ราคาต่อหน่วย (บาท)</th>
-                                                            <th>ราคาสุทธิ์</th>
+                                                            <th>ราคาสุทธิ์ (บาท)</th>
                                                             <th>จัดการ</th>
                                                         </tr>
                                                     </tfoot>
@@ -215,8 +257,8 @@ $LOGHarvest = getLogHarvest($fmid);
                                                                         <td class=\"text-right\">" . number_format($LOGHarvest[$i]['UnitPrice'], 2, '.', ',') . "</td>
                                                                         <td class=\"text-right\">" . number_format($LOGHarvest[$i]['TotalPrice'], 2, '.', ',') . "</td>
                                                                         <td style=\"text-align:center;\">
-                                                                            <button type=\"button\" class=\"btn btn-info btn-sm picture tt\"  title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
-                                                                            <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                                                                            <button type=\"button\" class=\"btn btn-info btn-sm btn-photo tt \"  lid=\"{$LOGHarvest[$i]['ID']}\" title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
+                                                                            <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   onclick=\"delfunction(' {$LOGHarvest[$i]['ID']}',' {$LOGHarvest[$i]['Name']}','{$LOGHarvest[$i]['dd']} {$strMonthCut[$LOGHarvest[$i]['Month']]} {$LOGHarvest[$i]['Year2']}')\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
                                                                         </td>
                                                                     </tr>";
                                                         }
@@ -256,76 +298,9 @@ $LOGHarvest = getLogHarvest($fmid);
     </div>
 </div>
 
-<!-- modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog">
-    <form method="post" id="formAdd" name="formAdd" action="manage.php" < div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header header-modal">
-                <h4 class="modal-title">เพิ่มผลผลิต</h4>
-            </div>
-            <div class="modal-body" id="addModalBody">
-                <div class="row mb-4">
-                    <div class="col-xl-3 col-12 text-right">
-                        <span>ชื่อแปลง<span class="text-danger"> *</span></span>
-                    </div>
-                    <div class="col-xl-9 col-12">
-                        <select id="sub" name="SubFarmID" class="form-control" required="" oninput="setCustomValidity('')">
-                            <option value="" selected>เลือกแปลง</option>
 
 
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-xl-3 col-12 text-right">
-                        <span>วันที่เก็บผลผลิต<span class="text-danger"> *</span></span>
-                    </div>
-                    <div class="col-xl-9 col-12">
-                        <input type="date" name="date" class="form-control" id="date" required="" oninput="setCustomValidity('')">
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-xl-3 col-12 text-right">
-                        <span>ผลผลิต (ก.ก.)<span class="text-danger"> *</span></span>
-                    </div>
-                    <div class="col-xl-9 col-12">
-                        <input type="number" name="weight" class="form-control" id="weight" required="" oninput="setCustomValidity('')">
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col-xl-3 col-12 text-right">
-                        <span>ราคาต่อหน่วย<span class="text-danger"> *</span></span>
-                    </div>
-                    <div class="col-xl-9 col-12">
-                        <input type="number" name="UnitPrice" class="form-control" id="UnitPrice" required="" oninput="setCustomValidity('')">
-                        <input type="text" hidden class="form-control" name="request" id="request" value="insert">
-                        <input type="text" hidden class="form-control" name="AddFarmID" id="FarmID" value="<?php echo $farmID; ?>">
-                    </div>
-                </div>
-                <!--<div class="row mb-4">
-                    <div class="col-xl-3 col-12 text-right">
-                            <label>รูปเพิ่มเติม : </label>
-                        </div>
-                        <div class='col-lg-8 col-md-8 col-sm-9 col-xs-6'>
-                            <div class='form-group'>
-                            <div id="grid-p_photo" class="grid-img-multiple">
-
-                            <div class="img-reletive">
-                                <img width="100px" height="100px" src="https://ast.kaidee.com/blackpearl/v6.18.0/_next/static/images/gallery-filled-48x48-p30-6477f4477287e770745b82b7f1793745.svg" width="50px" height="50px" alt="">
-                                <input type="file" class="form-control" id="p_photo" name="p_photo[]" accept=".jpg,.png" multiple>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-            </div>
-            <div class="modal-footer">
-                <button type="submit" name="save" id="save" class="btn btn-success">ยืนยัน</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
-            </div>
-        </div>
-    </form>
-</div>
-</div>
-
+<?php include_once("./OilPalmAreaVolDetailModel.php"); ?>
 <?php include_once("../layout/LayoutFooter.php"); ?>
+<?php include_once("../../cropImage/cropImage.php"); ?>
 <script src="./OilPalmAreaVolDetail.js"></script>

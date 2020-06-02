@@ -10,6 +10,9 @@ $FARMER = getAllFarmer();
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class=" modal-title">แก้ไขสวนปาล์ม</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <form action="#" method="post">
@@ -103,6 +106,7 @@ $FARMER = getAllFarmer();
                         <div class="row mb-4">
                             <div class="col-xl-3 col-12 text-right">
                                 <span>เจ้าของสวนปาล์ม</span>
+
                             </div>
                             <div class="col-xl-9 col-12">
                                 <select class="form-control" id="farmer" name="farmer">
@@ -139,6 +143,9 @@ $FARMER = getAllFarmer();
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">เปลี่ยนรูปไอคอนสวนปาล์ม</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="passModalBody">
                     <div class="form-group divHolder">
@@ -182,6 +189,9 @@ $FARMER = getAllFarmer();
             <form class="form-signin" method="POST" action='./manage.php'>
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class="modal-title">เพิ่มแปลง</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="row mb-4">
@@ -300,6 +310,9 @@ $FARMER = getAllFarmer();
         <div class="modal-content">
             <div class="modal-header header-modal" style="background-color: <?= $color ?>">
                 <h4 class=" modal-title">แก้ไขตำแหน่งสวน</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body" id="addModalBody">
 

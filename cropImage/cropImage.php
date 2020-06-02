@@ -7,7 +7,7 @@
     $('#pic-logo').on('change', function() {
         cropImage(this)
         idImg = 'img-pic-logo'
- 
+
     })
     $('#p_photo').on('change', function() {
         // alert('change')
@@ -56,9 +56,9 @@
 
         // })
 
-        
+
     });
-    
+
     $(document).on('click', '.btn-cancel-crop-edit', function() {
         // console.log('btn-cancel-crop-edit');
         $('.main-edit').toggle()
@@ -120,10 +120,10 @@
 
         // console.log('crop-img');
         // console.log('url = '+url);
-        if(type == 'circle'){
+        if (type == 'circle') {
             w = 200;
             h = 200;
-        }else{
+        } else {
             w = 300;
             h = 200;
         }
@@ -152,7 +152,7 @@
             // console.log('jQuery bind complete');
         });
     }
-   
+
     function submitCrop(output) {
         $('.upload-demo2').croppie('result', {
                 type: 'canvas',
@@ -168,11 +168,12 @@
         $('.upload-demo2').croppie('destroy')
 
     }
+
     function submitCropEdit(output) {
         // toDataURL($('#' + output).attr('src'), function(dataUrl) {
         //     console.log('RESULT:', dataUrl)
         //     $('#' + output).attr('src',dataUrl);
-            $('.upload-demo2-edit').croppie('result', {
+        $('.upload-demo2-edit').croppie('result', {
                 type: 'canvas',
                 size: 'viewport'
             })
@@ -188,12 +189,13 @@
         // })
 
     }
+
     function toDataURL(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
             var reader = new FileReader();
             reader.onloadend = function() {
-            callback(reader.result);
+                callback(reader.result);
             }
             reader.readAsDataURL(xhr.response);
         };
@@ -201,5 +203,4 @@
         xhr.responseType = 'blob';
         xhr.send();
     }
-    
 </script>

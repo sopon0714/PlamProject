@@ -5,6 +5,9 @@
                 <!-- -----------------header------------------------------ -->
                 <div class="modal-header header-modal" id="header-card">
                     <h4 class="modal-title" id="largeModalLabel">แก้ไขข้อมูลปุ๋ย</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <!-- start body ------------------------------------- -->
                 <div class="modal-body">

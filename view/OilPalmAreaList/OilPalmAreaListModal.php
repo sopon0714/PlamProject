@@ -9,6 +9,9 @@ $FARMER = getAllFarmer();
             <div class="modal-content">
                 <div class="modal-header header-modal" style="background-color: <?= $color ?>;">
                     <h4 class=" modal-title">เพิ่มสวนปาล์ม</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <form action="#" method="post">
