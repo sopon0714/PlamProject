@@ -231,12 +231,14 @@ $(document).ready(function() {
       });
 
     });
+});
 // function check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger) {
 //   if (o_name == name && o_alias == alias && o_charstyle == charstyle && o_danger == danger) {
 //       return false;
 //   }
 //   return true;
 // }
+
 function check_dup_pic(pic, old_pic) {
     if (pic == old_pic) {
         return false;
@@ -590,3 +592,4 @@ function delete_1(_id) {
     xhttp.send(`request=delete&id=${_id}`);
 
 }
+
