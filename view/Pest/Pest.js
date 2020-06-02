@@ -3,6 +3,8 @@ $( document ).ready(function() {
     console.log("y");
     $('.tt').tooltip();
 
+    modify_check = 0; 
+
     // $('#date').datepicker({
     //   autoHide: true,
     //   zIndex: 2048,
@@ -24,16 +26,20 @@ $( document ).ready(function() {
       pesttype_id = $(this).attr('pesttype');
       pest_id = $(this).attr('pest');
       note = $(this).attr('note');
+      modify = $(this).attr('modify');
+      modify_check = modify;
 
       $('#e_date').val(date);
-      $('#e_farm').val(farm_id);
+      // $('#e_farm').val(farm_id);
       $('#e_pesttype').val(pesttype_id);
       $('#e_note').val(note);
       $('#e_pestAlarmID').val(lid);
+      idSetHtml = '#e_farm';
+      selectFarm(idSetHtml, modify,farm_id);
       idSetHtml = '#e_subfarm';
-      selectSubfarm(idSetHtml,farm_id,subfarm_id);
+      selectSubfarm(idSetHtml,farm_id,subfarm_id,modify_check);
       idSetHtml = '#e_pest';
-      selectPest(idSetHtml,pesttype_id,pest_id);
+      selectPest(idSetHtml,pesttype_id,pest_id,modify_check);
       console.log('lid = '+lid);
 
       footer = `<div class="img-reletive">
@@ -49,23 +55,24 @@ $( document ).ready(function() {
     $('#farm').click(function() {
       fmid = $('#farm').val();
       idSetHtml = '#subfarm';
-      selectSubfarm(idSetHtml,fmid,-1);
+      selectSubfarm(idSetHtml,fmid,-1,0);
     });
     $('#pesttype').click(function() {
       ptid = $('#pesttype').val();
       idSetHtml = '#pest';
-      selectPest(idSetHtml,ptid,-1);
+      selectPest(idSetHtml,ptid,-1,0);
     });
 
     $('#e_farm').click(function() {
-      fmid = $('#e_farm').val();
+      console.log('modify_check = '+modify_check);
+      DIMfarmID = $('#e_farm').val();
       idSetHtml = '#e_subfarm';
-      selectSubfarm(idSetHtml,fmid,-1);
+      selectSubfarm(idSetHtml,DIMfarmID,-1,modify_check);
     });
     $('#e_pesttype').click(function() {
       ptid = $('#e_pesttype').val();
       idSetHtml = '#e_pest';
-      selectPest(idSetHtml,ptid,-1);
+      selectPest(idSetHtml,ptid,-1,modify_check);
     });
     $(document).on("click", ".btn-note", function() {
       $('#data').modal();
@@ -79,14 +86,14 @@ $( document ).ready(function() {
       arr = [];
 
       pid = $(this).attr('pest');
-      dpid = $(this).attr('dimpest');
+      dim_pest = $(this).attr('dimpest');
       ptid = $(this).attr('pesttype');
-      $.post("manage.php", {request: "selectPestByPID",dpid: dpid}, function(result){
+      $.post("manage.php", {request: "selectPestByPID",dim_pest: dim_pest}, function(result){
         // console.log(result)
 
         DATA_DB = JSON.parse(result);
         // console.log(DATA_DB)
-        path = "../../icon/pest/" + DATA_DB[1]['dbpestLID'] + "/" + DATA_DB[1]['Icon'];
+        path = "../../icon/pest/" + DATA_DB[1]['dbpestLID'] + "/" + DATA_DB[1]['FileName'];
         $('#data_icon').attr('src',path);
         $('#data_name').html('ชื่อ : '+DATA_DB[1]["Name"]);
         $('#data_alias').html('ชื่อทางการ : '+DATA_DB[1]["Alias"]);
@@ -102,6 +109,10 @@ $( document ).ready(function() {
         }
         path_style = "../../picture/pest/"+subpath+"/style/";
         path_danger = "../../picture/pest/"+subpath+"/danger/";
+
+        // pid = DATA_DB[1]["dbpestLID"];
+        $('#data_char2').html(DATA_DB[1]["Charactor"]);
+        $('#data_dang2').html(DATA_DB[1]["Danger"]);
 
         $.post("manage.php", {request: "scanDir",pid: pid ,path:path_style}, function(result1){
           // console.log('pid = '+pid)
@@ -124,7 +135,6 @@ $( document ).ready(function() {
           }
   
           $('#data_char1').html(html);
-          $('#data_char2').html(DATA_DB[1]["Charactor"]);
         });
         $.post("manage.php", {request: "scanDir",pid: pid ,path:path_danger}, function(result1){
           arr = JSON.parse(result1);
@@ -144,7 +154,6 @@ $( document ).ready(function() {
           }
   
           $('#data_dang1').html(html);
-          $('#data_dang2').html(DATA_DB[1]["Danger"]);
           showmore();
 
         });
@@ -201,6 +210,19 @@ $( document ).ready(function() {
       // if (!check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger)) return;
 
     });
+    $(document).on("click", ".morelink", function() {
+      if ($(this).hasClass("less")) {
+          $(this).removeClass("less");
+          $(this).html(moretext);
+      } else {
+          $(this).addClass("less");
+          $(this).html(lesstext);
+      }
+      $(this).parent().prev().toggle();
+      $(this).prev().toggle();
+      return false;
+
+});
  
 });
 // function check_duplicate(o_name, o_alias, o_charstyle, o_danger, name, alias, charstyle, danger) {
@@ -219,10 +241,10 @@ function check_dup_pic(pic, old_pic) {
 function setImgEdit(id, footer,path) {
   // console.log('setIMG')
   $.post("manage.php", {request: 'scanDir',path: path ,pid: id}, function(result){
-       console.log(result);
+      //  console.log(result);
       arr = JSON.parse(result);
 
-      console.log(arr);
+      // console.log(arr);
       var textPicChar = ''
 
       for (i = 0;i < arr.length ;i++) {
@@ -323,34 +345,21 @@ function showmore(){
               '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
           
           $(this).html(html);
-          console.log(html);
+          // console.log(html);
       }
 
   });
-  $(document).on("click", ".morelink", function() {
-         if ($(this).hasClass("less")) {
-             $(this).removeClass("less");
-             $(this).html(moretext);
-         } else {
-             $(this).addClass("less");
-             $(this).html(lesstext);
-         }
-         $(this).parent().prev().toggle();
-         $(this).prev().toggle();
-         return false;
- 
-     });
 
 }
 
 function loadPhoto_LogPestAlarm(path,id) {
-  console.log(path);
-  console.log(id);
+  // console.log(path);
+  // console.log(id);
 
   $.post("manage.php", {request: "scanDir",path: path,pid: id}, function(result){
     // console.log(result);
     let data1 = JSON.parse(result);
-    console.log(data1);
+    // console.log(data1);
 
     let text = "";
     PICS = path+id;
@@ -363,15 +372,35 @@ function loadPhoto_LogPestAlarm(path,id) {
   
   });
 }
-
-function selectSubfarm(idSetHtml,fmid,set){
-  $.post("manage.php", {request: "selectSubfarm",fmid: fmid}, function(result){
+function selectFarm(idSetHtml,modify,set){
+  $.post("manage.php", {request: "selectFarm",modify: modify}, function(result){
     DATA_DB = JSON.parse(result);
-    console.log('set subfarm id = '+set)
-    console.log(DATA_DB);
-    html = "<option selected value=''>เลือกแปลง</option>";
+    // console.log('set farm id = '+set)
+    // console.log(DATA_DB);
+    html = "<option selected value=''>เลือกสวน</option>";
     for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
-      html +='<option value='+DATA_DB[i]['fsid']+'>'+DATA_DB[i]['namesub']+'</option>';
+      html +='<option value='+DATA_DB[i]['DIMfarmID']+'>'+DATA_DB[i]['Name']+'</option>';
+    }
+    $(idSetHtml).html(html);
+    if(set != -1){
+      $('#e_farm').val(set);
+    }
+  });
+}
+function selectSubfarm(idSetHtml,id,set,modify_num){
+  $.post("manage.php", {request: "selectSubfarm",id: id,modify: modify_num}, function(result){
+    DATA_DB = JSON.parse(result);
+    // console.log('set subfarm id = '+set)
+    // console.log(DATA_DB);
+    html = "<option selected value=''>เลือกแปลง</option>";
+    if(modify_num == 0){
+      for (i = 1; i <= DATA_DB[0]['numrow']; i++) {
+        html += '<option value=' + DATA_DB[i]['fsid'] + '>' + DATA_DB[i]['namesub'] + '</option>';
+      }
+    }else{
+      for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
+        html +='<option value='+DATA_DB[i]['DIMSubfID']+'>'+DATA_DB[i]['Name']+'</option>';
+      }
     }
     $(idSetHtml).html(html);
     if(set != -1){
@@ -379,12 +408,18 @@ function selectSubfarm(idSetHtml,fmid,set){
     }
   });
 }
-function selectPest(idSetHtml,ptid,set){
-  $.post("manage.php", {request: "selectPest",ptid: ptid}, function(result){
+function selectPest(idSetHtml,type_id,set,modify_num){
+  $.post("manage.php", {request: "selectPest",type_id: type_id,modify:modify_num}, function(result){
     DATA_DB = JSON.parse(result);
     html = "<option selected value=''>เลือกศัตรูพืช</option>";
-    for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
-      html +='<option value='+DATA_DB[i]['PID']+'>'+DATA_DB[i]['Alias']+'</option>';
+    if(modify_num == 0){
+      for (i = 1; i <= DATA_DB[0]['numrow']; i++) {
+        html += '<option value=' + DATA_DB[i]['PID'] + '>' + DATA_DB[i]['Alias'] + '</option>';
+      }
+    }else{
+      for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
+        html +='<option value='+DATA_DB[i]['DIMpestID']+'>'+DATA_DB[i]['Alias']+'</option>';
+      }
     }
     $(idSetHtml).html(html);
     if(set != -1){
@@ -403,11 +438,11 @@ function initMap() {
     click_map = $('.click-map').html();
     // console.log(click_map);
     size = $('#size').attr('size');
-    console.log(size);
+    // console.log(size);
 
     for(i = 1 ; i < size ; i++){
       namesubfarm = $('#'+i).attr('namesubfarm');
-      console.log(namesubfarm);
+      // console.log(namesubfarm);
       la = parseFloat($('#'+i).attr('la'));
       long = parseFloat($('#'+i).attr('long'));
       AD3ID = parseFloat($('#'+i).attr('AD3ID'));

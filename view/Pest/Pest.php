@@ -297,7 +297,7 @@ $PESTTYPE = getPestType();
                                 // }
                         ?>
                                 <tr class="<?php echo $i; ?>" test="test<?php echo $i; ?>">
-                                    <td><?php echo $DATA[$i]["FullName"] ?></td>
+                                    <td><?php echo $DATA[$i]["OwnerName"] ?></td>
                                     <td><?php echo $DATA[$i]['Namefarm']; ?></td>
                                     <td><?php echo $DATA[$i]["Namesubfarm"] ?></td>
 
@@ -308,21 +308,21 @@ $PESTTYPE = getPestType();
 
                                     <td style="text-align:center;">
                                         <button type="button" id='edit<?php echo $i; ?>' class="btn btn-warning btn-sm btn-edit tt" data-toggle="tooltip" title="แก้ไข"
-                                        date = "<?php echo $DATA[$i]['Date']; ?>" farm="<?php echo $DATA[$i]['FID']; ?>"
-                                        subfarm = "<?php echo $DATA[$i]['SFID']; ?>" pesttype = "<?php echo $DATA[$i]['PTID']; ?>"
-                                        pest = "<?php echo $DATA[$i]['dbpestLID']; ?>" note = "<?php echo $DATA[$i]['Note']; ?>" lid = "<?php echo $DATA[$i]['ID']; ?>">
+                                        date = "<?php echo $DATA[$i]['Date']; ?>" farm="<?php echo $DATA[$i]['DIMfarmID']; ?>" modify ="<?php echo $DATA[$i]['Modify']; ?>"
+                                        subfarm = "<?php echo $DATA[$i]['DIMsubFID']; ?>" pesttype = "<?php echo $DATA[$i]['dbpestTID']; ?>"
+                                        pest = "<?php echo $DATA[$i]['DIMpestID']; ?>" note = "<?php echo $DATA[$i]['Note']; ?>" lid = "<?php echo $DATA[$i]['ID']; ?>">
                                         <i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" dimpest = "<?php echo $DATA[$i]['dpid']; ?>" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
-                                        pesttype = "<?php echo $DATA[$i]['PTID']; ?>" data-toggle="tooltip" title="ลักษณะ"><i class="fas fa-bars"></i></button>
+                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" dimpest = "<?php echo $DATA[$i]['dim_pest']; ?>" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
+                                        pesttype = "<?php echo $DATA[$i]['dbpestTID']; ?>" data-toggle="tooltip" title="ลักษณะ"><i class="fas fa-bars"></i></button>
                                         <button type="button" class="btn btn-info btn-sm btn-photo tt" lid="<?php echo $DATA[$i]['ID']; ?>"
                                         data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i class="far fa-images"></i></button>
                                         <button type="button" class="btn btn-primary btn-sm btn-note tt" note = "<?php echo $DATA[$i]['Note']; ?>"
                                         data-toggle="tooltip" title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
                                         <button type="button" class="btn btn-danger btn-sm btn-delete tt"
-                                        onclick="delfunction('<?php echo $DATA[$i]['ID']; ?>','<?php echo $DATA[$i]['Namesubfarm']; ?>','<?php echo $DATA[$i]['Name']; ?>')"
+                                        onclick="delfunction('<?php echo $DATA[$i]['ID']; ?>','<?php echo $DATA[$i]['Namesubfarm']; ?>','<?php echo $DATA[$i]['NameFarm']; ?>')"
                                         data-toggle="tooltip" title="ลบ"><i class="far fa-trash-alt"></i></button>
                                     </td>
-                                    <label class="click-map" hidden id="<?php echo $i; ?>" namesubfarm="<?php echo $DATA[$i]["Namesubfarm"]; ?>" AD3ID="<?php echo $DATA[$i]["AD3ID"]; ?>" la="<?php echo $DATA[$i]["Latitude"]; ?>" 
+                                    <label class="click-map" hidden id="<?php echo $i; ?>" namesubfarm="<?php echo $DATA[$i]["Namesubfarm"]; ?>" AD3ID="" la="<?php echo $DATA[$i]["Latitude"]; ?>" 
                                     long="<?php echo $DATA[$i]["Longitude"]; ?>" ></label>
                                 </tr>
                         <?php

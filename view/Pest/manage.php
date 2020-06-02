@@ -15,17 +15,32 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
+        case 'selectFarm' :
+          $modify = $_POST['modify'];
+          print_r(json_encode(getFarmByModify($modify)));
+        break;
         case 'selectSubfarm' :
-            $fmid = $_POST['fmid'];
-            print_r(json_encode(getSubfarm($fmid)));
+            $modify = $_POST['modify'];
+            if($modify != 0){
+              $dim_farm = $_POST['id'];
+              print_r(json_encode(getSubfarmByModify($dim_farm,$modify)));
+            }else{
+              $fmid = $_POST['id'];
+              print_r(json_encode(getSubfarm($fmid)));
+            }
             break;
         case 'selectPest' :
-              $ptid = $_POST['ptid'];
-              print_r(json_encode(getPestById($ptid)));
+              $type_id = $_POST['type_id'];
+              $modify = $_POST['modify'];
+              if($modify != 0){
+                print_r(json_encode(getPestByModify($type_id,$modify)));
+              }else{
+                print_r(json_encode(getPestByTID($type_id)));
+              }
             break;
         case 'selectPestByPID';
-              $dpid = $_POST['dpid'];
-              print_r(json_encode(getPestLogByPID($dpid)));
+              $dim_pest = $_POST['dim_pest'];
+              print_r(json_encode(getPestLogByDIMpestID($dim_pest)));
           break;
         case 'scanDir';
             $pid = $_POST['pid'];
