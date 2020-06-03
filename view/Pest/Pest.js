@@ -3,6 +3,10 @@ $(document).ready(function() {
     $('.tt').tooltip();
 
     modify_check = 0; 
+    showChar = 180; // How many characters are shown by default
+    ellipsestext = "...";
+    moretext = "Show more";
+    lesstext = "Show less";
 
     // $('#date').datepicker({
     //   autoHide: true,
@@ -136,6 +140,7 @@ $(document).ready(function() {
     });
 
     $(document).on("click", ".morelink", function() {
+      console.log('morelink');
       if ($(this).hasClass("less")) {
           $(this).removeClass("less");
           $(this).html(moretext);
@@ -146,7 +151,7 @@ $(document).ready(function() {
       $(this).parent().prev().toggle();
       $(this).prev().toggle();
       return false;
-
+  
     });
 
     $(document).on("click", ".btn-pest", function() {
@@ -223,11 +228,9 @@ $(document).ready(function() {
               }
       
               $('#data_dang1').html(html);
-              showmore();
-
-
         });
-      
+        showmore();
+
       });
 
     });
@@ -325,10 +328,7 @@ function setImgEdit(id, footer,path) {
 function showmore(){
   // Configure/customize these variables.
   console.log('showmore');
-  var showChar = 180; // How many characters are shown by default
-  var ellipsestext = "...";
-  var moretext = "Show more";
-  var lesstext = "Show less";
+
   $('.more').each(function() {
       var content = $(this).html();
       content = content.trim();
