@@ -303,4 +303,5 @@ $Check = CheckHaveFarm($fmid)
 <?php include_once("./OilPalmAreaVolDetailModel.php"); ?>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("../../cropImage/cropImage.php"); ?>
+
 <script src="./OilPalmAreaVolDetail.js"></script>

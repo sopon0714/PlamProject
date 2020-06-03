@@ -188,6 +188,7 @@ $(document).ready(function() {
             dataType: "JSON",
             success: function(data) {
                 chartyear(data);
+                chartyearFerHarv(data);
             }
         });
     }
@@ -212,8 +213,8 @@ $(document).ready(function() {
 
         $('.PDY').empty();
         $('.PDY').html(` <canvas id="productYear" style="height:150px;"></canvas>`);
-        let labelData = [];
-        let data2 = [];
+        var labelData = [];
+        var data2 = [];
         var year = maxyear;
         var thisYear;
         var j = 0;
@@ -383,6 +384,89 @@ $(document).ready(function() {
 
 
     }
+
+    function chartyearFerHarv(chart_data) {
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    boxWidth: 80,
+                    fontColor: 'black'
+                }
+            },
+            scales: {
+                yAxes: [{
+                        id: 'left-y',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'ผลผลิต (ก.ก./ปี) '
+                        },
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            min: 0
+                        },
+                        position: 'left'
+                    },
+                    {
+                        id: 'right-y',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'ปริมาณปุ๋ยที่ใส่ (ก.ก./ต้น)'
+                        },
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            min: 0
+                        },
+                        position: 'right'
+                    }
+                ],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'รายปี'
+                    },
+                    gridLines: {
+                        display: false
+                    }
+                }],
+            }
+        };
+
+        var speedData = {
+            labels: ["2561", "2562", "2563", "2564", "2565"],
+            datasets: [{
+                    yAxisID: 'left-y',
+                    label: "ผลผลิต",
+                    data: [5442, 4525, 5514, 6015, 2514],
+                    backgroundColor: 'transparent',
+                    borderColor: '#00ce68',
+
+                },
+                {
+                    yAxisID: 'right-y',
+                    label: "ปุ๋ย",
+                    data: [4.75, 5.58, 2.27, 6.78, 8.85],
+                    backgroundColor: 'transparent',
+                    borderColor: '#05acd3'
+                }
+            ]
+        };
+
+        var ctx = $("#tradFer");
+        var plantPie = new Chart(ctx, {
+            type: 'line',
+            data: speedData,
+            options: chartOptions
+        });
+    }
+
 
 
 

@@ -111,7 +111,7 @@ if ($result == 'getMProdect') {
     INNER JOIN `dim-farm` on `dim-farm`.`ID` = `log-harvest`.`DIMsubFID` 
     WHERE `dim-farm`.`dbID` = $fsid AND `dim-time`.`Year2`=$year
     GROUP BY  `dim-time`.`Month`
-    ORDER BY `dim-time`.`Year2` ASC";
+    ORDER BY`dim-time`.`Month` ASC";
     $data = selectAll($sql);
     echo json_encode($data);
 }
