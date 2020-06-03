@@ -288,7 +288,7 @@ $Check = CheckHaveFarm($fmid)
                 <div class="card-body">
                     <div class="row">
 
-                        <div class="col-xl-12 col-12">
+                        <div class="col-xl-12 col-12 PDY2">
                             <canvas id="tradFer" style="height:200px;"></canvas>
                         </div>
                     </div>

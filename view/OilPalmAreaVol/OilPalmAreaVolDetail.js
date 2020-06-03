@@ -84,7 +84,7 @@ $(document).ready(function() {
         $.post("manage.php", { action: "scanDir", path: path, lid: id }, function(result) {
 
             let data1 = JSON.parse(result);
-            console.log(data1);
+
 
             let text = "";
             PICS = path + id;
@@ -188,7 +188,21 @@ $(document).ready(function() {
             dataType: "JSON",
             success: function(data) {
                 chartyear(data);
-                chartyearFerHarv(data);
+                $.ajax({
+                    url: "data.php",
+                    method: "POST",
+                    data: {
+                        year: year,
+                        FMID: FMID,
+                        result: "getYearFer"
+                    },
+                    dataType: "JSON",
+                    success: function(data2) {
+                        chartyearFerHarv(data, data2);
+
+                    }
+                });
+
             }
         });
     }
@@ -213,11 +227,11 @@ $(document).ready(function() {
 
         $('.PDY').empty();
         $('.PDY').html(` <canvas id="productYear" style="height:150px;"></canvas>`);
-        var labelData = [];
-        var data2 = [];
-        var year = maxyear;
-        var thisYear;
-        var j = 0;
+        let labelData = [];
+        let data2 = [];
+        let year = maxyear;
+        let thisYear;
+        let j = 0;
         for (i = 0; i < 8; i++) {
             j = 0;
             thisYear = year - 7 + i;
@@ -305,7 +319,6 @@ $(document).ready(function() {
 
         $('.PDM').empty()
         $('.PDM').html(` <canvas id="productMonth" style="height:250px;"></canvas>`)
-        console.table(chart_data);
         let data2 = []
         var i, j = 0;
 
@@ -385,7 +398,59 @@ $(document).ready(function() {
 
     }
 
-    function chartyearFerHarv(chart_data) {
+    function chartyearFerHarv(chart_data, chart_data2) {
+        $('.PDY2').empty();
+        $('.PDY2').html(` <canvas id="tradFer" style="height:200px;"></canvas>`);
+        let labelData = [];
+        let data = [];
+        let data2 = [];
+        let year = maxyear;
+        let thisYear;
+        let j = 0;
+        for (i = 0; i < 8; i++) {
+            j = 0;
+            thisYear = year - 7 + i;
+
+            for (j = 0; j < chart_data2.length; j++) {
+                if (chart_data2[j].Year2 == thisYear) {
+                    labelData.push(chart_data2[j].Year2);
+                    data2.push(parseFloat(chart_data2[j].Vol).toFixed(2));
+                    break;
+                }
+            }
+
+            if (j == chart_data2.length && j != 0) {
+                if (thisYear < year && thisYear < chart_data2[0].Year2) {
+                    continue;
+                }
+
+                labelData.push(thisYear);
+                data2.push(0);
+            }
+            if (chart_data2.length == 0) {
+                labelData.push(thisYear);
+                data2.push(0);
+            }
+            ///////////////////////////////////
+            for (j = 0; j < chart_data.length; j++) {
+                if (chart_data[j].Year2 == thisYear) {
+                    data.push(parseFloat(chart_data[j].Weight).toFixed(2));
+                    break;
+                }
+            }
+
+            if (j == chart_data.length && j != 0) {
+                if (thisYear < year && thisYear < chart_data[0].Year2) {
+                    continue;
+                }
+
+                data.push(0);
+            }
+            if (chart_data.length == 0) {
+                data.push(0);
+            }
+
+        }
         var chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -440,11 +505,11 @@ $(document).ready(function() {
         };
 
         var speedData = {
-            labels: ["2561", "2562", "2563", "2564", "2565"],
+            labels: labelData,
             datasets: [{
                     yAxisID: 'left-y',
                     label: "ผลผลิต",
-                    data: [5442, 4525, 5514, 6015, 2514],
+                    data: data,
                     backgroundColor: 'transparent',
                     borderColor: '#00ce68',
 
@@ -452,7 +517,7 @@ $(document).ready(function() {
                 {
                     yAxisID: 'right-y',
                     label: "ปุ๋ย",
-                    data: [4.75, 5.58, 2.27, 6.78, 8.85],
+                    data: data2,
                     backgroundColor: 'transparent',
                     borderColor: '#05acd3'
                 }

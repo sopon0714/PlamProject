@@ -41,7 +41,7 @@ switch ($action) {
                     file_put_contents($path . "/" . $i . $extension, $Pic);
                }
           }
-          header("location:./OilPalmAreaVolDetail.php?FMID=$fmid");
+          //header("location:./OilPalmAreaVolDetail.php?FMID=$fmid");
           break;
      case 'scanDir';
           $lid = $_POST['lid'];
