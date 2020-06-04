@@ -200,7 +200,7 @@ $sumdeadPers = 0;
 
                 </div>
 
-                <div class="card-body">
+                <div class="card-body ">
                     <div class="row">
                         <div class="col-xl-5 col-12 scrollber">
                             <?php
@@ -216,10 +216,10 @@ $sumdeadPers = 0;
                                                     <div class=\"col-xl-3 \">
                                                         <span>ปลูก :  </span>
                                                     </div>
-                                                    <div class=\"col-xl-4 \">
-                                                        <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                                    <div class=\"col-xl-3 text-right\">
+                                                        <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                                     </div>
-                                                    <div class=\"col-xl-3 \">
+                                                    <div class=\"col-xl-3 text-right\">
                                                         <span>{$LOGPLANTTING[$i]['NumGrowth1']} ต้น</span>
                                                     </div>
                                                 </div>";
@@ -229,10 +229,10 @@ $sumdeadPers = 0;
                                         <div class=\"col-xl-3 \">
                                             <span>ปลูกซ่อม :  </span>
                                         </div>
-                                        <div class=\"col-xl-4 \">
-                                            <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                        <div class=\"col-xl-3 text-right \">
+                                        <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                         </div>
-                                        <div class=\"col-xl-3 \">
+                                        <div class=\"col-xl-3 text-right\">
                                             <span>{$LOGPLANTTING[$i]['NumGrowth2']} ต้น</span>
                                         </div>
                                     </div>";
@@ -242,10 +242,10 @@ $sumdeadPers = 0;
                                        <div class=\"col-xl-3 \">
                                            <span>ตาย :  </span>
                                        </div>
-                                       <div class=\"col-xl-4 \">
-                                           <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                       <div class=\"col-xl-3 text-right \">
+                                       <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                        </div>
-                                       <div class=\"col-xl-3 \">
+                                       <div class=\"col-xl-3 text-right\">
                                            <span>{$LOGPLANTTING[$i]['NumDead']} ต้น</span>
                                        </div>
                                    </div>";
@@ -265,27 +265,36 @@ $sumdeadPers = 0;
                                 </div>
                                 <div class="col-4">
                                     <div class="row mt-2">
-                                        <div class="col-3 mt-1">
+                                        <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #00ce68; "></div>
                                         </div>
-                                        <div class="col-9">
-                                            <span>ปลูก <?= $sumng1Pers ?> %</span>
+                                        <div class="col-4 text-right">
+                                            <span>ปลูก </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <?= number_format($sumng1Pers, 2, '.', ',') ?> %
                                         </div>
                                     </div>
                                     <div class="row mt-2">
-                                        <div class="col-3 mt-1">
+                                        <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #f6c23e; "></div>
                                         </div>
-                                        <div class="col-9">
-                                            <span>ซ่อม <?= $sumng2Pers ?> %</span>
+                                        <div class="col-4 text-right">
+                                            <span>ซ่อม </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <?= number_format($sumng2Pers, 2, '.', ',') ?> %
                                         </div>
                                     </div>
                                     <div class="row mt-2">
-                                        <div class="col-3 mt-1">
+                                        <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #e74a3b; "></div>
                                         </div>
-                                        <div class="col-9">
-                                            <span>ตาย <?= $sumdeadPers ?> %</span>
+                                        <div class="col-4 text-right">
+                                            <span>ตาย </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <?= number_format($sumdeadPers, 2, '.', ',') ?> %
                                         </div>
                                     </div>
                                 </div>
@@ -521,17 +530,25 @@ $sumdeadPers = 0;
             fillColor: '#FF0000',
             fillOpacity: 0.35
         });
+        var mapPoly2 = new google.maps.Polygon({
+            paths: triangleCoords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
         mapPoly.setMap(mapcolor);";
 
         ?>
         mapedit = new google.maps.Map(document.getElementById('map_area_edit'), {
-            zoom: 16,
+            zoom: 17,
             center: new google.maps.LatLng(<?php echo $INFOSUBFARM[1]['Latitude'] ?>, <?php echo $INFOSUBFARM[1]['Longitude'] ?>),
             mapTypeId: 'satellite'
         });
         mapedit.markers = [];
         var infowindow = [];
-
+        mapPoly2.setMap(mapedit);
         numCoor = 0;
         google.maps.event.addListener(mapedit, 'click', function(event) {
             placeMarker(event.latLng);
