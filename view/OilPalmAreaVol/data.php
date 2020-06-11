@@ -122,7 +122,7 @@ if ($result == 'getYearFer') {
     $sql = "SELECT `dim-time`.`Year2`,SUM(IF(`log-fertilising`.`Unit`=2,`log-fertilising`.`Vol`/1000,`log-fertilising`.`Vol`)) AS Vol
     FROM `log-fertilising` INNER JOIN `dim-time` on `log-fertilising`.`DIMdateID` = `dim-time`.`ID`
      INNER JOIN `dim-farm` on `dim-farm`.`ID` = `log-fertilising`.`DIMfarmID` 
-     WHERE`dim-farm`.`dbID` = $fmid AND (`dim-time`.`Year2` > $year-8  )  AND `log-fertilising`.`isDelete`=0
+     WHERE`dim-farm`.`dbID` = $fmid AND (`dim-time`.`Year2` > $year-20  )  AND `log-fertilising`.`isDelete`=0
     GROUP BY `dim-time`.`Year2` ORDER BY `dim-time`.`Year2` ASC";
     $data = selectAll($sql);
     echo json_encode($data);

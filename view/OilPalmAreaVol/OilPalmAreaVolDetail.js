@@ -162,13 +162,13 @@ $(document).ready(function() {
             },
             dataType: "JSON",
             success: function(data) {
-
+                var nf = new Intl.NumberFormat();
                 if (data[1].Weight === null) {
-                    $("#sumweight").html("0.00");
-                    $("#sumprice").html("0.00");
+                    $("#sumweight").html("0");
+                    $("#sumprice").html("0");
                 } else {
-                    $("#sumweight").html(parseFloat(data[1].Weight).toFixed(2));
-                    $("#sumprice").html(parseFloat(data[1].TotalPrice).toFixed(2));
+                    $("#sumweight").html(nf.format(parseInt(data[1].Weight)));
+                    $("#sumprice").html(nf.format(parseInt(data[1].TotalPrice)));
 
                 }
 
@@ -232,9 +232,9 @@ $(document).ready(function() {
         let year = maxyear;
         let thisYear;
         let j = 0;
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i < 20; i++) {
             j = 0;
-            thisYear = year - 7 + i;
+            thisYear = year - 19 + i;
 
             for (j = 0; j < chart_data.length; j++) {
                 if (chart_data[j].Year2 == thisYear) {

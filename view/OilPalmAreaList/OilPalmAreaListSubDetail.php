@@ -18,6 +18,7 @@ $OLDPALMSUBFARM = getOldPalmByIdSubFarm($fsid);
 $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
 $INFOFERT = getVolFertilising($fsid);
 $YEAR = getYear($fsid, false);
+$ChartPest = getChartPest($YEAR[1]['Year2'], $fsid);
 $sumng1 = 1;
 $sumng2 = 0;
 $sumdead = 0;
@@ -260,10 +261,10 @@ $sumdeadPers = 0;
                         </div>
                         <div class="col-xl-6 col-12">
                             <div class="row">
-                                <div class="col-8">
+                                <div class="col-7 text-left">
                                     <canvas id="plantPie"></canvas>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <div class="row mt-2">
                                         <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #00ce68; "></div>
@@ -380,6 +381,24 @@ $sumdeadPers = 0;
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div id="maxyear" hidden maxyear="<?= $YEAR[1]['Year2'] ?>"></div>
+        <div id="FMID" hidden FMID="<?= $fmid ?>"></div>
+        <div class="col-xl-12 col-12">
+            <div class="card">
+                <div class="card-header card-bg">
+                    <span>การตรวจพบศัตรูพืช</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-12 PA">
+                            <canvas id="pestAlarm" style="height:250px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("OilPalmAreaListSubDetailModal.php"); ?>
@@ -485,6 +504,91 @@ $sumdeadPers = 0;
         }
 
         ?>
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+                position: 'top',
+                labels: {
+                    boxWidth: 60,
+                    fontColor: 'black'
+                }
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'จำนวนที่พบ (ครั้ง) '
+                    },
+                    gridLines: {
+                        display: true
+                    },
+                    ticks: {
+                        min: 0,
+                        stepSize: 1
+
+                    },
+                    stacked: true
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'รายปี'
+                    },
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        min: 0,
+                        stepSize: 1
+
+                    },
+                    stacked: true
+                }],
+            }
+        };
+        <?php
+
+        if ($ChartPest['labelYear'] == "[]") {
+            echo " var speedData = {
+                labels: [$MaxYear],";
+        } else {
+            echo " var speedData = {
+                labels: {$ChartPest['labelYear']},";
+        }
+        echo "datasets: [{
+            label: '{$ChartPest['ArrName'][0]}',
+            data: {$ChartPest['labeldata'][1]},
+            backgroundColor: '#00ce68' 
+        },
+        {
+            label: '{$ChartPest['ArrName'][1]}',
+            data: {$ChartPest['labeldata'][2]},
+            backgroundColor: '#05acd3' 
+        },
+        {
+            label: '{$ChartPest['ArrName'][2]}',
+            data: {$ChartPest['labeldata'][3]},
+            backgroundColor: '#f6c23e' 
+        }
+        ,
+        {
+            label: '{$ChartPest['ArrName'][3]}',
+            data: {$ChartPest['labeldata'][4]},
+            backgroundColor: '#e74a4b' 
+        }
+
+    ]
+};";
+        ?>
+        var ctx = $("#pestAlarm");
+        var plantPie = new Chart(ctx, {
+            type: 'bar',
+            data: speedData,
+            options: chartOptions
+        });
+
 
     });
 
