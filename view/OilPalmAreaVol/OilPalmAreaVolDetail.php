@@ -219,12 +219,7 @@ $Check = CheckHaveFarm($fmid)
                                         <div class="card-header card-bg">
                                             <div>
                                                 <span>รายการเก็บผลผลิตต่อแปลง</span>
-                                                <?php
-                                                if ($Check) {
-                                                    echo "<button type=\"button\" id=\"btn_add_product\" style=\"float:right;\" class=\"btn btn-success btn-sm\"><i class=\"fas fa-plus\"></i> เพิ่มผลผลิต</button>";
-                                                }
-                                                ?>
-
+                                                <button type="button" id="btn_add_product" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มผลผลิต</button>";
                                             </div>
                                         </div>
                                         <div class="card-body">

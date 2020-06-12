@@ -1,8 +1,4 @@
 <!-- modal -->
-
-<?php
-$SUBFARM = getNameSubfarm($fmid);
-?>
 <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog">
     <form method="post" id="formAdd" name="formAdd" action="manage.php">
         <div class="modal-dialog modal-lg" role="document">
@@ -15,28 +11,23 @@ $SUBFARM = getNameSubfarm($fmid);
                 </div>
                 <div class="modal-body" id="addModalBody">
                     <div class="main">
-                        <div class="row mb-4 ">
-                            <div class="col-xl-4 col-12 text-right">
-                                <span>ชื่อแปลง</span>
-
-                            </div>
-                            <div class="col-xl-5 col-12">
-                                <select id="sub" name="SubFarmID" class="form-control" required="" oninput="setCustomValidity('')">
-                                    <option value="0" selected>เลือกแปลง</option>
-                                    <?php
-                                    for ($i = 1; $i < count($SUBFARM); $i++) {
-                                        echo "<option value=\"{$SUBFARM[$i]['FSID']}\" >{$SUBFARM[$i]['Name']}</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
                         <div class="row mb-4">
                             <div class="col-xl-4 col-12 text-right">
                                 <span>วันที่เก็บผลผลิต</span>
                             </div>
                             <div class="col-xl-5 col-12">
                                 <input type="date" name="date" class="form-control" id="date" required="" oninput="setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="row mb-4 ">
+                            <div class="col-xl-4 col-12 text-right">
+                                <span>ชื่อแปลง</span>
+
+                            </div>
+                            <div class="col-xl-5 col-12">
+                                <select id="SubFarmID" name="SubFarmID" class="form-control" required="" oninput="setCustomValidity('')">
+                                    <option value="0" selected>เลือกแปลง</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-4">

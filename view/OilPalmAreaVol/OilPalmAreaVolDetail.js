@@ -64,6 +64,10 @@ $(document).ready(function() {
             load_infoHarvest(year, FMID);
         }
     });
+    $(document).on('change', '#date', function() {
+        let date = $("#date").val();
+        setSelectSubfarm(FMID, date);
+    });
     $(document).on('click', '#btn_add_product', function() {
         $("#addProductModal").modal('show');
     });
@@ -82,10 +86,7 @@ $(document).ready(function() {
 
     function loadPhoto_LogHarvest(path, id) {
         $.post("manage.php", { action: "scanDir", path: path, lid: id }, function(result) {
-
             let data1 = JSON.parse(result);
-
-
             let text = "";
             PICS = path + id;
             for (i in data1) {
@@ -407,9 +408,9 @@ $(document).ready(function() {
         let year = maxyear;
         let thisYear;
         let j = 0;
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i < 20; i++) {
             j = 0;
-            thisYear = year - 7 + i;
+            thisYear = year - 19 + i;
 
             for (j = 0; j < chart_data2.length; j++) {
                 if (chart_data2[j].Year2 == thisYear) {
@@ -529,6 +530,21 @@ $(document).ready(function() {
             type: 'line',
             data: speedData,
             options: chartOptions
+        });
+    }
+
+    function setSelectSubfarm(FIMD, date) {
+        $.ajax({
+            url: "manage.php",
+            method: "POST",
+            data: {
+                FIMD: FIMD,
+                date: date,
+                action: "setSelectSubfarm"
+            },
+            success: function(data) {
+                $("#SubFarmID").html(data);
+            }
         });
     }
 

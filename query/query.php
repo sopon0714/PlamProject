@@ -1919,6 +1919,16 @@ function getFarmByModify($modify)
     $data = selectData($sql);
     return $data;
 }
+function getsubFarmByModify2($fmid, $modify)
+{
+    $sql = "SELECT sf.`ID` AS DIMFSID,sf.`Name` FROM `log-farm` 
+    INNER JOIN `dim-farm` as f ON  f.`ID` = `log-farm`.`DIMfarmID`
+    INNER JOIN `dim-farm` as sf ON  sf.`ID` = `log-farm`.`DIMSubfID`
+    WHERE f.`dbID`=$fmid AND '$modify' >= `log-farm`.`StartT` AND ( '$modify' <= `log-farm`.`EndT`
+    OR  `log-farm`.`EndT` IS NULL) AND  `log-farm`.`DIMSubfID` IS NOT NULL  ORDER BY sf.`Name`";
+    $data = selectData($sql);
+    return $data;
+}
 function CheckHaveFarm($fmid)
 {
     $sql = "SELECT * FROM `db-subfarm` WHERE `db-subfarm`.`FMID` = $fmid";

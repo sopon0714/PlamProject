@@ -10,7 +10,7 @@ $action  = $_POST['action'] ?? "";
 switch ($action) {
      case "insert":
           $fmid = $_POST['FMID'];
-          $fsid = $_POST['SubFarmID'];
+          $dimfsid = $_POST['SubFarmID'];
           $date = $_POST['date'];
           $weight = $_POST['weight'];
           $UnitPrice = $_POST['UnitPrice'];
@@ -25,9 +25,8 @@ switch ($action) {
           $DIMTIME = getDIMDate($date);
           $DIMFARMER = getDIMFarmer($DBFARM[1]['UFID']);
           $DIMFARM = getDIMFarm($fmid);
-          $DIMSUBFARM = getDIMSubFarm($fsid);
           $sql = "INSERT INTO `log-harvest` (`ID`, `isDelete`, `GuessFrom`, `Modify`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Weight`, `UnitPrice`, `TotalPrice`, `PICs`) 
-          VALUES (NULL, '0', NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMTIME[1]['ID']}', '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '{$DIMSUBFARM[1]['ID']}', '$weight', '$UnitPrice', ' $total', 'xxxxx')";
+          VALUES (NULL, '0', NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMTIME[1]['ID']}', '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '$dimfsid', '$weight', '$UnitPrice', ' $total', 'xxxxx')";
           $IDLog = addinsertData($sql);
           $sql = "UPDATE `log-harvest` SET `PICs` = 'picture/activities/harvest/$IDLog' WHERE `log-harvest`.`ID` = $IDLog";
           updateData($sql);
@@ -55,12 +54,23 @@ switch ($action) {
                     $arr[] = $obj;
                }
           }
+          echo json_encode($arr);
           break;
      case 'delete';
           $id = $_POST['id'];
 
           $sql = "UPDATE `log-harvest` SET `isDelete` = '1' WHERE `log-harvest`.`ID` = $id ";
           $o_did = updateData($sql);
+          break;
+     case 'setSelectSubfarm';
+          $FIMD = $_POST['FIMD'];
+          $date = $_POST['date'];
+          $INFODATA = getsubFarmByModify2($FIMD, strtotime($date));
+          $html = " <option value=\"0\" selected>เลือกแปลง</option>";
+          for ($i = 1; $i < count($INFODATA); $i++) {
+               $html .= " <option value=\"{$INFODATA[$i]['DIMFSID']}\" selected>{$INFODATA[$i]['Name']}</option>";
+          }
+          echo $html;
           break;
 }
 function getDIMFarmer($FID)
