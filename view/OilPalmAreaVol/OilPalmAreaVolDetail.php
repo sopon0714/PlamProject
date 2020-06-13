@@ -188,13 +188,25 @@ $Check = CheckHaveFarm($fmid)
                                         </div>
                                         <div class="card-body" style=" margin-top: 20px;">
                                             <div class="row" style=" margin-top: 10px;">
-                                                <div class="col-12">
-                                                    <span>ผลผลิตทั้งหมด : <span id="sumweight"></span> กิโลกรัม</span>
+                                                <div class="col-4 text-right">
+                                                    <span>ผลผลิตทั้งหมด : </span>
+                                                </div>
+                                                <div class="col-3 text-right">
+                                                    <span id="sumweight"></span>
+                                                </div>
+                                                <div class="col-2 text-right">
+                                                    <span>กิโลกรัม</span>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12" style=" margin-top: 20px;">
-                                                    <span>รายได้ทั้งหมด : <span id="sumprice"></span> บาท</span>
+                                                <div class="col-4 text-right" style=" margin-top: 20px;">
+                                                    <span>รายได้ทั้งหมด : </span>
+                                                </div>
+                                                <div class="col-3 text-right" style=" margin-top: 20px;">
+                                                    <span id="sumprice"></span>
+                                                </div>
+                                                <div class="col-2 text-right" style=" margin-top: 20px;">
+                                                    <span>บาท</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -207,12 +219,7 @@ $Check = CheckHaveFarm($fmid)
                                         <div class="card-header card-bg">
                                             <div>
                                                 <span>รายการเก็บผลผลิตต่อแปลง</span>
-                                                <?php
-                                                if ($Check) {
-                                                    echo "<button type=\"button\" id=\"btn_add_product\" style=\"float:right;\" class=\"btn btn-success btn-sm\"><i class=\"fas fa-plus\"></i> เพิ่มผลผลิต</button>";
-                                                }
-                                                ?>
-
+                                                <button type="button" id="btn_add_product" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มผลผลิต</button>";
                                             </div>
                                         </div>
                                         <div class="card-body">
@@ -288,7 +295,7 @@ $Check = CheckHaveFarm($fmid)
                 <div class="card-body">
                     <div class="row">
 
-                        <div class="col-xl-12 col-12">
+                        <div class="col-xl-12 col-12 PDY2">
                             <canvas id="tradFer" style="height:200px;"></canvas>
                         </div>
                     </div>
@@ -303,4 +310,5 @@ $Check = CheckHaveFarm($fmid)
 <?php include_once("./OilPalmAreaVolDetailModel.php"); ?>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("../../cropImage/cropImage.php"); ?>
+
 <script src="./OilPalmAreaVolDetail.js"></script>

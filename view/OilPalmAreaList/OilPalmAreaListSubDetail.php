@@ -18,6 +18,7 @@ $OLDPALMSUBFARM = getOldPalmByIdSubFarm($fsid);
 $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
 $INFOFERT = getVolFertilising($fsid);
 $YEAR = getYear($fsid, false);
+$ChartPest = getChartPest($YEAR[1]['Year2'], $fsid);
 $sumng1 = 1;
 $sumng2 = 0;
 $sumdead = 0;
@@ -200,7 +201,7 @@ $sumdeadPers = 0;
 
                 </div>
 
-                <div class="card-body">
+                <div class="card-body ">
                     <div class="row">
                         <div class="col-xl-5 col-12 scrollber">
                             <?php
@@ -216,10 +217,10 @@ $sumdeadPers = 0;
                                                     <div class=\"col-xl-3 \">
                                                         <span>ปลูก :  </span>
                                                     </div>
-                                                    <div class=\"col-xl-4 \">
-                                                        <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                                    <div class=\"col-xl-3 text-right\">
+                                                        <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                                     </div>
-                                                    <div class=\"col-xl-3 \">
+                                                    <div class=\"col-xl-3 text-right\">
                                                         <span>{$LOGPLANTTING[$i]['NumGrowth1']} ต้น</span>
                                                     </div>
                                                 </div>";
@@ -229,10 +230,10 @@ $sumdeadPers = 0;
                                         <div class=\"col-xl-3 \">
                                             <span>ปลูกซ่อม :  </span>
                                         </div>
-                                        <div class=\"col-xl-4 \">
-                                            <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                        <div class=\"col-xl-3 text-right \">
+                                        <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                         </div>
-                                        <div class=\"col-xl-3 \">
+                                        <div class=\"col-xl-3 text-right\">
                                             <span>{$LOGPLANTTING[$i]['NumGrowth2']} ต้น</span>
                                         </div>
                                     </div>";
@@ -242,10 +243,10 @@ $sumdeadPers = 0;
                                        <div class=\"col-xl-3 \">
                                            <span>ตาย :  </span>
                                        </div>
-                                       <div class=\"col-xl-4 \">
-                                           <span>{$LOGPLANTTING[$i]['dd']}/{$LOGPLANTTING[$i]['Month']}/{$LOGPLANTTING[$i]['Year2']}</span>
+                                       <div class=\"col-xl-3 text-right \">
+                                       <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                        </div>
-                                       <div class=\"col-xl-3 \">
+                                       <div class=\"col-xl-3 text-right\">
                                            <span>{$LOGPLANTTING[$i]['NumDead']} ต้น</span>
                                        </div>
                                    </div>";
@@ -260,32 +261,41 @@ $sumdeadPers = 0;
                         </div>
                         <div class="col-xl-6 col-12">
                             <div class="row">
-                                <div class="col-8">
+                                <div class="col-7 text-left">
                                     <canvas id="plantPie"></canvas>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <div class="row mt-2">
-                                        <div class="col-3 mt-1">
+                                        <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #00ce68; "></div>
                                         </div>
-                                        <div class="col-9">
-                                            <span>ปลูก <?= $sumng1Pers ?> %</span>
+                                        <div class="col-4 text-right">
+                                            <span>ปลูก </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <?= number_format($sumng1Pers, 2, '.', ',') ?> %
                                         </div>
                                     </div>
                                     <div class="row mt-2">
-                                        <div class="col-3 mt-1">
+                                        <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #f6c23e; "></div>
                                         </div>
-                                        <div class="col-9">
-                                            <span>ซ่อม <?= $sumng2Pers ?> %</span>
+                                        <div class="col-4 text-right">
+                                            <span>ซ่อม </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <?= number_format($sumng2Pers, 2, '.', ',') ?> %
                                         </div>
                                     </div>
                                     <div class="row mt-2">
-                                        <div class="col-3 mt-1">
+                                        <div class="col-2 mt-1">
                                             <div style="width: 30px; height: 15px; background-color: #e74a3b; "></div>
                                         </div>
-                                        <div class="col-9">
-                                            <span>ตาย <?= $sumdeadPers ?> %</span>
+                                        <div class="col-4 text-right">
+                                            <span>ตาย </span>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <?= number_format($sumdeadPers, 2, '.', ',') ?> %
                                         </div>
                                     </div>
                                 </div>
@@ -365,6 +375,24 @@ $sumdeadPers = 0;
                                 ?>
                             </div>
                             <!-- <span style=\"margin-left: 17%;\">" . $INFOFERT[$i]['Name'] . "</span> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div id="maxyear" hidden maxyear="<?= $YEAR[1]['Year2'] ?>"></div>
+        <div id="FMID" hidden FMID="<?= $fmid ?>"></div>
+        <div class="col-xl-12 col-12">
+            <div class="card">
+                <div class="card-header card-bg">
+                    <span>การตรวจพบศัตรูพืช</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-12 PA">
+                            <canvas id="pestAlarm" style="height:250px;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -476,6 +504,91 @@ $sumdeadPers = 0;
         }
 
         ?>
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+                position: 'top',
+                labels: {
+                    boxWidth: 60,
+                    fontColor: 'black'
+                }
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'จำนวนที่พบ (ครั้ง) '
+                    },
+                    gridLines: {
+                        display: true
+                    },
+                    ticks: {
+                        min: 0,
+                        stepSize: 1
+
+                    },
+                    stacked: true
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'รายปี'
+                    },
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        min: 0,
+                        stepSize: 1
+
+                    },
+                    stacked: true
+                }],
+            }
+        };
+        <?php
+
+        if ($ChartPest['labelYear'] == "[]") {
+            echo " var speedData = {
+                labels: [$MaxYear],";
+        } else {
+            echo " var speedData = {
+                labels: {$ChartPest['labelYear']},";
+        }
+        echo "datasets: [{
+            label: '{$ChartPest['ArrName'][0]}',
+            data: {$ChartPest['labeldata'][1]},
+            backgroundColor: '#00ce68' 
+        },
+        {
+            label: '{$ChartPest['ArrName'][1]}',
+            data: {$ChartPest['labeldata'][2]},
+            backgroundColor: '#05acd3' 
+        },
+        {
+            label: '{$ChartPest['ArrName'][2]}',
+            data: {$ChartPest['labeldata'][3]},
+            backgroundColor: '#f6c23e' 
+        }
+        ,
+        {
+            label: '{$ChartPest['ArrName'][3]}',
+            data: {$ChartPest['labeldata'][4]},
+            backgroundColor: '#e74a4b' 
+        }
+
+    ]
+};";
+        ?>
+        var ctx = $("#pestAlarm");
+        var plantPie = new Chart(ctx, {
+            type: 'bar',
+            data: speedData,
+            options: chartOptions
+        });
+
 
     });
 
@@ -521,17 +634,25 @@ $sumdeadPers = 0;
             fillColor: '#FF0000',
             fillOpacity: 0.35
         });
+        var mapPoly2 = new google.maps.Polygon({
+            paths: triangleCoords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
         mapPoly.setMap(mapcolor);";
 
         ?>
         mapedit = new google.maps.Map(document.getElementById('map_area_edit'), {
-            zoom: 16,
+            zoom: 17,
             center: new google.maps.LatLng(<?php echo $INFOSUBFARM[1]['Latitude'] ?>, <?php echo $INFOSUBFARM[1]['Longitude'] ?>),
             mapTypeId: 'satellite'
         });
         mapedit.markers = [];
         var infowindow = [];
-
+        mapPoly2.setMap(mapedit);
         numCoor = 0;
         google.maps.event.addListener(mapedit, 'click', function(event) {
             placeMarker(event.latLng);

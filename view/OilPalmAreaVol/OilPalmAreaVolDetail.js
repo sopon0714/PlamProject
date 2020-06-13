@@ -64,6 +64,10 @@ $(document).ready(function() {
             load_infoHarvest(year, FMID);
         }
     });
+    $(document).on('change', '#date', function() {
+        let date = $("#date").val();
+        setSelectSubfarm(FMID, date);
+    });
     $(document).on('click', '#btn_add_product', function() {
         $("#addProductModal").modal('show');
     });
@@ -82,10 +86,7 @@ $(document).ready(function() {
 
     function loadPhoto_LogHarvest(path, id) {
         $.post("manage.php", { action: "scanDir", path: path, lid: id }, function(result) {
-
             let data1 = JSON.parse(result);
-            console.log(data1);
-
             let text = "";
             PICS = path + id;
             for (i in data1) {
@@ -162,13 +163,13 @@ $(document).ready(function() {
             },
             dataType: "JSON",
             success: function(data) {
-
+                var nf = new Intl.NumberFormat();
                 if (data[1].Weight === null) {
-                    $("#sumweight").html("0.00");
-                    $("#sumprice").html("0.00");
+                    $("#sumweight").html("0");
+                    $("#sumprice").html("0");
                 } else {
-                    $("#sumweight").html(parseFloat(data[1].Weight).toFixed(2));
-                    $("#sumprice").html(parseFloat(data[1].TotalPrice).toFixed(2));
+                    $("#sumweight").html(nf.format(parseInt(data[1].Weight)));
+                    $("#sumprice").html(nf.format(parseInt(data[1].TotalPrice)));
 
                 }
 
@@ -188,6 +189,21 @@ $(document).ready(function() {
             dataType: "JSON",
             success: function(data) {
                 chartyear(data);
+                $.ajax({
+                    url: "data.php",
+                    method: "POST",
+                    data: {
+                        year: year,
+                        FMID: FMID,
+                        result: "getYearFer"
+                    },
+                    dataType: "JSON",
+                    success: function(data2) {
+                        chartyearFerHarv(data, data2);
+
+                    }
+                });
+
             }
         });
     }
@@ -214,12 +230,12 @@ $(document).ready(function() {
         $('.PDY').html(` <canvas id="productYear" style="height:150px;"></canvas>`);
         let labelData = [];
         let data2 = [];
-        var year = maxyear;
-        var thisYear;
-        var j = 0;
-        for (i = 0; i < 8; i++) {
+        let year = maxyear;
+        let thisYear;
+        let j = 0;
+        for (i = 0; i < 20; i++) {
             j = 0;
-            thisYear = year - 7 + i;
+            thisYear = year - 19 + i;
 
             for (j = 0; j < chart_data.length; j++) {
                 if (chart_data[j].Year2 == thisYear) {
@@ -304,7 +320,6 @@ $(document).ready(function() {
 
         $('.PDM').empty()
         $('.PDM').html(` <canvas id="productMonth" style="height:250px;"></canvas>`)
-        console.table(chart_data);
         let data2 = []
         var i, j = 0;
 
@@ -383,6 +398,156 @@ $(document).ready(function() {
 
 
     }
+
+    function chartyearFerHarv(chart_data, chart_data2) {
+        $('.PDY2').empty();
+        $('.PDY2').html(` <canvas id="tradFer" style="height:200px;"></canvas>`);
+        let labelData = [];
+        let data = [];
+        let data2 = [];
+        let year = maxyear;
+        let thisYear;
+        let j = 0;
+        for (i = 0; i < 20; i++) {
+            j = 0;
+            thisYear = year - 19 + i;
+
+            for (j = 0; j < chart_data2.length; j++) {
+                if (chart_data2[j].Year2 == thisYear) {
+                    labelData.push(chart_data2[j].Year2);
+                    data2.push(parseFloat(chart_data2[j].Vol).toFixed(2));
+                    break;
+                }
+            }
+
+            if (j == chart_data2.length && j != 0) {
+                if (thisYear < year && thisYear < chart_data2[0].Year2) {
+                    continue;
+                }
+
+                labelData.push(thisYear);
+                data2.push(0);
+            }
+            if (chart_data2.length == 0) {
+                labelData.push(thisYear);
+                data2.push(0);
+            }
+            ///////////////////////////////////
+            for (j = 0; j < chart_data.length; j++) {
+                if (chart_data[j].Year2 == thisYear) {
+                    data.push(parseFloat(chart_data[j].Weight).toFixed(2));
+                    break;
+                }
+            }
+
+            if (j == chart_data.length && j != 0) {
+                if (thisYear < year && thisYear < chart_data[0].Year2) {
+                    continue;
+                }
+
+                data.push(0);
+            }
+            if (chart_data.length == 0) {
+                data.push(0);
+            }
+
+        }
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    boxWidth: 80,
+                    fontColor: 'black'
+                }
+            },
+            scales: {
+                yAxes: [{
+                        id: 'left-y',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'ผลผลิต (ก.ก./ปี) '
+                        },
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            min: 0
+                        },
+                        position: 'left'
+                    },
+                    {
+                        id: 'right-y',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'ปริมาณปุ๋ยที่ใส่ (ก.ก./ต้น)'
+                        },
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            min: 0
+                        },
+                        position: 'right'
+                    }
+                ],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'รายปี'
+                    },
+                    gridLines: {
+                        display: false
+                    }
+                }],
+            }
+        };
+
+        var speedData = {
+            labels: labelData,
+            datasets: [{
+                    yAxisID: 'left-y',
+                    label: "ผลผลิต",
+                    data: data,
+                    backgroundColor: 'transparent',
+                    borderColor: '#00ce68',
+
+                },
+                {
+                    yAxisID: 'right-y',
+                    label: "ปุ๋ย",
+                    data: data2,
+                    backgroundColor: 'transparent',
+                    borderColor: '#05acd3'
+                }
+            ]
+        };
+
+        var ctx = $("#tradFer");
+        var plantPie = new Chart(ctx, {
+            type: 'line',
+            data: speedData,
+            options: chartOptions
+        });
+    }
+
+    function setSelectSubfarm(FIMD, date) {
+        $.ajax({
+            url: "manage.php",
+            method: "POST",
+            data: {
+                FIMD: FIMD,
+                date: date,
+                action: "setSelectSubfarm"
+            },
+            success: function(data) {
+                $("#SubFarmID").html(data);
+            }
+        });
+    }
+
 
 
 

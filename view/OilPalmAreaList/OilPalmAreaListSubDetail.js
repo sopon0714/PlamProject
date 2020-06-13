@@ -2,6 +2,7 @@ var dataSubFarm;
 var FSID = $('#FSIDmap').val();
 var maxyear = $('#maxyear').attr("maxyear");
 $(document).ready(function() {
+
     $("#btn_remove_mark").click(function() {
         for (let i = 0; i < mapedit.markers.length; i++) {
             mapedit.markers[i].setMap(null);
@@ -365,11 +366,12 @@ $(document).ready(function() {
             }
         });
     }
+
+
     // ผลผลิตต่อเดือน/ ///////////////////////////////////////////////////////
     function chartmonth(chart_data) {
         $('.PDM').empty()
         $('.PDM').html(` <canvas id="productMonth" style="height:250px;"></canvas>`)
-        console.table(chart_data);
         let data2 = []
         var i, j = 0;
 

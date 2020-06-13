@@ -266,7 +266,8 @@ if (isset($_POST['action'])) {
             $AreaRai = $_POST['AreaRai'];
             $AreaNgan = $_POST['AreaNgan'];
             $AreaWa = $_POST['AreaWa'];
-            $AD3ID = $_POST['distrinctSF'];
+            $AD3ID = $_POST['subdistrinctSF'];
+
             $addfarmSF = preg_replace('/[[:space:]]+/', ' ', trim($_POST['addfarmSF']));;
             $Areatotal = (400 * $AreaRai) + ($AreaNgan * 100) + $AreaWa;
             $fmid = $_POST['fmid'];
@@ -276,6 +277,7 @@ if (isset($_POST['action'])) {
             $sql = "INSERT INTO `db-subfarm` (`FSID`, `Name`, `Alias`, `Icon`, `Address`, `AD3ID`, `FMID`, `IsCoordinate`, `Latitude`, `Longitude`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
             VALUES (NULL, '$nameSubfarm', '$initialsSubfarm', 'default.png', '$addfarmSF', '$AD3ID',  '$fmid', '0', ' {$INFOFARM[1]['Latitude']}', ' {$INFOFARM[1]['Longitude']}', '$AreaRai', '$AreaNgan', '$AreaWa', '$Areatotal')";
             $idDBSubfarm = addinsertData($sql);
+
             $DIMSubfarm = getDIMSubFarm($idDBSubfarm);
             $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];
             $DIMDATE = getDIMDate();

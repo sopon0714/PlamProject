@@ -38,7 +38,7 @@ $(document).ready(function() {
 
     $(document).on("change", "#provinceSF", function() {
 
-        var e = document.getElementById("province");
+        var e = document.getElementById("provinceSF");
         var select_id = e.options[e.selectedIndex].value;
         data_show(select_id, "distrinctSF", '');
         $("#subdistrinctSF").html('<option selected value=0 disabled="">เลือกตำบล</option>');
@@ -48,7 +48,7 @@ $(document).ready(function() {
 
     $(document).on("change", "#distrinctSF", function() {
 
-        var e = document.getElementById("distrinct");
+        var e = document.getElementById("distrinctSF");
         var select_id = e.options[e.selectedIndex].value;
         data_show(select_id, "subdistrinctSF", '');
 

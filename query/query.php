@@ -743,8 +743,14 @@ function getYear($id, $isFarm)
         WHERE  `dim-time`.`Year2` >= (SELECT `dim-time`.`Year2` FROM `log-farm`
         INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`StartID`
         INNER JOIN `dim-farm`   ON `dim-farm` .`ID` = `log-farm`.`DIMfarmID`      
-        WHERE `dim-farm` .`dbID` = $id
+        WHERE `dim-farm` .`dbID` =$id
         GROUP BY `dim-farm` .`dbID`)
+        AND `dim-time`.`Year2`<=(SELECT  IFNULL(`dim-time`.`Year2`,9999) AS  Year2  FROM `log-farm`
+        LEFT JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`EndID`
+        WHERE `log-farm`.`ID` IN 
+        (SELECT MAX(`log-farm`.`ID`) as logFarmID FROM `log-farm` 
+        INNER JOIN `dim-farm`   ON `dim-farm`.`ID` =`log-farm` .`DIMfarmID` 
+        WHERE `dim-farm`.`dbID` = $id AND `log-farm`.`DIMSubfID` IS NULL))
         ORDER BY `dim-time`.`Year2` DESC";
         $Year = selectData($sql);
     } else {
@@ -752,7 +758,7 @@ function getYear($id, $isFarm)
         WHERE  `dim-time`.`Year2` >= (SELECT `dim-time`.`Year2` FROM `log-farm`
         INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-farm`.`StartID`
         INNER JOIN `dim-farm`   ON `dim-farm` .`ID` = `log-farm`.`DIMSubfID`      
-        WHERE `dim-farm` .`dbID` = $id
+        WHERE `dim-farm` .`dbID` =$id
         GROUP BY `dim-farm` .`dbID`)
         ORDER BY `dim-time`.`Year2` DESC";
         $Year = selectData($sql);
@@ -1956,6 +1962,16 @@ function getFarmByModify($modify)
     $data = selectData($sql);
     return $data;
 }
+function getsubFarmByModify2($fmid, $modify)
+{
+    $sql = "SELECT sf.`ID` AS DIMFSID,sf.`Name` FROM `log-farm` 
+    INNER JOIN `dim-farm` as f ON  f.`ID` = `log-farm`.`DIMfarmID`
+    INNER JOIN `dim-farm` as sf ON  sf.`ID` = `log-farm`.`DIMSubfID`
+    WHERE f.`dbID`=$fmid AND '$modify' >= `log-farm`.`StartT` AND ( '$modify' <= `log-farm`.`EndT`
+    OR  `log-farm`.`EndT` IS NULL) AND  `log-farm`.`DIMSubfID` IS NOT NULL  ORDER BY sf.`Name`";
+    $data = selectData($sql);
+    return $data;
+}
 function CheckHaveFarm($fmid)
 {
     $sql = "SELECT * FROM `db-subfarm` WHERE `db-subfarm`.`FMID` = $fmid";
@@ -1987,4 +2003,60 @@ function getAreaLogFarm()
   WHERE `log-farm`.`DIMSubfID` IS NULL GROUP BY `dim-farm`.`dbID` ) ";
     $INFOFARM = selectData($sql);
     return $INFOFARM;
+}
+
+function getChartPest($year, $fsid)
+{
+    $datapest = array();
+    $ArrName = array("แมลงศัตรูพืช", "โรคพืช", "วัชพืช", "ศัตรูพืชอื่นๆ");
+    $labelYear = "[";
+    $labelData[1] = "[";
+    $labelData[2] = "[";
+    $labelData[3] = "[";
+    $labelData[4] = "[";
+    $Check = false;
+    for ($j = 19; $j >= 0; $j--) {
+
+        $thisYear = $year - $j;
+        $sql = "SELECT `dim-pest`.`dbpestTID`,COUNT(*) AS num  FROM `dim-pest`
+            INNER JOIN `log-pestalarm` ON `log-pestalarm`.`DIMpestID` = `dim-pest`.`dbpestLID`
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-pestalarm`.`DIMsubFID`
+            INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
+            WHERE  `log-pestalarm`.`isDelete`=0  AND `dim-time`.`Year2`='$thisYear'  AND `dim-farm`.`dbID`=$fsid
+             GROUP BY `dim-pest`.`dbpestTID`";
+        $NUM = selectData($sql);
+        if ($Check || $NUM[0]['numrow'] > 0) {
+            $Check = true;
+            $labelYear .= "\"$thisYear\",";
+            $num[1] = 0;
+            $num[2] = 0;
+            $num[3] = 0;
+            $num[4] = 0;
+            for ($i = 1; $i < count($NUM); $i++) {
+                $num[$NUM[$i]['dbpestTID']] = $NUM[$i]['num'];
+            }
+            $labelData[1] .=  number_format($num[1], 0, '.', ',') . ",";
+            $labelData[2] .=  number_format($num[2], 0, '.', ',') . ",";
+            $labelData[3] .=  number_format($num[3], 0, '.', ',') . ",";
+            $labelData[4] .=  number_format($num[4], 0, '.', ',') . ",";
+        }
+    }
+    if ($Check) {
+        $labelYear = substr($labelYear, 0, -1);
+        $labelData[1] = substr($labelData[1], 0, -1);
+        $labelData[2] = substr($labelData[2], 0, -1);
+        $labelData[3] = substr($labelData[3], 0, -1);
+        $labelData[4] = substr($labelData[4], 0, -1);
+    }
+    $labelYear .=  "]";
+    $labelData[1] .=  "]";
+    $labelData[2] .=  "]";
+    $labelData[3] .=  "]";
+    $labelData[4] .=  "]";
+
+
+    $datapest["labelYear"] = $labelYear;
+    $datapest["ArrName"] = $ArrName;
+    $datapest["labeldata"] = $labelData;
+    return $datapest;
 }
