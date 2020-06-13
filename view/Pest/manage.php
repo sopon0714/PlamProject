@@ -16,27 +16,22 @@ if(isset($_POST['request'])){
 
     switch($request){
         case 'selectFarm' :
-          $modify = $_POST['modify'];
+            $date = $_POST['date'];
+            $modify = strtotime($date);
           print_r(json_encode(getFarmByModify($modify)));
         break;
         case 'selectSubfarm' :
-            $modify = $_POST['modify'];
-            if($modify != 0){
+              $date = $_POST['date'];
+              $modify = strtotime($date);           
               $dim_farm = $_POST['id'];
               print_r(json_encode(getSubfarmByModify($dim_farm,$modify)));
-            }else{
-              $fmid = $_POST['id'];
-              print_r(json_encode(getSubfarm($fmid)));
-            }
+              
             break;
         case 'selectPest' :
               $type_id = $_POST['type_id'];
-              $modify = $_POST['modify'];
-              if($modify != 0){
-                print_r(json_encode(getPestByModify($type_id,$modify)));
-              }else{
-                print_r(json_encode(getPestByTID($type_id)));
-              }
+              $date = $_POST['date'];
+              $modify = strtotime($date); 
+              print_r(json_encode(getPestByModify($type_id,$modify)));
             break;
         case 'selectPestByPID';
               $dim_pest = $_POST['dim_pest'];
@@ -68,12 +63,14 @@ if(isset($_POST['request'])){
             
         case 'insert':
             $date = $_POST['date'];
-            $farm = $_POST['farm'];
-            $subfarm = $_POST['subfarm'];
+            $dim_farm_id = $_POST['farm'];
+            $dim_subfarm_id = $_POST['subfarm'];
             $pesttype = $_POST['pesttype'];
-            $pest = $_POST['pest'];
+            $dim_pest_id = $_POST['pest'];
             $note = $_POST['note'];
             
+            $dim_owner_id = getDIMOwner($dim_farm_id);            
+
             $dataPic = explode('manu20', $_POST['pic']);
             $countfiles = sizeof($dataPic) - 1;
             $extension = ".png";
@@ -90,18 +87,18 @@ if(isset($_POST['request'])){
             $time = time();
             $id_t =  getDIMDate($date)[1]['ID'];
 
-            $id_owner = getIDowner($farm);
-            $dim_owner_id = getIDDIMfarmer($id_owner);
-            $dim_farm_id = getIDDIMfarm($farm);
-            $dim_subfarm_id = getIDDIMsubfarm($subfarm);
-            $dim_pest_id = getIDDIMpest($pest);
+            // $id_owner = getIDowner($farm);
+            // $dim_owner_id = getIDDIMfarmer($id_owner);
+            // $dim_farm_id = getIDDIMfarm($farm);
+            // $dim_subfarm_id = getIDDIMsubfarm($subfarm);
+            // $dim_pest_id = getIDDIMpest($pest);
 
-            echo '$id_owner = '.$id_owner."<br>";
-            echo '$dim_owner_id = '.$dim_owner_id."<br>";
+            // echo '$id_owner = '.$id_owner."<br>";
+            // echo '$dim_owner_id = '.$dim_owner_id."<br>";
 
-            echo '$dim_farm_id = '.$dim_farm_id."<br>";
-            echo '$dim_subfarm_id = '.$dim_subfarm_id."<br>";
-            echo '$dim_pest_id = '.$dim_pest_id."<br>";
+            // echo '$dim_farm_id = '.$dim_farm_id."<br>";
+            // echo '$dim_subfarm_id = '.$dim_subfarm_id."<br>";
+            // echo '$dim_pest_id = '.$dim_pest_id."<br>";
 
             $sql = "INSERT INTO `log-pestalarm` (`isDelete`, `Modify`, `LOGloginID`, `DIMdateID`, 
             `DIMownerID`, `DIMfarmID`, `DIMsubFID` , `DIMpestID`, `Note`)
@@ -137,10 +134,10 @@ if(isset($_POST['request'])){
         case 'update':
           $id = $_POST['e_pestAlarmID'];
           $date = $_POST['e_date'];
-          $farm = $_POST['e_farm'];
-          $subfarm = $_POST['e_subfarm'];
+          $dim_farm_id = $_POST['e_farm'];
+          $dim_subfarm_id = $_POST['e_subfarm'];
           $pesttype = $_POST['e_pesttype'];
-          $pest = $_POST['e_pest'];
+          $dim_pest_id = $_POST['e_pest'];
           $note = $_POST['e_note'];
 
           $sql = "SELECT * FROM `log-pestalarm` WHERE `ID`='" . $id . "'";
@@ -159,13 +156,15 @@ if(isset($_POST['request'])){
           $id_t =  getDIMDate($date)[1]["ID"];
           echo 'dim date = '.$id_t.'<br>';
 
-          $id_owner = getIDowner($farm);
-          $dim_owner_id = getIDDIMfarmer($id_owner);
-          $dim_farm_id = getIDDIMfarm($farm);
-          $dim_subfarm_id = getIDDIMsubfarm($subfarm);
-          $dim_pest_id = getIDDIMpest($pest);
+          $dim_owner_id = getIDDIMfarmerByDIMfarmID($dim_farm_id);
 
-          if($LOGPESTALARM[1]['ID'] == $id && $LOGPESTALARM[1]['DIMdateID'] == $id_t && $LOGPESTALARM[1]['DIMownerID'] == $dim_owner_id &&
+          // $id_owner = getIDowner($farm);
+          // $dim_owner_id = getIDDIMfarmer($id_owner);
+          // $dim_farm_id = getIDDIMfarm($farm);
+          // $dim_subfarm_id = getIDDIMsubfarm($subfarm);
+          // $dim_pest_id = getIDDIMpest($pest);
+
+          if($LOGPESTALARM[1]['ID'] == $id && $LOGPESTALARM[1]['DIMdateID'] == $id_t &&
           $LOGPESTALARM[1]['DIMfarmID'] == $dim_farm_id && $LOGPESTALARM[1]['DIMsubFID'] == $dim_subfarm_id && 
           $LOGPESTALARM[1]['DIMpestID'] == $dim_pest_id && $LOGPESTALARM[1]['Note'] == $note && $pic_edit == $old_pic_edit ){
 
@@ -255,6 +254,11 @@ if(isset($_POST['request'])){
     closedir($dir); 
 } 
 
+function getIDDIMfarmerByDIMfarmID($DIMfarmID){
+  $sql = "SELECT * FROM `log-farm` WHERE `log-farm`.DIMfarmID = '$DIMfarmID' ";
+  $data = selectData($sql)[1]["DIMownerID"];
+  return $data; 
+}
   function getIDDIMfarmer($id){
     $sql = "SELECT  MAX(`log-farmer`.`ID`) AS ID FROM `dim-user`
     JOIN `log-farmer` ON  `log-farmer`.`DIMuserID` = `dim-user`.`ID`
@@ -266,6 +270,16 @@ if(isset($_POST['request'])){
     
     $data = selectData($sql)[1]["DIMuserID"];
     return $data; 
+  }
+
+  function getDIMOwner($dim_farm){
+    $sql = "SELECT `log-farm`.`DIMownerID` FROM(
+      SELECT MAX(`log-farm`.`ID`)  AS ID FROM `log-farm` 
+      WHERE `log-farm`.`DIMfarmID`  = '$dim_farm')AS t1
+      JOIN `log-farm` ON `log-farm`.`ID` = t1.ID";
+
+      $data = selectData($sql)[1]['DIMownerID'];
+      return $data;
   }
 
   function getIDDIMfarm($id){

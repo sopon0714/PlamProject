@@ -224,8 +224,9 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                             </button>
                                         </a>
                                     </td>
-                                    <label class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARMER[$i]["subDistrinct"]; ?>" 
-                                    AD3ID="<?php echo $FARMER[$i]["AD3ID"]; ?>" la="<?php echo $FARMER[$i]["Latitude"]; ?>" long="<?php echo $FARMER[$i]["Longitude"]; ?>"></label>
+                                    <label class="click-map" hidden id="<?php echo $i; ?>" pro="<?php echo $FARMER[$i]["Province"]; ?>" 
+                                    dist="<?php echo $FARMER[$i]["Distrinct"]; ?>"  owner="<?php echo $FARMER[$i]["FullName"]; ?>" 
+                                    la="<?php echo $FARMER[$i]["Latitude"]; ?>" long="<?php echo $FARMER[$i]["Longitude"]; ?>"></label>
                                 </tr>
                         <?php
                             }

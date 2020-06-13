@@ -524,6 +524,11 @@ function getSubfarm($fmid)
     $Subfarm = selectData($sql);
     return $Subfarm;
 }
+function getSubfarmByFMID($fmid){
+    $sql = "SELECT * FROM `db-subfarm` WHERE FMID = '$fmid' ";
+    $data = selectData($sql);
+    return $data;
+}
 function getSubfarmByModify($dim_farm, $modify)
 {
     $sql = "SELECT * FROM `log-farm` 
@@ -1789,29 +1794,48 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
-    $sql = "SELECT `log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
+    $sql = "SELECT MAX(`log-farm`.`ID`),`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
     `log-pestalarm`.`DIMownerID`,`log-pestalarm`.`DIMfarmID`,`log-pestalarm`.`DIMsubFID`,
     `log-pestalarm`.`DIMpestID`,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
     `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
     `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
-    `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`
+    `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
+    `dim-address`.`Distrinct`,`dim-address`.`Province`
     FROM `log-pestalarm` 
-    JOIN `log-farm` ON  `log-pestalarm`.`DIMsubFID` =  `log-farm`.`ID`
+    JOIN `log-farm` ON  `log-pestalarm`.`DIMsubFID` =  `log-farm`.`DIMSubfID`
     JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
     JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
-    WHERE `log-pestalarm`.`isDelete` = 0";
+    WHERE `log-pestalarm`.`isDelete` = 0
+    GROUP BY `dim-address`.`ID`,`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
+    `log-pestalarm`.`DIMownerID`,`log-pestalarm`.`DIMfarmID`,`log-pestalarm`.`DIMsubFID`,
+    `log-pestalarm`.`DIMpestID`,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
+    `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
+    `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
+    `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
+    `dim-address`.`Distrinct`,`dim-address`.`Province`  
+    ORDER BY `log-pestalarm`.`ID` ASC";
 
     if ($fpro    != 0)  $sql = $sql . " AND `dim-address`.dbprovID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `db-address`.dbDistID = '" . $fdist . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND `dim-address`.dbDistID = '" . $fdist . "' ";
     if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
 
     $LOG = selectData($sql);
 
     for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
+        $LOG[$i]['check_show'] = 1;
         $dim_user = $LOG[$i]['DIMownerID'];
         $dim_farm = $LOG[$i]['DIMfarmID'];
         $dim_subfarm = $LOG[$i]['DIMsubFID'];
         $dim_pest = $LOG[$i]['DIMpestID'];
+
+        $sql = "SELECT `dim-farm`.`Name` FROM `dim-farm` WHERE `dim-farm`.`ID` = '$dim_farm'";
+        $LOG[$i]['NameFarm_old'] = selectData($sql)[1]['Name'];
+
+        $sql = "SELECT `dim-farm`.`Name` FROM `dim-farm` WHERE `dim-farm`.`ID` = '$dim_subfarm'";
+        $LOG[$i]['NamesubFarm_old'] = selectData($sql)[1]['Name'];
+
+        $sql = "SELECT `dim-pest`.`Alias` FROM `dim-pest` WHERE `dim-pest`.`ID` = '$dim_pest'";
+        $LOG[$i]['NamePest_old'] = selectData($sql)[1]['Alias'];
 
         $sql = "SELECT `dim-user`.`ID`, `dim-user`.`FullName`,`dim-user`.`FormalID` FROM(
             SELECT `log-farmer`.`DIMuserID` FROM (
@@ -1828,8 +1852,13 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
 
         $DATA = selectData($sql);
-        $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
-        $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
+        if($DATA[0]['numrow'] == 0){
+            $LOG[$i]['check_show'] = 0;
+        }else{
+            $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
+            $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
+        }
+
 
         $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
             SELECT `log-farm`.`DIMfarmID` FROM (
@@ -1844,8 +1873,13 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID";
 
         $DATA = selectData($sql);
-        $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
-        $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
+        if($DATA[0]['numrow'] == 0){
+            $LOG[$i]['check_show'] = 0;
+        }else{
+            $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
+            $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
+        }
+        
 
         $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
             SELECT `log-farm`.`DIMSubfID` FROM (
@@ -1860,8 +1894,12 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID";
 
         $DATA = selectData($sql);
+        if($DATA[0]['numrow'] == 0){
+            $LOG[$i]['check_show'] = 0;
+        }else{
         $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
         $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
+        }
 
         $sql = "SELECT * FROM(
             SELECT `log-pest`.`DIMpestID` FROM (
@@ -1877,10 +1915,15 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         if ($ftype   != 0)  $sql = $sql . " WHERE `dim-pest`.`dbpestTID` = '" . $ftype . "' ";
 
         $DATA = selectData($sql);
+        if($DATA[0]['numrow'] == 0){
+            $LOG[$i]['check_show'] = 0;
+        }else{
         $LOG[$i]['dim_pest'] = $DATA[1]['ID'];
         $LOG[$i]['dbpestLID'] = $DATA[1]['dbpestLID'];
         $LOG[$i]['dbpestTID'] = $DATA[1]['dbpestTID'];
+        $LOG[$i]['PestAlias'] = $DATA[1]['Alias'];
         $LOG[$i]['TypeTH'] = $DATA[1]['TypeTH'];
+        }
     }
     // print_r($LOG);
     return $LOG;

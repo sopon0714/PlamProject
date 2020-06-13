@@ -24,35 +24,42 @@ $PESTTYPE = getPestType();
 <link rel="stylesheet" href="../../css/insect admin/stylePest.css">
 
 <style>
-        textarea {
-            overflow-y: scroll;
-            height: 100px;
-            resize: vertical; 
-        }
-        .img-reletive input[type=file] {
-            cursor: pointer;
-            width: 100px;
-            height: 100px;
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-        }
-        .croppie-container .cr-boundary {
-            width: 350px;
-            height: 220px;
-        }
-        .upload-demo2  {
-            width: 350px;
-            height: 250px;
-        }
-        .img-gal {
-            width: 150px;
-            height: 100px;
-            z-index: 5;
-        }
-    </style>
+textarea {
+    overflow-y: scroll;
+    height: 100px;
+    resize: vertical;
+}
+
+.img-reletive input[type=file] {
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.croppie-container .cr-boundary {
+    width: 350px;
+    height: 220px;
+}
+
+.upload-demo2 {
+    width: 350px;
+    height: 250px;
+}
+
+.img-gal {
+    width: 150px;
+    height: 100px;
+    z-index: 5;
+}
+.set-button{
+    width: 30px !important;
+}
+</style>
 
 <div class="container">
 
@@ -62,12 +69,14 @@ $PESTTYPE = getPestType();
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">ตรวจพบศัตรูพืช</span>
+                            <span class="link-active font-weight-bold"
+                                style="color:<?= $color ?>;">ตรวจพบศัตรูพืช</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
                                 <span> > </span>
-                                <a class="link-path link-active" href="#" style="color:<?= $color ?>;">ตรวจพบศัตรูพืช</a>
+                                <a class="link-path link-active" href="#"
+                                    style="color:<?= $color ?>;">ตรวจพบศัตรูพืช</a>
                             </span>
                         </div>
                     </div>
@@ -92,7 +101,9 @@ $PESTTYPE = getPestType();
             <div class="col-xl-12 col-12 mb-4">
                 <div id="accordion">
                     <div class="card">
-                        <div class="card-header collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="cursor:pointer; background-color: <?= $color ?>; color: white;">
+                        <div class="card-header collapsed" id="headingOne" data-toggle="collapse"
+                            data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+                            style="cursor:pointer; background-color: <?= $color ?>; color: white;">
                             <div class="row">
                                 <div class="col-3">
                                     <i class="fas fa-search"> ค้นหาขั้นสูง</i>
@@ -215,7 +226,8 @@ $PESTTYPE = getPestType();
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-12">
-                                        <input type="text" class="form-control" id="s_name" name="s_name" <?php if ($fullname != '') echo 'value="' . $fullname . '"'; ?>>
+                                        <input type="text" class="form-control" id="s_name" name="s_name"
+                                            <?php if ($fullname != '') echo 'value="' . $fullname . '"'; ?>>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -225,13 +237,16 @@ $PESTTYPE = getPestType();
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-12">
-                                        <input type="password" class="form-control input-setting" id="s_formalid" name="s_formalid" <?php if ($idformal != '') echo 'value="' . $idformal . '"'; ?>>
+                                        <input type="password" class="form-control input-setting" id="s_formalid"
+                                            name="s_formalid"
+                                            <?php if ($idformal != '') echo 'value="' . $idformal . '"'; ?>>
                                         <i class="fa fa-eye-slash eye-setting" id="hide1"></i>
                                     </div>
                                 </div>
-                                <div class="row mb-2 padding">
+                                <div class="row mb-2">
                                     <div class="col-12">
-                                        <button type="summit" id="btn_search" class="btn btn-success btn-sm form-control">ค้นหา</button>
+                                        <button type="submit" id="btn_pass"
+                                            class="btn btn-success btn-sm form-control">ค้นหา</button>
                                     </div>
                                 </div>
                             </div>
@@ -245,7 +260,8 @@ $PESTTYPE = getPestType();
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
-            <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 25px; position: absolute; float:left;">ศัตรูพืชสวนปาล์มน้ำมันในระบบ</h6>
+            <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 25px; position: absolute; float:left;">
+                ศัตรูพืชสวนปาล์มน้ำมันในระบบ</h6>
             <button type="button" id="add" style="float:right;" class="btn btn-success" data-toggle="tooltip">
                 <i class="fas fa-plus"></i>เพิ่มการตรวจพบศัตรูพืช</button>
         </div>
@@ -279,9 +295,10 @@ $PESTTYPE = getPestType();
                         </tr>
                     </tfoot>
                     <tbody id="body">
-                        <label id="size" hidden size ="<?php echo sizeof($DATA); ?>"></label>
+                        <label id="size" hidden size="<?php echo sizeof($DATA); ?>"></label>
                         <?php
                             for ($i = 1; $i < sizeof($DATA); $i++) {
+                                if($DATA[$i]['check_show'] == 1){
                                 $time = $DATA[$i]['Date'];
                                 $time = strtotime($time);                                
                                 // function thai_date_short($time){   // 19  ธ.ค. 2556
@@ -295,38 +312,61 @@ $PESTTYPE = getPestType();
                                     
                                     $date =  $thai_date_return;   
                                 // }
+                                $lati = str_replace('.','-',$DATA[$i]["Latitude"]);
+                                $longi = str_replace('.','-',$DATA[$i]["Longitude"]);
                         ?>
-                                <tr class="<?php echo $i; ?>" test="test<?php echo $i; ?>">
-                                    <td><?php echo $DATA[$i]["OwnerName"] ?></td>
-                                    <td><?php echo $DATA[$i]['Namefarm']; ?></td>
-                                    <td><?php echo $DATA[$i]["Namesubfarm"] ?></td>
+                        <tr class="<?php echo 'la'.$lati.'long'.$longi; ?> table-set" test="test<?php echo $i; ?>">
+                            <td><?php echo $DATA[$i]["OwnerName"] ?></td>
+                            <td><?php echo $DATA[$i]['Namefarm']; ?></td>
+                            <td><?php echo $DATA[$i]["Namesubfarm"] ?></td>
 
-                                    <td class="text-right"><?php echo $DATA[$i]['AreaRai']; ?> ไร่ <?php echo $DATA[$i]['AreaNgan']; ?> งาน</td>
-                                    <td class="text-right"><?php echo $DATA[$i]['NumTree'];; ?> ต้น</td>
-                                    <td class="text-left"><?php echo $DATA[$i]['TypeTH']; ?></td>
-                                    <td class="text-center"><?php echo $date; ?></td>
+                            <td class="text-right"><?php echo $DATA[$i]['AreaRai']; ?> ไร่
+                                <?php echo $DATA[$i]['AreaNgan']; ?> งาน</td>
+                            <td class="text-right"><?php echo $DATA[$i]['NumTree'];; ?> ต้น</td>
+                            <td class="text-center"><?php echo $DATA[$i]['TypeTH']; ?></td>
+                            <td class="text-center"><?php echo $date; ?></td>
 
-                                    <td style="text-align:center;">
-                                        <button type="button" id='edit<?php echo $i; ?>' class="btn btn-warning btn-sm btn-edit tt" data-toggle="tooltip" title="แก้ไข"
-                                        date = "<?php echo $DATA[$i]['Date']; ?>" farm="<?php echo $DATA[$i]['DIMfarmID']; ?>" modify ="<?php echo $DATA[$i]['Modify']; ?>"
-                                        subfarm = "<?php echo $DATA[$i]['DIMsubFID']; ?>" pesttype = "<?php echo $DATA[$i]['dbpestTID']; ?>"
-                                        pest = "<?php echo $DATA[$i]['DIMpestID']; ?>" note = "<?php echo $DATA[$i]['Note']; ?>" lid = "<?php echo $DATA[$i]['ID']; ?>">
-                                        <i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-success btn-sm btn-pest tt" dimpest = "<?php echo $DATA[$i]['dim_pest']; ?>" pest = "<?php echo $DATA[$i]['dbpestLID']; ?>"
-                                        pesttype = "<?php echo $DATA[$i]['dbpestTID']; ?>" data-toggle="tooltip" title="ลักษณะ"><i class="fas fa-bars"></i></button>
-                                        <button type="button" class="btn btn-info btn-sm btn-photo tt" lid="<?php echo $DATA[$i]['ID']; ?>"
-                                        data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i class="far fa-images"></i></button>
-                                        <button type="button" class="btn btn-primary btn-sm btn-note tt" note = "<?php echo $DATA[$i]['Note']; ?>"
-                                        data-toggle="tooltip" title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm btn-delete tt"
-                                        onclick="delfunction('<?php echo $DATA[$i]['ID']; ?>','<?php echo $DATA[$i]['Namesubfarm']; ?>','<?php echo $DATA[$i]['NameFarm']; ?>')"
-                                        data-toggle="tooltip" title="ลบ"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                    <label class="click-map" hidden id="<?php echo $i; ?>" namesubfarm="<?php echo $DATA[$i]["Namesubfarm"]; ?>" AD3ID="" la="<?php echo $DATA[$i]["Latitude"]; ?>" 
-                                    long="<?php echo $DATA[$i]["Longitude"]; ?>" ></label>
-                                </tr>
+                            <td style="text-align:center;">
+                                <button type="button" id='edit<?php echo $i; ?>'
+                                    class="btn btn-warning btn-sm btn-edit tt set-button" data-toggle="tooltip" title="รายละเอียด"
+                                    farm="<?php echo $DATA[$i]['Namefarm']; ?>"
+                                    subfarm="<?php echo $DATA[$i]['Namesubfarm']; ?>" date="<?php echo $date; ?>"
+                                    o_farm="<?php echo $DATA[$i]['NameFarm_old']; ?>"
+                                    modify="<?php echo $DATA[$i]['Modify']; ?>"
+                                    o_subfarm="<?php echo $DATA[$i]['NamesubFarm_old']; ?>"
+                                    pesttype_name="<?php echo $DATA[$i]['TypeTH']; ?>"
+                                    pesttype="<?php echo $DATA[$i]['dbpestTID']; ?>"
+                                    pestalias="<?php echo $DATA[$i]['PestAlias']; ?>"
+                                    pest="<?php echo $DATA[$i]['DIMpestID']; ?>" note="<?php echo $DATA[$i]['Note']; ?>"
+                                    lid="<?php echo $DATA[$i]['ID']; ?>">
+                                    <i class="far fa-file"></i></button>
+                                <button type="button" class="btn btn-success btn-sm btn-pest tt set-button"
+                                    dimpest="<?php echo $DATA[$i]['dim_pest']; ?>"
+                                    pest="<?php echo $DATA[$i]['dbpestLID']; ?>"
+                                    pesttype="<?php echo $DATA[$i]['dbpestTID']; ?>" data-toggle="tooltip"
+                                    title="ลักษณะศัตรูพืช"><i class="fas fa-bars"></i></button>
+                                <button type="button" class="btn btn-info btn-sm btn-photo tt set-button"
+                                    lid="<?php echo $DATA[$i]['ID']; ?>" data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i
+                                        class="far fa-images"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm btn-note tt set-button"
+                                    note="<?php echo $DATA[$i]['Note']; ?>" data-toggle="tooltip"
+                                    title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm btn-delete tt set-button"
+                                    lid="<?php echo $DATA[$i]['ID']; ?>"
+                                    subfarm="<?php echo $DATA[$i]['Namesubfarm']; ?>"
+                                    pestalias='<?php echo $DATA[$i]['PestAlias']; ?>' data-toggle="tooltip"
+                                    title="ลบ"><i class="far fa-trash-alt"></i></button>
+                            </td>
+                            <label class="click-map" hidden id="<?php echo $i; ?>"
+                                namesubfarm="<?php echo $DATA[$i]["Namesubfarm"]; ?>"
+                                dim_subfarm ="<?php echo $DATA[$i]["dim_subfarm"]; ?>"
+                                la="<?php echo $DATA[$i]["Latitude"]; ?>" long="<?php echo $DATA[$i]["Longitude"]; ?>"
+                                check="<?php echo $DATA[$i]["check_show"]; ?>"
+                                dist="<?php echo $DATA[$i]["Distrinct"]; ?>" pro="<?php echo $DATA[$i]["Province"]; ?>"
+                                owner="<?php echo $DATA[$i]["OwnerName"]; ?>"></label>
+                        </tr>
                         <?php
-                            
+                                }
                         }
                         ?>
 
@@ -349,4 +389,6 @@ $PESTTYPE = getPestType();
 
 <script src="Pest.js"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"
+    async defer></script>

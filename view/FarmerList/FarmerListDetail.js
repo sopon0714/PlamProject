@@ -16,10 +16,12 @@ function initMap() {
       console.log(subDistrinct);
       la = parseFloat($('#'+i).attr('la'));
       long = parseFloat($('#'+i).attr('long'));
-      AD3ID = parseFloat($('#'+i).attr('AD3ID'));
+      farm = $('#' + i).attr('farm');
+      pro = $('#' + i).attr('pro');
+      dist = $('#' + i).attr('dist'); 
       center[0] += la;
       center[1] += long;
-      data = [subDistrinct,la,long,AD3ID];
+      data = [farm, la, long, dist, pro];
       locations.push(data);
 
     }
@@ -63,12 +65,16 @@ function initMap() {
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
             if(i != -1){
-              subDistrinct = locations[i][0];
+              content = "";
+              content += locations[i][0];
+              content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
             }else{
-              subDistrinct = $('#info').attr('subDistrinct');
+              content = "";
+              content += $('#info').attr('owner');
+              content += "<br> อ." + $('#info').attr('dist') + " จ." + $('#info').attr('pro');
             }
 
-            infowindow.setContent(subDistrinct);
+            infowindow.setContent(content);
             infowindow.open(map, marker);
 
             console.log('i = '+i)

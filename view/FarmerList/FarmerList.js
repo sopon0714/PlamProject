@@ -15,14 +15,15 @@ function initMap() {
     size = $('#size').attr('size');
     console.log(size);
     for (i = 0; i < size; i++) {
-        subDistrinct = $('#' + i).attr('subDistrinct');
-        console.log(subDistrinct);
         la = parseFloat($('#' + i).attr('la'));
         long = parseFloat($('#' + i).attr('long'));
-        AD3ID = parseFloat($('#' + i).attr('AD3ID'));
+        owner = $('#' + i).attr('owner');
+        pro = $('#' + i).attr('pro');
+        dist = $('#' + i).attr('dist');
+
         center[0] += la;
         center[1] += long;
-        data = [subDistrinct, la, long, AD3ID];
+        data = [owner, la, long, dist, pro];
         locations.push(data);
 
     }
@@ -58,7 +59,10 @@ function initMap() {
         console.log('i == ' + i)
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-                infowindow.setContent(locations[i][0]);
+                content = "";
+                content += locations[i][0];
+                content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
+                infowindow.setContent(content);
                 infowindow.open(map, marker);
 
                 console.log('i = ' + i)

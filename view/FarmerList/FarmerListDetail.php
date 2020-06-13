@@ -156,7 +156,8 @@ $FARM = getOwnerFarmer($farmerID);
                                         </div>
                                        
                                         <label hidden id="info" la="<?php echo $PROFILE[1]["Latitude"]; ?>" long="<?php echo $PROFILE[1]["Longitude"]; ?>" 
-                                        subDistrinct="<?php echo $PROFILE[1]["subDistrinct"] ?>"></label>
+                                        pro = "<?php echo $PROFILE[1]["Province"] ?>" dist = "<?php echo $PROFILE[1]["Distrinct"] ?>" 
+                                        owner ="<?php echo $PROFILE[1]["Title"]." ".$PROFILE[1]["FirstName"]." ".$PROFILE[1]["LastName"] ?>"></label>
                                     </div>
                         </div>
                     </div>
@@ -224,9 +225,9 @@ $FARM = getOwnerFarmer($farmerID);
                                         <td class = "text-right"><?php echo $FARM[$i]['NumSubFarm']; ?> แปลง</td>
                                         <td class = "text-right"><?php echo $FARM[$i]['AreaRai']; ?> ไร่ <?php echo $FARM[$i]['AreaNgan']; ?> งาน</td>
                                         <td class = "text-right"><?php echo $FARM[$i]['NumTree']; ?> ต้น</td>
-                                        <label class="click-map" hidden id="<?php echo $i; ?>" subDistrinct="<?php echo $FARM[$i]["subDistrinct"]; ?>" 
-                                        AD3ID="<?php echo $FARM[$i]["AD3ID"]; ?>" la="<?php echo $FARM[$i]["Latitude"]; ?>" 
-                                        long="<?php echo $FARM[$i]["Longitude"]; ?>" ></label>
+                                        <label class="click-map" hidden id="<?php echo $i; ?>" pro="<?php echo $FARM[$i]["Province"]; ?>" 
+                                        dist="<?php echo $FARM[$i]["Distrinct"]; ?>" farm = "<?php echo $FARM[$i]['Name']; ?>"
+                                        la="<?php echo $FARM[$i]["Latitude"]; ?>" long="<?php echo $FARM[$i]["Longitude"]; ?>" ></label>
                                     </tr>
                                 <?php
                                     }
