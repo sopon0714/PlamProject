@@ -1,7 +1,7 @@
 <?php
 include_once("./../../dbConnect.php");
 $myConDB = connectDB();
-
+date_default_timezone_set("Asia/Bangkok");
 $currentYear = date("Y") + 543;
 $backYear = $currentYear - 1;
 
@@ -2335,4 +2335,28 @@ function getAvgWater($year)
     WHERE `dim-time`.`Year2` = $year AND `log-raining`.`isDelete`=0";
     $DATA = selectData($sql);
     return $DATA[1]['AVGVol'];
+}
+function getLogRain($fsid)
+{
+    $sql = "SELECT `log-raining`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
+    `log-raining`.`StartTime`,`log-raining`.`StopTime`,`log-raining`.`Period`,`log-raining`.`Vol`
+    FROM `log-raining`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-raining`.`DIMdateID`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-raining`.`DIMsubFID`
+    WHERE `log-raining`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid
+    ORDER BY `log-raining`.`StartTime` DESC";
+    $DATA = selectData($sql);
+    return  $DATA;
+}
+function getLogWater($fsid)
+{
+    $sql = "SELECT `log-watering`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
+    `log-watering`.`StartTime`,`log-watering`.`StopTime`,`log-watering`.`Period`,`log-watering`.`Vol`
+    FROM `log-watering`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-watering`.`DIMdateID`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-watering`.`DIMsubFID`
+    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid
+    ORDER BY `log-watering`.`StartTime` DESC";
+    $DATA = selectData($sql);
+    return  $DATA;
 }

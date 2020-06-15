@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <input type="text" hidden name="FSID" value="<?= $INFOSUBFARM[1]['FSID'] ?>">
-                    <input type="text" hidden name="Type" value="Detail">
+                    <input type="text" hidden name="TypeDetail" value="Detail">
                     <input type="text" hidden name="action" value="AddRain">
                 </div>
                 <div class="modal-footer">
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <input type="text" hidden name="FSID" value="<?= $INFOSUBFARM[1]['FSID'] ?>">
-                    <input type="text" hidden name="Type" value="Detail">
+                    <input type="text" hidden name="TypeDetail" value="Detail">
                     <input type="text" hidden name="action" value="AddWater">
                 </div>
                 <div class="modal-footer">

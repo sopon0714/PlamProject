@@ -10,6 +10,17 @@ date_default_timezone_set('Asia/Bangkok');
 $action  = $_POST['action'] ?? "";
 echo $action;
 switch ($action) {
+    case 'deleteLog';
+        $logid = $_POST['logid'];
+        $TYPEP = $_POST['TYPEP'];
+        if ($TYPEP == 1) {
+            $name = "`log-raining`";
+        } else {
+            $name = "`log-watering`";
+        }
+        $sql = "UPDATE $name SET `isDelete` = '1' WHERE $name.`ID` = $logid";
+        updateData($sql);
+        break;
     case 'setSelectFarm';
         $date = $_POST['date'];
         $INFODATA = getFarmByModify(strtotime($date));
@@ -30,8 +41,8 @@ switch ($action) {
         echo $html;
         break;
     case 'AddRain';
-        $FSID = $_POST['FSID'];
-        $Type = $_POST['Type'] ?? "";
+        $FSID = $_POST['FSID'] ?? "";
+        $TypeDetail = $_POST['TypeDetail'] ?? "";
         $dateRain = $_POST['dateRain'];
         $dimFarmIDRian = $_POST['FarmIDRian'];
         $dimSubFarmIDRian = $_POST['SubFarmIDRian'];
@@ -71,15 +82,15 @@ switch ($action) {
                 '$to_time', '$dimOwnerID', '$dimFarmIDRian', '$dimSubFarmIDRian', '$Vol', $rank, '$min')";
         addinsertData($sql);
         echo "555";
-        if ($Type == "Detail") {
+        if ($TypeDetail == "Detail") {
             header("location:WaterDetail.php?FSID=$FSID&Type=1");
         } else {
             header("location:Water.php");
         }
         break;
     case 'AddWater';
-        $FSID = $_POST['FSID'];
-        $Type = $_POST['Type'] ?? "";
+        $FSID = $_POST['FSID'] ?? "";
+        $TypeDetail = $_POST['TypeDetail'] ?? "";
         $dateWater = $_POST['dateWater'];
         $dimFarmIDWater = $_POST['FarmIDWater'];
         $dimSubFarmIDWater = $_POST['SubFarmIDWater'];
@@ -98,7 +109,7 @@ switch ($action) {
                 VALUES (NULL, '0', '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$from_time', '$to_time',
                 '$dimOwnerID', '$dimFarmIDWater', ' $dimSubFarmIDWater', '$Vol', '$min')";
         addinsertData($sql);
-        if ($Type == "Detail") {
+        if ($TypeDetail == "TypeDetail") {
             header("location:WaterDetail.php?FSID=$FSID&Type=2");
         } else {
             header("location:Water.php?active=2");

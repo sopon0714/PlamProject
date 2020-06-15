@@ -4,6 +4,7 @@ $idUT = $_SESSION[md5('typeid')];
 $CurrentMenu = "Water";
 $fsid = $_GET['FSID'] ?? "";
 $type = $_GET['Type'] ?? "";
+$active = $_GET['Active'] ?? "1";
 if ($type == 1) {
     $title = "รายละเอียดปริมาณฝน";
     $title2 = "ข้อมูลปริมาณฝนในแปลง";
@@ -14,7 +15,10 @@ if ($type == 1) {
 include_once("./../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
 $INFOSUBFARM =   getDetailLogSubFarm($fsid);
-print_r($INFOSUBFARM);
+$INFOLOGRAIN = getLogRain($fsid);
+$INFOLOGWATER = getLogWater($fsid);
+$strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+// print_r($INFOSUBFARM);
 ?>
 
 <!-- <link href='../Calendar/packages/core/main.css' rel='stylesheet' />
@@ -22,7 +26,8 @@ print_r($INFOSUBFARM);
 <link href='../Calendar/packages/timegrid/main.css' rel='stylesheet' />
 <link href='../Calendar/packages/list/main.css' rel='stylesheet' /> -->
 
-
+<div hidden id="FSID" fsid="<?= $fsid ?>"></div>
+<div hidden id="TYPEP" typep="<?= $type ?>"></div>
 <div class="container">
 
     <!------------ Start Head ------------>
@@ -56,9 +61,9 @@ print_r($INFOSUBFARM);
                     <div class="row">
                         <?php
                         if ($INFOSUBFARM[1]['iconSubfarm'] == "default.png") {
-                            echo "<img class=\"img-radius img-profile\" src=\"../../icon/subfarm/0/defultFarm.png\" >";
+                            echo "<img class=\"img-radius img-profile\" src=\"../../icon/subfarm/0/defultSubFarm.png\" >";
                         } else {
-                            echo "<img class=\"img-radius img-profile\" src=\"../../icon/subfarm/{$INFOSUBFARM[1]['FMID']}/{$INFOSUBFARM[1]['iconSubfarm']}\" >";
+                            echo "<img class=\"img-radius img-profile\" src=\"../../icon/subfarm/{$INFOSUBFARM[1]['FSID']}/{$INFOSUBFARM[1]['iconSubfarm']}\" >";
                         }
                         ?>
                     </div>
@@ -86,7 +91,7 @@ print_r($INFOSUBFARM);
                 <div class="card-body" height="166px" id="card_height">
                     <div class="row">
                         <?php
-                        if ($INFOSUBFARM[1]['iconFarmmer'] == "default.png") {
+                        if ($INFOSUBFARM[1]['iconFarmmer'] == "default.jpg") {
                             if ($INFOSUBFARM[1]['Title'] == 1) {
                                 echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/man.jpg\" >";
                             } else {
@@ -133,10 +138,10 @@ print_r($INFOSUBFARM);
                     <!------------  Tab Bar ------------>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">ปฏิทินข้อมูล</a>
+                            <a class="nav-link <?php if ($active == 1) echo "active"; ?>" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">ปฏิทินข้อมูล</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#table" role="tab" aria-controls="profile" aria-selected="false">ตารางข้อมูล</a>
+                            <a class="nav-link <?php if ($active != 1) echo "active"; ?>" id="profile-tab" data-toggle="tab" href="#table" role="tab" aria-controls="profile" aria-selected="false">ตารางข้อมูล</a>
                         </li>
                     </ul>
 
@@ -144,13 +149,96 @@ print_r($INFOSUBFARM);
                     <div class="tab-content" id="myTabContent" style="margin-top:20px;">
 
                         <!------------ Start Calender ------------>
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="tab-pane fade <?php if ($active == 1) echo "show active"; ?>" id="home" role="tabpanel" aria-labelledby="home-tab">
 
                         </div>
 
                         <!------------ Start Table ------------>
-                        <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="profile-tab">
-
+                        <div class="tab-pane fade <?php if ($active != 1) echo "show active"; ?>" id="table" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row mt-4 typeDefualt type1">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <!------- Start DataTable ------->
+                                        <table id="example1" class="table table-bordered table-data tableSearch">
+                                            <thead>
+                                                <tr>
+                                                    <th>วันที่ฝนตก</th>
+                                                    <th>ช่วงเวลาที่ฝนตก</th>
+                                                    <th>ระยะเวลาที่ฝนตก (นาที)</th>
+                                                    <th>ปริมาณฝน (มม.)</th>
+                                                    <th>จัดการ</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>วันที่ฝนตก</th>
+                                                    <th>ช่วงเวลาที่ฝนตก</th>
+                                                    <th>ระยะเวลาที่ฝนตก (นาที)</th>
+                                                    <th>ปริมาณฝน (มม.)</th>
+                                                    <th>จัดการ</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                <?php
+                                                for ($i = 1; $i < count($INFOLOGRAIN); $i++) {
+                                                    echo "  <tr>
+                                                                <td class=\"text-center\">{$INFOLOGRAIN[$i]['dd']} " . $strMonthCut[$INFOLOGRAIN[$i]['Month']] . " {$INFOLOGRAIN[$i]['Year2']}</td>
+                                                                <td class=\"text-center\">" . date("H:i", $INFOLOGRAIN[$i]['StartTime']) . " - " . date("H:i", $INFOLOGRAIN[$i]['StopTime']) . "</td>
+                                                                <td class=\"text-right\">{$INFOLOGRAIN[$i]['Period']}</td>
+                                                                <td class=\"text-right\">{$INFOLOGRAIN[$i]['Vol']}</td>
+                                                                <td class=\"text-center\">
+                                                                    <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\"   logid=\"{$INFOLOGRAIN[$i]['LogID']}\"  info=\"ฝนตก\"  logdate=\"{$INFOLOGRAIN[$i]['dd']} {$strMonthCut[$INFOLOGRAIN[$i]['Month']]} {$INFOLOGRAIN[$i]['Year2']}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                                                                </td>
+                                                            </tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 typeDefualt type2">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <!------- Start DataTable ------->
+                                        <table id="example1" class="table table-bordered table-data tableSearch">
+                                            <thead>
+                                                <tr>
+                                                    <th>วันที่รดน้ำ</th>
+                                                    <th>ช่วงเวลาที่รดน้ำ</th>
+                                                    <th>ระยะเวลาที่รดน้ำ (นาที)</th>
+                                                    <th>ปริมาณที่รดน้ำ (ลิตร)</th>
+                                                    <th>จัดการ</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>วันที่รดน้ำ</th>
+                                                    <th>ช่วงเวลาที่รดน้ำ</th>
+                                                    <th>ระยะเวลาที่รดน้ำ (นาที)</th>
+                                                    <th>ปริมาณที่รดน้ำ (ลิตร)</th>
+                                                    <th>จัดการ</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                <?php
+                                                for ($i = 1; $i < count($INFOLOGWATER); $i++) {
+                                                    echo "  <tr>
+                                                                <td class=\"text-center\">{$INFOLOGWATER[$i]['dd']} " . $strMonthCut[$INFOLOGWATER[$i]['Month']] . " {$INFOLOGWATER[$i]['Year2']}</td>
+                                                                <td class=\"text-center\">" . date("H:i", $INFOLOGWATER[$i]['StartTime']) . " - " . date("H:i", $INFOLOGWATER[$i]['StopTime']) . "</td>
+                                                                <td class=\"text-right\">{$INFOLOGWATER[$i]['Period']}</td>
+                                                                <td class=\"text-right\">{$INFOLOGWATER[$i]['Vol']}</td>
+                                                                <td class=\"text-center\">
+                                                                    <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\"   logid=\"{$INFOLOGWATER[$i]['LogID']}\"  info=\"การรดน้ำ\"  logdate=\"{$INFOLOGWATER[$i]['dd']} {$strMonthCut[$INFOLOGWATER[$i]['Month']]} {$INFOLOGWATER[$i]['Year2']}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                                                                </td>
+                                                            </tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

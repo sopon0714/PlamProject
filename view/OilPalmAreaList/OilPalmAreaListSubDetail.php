@@ -119,7 +119,7 @@ $sumdeadPers = 0;
                 <div class="card-body" id="card_height">
                     <div class="row">
                         <?php
-                        if ($INFOFARMER[1]['Icon'] == "default.png") {
+                        if ($INFOFARMER[1]['Icon'] == "default.jpg") {
                             if ($INFOFARMER[1]['Title2'] == "นาย") {
                                 echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/man.jpg\" >";
                             } else {

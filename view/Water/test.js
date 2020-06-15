@@ -1,6 +1,61 @@
 $(document).ready(function() {
     $('.show1').show();
     $('.show2').hide();
+    $('.tt').tooltip();
+    var FSID = $('#FSID').attr('fsid');
+    var TYPEP = $('#TYPEP').attr('typep');
+    $(document).on("click", ".btn-delete", function() {
+        let date = $(this).attr("logdate");
+        let logid = $(this).attr("logid");
+        let info = $(this).attr("info");
+        swal({
+                title: "คุณต้องการลบข้อมูล" + info,
+                text: `วันที่ ${date} หรือไม่ ?`,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                cancelButtonClass: "btn-secondary",
+                confirmButtonText: "ยืนยัน",
+                cancelButtonText: "ยกเลิก",
+                closeOnConfirm: false,
+                closeOnCancel: function() {
+                    $('[data-toggle=tooltip]').tooltip({
+                        boundary: 'window',
+                        trigger: 'hover'
+                    });
+                    return true;
+                }
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    // console.log(1)
+                    swal({
+                        title: "ลบข้อมูลสำเร็จ",
+                        type: "success",
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "ตกลง",
+                        closeOnConfirm: false,
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            delete_1(logid)
+                        } else {}
+                    });
+                } else {}
+            });
+    });
+
+    function delete_1(logid) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                window.location.href = "./WaterDetail.php?FSID=" + FSID + "&Type=" + TYPEP + "&Active=2";
+            }
+        };
+        xhttp.open("POST", "manage.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`action=deleteLog&logid=${logid}&TYPEP=${TYPEP}`);
+
+    }
     $(document).on("click", "#btn-modal1", function() {
         $("#modal-1").modal('show');
     });
@@ -14,7 +69,7 @@ $(document).ready(function() {
         var Type = $("#formAddRain input[name='Type']:checked");
         var rank = $("#formAddRain select[name='rankRain']");
         var Vol = $("#formAddRain input[name='rainVol']");
-        //console.log("date" + date.val() + "\nFarmID" + FarmID.val() + "\nsubFarmID" + subFarmID.val() + "\ntimeStrat" + timeStrat.val() + "\ntimeEnd" + timeEnd.val() + "\nType" + Type.val() + "\nrank" + rank.val() + "\nVol" + Vol.val())
+        //console.log("date" + date.val() + "\ntimeStrat" + timeStrat.val() + "\ntimeEnd" + timeEnd.val() + "\nType" + Type.val() + "\nrank" + rank.val() + "\nVol" + Vol.val())
         let dataNull = [date];
         let dataNull2 = [timeStrat, timeEnd];
         if (Type.val() == 1) {
