@@ -99,7 +99,7 @@ $Check = CheckHaveFarm($fmid)
             </div>
         </div>
         <div class="col-xl-6 col-12">
-            <div class="card">
+            <div class="card" style="height: 350px">
                 <div class="card-body" id="card_height">
                     <div class="row">
                         <?php

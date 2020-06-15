@@ -17,26 +17,8 @@
                             <input type="date" name="dateRain" class="form-control" id="dateRian" required="" oninput="setCustomValidity('')">
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-4 col-12 text-right">
-                            <span>สวน</span>
-                        </div>
-                        <div class="col-xl-5 col-12">
-                            <select class="form-control" id="FarmIDRian" name="FarmIDRian" required="" oninput="setCustomValidity('')">
-                                <option selected value="0">เลือกสวน</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-4 col-12 text-right">
-                            <span>แปลง</span>
-                        </div>
-                        <div class="col-xl-5 col-12">
-                            <select class="form-control" id="SubFarmIDRian" name="SubFarmIDRian" required="" oninput="setCustomValidity('')">
-                                <option selected value="0">เลือกแปลง</option>
-                            </select>
-                        </div>
-                    </div>
+                    <input type="hidden" name="FarmIDRian" value="<?= $INFOSUBFARM[1]['DIMfarmID'] ?>">
+                    <input type="hidden" name="SubFarmIDRian" value="<?= $INFOSUBFARM[1]['DIMSubfarmID'] ?>">
                     <div class="row mb-4">
                         <div class="col-xl-4 col-12 text-right">
                             <span>เวลาที่ฝนเริ่มตก</span>
@@ -87,6 +69,8 @@
                             <input type="number" id="rainVol" name="rainVol" class="form-control text-right" required="" oninput="setCustomValidity('')" min="0" step="0.01" value="0">
                         </div>
                     </div>
+                    <input type="text" hidden name="FSID" value="<?= $INFOSUBFARM[1]['FSID'] ?>">
+                    <input type="text" hidden name="Type" value="Detail">
                     <input type="text" hidden name="action" value="AddRain">
                 </div>
                 <div class="modal-footer">
@@ -115,26 +99,8 @@
                             <input type="date" id="dateWater" name="dateWater" class="form-control" required="" oninput="setCustomValidity('')">
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-4 col-12 text-right">
-                            <span>สวน</span>
-                        </div>
-                        <div class="col-xl-5 col-12">
-                            <select class="form-control" id="FarmIDWater" name="FarmIDWater" required="" oninput="setCustomValidity('')">
-                                <option selected value="0">เลือกสวน</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-4 col-12 text-right">
-                            <span>แปลง</span>
-                        </div>
-                        <div class="col-xl-5 col-12">
-                            <select class="form-control" id="SubFarmIDWater" name="SubFarmIDWater" required="" oninput="setCustomValidity('')">
-                                <option selected value="0"> เลือกแปลง</option>
-                            </select>
-                        </div>
-                    </div>
+                    <input type="hidden" name="FarmIDWater" value="<?= $INFOSUBFARM[1]['DIMfarmID'] ?>">
+                    <input type="hidden" name="SubFarmIDWater" value="<?= $INFOSUBFARM[1]['DIMSubfarmID'] ?>">
                     <div class="row mb-4">
                         <div class="col-xl-4 col-12 text-right">
                             <span>เวลาที่เริ่มให้น้ำ</span>
@@ -161,6 +127,8 @@
                             <input type="number" class="form-control text-right" min="0" value="0" step="0.01" id="waterVol" name="waterVol" required="" oninput="setCustomValidity('')">
                         </div>
                     </div>
+                    <input type="text" hidden name="FSID" value="<?= $INFOSUBFARM[1]['FSID'] ?>">
+                    <input type="text" hidden name="Type" value="Detail">
                     <input type="text" hidden name="action" value="AddWater">
                 </div>
                 <div class="modal-footer">
