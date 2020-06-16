@@ -127,10 +127,10 @@
             // $extension = explode('/', $dataPic2[$i]);
             // $extension = explode(';', $extension[1]);
             // $extension = '.'.$extension[0];
-
+            $time = time(); 
             echo '$extension style = '.$extension.'<br>';
             $Pic2 = getImgPest($dataPic2[$i]);
-            file_put_contents($folderStyle.$pid."/".$i.$extension, $Pic2);
+            file_put_contents($folderStyle.$pid."/".$i."-".$time.$extension, $Pic2);
           }
         }
 
@@ -140,7 +140,7 @@
             echo 'p danger = '.$p.'<br>';
             echo '$extension danger = '.$extension.'<br>';
             $Pic3 = getImgPest($dataPic3[$i]);
-            file_put_contents($folderDanger.$pid."/".$i.$extension, $Pic3);
+            file_put_contents($folderDanger.$pid."/".$i."-".$time.$extension, $Pic3);
           }
         }
 
@@ -326,12 +326,12 @@
 
               if(!isset($checkPic2[$pic]) || $checkPic2[$pic] == 0){
                   for ($i = 0; $i < $countfiles_style; $i++) {
-                    $check_dup_pic = check_dup_name_picture($folderStyle.$pid,$i.$extension);
+                    $check_dup_pic = check_dup_name_picture($folderStyle.$pid,$i."-".$time.$extension);
                     if(!$check_dup_pic){
                         echo 'push style i = '.$i.'<br>';
                         $Pic2 = getImgPest($dataPic2[$j]);
-                        echo $folderStyle.$pid."/".$i.$extension.'<br>';
-                        file_put_contents($folderStyle.$pid."/".$i.$extension, $Pic2);
+                        echo $folderStyle.$pid."/".$i."-".$time.$extension.'<br>';
+                        file_put_contents($folderStyle.$pid."/".$i."-".$time.$extension, $Pic2);
                         break;
                     }
                   }
@@ -355,11 +355,11 @@
               echo $pic.'<br>';
               if(!isset($checkPic3[$pic]) || $checkPic3[$pic] == 0){
                   for ($i = 0; $i < $countfiles_danger; $i++) {
-                    $check_dup_pic = check_dup_name_picture($folderDanger.$pid,$i.$extension);
+                    $check_dup_pic = check_dup_name_picture($folderDanger.$pid,$i."-".$time.$extension);
                     if(!$check_dup_pic){
                         echo 'push danger i = '.$i.'<br>';
                         $Pic3 = getImgPest($dataPic3[$j]);
-                        file_put_contents($folderDanger.$pid."/".$i.$extension, $Pic3);
+                        file_put_contents($folderDanger.$pid."/".$i."-".$time.$extension, $Pic3);
                         break;
                     }
                   }

@@ -5,24 +5,22 @@ $(document).ready(function() {
 });
 
 function initMap() {
-    //     icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-    //     // pink-dot.png
-    //     // yellow-dot.png
-    //     // purple-dot.png
     var locations = [];
     var center = [0, 0];
     click_map = $('.click-map').html();
     size = $('#size').attr('size');
     console.log(size);
     for (i = 0; i < size; i++) {
-        la = parseFloat($('#' + i).attr('la'));
-        long = parseFloat($('#' + i).attr('long'));
+        la = $('#'+i).attr('la');
+        long = $('#'+i).attr('long');
+        laFloat = parseFloat($('#'+i).attr('la'));
+        longFloat = parseFloat($('#'+i).attr('long'));
         owner = $('#' + i).attr('owner');
         pro = $('#' + i).attr('pro');
         dist = $('#' + i).attr('dist');
 
-        center[0] += la;
-        center[1] += long;
+        center[0] += laFloat;
+        center[1] += longFloat;
         data = [owner, la, long, dist, pro];
         locations.push(data);
 
@@ -67,12 +65,18 @@ function initMap() {
 
                 console.log('i = ' + i)
                 console.log(locations)
+                console.log(locations[i][1])
 
                 for (j = 0; j < size; j++) {
-                    if (i == j) {
-                        $('.' + j).show();
+
+                    lati1 = locations[i][1].replace('.','-');
+                    longi1 = locations[i][2].replace('.','-');
+                    lati2 = locations[j][1].replace('.','-');
+                    longi2 = locations[j][2].replace('.','-');
+                    if (lati1 == lati2 && longi1 == longi2) {
+                        $('.la' + lati1+'long'+longi1).show();
                     } else {
-                        $('.' + j).hide();
+                        $('.la' + lati2+'long'+longi2).hide();
                     }
                 }
 

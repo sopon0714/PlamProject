@@ -205,8 +205,11 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                         <?php
                         if ($FARMER != 0) {
                             for ($i = 0; $i < sizeof($FARMER); $i++) {
+
+                                $lati = str_replace('.','-',$FARMER[$i]["Latitude"]);
+                                $longi = str_replace('.','-',$FARMER[$i]["Longitude"]);
                         ?>
-                                <tr class="<?php echo $i; ?>" test="test<?php echo $i; ?>">
+                                <tr class="<?php echo 'la'.$lati.'long'.$longi; ?> test="test<?php echo $i; ?>">
                                     <td><?php echo $FARMER[$i]['FullName']; ?></td>
                                     <td><?php echo $FARMER[$i]["Province"] ?></td>
                                     <td><?php echo $FARMER[$i]["Distrinct"] ?></td>
@@ -226,6 +229,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                     </td>
                                     <label class="click-map" hidden id="<?php echo $i; ?>" pro="<?php echo $FARMER[$i]["Province"]; ?>" 
                                     dist="<?php echo $FARMER[$i]["Distrinct"]; ?>"  owner="<?php echo $FARMER[$i]["FullName"]; ?>" 
+                                    check="<?php echo $DATA[$i]["check_show"]; ?>"
                                     la="<?php echo $FARMER[$i]["Latitude"]; ?>" long="<?php echo $FARMER[$i]["Longitude"]; ?>"></label>
                                 </tr>
                         <?php
