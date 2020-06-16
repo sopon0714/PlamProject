@@ -1,7 +1,7 @@
 <?php
 include_once("./../../dbConnect.php");
 $myConDB = connectDB();
-
+date_default_timezone_set("Asia/Bangkok");
 $currentYear = date("Y") + 543;
 $backYear = $currentYear - 1;
 
@@ -524,7 +524,8 @@ function getSubfarm($fmid)
     $Subfarm = selectData($sql);
     return $Subfarm;
 }
-function getSubfarmByFMID($fmid){
+function getSubfarmByFMID($fmid)
+{
     $sql = "SELECT * FROM `db-subfarm` WHERE FMID = '$fmid' ";
     $data = selectData($sql);
     return $data;
@@ -733,7 +734,12 @@ function getDmy($suid)
     $dmy = selectData($sql);
     return $dmy;
 }
-
+function getYearAll()
+{
+    $sql = "SELECT  DISTINCT `Year2` FROM `dim-time` ORDER BY `Year2` DESC";
+    $DATA = selectData($sql);
+    return $DATA;
+}
 // sql ค่าของ Year 
 function getYear($id, $isFarm)
 {
@@ -935,6 +941,41 @@ function getDetailLogFarm($fmid)
 
 
     return $INFOFARM;
+}
+function getDetailLogSubFarm($fsid)
+{
+    $sql = "SELECT f.`dbID` AS FMID  ,f.`ID` AS DIMfarmID , sf.`dbID` AS FSID  ,
+            sf.`ID` AS DIMSubfarmID ,`dim-user`.`dbID`AS UFID,
+            `dim-user`.`ID` AS DIMownerID ,`dim-user`.`Title`,`dim-user`.`FullName`,
+            f.`Name` as NameFarm ,sf.`Name` as NameSubfarm
+             FROM `log-farm`
+            INNER JOIN `dim-farm` as sf ON sf.`ID` =`log-farm`.`DIMSubfID`
+            INNER JOIN `dim-farm`  as f ON f.`ID` =`log-farm`.`DIMfarmID`
+            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` 
+            INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID` 
+            WHERE `log-farm`.`ID` IN (SELECT MAX(`log-farm`.`ID`) as ID FROM `log-farm` 
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMSubfID` 
+            WHERE `dim-farm`.`dbID` = $fsid ) ";
+    $INFOSUBFARM = selectData($sql);
+    $sql = "SELECT * FROM  `log-icon` WHERE `log-icon`.`ID` =
+    (SELECT MAX(`log-icon`.`ID`) AS  ID FROM `log-icon` 
+    WHERE `log-icon`.`DIMiconID`={$INFOSUBFARM[1]['DIMSubfarmID']} AND `log-icon`.`Type`=3)";
+    $logiconsubFarm =  selectData($sql);
+    $sql = "SELECT * FROM  `log-icon` WHERE `log-icon`.`ID` =
+    (SELECT MAX(`log-icon`.`ID`) AS  ID FROM `log-icon` 
+    WHERE `log-icon`.`DIMiconID`={$INFOSUBFARM[1]['DIMownerID']} AND `log-icon`.`Type`=5)";
+    $logiconFarmmer =  selectData($sql);
+    if ($logiconsubFarm[0]['numrow'] == 0) {
+        $INFOSUBFARM[1]['iconSubfarm'] = "default.png";
+    } else {
+        $INFOSUBFARM[1]['iconSubfarm'] = $logiconsubFarm[1]['FileName'];
+    }
+    if ($logiconFarmmer[0]['numrow'] == 0) {
+        $INFOSUBFARM[1]['iconFarmmer'] = "default.png";
+    } else {
+        $INFOSUBFARM[1]['iconFarmmer'] = $logiconFarmmer[1]['FileName'];
+    }
+    return $INFOSUBFARM;
 }
 ///////////////////////////////////////////////////////////////////////////////////
 //ผลผลิตปาร์มแบบมี ID
@@ -1863,9 +1904,9 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
+        } else {
             $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
             $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
         }
@@ -1884,13 +1925,13 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
+        } else {
             $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
             $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
         }
-        
+
 
         $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
             SELECT `log-farm`.`DIMSubfID` FROM (
@@ -1905,11 +1946,11 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
-        $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
-        $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
+        } else {
+            $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
+            $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
         }
 
         $sql = "SELECT * FROM(
@@ -1926,14 +1967,14 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         if ($ftype   != 0)  $sql = $sql . " WHERE `dim-pest`.`dbpestTID` = '" . $ftype . "' ";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
-        $LOG[$i]['dim_pest'] = $DATA[1]['ID'];
-        $LOG[$i]['dbpestLID'] = $DATA[1]['dbpestLID'];
-        $LOG[$i]['dbpestTID'] = $DATA[1]['dbpestTID'];
-        $LOG[$i]['PestAlias'] = $DATA[1]['Alias'];
-        $LOG[$i]['TypeTH'] = $DATA[1]['TypeTH'];
+        } else {
+            $LOG[$i]['dim_pest'] = $DATA[1]['ID'];
+            $LOG[$i]['dbpestLID'] = $DATA[1]['dbpestLID'];
+            $LOG[$i]['dbpestTID'] = $DATA[1]['dbpestTID'];
+            $LOG[$i]['PestAlias'] = $DATA[1]['Alias'];
+            $LOG[$i]['TypeTH'] = $DATA[1]['TypeTH'];
         }
     }
     // print_r($LOG);
@@ -1960,7 +2001,7 @@ function getLogHarvest($fmid)
 }
 function getFarmByModify($modify)
 {
-    $sql = "SELECT * FROM `log-farm` 
+    $sql = "SELECT * , `dim-farm`.`ID`AS DIMFID FROM `log-farm` 
     JOIN `dim-farm` ON `log-farm`.`DIMfarmID` = `dim-farm`.`ID`
     WHERE '$modify' >= `log-farm`.`StartT` AND ( '$modify' <= `log-farm`.`EndT`
     OR  `log-farm`.`EndT` IS NULL) AND  `log-farm`.`DIMSubfID` IS NULL";

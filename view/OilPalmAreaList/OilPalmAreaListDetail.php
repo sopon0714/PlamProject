@@ -10,6 +10,7 @@ include_once("./../../query/query.php");
 $INFOFARM =  getDATAFarmByFMID($fmid);
 $ADDRESSFARM = getAddress($fmid);
 $INFOFARMER = getFarmerByUFID($INFOFARM[1]['UFID']);
+print_r($INFOFARMER);
 $INFOAREAFARM = getAreatotalByIdFarm($fmid);
 $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
 $INNFOCOORFRAM = getCoorsFarm($fmid);
@@ -77,7 +78,7 @@ $COUNTCOORFRAM = getCountCoor($fmid);
                 <div class="card-body" id="card_height">
                     <div class="row">
                         <?php
-                        if ($INFOFARMER[1]['Icon'] == "default.png") {
+                        if ($INFOFARMER[1]['Icon'] == "default.jpg") {
                             if ($INFOFARMER[1]['Title2'] == "นาย") {
                                 echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/man.jpg\" >";
                             } else {

@@ -388,7 +388,7 @@ if (isset($_POST['action'])) {
             $AreaRai = $_POST['AreaRai'];
             $AreaNgan = $_POST['AreaNgan'];
             $AreaWa = $_POST['AreaWa'];
-            $AD3ID = $_POST['distrinct'];
+            $AD3ID = $_POST['subdistrinct'];
             $addfarmSF = preg_replace('/[[:space:]]+/', ' ', trim($_POST['addfarmSF']));;
             $Areatotal = (400 * $AreaRai) + ($AreaNgan * 100) + $AreaWa;
             $fmid = $_POST['fmid'];
