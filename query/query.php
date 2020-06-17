@@ -2119,13 +2119,6 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
-
-    echo 'fyear = '.$fyear.'<br>';
-    echo 'ftype = '.$ftype.'<br>';
-    echo 'idformal = '.$idformal.'<br>';
-    echo 'fpro = '.$fpro.'<br>';
-    echo 'fdist = '.$fdist.'<br>';
-
     $sql = "SELECT MAX(t1.Date)AS max_date,COUNT(t1.`dbID`)AS time,t1.dbID,t1.`ID`,t1.`Modify`,t1.`DIMdateID`,
     t1.`DIMownerID`,t1.`DIMfarmID`,t1.`DIMsubFID`,
     t1.`Note`,t1.`PICs`,  t1.`Latitude`,
@@ -2133,7 +2126,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     t1.`AreaNgan`,t1.`AreaWa`,t1.`AreaTotal`,t1.`dbsubDID`,
     t1.`dbDistID`,t1.`dbprovID`,t1.`Year2`,t1.`Date`,
     t1.`Distrinct`,t1.`Province` FROM (
-    SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
+SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
     `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
     `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
@@ -2153,17 +2146,15 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
     `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
     `dim-address`.`Distrinct`,`dim-address`.`Province`
-    ORDER BY `log-activity`.`ID` ASC)AS t1 WHERE 1";
+    ORDER BY `log-activity`.`ID` ASC)AS t1
+    GROUP BY t1.`dbID` 
+    ORDER BY `max_date` DESC";
 
-    if ($fpro    != 0)  $sql = $sql . " AND `t1`.dbprovID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `t1`.dbDistID = '" . $fdist . "' ";
-    if ($fyear   != 0)  $sql = $sql . " AND `t1`.Year2 = '" . $fyear . "' ";
+    if ($fpro    != 0)  $sql = $sql . " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
 
-    $sql = $sql . "GROUP BY t1.`dbID` 
-            ORDER BY `max_date` DESC";
     $LOG = selectData($sql);
-    print_r($sql);
-    print_r($LOG);
     for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
         $LOG[$i]['check_show'] = 1;
         $dim_user = $LOG[$i]['DIMownerID'];
@@ -2365,6 +2356,232 @@ function getCutBranchDetail($farmID)
 
     return $LOG;
 }
+function getTableAllRain(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$score_From, &$score_To)
+{
+    $score_From = 0;
+    $score_To = 0;
+    $idformal = '';
+    $fpro = 0;
+    $fdist = 0;
+    $fullname = '';
+    if (isset($_POST['score_From']))  $score_From = $_POST['score_From'];
+    if (isset($_POST['score_To']))  $score_To = $_POST['score_To'];
+    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+    if (isset($_POST['year']))  $year = $_POST['year'];
+    if (isset($_POST['s_province']))  $fpro = $_POST['s_province'];
+    if (isset($_POST['s_distrinct'])) $fdist = $_POST['s_distrinct'];
+    if (isset($_POST['s_name'])) {
+        $fullname = rtrim($_POST['s_name']);
+        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+        $namef = explode(" ", $fullname);
+        if (isset($namef[1])) {
+            $fnamef = $namef[0];
+            $lnamef = $namef[1];
+        } else {
+            $fnamef = $fullname;
+            $lnamef = $fullname;
+        }
+    }
+    $sql = "SELECT  sf.`dbID` AS FSID ,f.`dbID` AS FMID ,`dim-user`.`FullName`,f.`Name` as NameFarm ,sf.`Name` as NameSubfarm ,
+            `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`Latitude`,
+            `log-farm`.`Longitude`,`log-farm`.`NumTree`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM `log-farm`
+            INNER JOIN `dim-farm`as f ON f.`ID` =`log-farm`.`DIMfarmID` 
+            INNER JOIN `dim-farm` as sf ON sf.`ID` =`log-farm`.`DIMSubfID` 
+            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+            INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+            WHERE  `log-farm`.`ID` IN
+            (SELECT MAX(`log-farm`.`ID`)  as LogID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMSubfID` 
+            WHERE `log-farm`.`DIMSubfID` IS NOT NULL ";
+    if ($idformal != '') $sql .= " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+
+    $sql .= " GROUP BY `dim-farm`.`dbID`) ORDER BY `dim-user`.`FullName`,f.`Name`  ,sf.`Name`";
+    $INFOSUBFARM =  selectData($sql);
+    $INFOSUBFARMRAIN = array();
+    if ($INFOSUBFARM[0]['numrow'] == 0) {
+        $INFOSUBFARMRAIN = null;
+    }
+    for ($i = 1; $i < count($INFOSUBFARM); $i++) {
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
+        $INFORAIN = getInfoRain($INFOSUBFARM[$i]['FSID'], $year);
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['rainDay'] = $INFORAIN['rainDay'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['notrainDay'] = $INFORAIN['notrainDay'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['totalVol'] = $INFORAIN['totalVol'];
+        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['longDay'] = $INFORAIN['longDay'];
+    }
+    return $INFOSUBFARMRAIN;
+}
+function getInfoRain($fsid, $year)
+{
+    $DATA = array();
+    $sql = "SELECT COUNT(DISTINCT `log-raining`.`DIMdateID`) AS rainDay,IFNULL(ROUND(SUM(`log-raining`.`Vol`),2),0) AS totalVol  FROM `log-raining` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-raining`.`DIMsubFID`
+    INNER JOIN `dim-time`  ON `dim-time`.`ID` =  `log-raining`.`DIMdateID`
+    WHERE `dim-farm`.`dbID` = $fsid AND `dim-time`.`Year2`= $year AND `log-raining`.`isDelete` =0";
+    $thisYear = date("Y") + 543;
+    $INFO = selectData($sql);
+    $DATA['rainDay'] = $INFO[1]['rainDay'];
+    $DATA['totalVol'] = $INFO[1]['totalVol'];
+    if ($year != $thisYear) {
+        if (((int) ($year + 1)) % 4 == 0) {
+            $DATA['notrainDay'] = 366 - $DATA['rainDay'];
+        } else {
+            $DATA['notrainDay'] = 365 - $DATA['rainDay'];
+        }
+    } else {
+        $DATA['notrainDay'] = (date("z") + 1) - $DATA['rainDay'];
+    }
+    $sql = "SELECT DISTINCT `dim-time`.`Date` FROM `log-raining` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-raining`.`DIMsubFID`
+    INNER JOIN `dim-time`  ON `dim-time`.`ID` =  `log-raining`.`DIMdateID`
+    WHERE `dim-farm`.`dbID` = $fsid AND `dim-time`.`Year2`= $year AND `log-raining`.`isDelete` =0
+    ORDER BY  `dim-time`.`Date`";
+    $INFO = selectData($sql);
+    if ($INFO[0]['numrow'] > 0) {
+        $daystart = 0;
+        $dayend = date("z", strtotime($INFO[1]['Date']));
+        $longDay = $dayend - $daystart;
+        $daystart = date("z", strtotime($INFO[1]['Date']));
+        for ($i = 2; $i < count($INFO); $i++) {
+            $dayend = date("z", strtotime($INFO[$i]['Date']));
+            if ($longDay < $dayend - $daystart) {
+                $longDay = $dayend - $daystart;
+            }
+            $daystart = date("z", strtotime($INFO[$i]['Date']));
+        }
+        if ($year != $thisYear) {
+            if (((int) ($year + 1)) % 4 == 0) {
+                $dayend = 365;
+                if ($longDay < $dayend - $daystart) {
+                    $longDay = $dayend - $daystart;
+                }
+            } else {
+                $dayend = 364;
+                if ($longDay < $dayend - $daystart) {
+                    $longDay = $dayend - $daystart;
+                }
+            }
+        } else {
+            $dayend = date("z");
+            if ($longDay < $dayend - $daystart) {
+                $longDay = $dayend - $daystart;
+            }
+        }
+    } else {
+        $longDay = date("z");
+    }
+    $DATA['longDay'] = $longDay + 1;
+    return $DATA;
+}
+function getTableAllWater(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$score_From, &$score_To)
+{
+    $idformal = '';
+    $fpro = 0;
+    $fdist = 0;
+    $fullname = '';
+    $score_From = 0;
+    $score_To = 0;
+    if (isset($_POST['score_From']))  $score_From = $_POST['score_From'];
+    if (isset($_POST['score_To']))  $score_To = $_POST['score_To'];
+    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+    if (isset($_POST['year']))  $year = $_POST['year'];
+    if (isset($_POST['s_province']))  $fpro = $_POST['s_province'];
+    if (isset($_POST['s_distrinct'])) $fdist = $_POST['s_distrinct'];
+    if (isset($_POST['s_name'])) {
+        $fullname = rtrim($_POST['s_name']);
+        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+        $namef = explode(" ", $fullname);
+        if (isset($namef[1])) {
+            $fnamef = $namef[0];
+            $lnamef = $namef[1];
+        } else {
+            $fnamef = $fullname;
+            $lnamef = $fullname;
+        }
+    }
+    $sql = "SELECT  sf.`dbID` AS FSID ,f.`dbID` AS FMID,`dim-user`.`FullName`,f.`Name` as NameFarm ,sf.`Name` as NameSubfarm ,
+            `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`Latitude`,
+            `log-farm`.`Longitude`,`log-farm`.`NumTree`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM `log-farm`
+            INNER JOIN `dim-farm`as f ON f.`ID` =`log-farm`.`DIMfarmID` 
+            INNER JOIN `dim-farm` as sf ON sf.`ID` =`log-farm`.`DIMSubfID` 
+            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+            INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+            WHERE  `log-farm`.`ID` IN
+            (SELECT MAX(`log-farm`.`ID`)  as LogID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMSubfID` 
+            WHERE `log-farm`.`DIMSubfID` IS NOT NULL";
+    if ($idformal != '') $sql .= " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+
+    $sql .= " GROUP BY `dim-farm`.`dbID`) ORDER BY `dim-user`.`FullName`,f.`Name`  ,sf.`Name`";
+    $INFOSUBFARM =  selectData($sql);
+    $INFOSUBFARMWATER = array();
+    if ($INFOSUBFARM[0]['numrow'] == 0) {
+        $INFOSUBFARMWATER = null;
+    }
+    for ($i = 1; $i < count($INFOSUBFARM); $i++) {
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
+        $INFO = getInfoWater($INFOSUBFARM[$i]['FSID'], $year);
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['lastDate'] = $INFO['lastDate'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['lastVol'] = $INFO['lastVol'];
+        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['totalVol'] = $INFO['totalVol'];
+    }
+    return $INFOSUBFARMWATER;
+}
+function getInfoWater($fsid, $year)
+{
+    $DATA = array();
+    $sql = "SELECT `dim-time`.`dd`,  `dim-time`.`Month`, `dim-time`.`Year2`,ROUND(`log-watering`.`Vol`,2) as Vol FROM `log-watering`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-watering`.`DIMsubFID`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-watering`.`DIMdateID`
+    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-time`.`Year2`= $year
+    AND `dim-time`.`Date` =
+    (SELECT MAX(`dim-time`.`Date`)  as Date FROM `log-watering`
+     INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-watering`.`DIMsubFID`
+     INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-watering`.`DIMdateID`
+    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-time`.`Year2`= $year)";
+    $INFO = selectData($sql);
+    $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    if ($INFO[0]['numrow'] == 0) {
+        $DATA['lastDate'] = "-";
+        $DATA['lastVol'] = "0.00";
+    } else {
+        $DATA['lastDate'] = "{$INFO[1]['dd']} {$strMonthCut[$INFO[1]['Month']]} {$INFO[1]['Year2']}";
+        $DATA['lastVol'] = $INFO[1]['Vol'];
+    }
+    $sql = "SELECT IFNULL(ROUND(SUM(`log-watering`.`Vol`),2),0.00) AS totalVol FROM `log-watering`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-watering`.`DIMsubFID`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-watering`.`DIMdateID`
+    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-time`.`Year2`= $year";
+    $INFO = selectData($sql);
+    $DATA['totalVol'] = $INFO[1]['totalVol'];
+    return $DATA;
+}
 function getAvgWater($year)
 {
     $sql = "SELECT IFNULL(ROUND(ROUND(SUM(`log-raining`.`Vol`),2)/COUNT(DISTINCT `dim-farm`.`dbID`),2),0) AS  AVGVol  FROM `log-raining` 
@@ -2408,7 +2625,6 @@ function getFactDry($fsid)
     $DATA = selectData($sql);
     return  $DATA;
 }
-
 function getTextEventWatering($fsid)
 {
     $INFOLOGRAIN = getLogRain($fsid);
