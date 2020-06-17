@@ -327,7 +327,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
         /////////////////////////////////////////////////////
         $(".ac").hide();
         $(".ac<?php echo $active ?>").show();
-        var FSID = $('#FSID').attr('fsid');
+
         $(document).on("click", "#home-tab", function() {
             $(".ac").hide();
             $(".ac1").show();

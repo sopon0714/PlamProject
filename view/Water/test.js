@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var FSID = $('#FSID').attr('fsid');
     $('.show1').show();
     $('.show2').hide();
     $('.tt').tooltip();
