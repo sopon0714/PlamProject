@@ -94,7 +94,7 @@ textarea {
 
     </div>
 
-    <form action="Pest.php?isSearch=1" method="post">
+    <form action="CutBranch.php?isSearch=1" method="post">
         <div class="row">
             <div class="col-xl-12 col-12 mb-4">
                 <div id="accordion">
@@ -281,9 +281,9 @@ textarea {
                         </tr>
                     </tfoot>
                     <tbody id="body">
-                        <label id="size" hidden size="<?php echo sizeof($DATA); ?>"></label>
+                        <label id="size" hidden size="<?php echo $DATA[0]['numrow']+1; ?>"></label>
                         <?php
-                            for ($i = 1; $i < sizeof($DATA); $i++) {
+                            for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                                 if($DATA[$i]['check_show'] == 1){
                                 $time = $DATA[$i]['max_date'];
                                 $time = strtotime($time);                                
