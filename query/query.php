@@ -2126,7 +2126,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     t1.`AreaNgan`,t1.`AreaWa`,t1.`AreaTotal`,t1.`dbsubDID`,
     t1.`dbDistID`,t1.`dbprovID`,t1.`Year2`,t1.`Date`,
     t1.`Distrinct`,t1.`Province` FROM (
-SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
+    SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
     `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
     `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
@@ -2182,9 +2182,9 @@ SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-ac
         if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
+        } else {
             $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
             $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
         }
@@ -2203,13 +2203,13 @@ SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-ac
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
+        } else {
             $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
             $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
         }
-        
+
 
         $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
             SELECT `log-farm`.`DIMSubfID` FROM (
@@ -2224,17 +2224,18 @@ SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-ac
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
-        $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
-        $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
+        } else {
+            $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
+            $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
         }
     }
     // print_r($LOG);
     return $LOG;
 }
-function getCutBranchDetail($farmID){
+function getCutBranchDetail($farmID)
+{
     $sql = "SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
     `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
@@ -2258,7 +2259,7 @@ function getCutBranchDetail($farmID){
     ORDER BY `dim-time`.`Date` DESC";
 
     $LOG = selectData($sql);
-    $LOGFARM = getDetailLogFarm($farmID); 
+    $LOGFARM = getDetailLogFarm($farmID);
     $LOG[0]['OwnerName'] = $LOGFARM[1]['FullName'];
     $LOG[0]['Namefarm'] = $LOGFARM[1]['NameFarm'];
 
@@ -2295,9 +2296,9 @@ function getCutBranchDetail($farmID){
             JOIN  `dim-user` ON  `dim-user`.`ID` = t4.DIMuserID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
+        } else {
             $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
             $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
         }
@@ -2316,13 +2317,13 @@ function getCutBranchDetail($farmID){
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
+        } else {
             $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
             $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
         }
-        
+
 
         $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
             SELECT `log-farm`.`DIMSubfID` FROM (
@@ -2337,11 +2338,11 @@ function getCutBranchDetail($farmID){
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID";
 
         $DATA = selectData($sql);
-        if($DATA[0]['numrow'] == 0){
+        if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
-        }else{
-        $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
-        $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
+        } else {
+            $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
+            $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
         }
     }
     // echo "size = ".$LOG[0]['numrow']."<br>";
@@ -2354,7 +2355,39 @@ function getCutBranchDetail($farmID){
     // print_r($LOG[3]);
 
     return $LOG;
-
+}
+function getAvgWater($year)
+{
+    $sql = "SELECT IFNULL(ROUND(ROUND(SUM(`log-raining`.`Vol`),2)/COUNT(DISTINCT `dim-farm`.`dbID`),2),0) AS  AVGVol  FROM `log-raining` 
+    INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-raining`.`DIMdateID`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-raining`.`DIMsubFID`
+    WHERE `dim-time`.`Year2` = $year AND `log-raining`.`isDelete`=0";
+    $DATA = selectData($sql);
+    return $DATA[1]['AVGVol'];
+}
+function getLogRain($fsid)
+{
+    $sql = "SELECT `log-raining`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
+    `log-raining`.`StartTime`,`log-raining`.`StopTime`,`log-raining`.`Period`,`log-raining`.`Vol`
+    FROM `log-raining`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-raining`.`DIMdateID`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-raining`.`DIMsubFID`
+    WHERE `log-raining`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid
+    ORDER BY `log-raining`.`StartTime` DESC";
+    $DATA = selectData($sql);
+    return  $DATA;
+}
+function getLogWater($fsid)
+{
+    $sql = "SELECT `log-watering`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
+    `log-watering`.`StartTime`,`log-watering`.`StopTime`,`log-watering`.`Period`,`log-watering`.`Vol`
+    FROM `log-watering`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-watering`.`DIMdateID`
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-watering`.`DIMsubFID`
+    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid
+    ORDER BY `log-watering`.`StartTime` DESC";
+    $DATA = selectData($sql);
+    return  $DATA;
 }
 function getFactDry($fsid)
 {
@@ -2366,6 +2399,7 @@ function getFactDry($fsid)
     $DATA = selectData($sql);
     return  $DATA;
 }
+
 function getTextEventWatering($fsid)
 {
     $INFOLOGRAIN = getLogRain($fsid);
