@@ -284,7 +284,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                                                     <td class=\"text-right\">{$SUBDATA['longDay']} วัน</td>
                                                                     <td class=\"text-right\">" . number_format($SUBDATA['totalVol'], 2, '.', ',') . "</td>
                                                                     <td class=\"text-center\">
-                                                                    <a href=\"./WaterDetail.php?FSID={$SUBDATA['FSID']}&Type=1\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                                                                    <a href=\"./WaterDetail.php?FSID={$SUBDATA['FSID']}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
                                                                     </td>
                                                                 </tr>";
                                                     }
@@ -363,7 +363,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                                                     <td class=\"text-right\">{$SUBDATA['lastVol']}</td>
                                                                     <td class=\"text-right\">" . number_format($SUBDATA['totalVol'], 2, '.', ',') . "</td>
                                                                     <td class=\"text-center\">
-                                                                    <a href=\"./WaterDetail.php?FSID={$SUBDATA['FSID']}&Type=2\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                                                                    <a href=\"./WaterDetail.php?FSID={$SUBDATA['FSID']}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
                                                                     </td>
                                                                 </tr>";
                                                         echo  "<label  id=\"$i\" hidden distrinct=\"{$SUBDATA['Distrinct']}\" province=\"{$SUBDATA['Province']}\" namesubfarm=\"{$SUBDATA['NameSubfarm']}\" la=\"{$SUBDATA['Latitude']}\" long=\"{$SUBDATA['Longitude']}\"></label>";

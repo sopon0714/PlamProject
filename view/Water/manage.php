@@ -8,12 +8,11 @@ date_default_timezone_set('Asia/Bangkok');
 
 <?php
 $action  = $_POST['action'] ?? "";
-echo $action;
 switch ($action) {
     case 'deleteLog';
         $logid = $_POST['logid'];
-        $TYPEP = $_POST['TYPEP'];
-        if ($TYPEP == 1) {
+        $TYPEP = $_POST['typeid'];
+        if ($TYPEP == 3) {
             $name = "`log-raining`";
         } else {
             $name = "`log-watering`";
@@ -83,7 +82,7 @@ switch ($action) {
         addinsertData($sql);
         echo "555";
         if ($TypeDetail == "Detail") {
-            header("location:WaterDetail.php?FSID=$FSID&Type=1");
+            header("location:WaterDetail.php?FSID=$FSID&Active=3");
         } else {
             header("location:Water.php");
         }
@@ -109,8 +108,8 @@ switch ($action) {
                 VALUES (NULL, '0', '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$from_time', '$to_time',
                 '$dimOwnerID', '$dimFarmIDWater', ' $dimSubFarmIDWater', '$Vol', '$min')";
         addinsertData($sql);
-        if ($TypeDetail == "TypeDetail") {
-            header("location:WaterDetail.php?FSID=$FSID&Type=2");
+        if ($TypeDetail == "Detail") {
+            header("location:WaterDetail.php?FSID=$FSID&Active=4");
         } else {
             header("location:Water.php?active=2");
         }
