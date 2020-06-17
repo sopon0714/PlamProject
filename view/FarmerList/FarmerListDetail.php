@@ -217,8 +217,10 @@ $FARM = getOwnerFarmer($farmerID);
                             <?php
                             if ($FARM != 0) {
                                 for ($i = 1; $i < sizeof($FARM); $i++) {
+                                    $lati = str_replace('.','-',$FARM[$i]["Latitude"]);
+                                    $longi = str_replace('.','-',$FARM[$i]["Longitude"]);
                             ?>
-                                    <tr class="<?php echo $i; ?>">
+                                    <tr class="<?php echo 'la'.$lati.'long'.$longi; ?>">
                                         <td><a href="./../OilPalmAreaList/OilPalmAreaListDetail.php?fmid=<?php echo $FARM[$i]["FMID"]; ?>"><?php echo $FARM[$i]['Name']; ?></a></td>
                                         <td><?php echo $FARM[$i]['Province']; ?></td>
                                         <td><?php echo $FARM[$i]['Distrinct']; ?></td>
