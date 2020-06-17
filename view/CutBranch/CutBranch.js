@@ -239,7 +239,7 @@ function initMap() {
     for(i = 1 ; i < size ; i++){
       check = parseFloat($('#'+i).attr('check'));
       if(check == 1){
-        namesubfarm = $('#'+i).attr('namesubfarm');
+        namefarm = $('#'+i).attr('namefarm');
         console.log('map i = '+i);
         la = $('#'+i).attr('la');
         long = $('#'+i).attr('long');
@@ -250,7 +250,7 @@ function initMap() {
         owner = $('#'+i).attr('owner');
         center[0] += laFloat;
         center[1] += longFloat;
-        data = [namesubfarm,la,long,dist,pro,owner];
+        data = [namefarm,la,long,dist,pro,owner];
         locations.push(data);
       }else{
         size_check--; 

@@ -2693,3 +2693,15 @@ function getTextEventDry($fsid)
     $text = substr($text, 0, -1) . "]";
     return $text;
 }
+function getAvgCutBranch($year){
+    $sql = "SELECT IFNULL(ROUND(ROUND(COUNT(d1.dbID),2)/COUNT(DISTINCT d1.`dbID`),2),0) AS  AVGTime FROM `log-activity` 
+    INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-activity`.`DIMdateID`
+    INNER JOIN `dim-farm` AS d1 ON d1.`ID` = `log-activity`.`DIMsubFID`
+    INNER JOIN `dim-farm` AS d2 ON d2.`ID` = `log-activity`.`DIMfarmID`
+    WHERE `dim-time`.`Year2` = '$year' AND `log-activity`.`isDelete`=0
+    AND  `log-activity`.`DBactID` = 1";
+    $DATA = selectData($sql);
+
+    return $DATA[1]['AVGTime'];
+
+}
