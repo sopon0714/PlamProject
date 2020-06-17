@@ -2109,7 +2109,6 @@ function getChartPest($year, $fsid)
 
 function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
 {
-
     if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
     if (isset($_POST['s_type']))  $ftype = rtrim($_POST['s_type']);
     if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
@@ -2119,6 +2118,13 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
+
+    echo 'fyear = '.$fyear.'<br>';
+    echo 'ftype = '.$ftype.'<br>';
+    echo 'idformal = '.$idformal.'<br>';
+    echo 'fpro = '.$fpro.'<br>';
+    echo 'fdist = '.$fdist.'<br>';
+
     $sql = "SELECT MAX(t1.Date)AS max_date,COUNT(t1.`dbID`)AS time,t1.dbID,t1.`ID`,t1.`Modify`,t1.`DIMdateID`,
     t1.`DIMownerID`,t1.`DIMfarmID`,t1.`DIMsubFID`,
     t1.`Note`,t1.`PICs`,  t1.`Latitude`,
@@ -2126,7 +2132,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     t1.`AreaNgan`,t1.`AreaWa`,t1.`AreaTotal`,t1.`dbsubDID`,
     t1.`dbDistID`,t1.`dbprovID`,t1.`Year2`,t1.`Date`,
     t1.`Distrinct`,t1.`Province` FROM (
-SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
+    SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
     `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
     `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
@@ -2148,11 +2154,15 @@ SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-ac
     `dim-address`.`Distrinct`,`dim-address`.`Province`
     ORDER BY `log-activity`.`ID` ASC)AS t1 WHERE 1 ";
 
-    if ($fpro    != 0)  $sql = $sql . " AND `dim-address`.dbprovID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-    if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
+    if ($fpro    != 0)  $sql = $sql . " AND `t1`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND `t1`.dbDistID = '" . $fdist . "' ";
+    if ($fyear   != 0)  $sql = $sql . " AND `t1`.Year2 = '" . $fyear . "' ";
 
+    $sql = $sql . "GROUP BY t1.`dbID` 
+            ORDER BY `max_date` DESC";
     $LOG = selectData($sql);
+    print_r($sql);
+    print_r($LOG);
     for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
         $LOG[$i]['check_show'] = 1;
         $dim_user = $LOG[$i]['DIMownerID'];
