@@ -2153,7 +2153,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
     `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
     `dim-address`.`Distrinct`,`dim-address`.`Province`
-    ORDER BY `log-activity`.`ID` ASC)AS t1 WHERE 1";
+    ORDER BY `log-activity`.`ID` ASC)AS t1 WHERE 1 ";
 
     if ($fpro    != 0)  $sql = $sql . " AND `t1`.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `t1`.dbDistID = '" . $fdist . "' ";
