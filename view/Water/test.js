@@ -2,12 +2,11 @@ $(document).ready(function() {
     $('.show1').show();
     $('.show2').hide();
     $('.tt').tooltip();
-    var FSID = $('#FSID').attr('fsid');
-    var TYPEP = $('#TYPEP').attr('typep');
     $(document).on("click", ".btn-delete", function() {
         let date = $(this).attr("logdate");
         let logid = $(this).attr("logid");
         let info = $(this).attr("info");
+        let typeid = $(this).attr("typeid");
         swal({
                 title: "คุณต้องการลบข้อมูล" + info,
                 text: `วันที่ ${date} หรือไม่ ?`,
@@ -37,23 +36,23 @@ $(document).ready(function() {
                         closeOnConfirm: false,
                     }, function(isConfirm) {
                         if (isConfirm) {
-                            delete_1(logid)
+                            delete_1(logid, typeid)
                         } else {}
                     });
                 } else {}
             });
     });
 
-    function delete_1(logid) {
+    function delete_1(logid, typeid) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                window.location.href = "./WaterDetail.php?FSID=" + FSID + "&Type=" + TYPEP + "&Active=2";
+                window.location.href = "./WaterDetail.php?FSID=" + FSID + "&Active=" + typeid;
             }
         };
         xhttp.open("POST", "manage.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`action=deleteLog&logid=${logid}&TYPEP=${TYPEP}`);
+        xhttp.send(`action=deleteLog&logid=${logid}&typeid=${typeid}`);
 
     }
     $(document).on("click", "#btn-modal1", function() {
@@ -159,4 +158,5 @@ $(document).ready(function() {
 
         return true;
     }
+
 });

@@ -2356,3 +2356,73 @@ function getCutBranchDetail($farmID){
     return $LOG;
 
 }
+function getFactDry($fsid)
+{
+    $sql = "SELECT StartT.`Date` AS StartT,  EndT.`Date` AS  EndT,`fact-drying`.`Period`  FROM `fact-drying` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`fact-drying`.`DIMsubFID`
+    INNER JOIN `dim-time`  AS StartT ON StartT.`ID` = `fact-drying`.`DIMstartDID`
+    LEFT JOIN `dim-time`  AS EndT  ON EndT.`ID` = `fact-drying`.`DIMstopDID`
+    WHERE `dim-farm`.`dbID`=$fsid ORDER BY StartT.`Date` DESC";
+    $DATA = selectData($sql);
+    return  $DATA;
+}
+function getTextEventWatering($fsid)
+{
+    $INFOLOGRAIN = getLogRain($fsid);
+    $INFOLOGWATER = getLogWater($fsid);
+    $text = "[";
+    for ($i = 1; $i < count($INFOLOGRAIN); $i++) {
+        $timeStart = date("Y-m-d\TH:i:s", $INFOLOGRAIN[$i]['StartTime']);
+        $timeEnd = date("Y-m-d\TH:i:s", $INFOLOGRAIN[$i]['StopTime']);
+        $text .= "{
+            title: 'มีฝนตกปริมาณ {$INFOLOGRAIN[$i]['Vol']} มม.',
+            start: '$timeStart',
+            end: '$timeEnd',
+            color: '#36B926',
+            textColor: '#FFFFFF'
+        },";
+    }
+
+    for ($i = 1; $i < count($INFOLOGWATER); $i++) {
+        $timeStart = date("Y-m-d\TH:i:s", $INFOLOGWATER[$i]['StartTime']);
+        $timeEnd = date("Y-m-d\TH:i:s", $INFOLOGWATER[$i]['StopTime']);
+        $text .= "{
+            title: 'รดน้ำปริมาณ {$INFOLOGWATER[$i]['Vol']} ลิตร',
+            start: '$timeStart',
+            end: '$timeEnd',
+            color: '#2B9EF7',
+            textColor: '#FFFFFF'
+        },";
+    }
+    $text = substr($text, 0, -1) . "]";
+    return $text;
+}
+function getTextEventDry($fsid)
+{
+    $INFOLOGDRY = getFactDry($fsid);
+
+    $text = "[";
+    for ($i = 1; $i < count($INFOLOGDRY); $i++) {
+        if ($INFOLOGDRY[$i]['Period'] > 0) {
+            $day = $INFOLOGDRY[$i]['Period'];
+            $start = $INFOLOGDRY[$i]['StartT'];
+            $end = $INFOLOGDRY[$i]['EndT'];
+        } else {
+            $date1 = date_create($INFOLOGDRY[$i]['StartT']);
+            $date2 = date_create(date("Y-m-d"));
+            $diff = date_diff($date1, $date2);
+            $day = $diff->format("%a");
+            $start = $INFOLOGDRY[$i]['StartT'];
+            $end = date("Y-m-d");
+        }
+        $text .= "{
+            title: 'การให้น้ำขาดช่วง $day วัน',
+            start: '{$start}',
+            end: '{$end}',
+            color: '#E51B1B',
+            textColor: '#FFFFFF'
+        },";
+    }
+    $text = substr($text, 0, -1) . "]";
+    return $text;
+}
