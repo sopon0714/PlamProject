@@ -2119,11 +2119,11 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
 
-    echo 'fyear = '.$fyear.'<br>';
-    echo 'ftype = '.$ftype.'<br>';
-    echo 'idformal = '.$idformal.'<br>';
-    echo 'fpro = '.$fpro.'<br>';
-    echo 'fdist = '.$fdist.'<br>';
+    // echo 'fyear = '.$fyear.'<br>';
+    // echo 'ftype = '.$ftype.'<br>';
+    // echo 'idformal = '.$idformal.'<br>';
+    // echo 'fpro = '.$fpro.'<br>';
+    // echo 'fdist = '.$fdist.'<br>';
 
     $sql = "SELECT MAX(t1.Date)AS max_date,COUNT(t1.`dbID`)AS time,t1.dbID,t1.`ID`,t1.`Modify`,t1.`DIMdateID`,
     t1.`DIMownerID`,t1.`DIMfarmID`,t1.`DIMsubFID`,
@@ -2161,8 +2161,8 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     $sql = $sql . "GROUP BY t1.`dbID` 
             ORDER BY `max_date` DESC";
     $LOG = selectData($sql);
-    print_r($sql);
-    print_r($LOG);
+    // print_r($sql);
+    // print_r($LOG);
     for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
         $LOG[$i]['check_show'] = 1;
         $dim_user = $LOG[$i]['DIMownerID'];
