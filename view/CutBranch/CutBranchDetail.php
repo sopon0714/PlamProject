@@ -2,7 +2,7 @@
 session_start();
 
 $idUT = $_SESSION[md5('typeid')];
-$CurrentMenu = "Pest";
+$CurrentMenu = "CutBranch";
 
 include_once("../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
