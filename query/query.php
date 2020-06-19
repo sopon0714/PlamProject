@@ -2146,7 +2146,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, 
             JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
             JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
            JOIN  `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-            WHERE `log-activity`.`isDelete` = 0
+            WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
             GROUP BY `dim-address`.`ID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
             `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
             `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
@@ -2256,7 +2256,7 @@ function getCutBranchDetail($farmID)
     JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
     JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
    JOIN  `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-    WHERE `log-activity`.`isDelete` = 0 AND `dim-farm`.`dbID`= '$farmID'
+    WHERE `log-activity`.`isDelete` = 0 AND `dim-farm`.`dbID`= '$farmID' AND `log-activity`.`DBactID` = 1
     GROUP BY `dim-address`.`ID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
     `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
