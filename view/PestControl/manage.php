@@ -9,9 +9,9 @@ $folder_use = "picture/activities/others/";
 $loglogin = $_SESSION[md5('LOG_LOGIN')];
 $loglogin_id = $loglogin[1]['ID'];
 $startID = $loglogin[1]['StartID'];
-$DBactID = 1;
-$header1 = "location:CutBranch.php";
-$header2 = "location:CutBranchDetail.php?farmID=";
+$DBactID = 2;
+$header1 = "location:PestControl.php";
+$header2 = "location:PestControlDetail.php?farmID=";
 
 if(isset($_POST['request'])){
     $request = $_POST['request'];

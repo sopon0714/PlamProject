@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    win_location = "CutBranchDetail.php?farmID=";
     console.log("y");
     $('.tt').tooltip();
 
@@ -410,7 +411,7 @@ function delete_1(_id,_fmid) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            window.location.href = "CutBranchDetail.php?farmID="+_fmid;
+            window.location.href = win_location+_fmid;
             // alert(this.responseText);
         }
     };

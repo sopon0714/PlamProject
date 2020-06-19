@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    win_location = "CutBranch.php"
+    win_location = "PestControl.php"
     console.log("y");
     $('.tt').tooltip();
 

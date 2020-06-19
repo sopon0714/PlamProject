@@ -2,7 +2,7 @@
 session_start();
 
 $idUT = $_SESSION[md5('typeid')];
-$CurrentMenu = "CutBranch";
+$CurrentMenu = "PestControl";
 
 include_once("../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
@@ -14,7 +14,7 @@ $fmax = -1;
 $fpro = 0;
 $fdist = 0;
 
-$DATA = getActivity($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax,1);
+$DATA = getActivity($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax,2);
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 if($fyear == 0){
@@ -23,7 +23,7 @@ if($fyear == 0){
     $year = $fyear;
 }
 
-$head = "ล้างคอขวด";
+$head = "กำจัดวัชพืช";
 
 ?>
 
@@ -94,7 +94,7 @@ textarea {
     <div class="row">
 
         <?php
-        creatCard("card-color-one",   "จำนวน".$head."เฉลี่ย ปี $year", getAvgActivity($year,1) . " ครั้ง", "waves");
+        creatCard("card-color-one",   "จำนวน".$head."เฉลี่ย ปี $year", getAvgActivity($year,2) . " ครั้ง", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getAreaLogFarm()[1]["NumFarm"]. " สวน " . getAreaLogFarm()[1]["NumSubFarm"] . " แปลง", "group");
         creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaLogFarm()[1]["AreaRai"] . " ไร่ ".getAreaLogFarm()[1]["AreaNgan"] . " งาน", "dashboard");
         creatCard("card-color-four",   "จำนวนต้นไม้", getAreaLogFarm()[1]['NumTree'] . " ต้น", "format_size");
@@ -371,7 +371,7 @@ textarea {
 <?php  include_once($CurrentMenu."Modal.php"); ?>
 <?php include_once("../../cropImage/cropImage.php");?>
 
-<script src="CutBranch.js"></script>
+<script src="PestControl.js"></script>
 
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"

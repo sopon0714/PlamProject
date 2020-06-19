@@ -2107,7 +2107,7 @@ function getChartPest($year, $fsid)
     return $datapest;
 }
 
-function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &$fmax)
+function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &$fmax ,$DBactID)
 {
     if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
     if (isset($_POST['s_min']))  $fmin = rtrim($_POST['s_min']);
@@ -2118,6 +2118,10 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, 
     if (isset($_POST['s_name'])) {
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+    }
+    if($fmin == 0 && $fmax == 0){
+        $fmin = -1;
+        $fmax = -1;
     }
 
     // echo 'fyear = '.$fyear.'<br>';
@@ -2146,7 +2150,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, 
             JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
             JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
            JOIN  `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-            WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
+            WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = '$DBactID'
             GROUP BY `dim-address`.`ID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
             `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
             `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
@@ -2155,9 +2159,9 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, 
             `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
             `dim-address`.`Distrinct`,`dim-address`.`Province`
             ORDER BY `log-activity`.`ID` ASC)AS t1 GROUP BY t1.`dbID` ORDER BY `max_date` DESC)AS t2 WHERE 1";
-    if ($fpro    != 0)  $sql = $sql . " AND `t1`.dbprovID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `t1`.dbDistID = '" . $fdist . "' ";
-    if ($fyear   != 0)  $sql = $sql . " AND `t1`.Year2 = '" . $fyear . "' ";
+    if ($fpro    != 0)  $sql = $sql . " AND t2.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND t2.dbDistID = '" . $fdist . "' ";
+    if ($fyear   != 0)  $sql = $sql . " AND t2.Year2 = '" . $fyear . "' ";
     if ($fmin != -1 && $fmax != -1)  $sql = $sql . " AND t2.time >= '" . $fmin . "' AND t2.time <= '$fmax'";
 
     $LOG = selectData($sql);
@@ -2242,7 +2246,7 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, 
     // print_r($LOG);
     return $LOG;
 }
-function getCutBranchDetail($farmID)
+function getActivityDetail($farmID,$DBactID)
 {
     $sql = "SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
@@ -2256,7 +2260,7 @@ function getCutBranchDetail($farmID)
     JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
     JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
    JOIN  `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-    WHERE `log-activity`.`isDelete` = 0 AND `dim-farm`.`dbID`= '$farmID' AND `log-activity`.`DBactID` = 1
+    WHERE `log-activity`.`isDelete` = 0 AND `dim-farm`.`dbID`= '$farmID' AND `log-activity`.`DBactID` = '$DBactID'
     GROUP BY `dim-address`.`ID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
     `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
@@ -2749,14 +2753,14 @@ function getChartActivity($year, $fsid)
     $data["labeldata"] = $labelData;
     return $data;
 }
-function getAvgCutBranch($year)
+function getAvgActivity($year,$DBactID)
 {
     $sql = "SELECT IFNULL(ROUND(ROUND(COUNT(d1.dbID),2)/COUNT(DISTINCT d1.`dbID`),2),0) AS  AVGTime FROM `log-activity` 
     INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-activity`.`DIMdateID`
     INNER JOIN `dim-farm` AS d1 ON d1.`ID` = `log-activity`.`DIMsubFID`
     INNER JOIN `dim-farm` AS d2 ON d2.`ID` = `log-activity`.`DIMfarmID`
     WHERE `dim-time`.`Year2` = '$year' AND `log-activity`.`isDelete`=0
-    AND  `log-activity`.`DBactID` = 1";
+    AND  `log-activity`.`DBactID` = '$DBactID'";
     $DATA = selectData($sql);
 
     return $DATA[1]['AVGTime'];
