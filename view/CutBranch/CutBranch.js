@@ -8,10 +8,13 @@ $(document).ready(function() {
     moretext = "Show more";
     lesstext = "Show less";
 
+    s_min = $('#s_min').val();
+    s_max = $('#s_max').val();
+
     $("#palmvolsilder").ionRangeSlider({
       type: "double",
-      from: 0,
-      to: 0,
+      from: s_min,
+      to: s_max,
       step: 1,
       min: 0,
       max: 100,
@@ -22,6 +25,8 @@ $(document).ready(function() {
           score_From = data.from;
           score_To = data.to;
           console.log(score_From + " " + score_To);
+          $('#s_min').val(score_From);
+          $('#s_max').val(score_To);
       }
     });
     $("#palmvolsilder").ionRangeSlider({

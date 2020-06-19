@@ -9,11 +9,12 @@ include_once("./../../query/query.php");
 $idformal = '';
 $fullname = '';
 $fyear = 0;
-$ftype = 0;
+$fmin = -1;
+$fmax = -1;
 $fpro = 0;
 $fdist = 0;
 
-$DATA = getCutBranch($idformal, $fullname, $fpro, $fdist ,$fyear ,$ftype);
+$DATA = getCutBranch($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax);
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 if($fyear == 0){
@@ -159,6 +160,14 @@ textarea {
                                         <div class="irs-demo">
                                             <span>จำนวนครั้งล้างคอขวด</span>
                                             <input class="js-range-slider" type="text" id="palmvolsilder" value="" />
+                                            <input hidden type="text" id="s_min" name="s_min" 
+                                            <?php if($fmin == -1) echo "value = '0'";
+                                            else echo "value = '$fmin'"; ?> 
+                                            />                                          
+                                            <input hidden type="text" id="s_max" name="s_max" 
+                                            <?php if($fmax == -1) echo "value = '0'";
+                                            else echo "value = '$fmax'"; ?> 
+                                            />
                                         </div>
                                     </div>
                                 </div>
