@@ -19,6 +19,7 @@ $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
 $INFOFERT = getVolFertilising($fsid);
 $YEAR = getYear($fsid, false);
 $ChartPest = getChartPest($YEAR[1]['Year2'], $fsid);
+$ChartActivity = getChartActivity($YEAR[1]['Year2'], $fsid);
 $sumng1 = 1;
 $sumng2 = 0;
 $sumdead = 0;
@@ -217,7 +218,7 @@ $sumdeadPers = 0;
                                                     <div class=\"col-xl-3 \">
                                                         <span>ปลูก :  </span>
                                                     </div>
-                                                    <div class=\"col-xl-3 text-right\">
+                                                    <div class=\"col-xl-4 text-right\">
                                                         <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                                     </div>
                                                     <div class=\"col-xl-3 text-right\">
@@ -230,7 +231,7 @@ $sumdeadPers = 0;
                                         <div class=\"col-xl-3 \">
                                             <span>ปลูกซ่อม :  </span>
                                         </div>
-                                        <div class=\"col-xl-3 text-right \">
+                                        <div class=\"col-xl-4 text-right \">
                                         <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                         </div>
                                         <div class=\"col-xl-3 text-right\">
@@ -243,7 +244,7 @@ $sumdeadPers = 0;
                                        <div class=\"col-xl-3 \">
                                            <span>ตาย :  </span>
                                        </div>
-                                       <div class=\"col-xl-3 text-right \">
+                                       <div class=\"col-xl-4 text-right \">
                                        <span>" . str_pad($LOGPLANTTING[$i]['dd'], 2, "0", STR_PAD_LEFT) . "/" . str_pad($LOGPLANTTING[$i]['Month'], 2, "0", STR_PAD_LEFT) . "/{$LOGPLANTTING[$i]['Year2']}</span>
                                        </div>
                                        <div class=\"col-xl-3 text-right\">
@@ -399,55 +400,73 @@ $sumdeadPers = 0;
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div id="maxyear" hidden maxyear="<?= $YEAR[1]['Year2'] ?>"></div>
+        <div id="FMID" hidden FMID="<?= $fmid ?>"></div>
+        <div class="col-xl-12 col-12">
+            <div class="card">
+                <div class="card-header card-bg">
+                    <span>การทำกิจกรรมอื่นๆ</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-12 PA">
+                            <canvas id="Activity" style="height:250px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("OilPalmAreaListSubDetailModal.php"); ?>
 <script>
     var mapedit;
     var numCoor;
-    $(document).ready(function() {
-        var chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    boxWidth: 50,
-                    fontColor: 'black'
-                }
-            },
-        };
 
-        var speedData = {
-            labels: ["ปลูก", "ซ่อม", "ตาย"],
-            datasets: [{
-                label: "Demo Data 1",
-                data: [<?= $sumng1 ?>, <?= $sumng2 ?>, <?= $sumdead ?>],
-                backgroundColor: ["#00ce68", "#f6c23e", "#e74a3b"]
-            }]
-        };
-
-        var ctx = $("#plantPie");
-        var plantPie = new Chart(ctx, {
-            type: 'pie',
-            data: speedData,
-            options: chartOptions
-        });
-
-        // //Fer section////////////////////////////////////////////////////////
-        <?php
-
-
-
-        $MaxYear = ((int) date("Y")) + 543;
-        for ($i = 1; $i <= $INFOFERT[0]['numrow']; $i++) {
-            if ($INFOFERT[$i]['Unit'] == 1) {
-                $unit = "ก.ก";
-            } else {
-                $unit = "กรัม";
+    var chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            display: true,
+            position: 'top',
+            labels: {
+                boxWidth: 50,
+                fontColor: 'black'
             }
-            echo "  var chartOptions$i = {
+        },
+    };
+
+    var speedData = {
+        labels: ["ปลูก", "ซ่อม", "ตาย"],
+        datasets: [{
+            label: "Demo Data 1",
+            data: [<?= $sumng1 ?>, <?= $sumng2 ?>, <?= $sumdead ?>],
+            backgroundColor: ["#00ce68", "#f6c23e", "#e74a3b"]
+        }]
+    };
+
+    var ctx = $("#plantPie");
+    var plantPie = new Chart(ctx, {
+        type: 'pie',
+        data: speedData,
+        options: chartOptions
+    });
+
+    // //Fer section////////////////////////////////////////////////////////
+    <?php
+
+
+
+    $MaxYear = ((int) date("Y")) + 543;
+    for ($i = 1; $i <= $INFOFERT[0]['numrow']; $i++) {
+        if ($INFOFERT[$i]['Unit'] == 1) {
+            $unit = "ก.ก";
+        } else {
+            $unit = "กรัม";
+        }
+        echo "  var chartOptions$i = {
                         responsive: true,
                         maintainAspectRatio: false,
                         legend: {
@@ -501,63 +520,63 @@ $sumdeadPers = 0;
                         data: speedData$i,
                         options: chartOptions$i
                     });";
-        }
+    }
 
-        ?>
-        var chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: {
-                display: false,
-                position: 'top',
-                labels: {
-                    boxWidth: 60,
-                    fontColor: 'black'
-                }
-            },
-            scales: {
-                yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'จำนวนที่พบ (ครั้ง) '
-                    },
-                    gridLines: {
-                        display: true
-                    },
-                    ticks: {
-                        min: 0,
-                        stepSize: 1
-
-                    },
-                    stacked: true
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'รายปี'
-                    },
-                    gridLines: {
-                        display: false
-                    },
-                    ticks: {
-                        min: 0,
-                        stepSize: 1
-
-                    },
-                    stacked: true
-                }],
+    ?>
+    var chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            display: false,
+            position: 'top',
+            labels: {
+                boxWidth: 60,
+                fontColor: 'black'
             }
-        };
-        <?php
+        },
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'จำนวนที่พบ (ครั้ง) '
+                },
+                gridLines: {
+                    display: true
+                },
+                ticks: {
+                    min: 0,
+                    stepSize: 1
 
-        if ($ChartPest['labelYear'] == "[]") {
-            echo " var speedData = {
-                labels: [$MaxYear],";
-        } else {
-            echo " var speedData = {
-                labels: {$ChartPest['labelYear']},";
+                },
+                stacked: true
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'รายปี'
+                },
+                gridLines: {
+                    display: false
+                },
+                ticks: {
+                    min: 0,
+                    stepSize: 1
+
+                },
+                stacked: true
+            }],
         }
-        echo "datasets: [{
+    };
+    <?php
+
+    if ($ChartPest['labelYear'] == "[]") {
+        echo " var speedData = {
+                labels: [$MaxYear],";
+    } else {
+        echo " var speedData = {
+                labels: {$ChartPest['labelYear']},";
+    }
+    echo "datasets: [{
             label: '{$ChartPest['ArrName'][0]}',
             data: {$ChartPest['labeldata'][1]},
             backgroundColor: '#00ce68' 
@@ -581,16 +600,89 @@ $sumdeadPers = 0;
 
     ]
 };";
-        ?>
-        var ctx = $("#pestAlarm");
-        var plantPie = new Chart(ctx, {
-            type: 'bar',
-            data: speedData,
-            options: chartOptions
-        });
-
-
+    ?>
+    var ctx = $("#pestAlarm");
+    var plantPie = new Chart(ctx, {
+        type: 'bar',
+        data: speedData,
+        options: chartOptions
     });
+
+
+
+
+    ////////////////////////////////////////////////////////
+    var chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            display: false,
+            position: 'top',
+            labels: {
+                boxWidth: 60,
+                fontColor: 'black'
+            }
+        },
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'จำนวนที่ทำกิจกรรม (ครั้ง) '
+                },
+                gridLines: {
+                    display: true
+                },
+                ticks: {
+                    min: 0,
+                    stepSize: 1
+                },
+
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'รายปี'
+                },
+                gridLines: {
+                    display: false
+                },
+                ticks: {
+                    min: 0,
+                    stepSize: 1
+
+                },
+            }],
+        }
+    };
+    <?php
+
+    if ($ChartActivity['labelYear'] == "[]") {
+        echo " var speedData = {
+                labels: [$MaxYear],";
+    } else {
+        echo " var speedData = {
+                labels: {$ChartActivity['labelYear']},";
+    }
+    echo "datasets: [{
+            label: '{$ChartActivity['ArrName'][0]}',
+            data: {$ChartActivity['labeldata'][1]},
+            backgroundColor: '#00ce68' 
+        },
+        {
+            label: '{$ChartActivity['ArrName'][1]}',
+            data: {$ChartActivity['labeldata'][2]},
+            backgroundColor: '#05acd3' 
+        }
+    ]
+};";
+    ?>
+    var ctx = $("#Activity");
+    var plantPie = new Chart(ctx, {
+        type: 'bar',
+        data: speedData,
+        options: chartOptions
+    });
+    ////////////////////////////////////////////
 
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {

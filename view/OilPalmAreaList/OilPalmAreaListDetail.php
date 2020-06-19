@@ -10,7 +10,6 @@ include_once("./../../query/query.php");
 $INFOFARM =  getDATAFarmByFMID($fmid);
 $ADDRESSFARM = getAddress($fmid);
 $INFOFARMER = getFarmerByUFID($INFOFARM[1]['UFID']);
-print_r($INFOFARMER);
 $INFOAREAFARM = getAreatotalByIdFarm($fmid);
 $INFOSUBFARM = getOilPalmAreaListDetailByIdFarm($fmid);
 $INNFOCOORFRAM = getCoorsFarm($fmid);

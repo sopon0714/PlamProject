@@ -2119,11 +2119,11 @@ function getCutBranch(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
 
-    echo 'fyear = '.$fyear.'<br>';
-    echo 'ftype = '.$ftype.'<br>';
-    echo 'idformal = '.$idformal.'<br>';
-    echo 'fpro = '.$fpro.'<br>';
-    echo 'fdist = '.$fdist.'<br>';
+    echo 'fyear = ' . $fyear . '<br>';
+    echo 'ftype = ' . $ftype . '<br>';
+    echo 'idformal = ' . $idformal . '<br>';
+    echo 'fpro = ' . $fpro . '<br>';
+    echo 'fdist = ' . $fdist . '<br>';
 
     $sql = "SELECT MAX(t1.Date)AS max_date,COUNT(t1.`dbID`)AS time,t1.dbID,t1.`ID`,t1.`Modify`,t1.`DIMdateID`,
     t1.`DIMownerID`,t1.`DIMfarmID`,t1.`DIMsubFID`,
@@ -2661,7 +2661,13 @@ function getTextEventWatering($fsid)
             textColor: '#FFFFFF'
         },";
     }
-    $text = substr($text, 0, -1) . "]";
+
+    if ($INFOLOGWATER[0]['numrow'] > 0 || $INFOLOGRAIN[0]['numrow'] > 0) {
+        $text = substr($text, 0, -1) . "]";
+    } else {
+        $text = "[]";
+    }
+
     return $text;
 }
 function getTextEventDry($fsid)
@@ -2690,6 +2696,56 @@ function getTextEventDry($fsid)
             textColor: '#FFFFFF'
         },";
     }
-    $text = substr($text, 0, -1) . "]";
+    if ($INFOLOGDRY[0]['numrow'] > 0) {
+        $text = substr($text, 0, -1) . "]";
+    } else {
+        $text = "[]";
+    }
+
     return $text;
+}
+function getChartActivity($year, $fsid)
+{
+    $data = array();
+    $ArrName = array("ล้างคอขวด", "กำจัดวัชพืช");
+    $labelYear = "[";
+    $labelData[1] = "[";
+    $labelData[2] = "[";
+    $Check = false;
+    for ($j = 9; $j >= 0; $j--) {
+
+        $thisYear = $year - $j;
+        $sql = "SELECT `log-activity`.`DBactID`,COUNT(*) AS num  FROM `log-activity` 
+        INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
+        INNER JOIN `dim-time` ON `dim-time`.`ID` =  `log-activity`.`DIMdateID`
+        WHERE   `log-activity` .`isDelete`=0  AND `dim-time`.`Year2`='$thisYear'  AND `dim-farm`.`dbID`=$fsid
+         GROUP BY `log-activity`.`DBactID`
+         ORDER BY`log-activity`.`DBactID`";
+        $NUM = selectData($sql);
+        if ($Check || $NUM[0]['numrow'] > 0) {
+            $Check = true;
+            $labelYear .= "\"$thisYear\",";
+            $num[1] = 0;
+            $num[2] = 0;
+            for ($i = 1; $i < count($NUM); $i++) {
+                $num[$NUM[$i]['DBactID']] = $NUM[$i]['num'];
+            }
+            $labelData[1] .=  number_format($num[1], 0, '.', ',') . ",";
+            $labelData[2] .=  number_format($num[2], 0, '.', ',') . ",";
+        }
+    }
+    if ($Check) {
+        $labelYear = substr($labelYear, 0, -1);
+        $labelData[1] = substr($labelData[1], 0, -1);
+        $labelData[2] = substr($labelData[2], 0, -1);
+    }
+    $labelYear .=  "]";
+    $labelData[1] .=  "]";
+    $labelData[2] .=  "]";
+
+
+    $data["labelYear"] = $labelYear;
+    $data["ArrName"] = $ArrName;
+    $data["labeldata"] = $labelData;
+    return $data;
 }
