@@ -9,13 +9,19 @@ include_once("./../../query/query.php");
 $idformal = '';
 $fullname = '';
 $fyear = 0;
-$ftype = 0;
+$fmin = -1;
+$fmax = -1;
 $fpro = 0;
 $fdist = 0;
 
-$DATA = getCutBranch($idformal, $fullname, $fpro, $fdist ,$fyear ,$ftype);
+$DATA = getCutBranch($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax);
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
+if($fyear == 0){
+    $year = $currentYear;
+}else{
+    $year = $fyear;
+}
 
 ?>
 
@@ -86,7 +92,7 @@ textarea {
     <div class="row">
 
         <?php
-        creatCard("card-color-one",   "จำนวนครั้งล้างคอขวด", getCountCutBranch() . " ครั้ง", "waves");
+        creatCard("card-color-one",   "จำนวนล้างคอขวดเฉลี่ย ปี $year", getAvgCutBranch($year) . " ครั้ง", "waves");
         creatCard("card-color-two",   "จำนวนสวน",  getAreaLogFarm()[1]["NumFarm"]. " สวน " . getAreaLogFarm()[1]["NumSubFarm"] . " แปลง", "group");
         creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaLogFarm()[1]["AreaRai"] . " ไร่ ".getAreaLogFarm()[1]["AreaNgan"] . " งาน", "dashboard");
         creatCard("card-color-four",   "จำนวนต้นไม้", getAreaLogFarm()[1]['NumTree'] . " ต้น", "format_size");
@@ -154,6 +160,14 @@ textarea {
                                         <div class="irs-demo">
                                             <span>จำนวนครั้งล้างคอขวด</span>
                                             <input class="js-range-slider" type="text" id="palmvolsilder" value="" />
+                                            <input hidden type="text" id="s_min" name="s_min" 
+                                            <?php if($fmin == -1) echo "value = '0'";
+                                            else echo "value = '$fmin'"; ?> 
+                                            />                                          
+                                            <input hidden type="text" id="s_max" name="s_max" 
+                                            <?php if($fmax == -1) echo "value = '0'";
+                                            else echo "value = '$fmax'"; ?> 
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -326,6 +340,7 @@ textarea {
                             </td>
                             <label class="click-map" hidden id="<?php echo $i; ?>"
                                 namesubfarm="<?php echo $DATA[$i]["Namesubfarm"]; ?>"
+                                namefarm="<?php echo $DATA[$i]["Namefarm"]; ?>"
                                 dim_subfarm="<?php echo $DATA[$i]["dim_subfarm"]; ?>"
                                 la="<?php echo $DATA[$i]["Latitude"]; ?>" long="<?php echo $DATA[$i]["Longitude"]; ?>"
                                 check="<?php echo $DATA[$i]["check_show"]; ?>"
