@@ -654,27 +654,41 @@ $sumdeadPers = 0;
             }],
         }
     };
+    // var speedData = {
+    //     labels: ["2562", "2563"],
+    //     datasets: [{
+    //             label: "ล้างคอขวด",
+    //             data: [5, 4],
+    //             backgroundColor: '#00ce68'
+    //         },
+    //         {
+    //             label: "กำจัดวัชพืช",
+    //             data: [8, 2],
+    //             backgroundColor: '#05acd3'
+    //         }
+    //     ]
+    // };
     <?php
 
     if ($ChartActivity['labelYear'] == "[]") {
         echo " var speedData = {
-                labels: [$MaxYear],";
+                    labels: [$MaxYear],";
     } else {
         echo " var speedData = {
-                labels: {$ChartActivity['labelYear']},";
+                    labels: {$ChartActivity['labelYear']},";
     }
     echo "datasets: [{
-            label: '{$ChartActivity['ArrName'][0]}',
-            data: {$ChartActivity['labeldata'][1]},
-            backgroundColor: '#00ce68' 
-        },
-        {
-            label: '{$ChartActivity['ArrName'][1]}',
-            data: {$ChartActivity['labeldata'][2]},
-            backgroundColor: '#05acd3' 
-        }
-    ]
-};";
+                label: '{$ChartActivity['ArrName'][0]}',
+                data: {$ChartActivity['labeldata'][1]},
+                backgroundColor: '#00ce68' 
+            },
+            {
+                label: '{$ChartActivity['ArrName'][1]}',
+                data: {$ChartActivity['labeldata'][2]},
+                backgroundColor: '#05acd3' 
+            }
+        ]
+    };";
     ?>
     var ctx = $("#Activity");
     var plantPie = new Chart(ctx, {
