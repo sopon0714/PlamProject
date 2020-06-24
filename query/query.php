@@ -1857,7 +1857,13 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     JOIN `log-farm` ON  `log-pestalarm`.`DIMsubFID` =  `log-farm`.`DIMSubfID`
     JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
     JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
-    WHERE `log-pestalarm`.`isDelete` = 0
+    WHERE `log-pestalarm`.`isDelete` = 0 ";
+
+    if ($fpro    != 0)  $sql = $sql . " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
+
+    $sql = $sql . "
     GROUP BY `dim-address`.`ID`,`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
     `log-pestalarm`.`DIMownerID`,`log-pestalarm`.`DIMfarmID`,`log-pestalarm`.`DIMsubFID`,
     `log-pestalarm`.`DIMpestID`,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
@@ -1866,12 +1872,9 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
     `dim-address`.`Distrinct`,`dim-address`.`Province`  
     ORDER BY `dim-time`.`Date` DESC";
-
-    if ($fpro    != 0)  $sql = $sql . " AND `dim-address`.dbprovID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-    if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
-
     $LOG = selectData($sql);
+    // print_r($sql);
+    // print_r($LOG);
 
     for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
         $LOG[$i]['check_show'] = 1;
