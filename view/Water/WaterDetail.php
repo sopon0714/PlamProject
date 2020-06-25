@@ -283,7 +283,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
             header: {
                 left: 'prevYear,prev,next,nextYear today',
                 center: 'title',
-                right: ' dayGridMonth,timeGridWeek,listMonth'
+                right: 'dayGridMonth,timeGridWeek,listMonth'
             },
             buttonText: {
                 list: 'รายละเอียด'

@@ -309,14 +309,14 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
                                         <table id="example2" class="table table-bordered table-data tableSearch">
                                             <colgroup>
+                                                <col width="19%">
                                                 <col width="15%">
                                                 <col width="15%">
-                                                <col width="15%">
                                                 <col width="10%">
-                                                <col width="10%">
-                                                <col width="10%">
-                                                <col width="10%">
-                                                <col width="10%">
+                                                <col width="7%">
+                                                <col width="12%">
+                                                <col width="12%">
+                                                <col width="5%">
                                                 <col width="5%">
 
                                             </colgroup>
@@ -328,7 +328,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                                     <th>พื้นที่ปลูก</th>
                                                     <th>จำนวนต้น</th>
                                                     <th>วันที่ให้น้ำล่าสุด</th>
-                                                    <th>ปริมาณให้น้ำล่าสุด(ลิตร)</th>
+                                                    <th>ปริมาณให้<br>น้ำล่าสุด(ลิตร)</th>
                                                     <th>ปริมาณน้ำสะสม(ลิตร)</th>
                                                     <th>จัดการ</th>
                                                 </tr>
@@ -341,7 +341,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                                     <th>พื้นที่ปลูก</th>
                                                     <th>จำนวนต้น</th>
                                                     <th>วันที่ให้น้ำล่าสุด</th>
-                                                    <th>ปริมาณให้น้ำล่าสุด(ลิตร)</th>
+                                                    <th>ปริมาณให้<br>น้ำล่าสุด(ลิตร)</th>
                                                     <th>ปริมาณน้ำสะสม(ลิตร)</th>
                                                     <th>จัดการ</th>
                                                 </tr>
