@@ -2768,3 +2768,24 @@ function getAvgActivity($year,$DBactID)
 
     return $DATA[1]['AVGTime'];
 }
+function getYearAgriMap(){
+    $sql = "SELECT DISTINCT(Year2) FROM `log-fertilising` 
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
+    UNION
+    SELECT DISTINCT(Year2) FROM `log-harvest` 
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-harvest`.`DIMdateID`
+    UNION
+    SELECT DISTINCT(Year2) FROM `log-watering` 
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-watering`.`DIMdateID`
+    UNION
+    SELECT DISTINCT(Year2) FROM `log-raining` 
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-raining`.`DIMdateID`
+    UNION
+    SELECT DISTINCT(Year2) FROM `log-pestalarm` 
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
+    UNION
+    SELECT DISTINCT(Year2) FROM `log-activity` 
+    JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`";
+    $data = selectData($sql);
+    return $data;
+}

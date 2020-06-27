@@ -7,7 +7,7 @@ include_once("./../../query/query.php");
 $fpesttype = 0;
 
 $PROVINCE = getProvince();
-$YEAR = array();
+$YEAR = getYearAgriMap();
 $PESTTYPE = getPestType();
 
 ?>
@@ -48,14 +48,14 @@ $PESTTYPE = getPestType();
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <select id="s_year" name="s_year" class="form-control ">
+                                    <select id="year" name="year" class="form-control ">
                                         <option selected value=0>เลือกทั้งหมด</option>
                                         <?php
                                             for ($i = 1; $i < sizeof($YEAR); $i++) {
-                                                if ($fyear == $YEAR[$i]["year"])
-                                                    echo '<option value="' . $YEAR[$i]["year"] . '" selected>' . $YEAR[$i]["year"] . '</option>';
+                                                if ($fyear == $YEAR[$i]["Year2"])
+                                                    echo '<option value="' . $YEAR[$i]["Year2"] . '" selected>' . $YEAR[$i]["Year2"] . '</option>';
                                                 else
-                                                    echo '<option value="' . $YEAR[$i]["year"] . '">' . $YEAR[$i]["year"] . '</option>';
+                                                    echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
                                             }
                                             ?>
                                     </select>
@@ -68,7 +68,7 @@ $PESTTYPE = getPestType();
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <select id="s_province" name="s_province" class="form-control ">
+                                    <select id="province" name="province" class="form-control ">
                                         <option selected value=0>เลือกทั้งหมด</option>
                                         <?php
                                             for ($i = 1; $i < sizeof($PROVINCE); $i++) {
@@ -88,7 +88,7 @@ $PESTTYPE = getPestType();
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <select id="distrinct" disabled class="form-control selectpicker" data-live-search="true"
+                                    <select id="distrinct" name="distrinct" disabled class="form-control selectpicker" data-live-search="true"
                                         title="กรุณาเลือกอำเภอ">
                                         <option value="" hidden>เลือกทั้งหมด</option>
                                     </select>
@@ -106,7 +106,7 @@ $PESTTYPE = getPestType();
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <input type="text" class="form-control" id="farmer">
+                                    <input type="text" class="form-control" id="farmer" placeholder="กรอกชื่อเกษตรกร">
                                 </div>
                             </div>
 
@@ -190,7 +190,7 @@ $PESTTYPE = getPestType();
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                <select id="s_pesttype" name="s_pesttype" disabled class="form-control ">
+                                <select id="pesttype" name="pesttype" disabled class="form-control ">
                                         <option selected value=0>เลือกทั้งหมด</option>
                                         <?php
                                             for ($i = 1; $i < sizeof($PESTTYPE); $i++) {
@@ -209,7 +209,7 @@ $PESTTYPE = getPestType();
 
                 <div class="col-12">
                     <div class="card-footer" align="center">
-                        <button type="button" id="search" class="btn"
+                        <button type="button" id="search" name="search" class="btn"
                             style="background-color: <?= $color ?>; color:white; height:50px; width:100px;">ค้นหา
                             <i class="fas fa-search"></i> </button>
                     </div>

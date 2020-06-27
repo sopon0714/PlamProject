@@ -1,3 +1,24 @@
+$("#search").click(function(){
+    console.log('search');
+    year = $('#year').val();
+    province = $('#province').val();
+    distrinct = $('#distrinct').val();
+    farmer = $('#farmer').val();
+    product = $('#product').val();
+    fertilizer = $('#fertilizer').val();
+    water = $('#water').val();
+    waterlack = $('#waterlack').val();
+    wash = $('#wash').val();
+    pesttype = $('#pesttype').val();
+    $.post("manage.php", {request: "search", year:year, province:province, distrinct:distrinct,
+    farmer:farmer, product:product, fertilizer:fertilizer, water:water, waterlack:waterlack,
+    wash:wash, pesttype:pesttype}, function(result){
+        console.log(result);
+
+        // DATA_DB = JSON.parse(result);
+        // console.log(DATA_DB);
+    });
+});
 function initMap(data) {
     //The location of Uluru
     if (data) {
@@ -58,6 +79,33 @@ function initMap(data) {
     //location.length=0;
 }
 
+$("#province").change(function(){
+    // console.log('pro = '+$("#province").val());
+    select_id = $('#province').val();
+    if(select_id == 0){
+        $("#distrinct").val("0");
+        $("#distrinct").attr("disabled", "disabled");
+    }else{
+        $("#distrinct").removeAttr("disabled");
+        data_show(select_id, "distrinct", '');
+    }
+});
+
+function data_show(select_id, result, point_id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.responseText);
+            // console.log(result);
+            document.getElementById(result).innerHTML = xhttp.responseText;
+
+        };
+    }
+    xhttp.open("POST", "data.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
+}
+
 $("#check1").click(function() {
     $("#product").attr("disabled", !this.checked);
 });
@@ -85,7 +133,7 @@ $("#check5").change(function() {
 });
 
 $("#check6").click(function() {
-    $("#s_pesttype").attr("disabled", !this.checked);
+    $("#pesttype").attr("disabled", !this.checked);
 });
 
 
