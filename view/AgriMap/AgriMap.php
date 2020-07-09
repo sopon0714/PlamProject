@@ -118,7 +118,7 @@ $PESTTYPE = getPestType();
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <select id="product" class="form-control" disabled>
+                                    <select id="harvest" class="form-control" disabled>
                                         <option value=0 selected>ทั้งหมด</option>
                                         <option value=1>เกินค่าเฉลี่ย</option>
                                         <option value=2>ไม่เกินค่าเฉลี่ย</option>

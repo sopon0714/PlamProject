@@ -1,20 +1,54 @@
+minlack = 1;
+maxlack = 5;
+
+minwater = 1;
+maxwater = 5;
+
+mincutbranch = 1;
+maxcutbranch = 5;
+
 $("#search").click(function(){
     console.log('search');
     year = $('#year').val();
     province = $('#province').val();
     distrinct = $('#distrinct').val();
     farmer = $('#farmer').val();
-    product = $('#product').val();
+    harvest = $('#harvest').val();
     fertilizer = $('#fertilizer').val();
     water = $('#water').val();
     waterlack = $('#waterlack').val();
     wash = $('#wash').val();
     pesttype = $('#pesttype').val();
+    if(!$('#check3').is(':checked') == false){
+        lack = 0;
+        minlack= 0;
+        maxlack = 0;
+    }else{
+        lack = 1;
+    }
+    if(!$('#check4').is(':checked') == false){
+        water = 0;
+        minwater= 0;
+        maxwater = 0;
+    }else{
+        water = 1;
+    }
+    if($('#check5').is(':checked') == false){
+        cutbranch = 0;
+        mincutbranch= 0;
+        maxcutbranch = 0;
+    }else{
+        cutbranch = 1;
+    }
+
     $.post("manage.php", {request: "search", year:year, province:province, distrinct:distrinct,
-    farmer:farmer, product:product, fertilizer:fertilizer, water:water, waterlack:waterlack,
-    wash:wash, pesttype:pesttype}, function(result){
+    farmer:farmer, harvest:harvest, fertilizer:fertilizer, minwater:minwater, maxwater:maxwater, 
+    minlack:minlack, maxlack:maxlack, pesttype:pesttype,
+    mincutbranch:mincutbranch, maxcutbranch:maxcutbranch,
+    lack:lack, water:water, cutbranch:cutbranch}, function(result){
         console.log(result);
 
+        // console.log('maxc = '+maxcutbranch);
         // DATA_DB = JSON.parse(result);
         // console.log(DATA_DB);
     });
@@ -54,7 +88,7 @@ function initMap(data) {
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
                 return function() {
                     info.setContent(location[i].name + "<br/>" + location[i].address + "<br/>" +
-                        "ปริมาณผลผลิต " + location[i].product + " กิโลกรัม" + "<br/>" +
+                        "ปริมาณผลผลิต " + location[i].harvest + " กิโลกรัม" + "<br/>" +
                         '<a href = "../OilPalmAreaVol/OilPalmAreaVol.php">เพิ่มเติม</a>');
                     info.open(map, marker);
                 }
@@ -107,7 +141,7 @@ function data_show(select_id, result, point_id) {
 }
 
 $("#check1").click(function() {
-    $("#product").attr("disabled", !this.checked);
+    $("#harvest").attr("disabled", !this.checked);
 });
 
 $("#check2").click(function() {
@@ -140,7 +174,7 @@ $("#check6").click(function() {
 $("#water").ionRangeSlider({
     type: "double",
     from: 1,
-    to: 1,
+    to: 5,
     step: 1,
     min: 0,
     max: 365,
@@ -151,6 +185,8 @@ $("#water").ionRangeSlider({
     postfix: " วัน",
     onFinish: function(data) {
         console.log(data.to + " " + data.from);
+        minwater = data.from;
+        maxwater = data.to;
     }
 });
 $("#waterlack").ionRangeSlider({
@@ -167,6 +203,8 @@ $("#waterlack").ionRangeSlider({
     postfix: " วัน",
     onFinish: function(data) {
         console.log(data.to + " " + data.from);
+        minlack = data.from;
+        maxlack = data.to;
     }
 });
 $("#wash").ionRangeSlider({
@@ -183,5 +221,10 @@ $("#wash").ionRangeSlider({
     postfix: " ครั้ง",
     onFinish: function(data) {
         console.log(data.to + " " + data.from);
+        console.log('check5 = '+$('#check5').is(':checked'));
+        mincutbranch= data.from;
+        maxcutbranch = data.to;
+        
+
     }
 });
