@@ -154,12 +154,6 @@ if(isset($_POST['request'])){
 
             // print_r($sql);
             print_r($data_pesttype);
-
-            $sql = "SELECT t1.DIMsubFID FROM (
-                SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID` FROM `log-activity`
-                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
-                WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
-                GROUP BY `dim-farm`.`dbID`)AS t1 ";
             if($mincutbranch == 0 && $maxcutbranch == 0 && $cutbranch != 0){
                 $sql = "SELECT DISTINCT(t1.DIMSubfID) AS DIMsubFID FROM (
                     SELECT MAX(`log-farm`.`ID`),`log-farm`.`DIMSubfID` FROM `log-farm` 
@@ -173,12 +167,22 @@ if(isset($_POST['request'])){
                     WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
                     GROUP BY `dim-farm`.`dbID`)AS t2)";
             }else if($cutbranch != 0){
-                $sql = $sql . " WHERE t1.times >= '$mincutbranch' AND t1.times <= '$maxcutbranch'";
+                $sql = "SELECT t1.DIMsubFID FROM (
+                    SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID` FROM `log-activity`
+                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
+                    WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
+                    GROUP BY `dim-farm`.`dbID`)AS t1 ";
+                if($mincutbranch == 0){
+                    $sql = $sqlAllSubfarm." WHERE t1.DIMsubFID NOT IN (".$sql."  WHERE t1.times > '$maxcutbranch')" ;
+                }else{
+                    $sql = $sql . " WHERE t1.times >= '$mincutbranch' AND t1.times <= '$maxcutbranch'";
+                }
+                
             } 
             
             if($cutbranch == 0){
                 $sql = $sqlAllSubfarm;
-            }
+            } 
             $data_minmax_cutbranch= selectData($sql);
             // print_r($data_minmax_cutbranch);
             $data_minmax_cutbranch = toDBID($data_minmax_cutbranch);
@@ -186,17 +190,123 @@ if(isset($_POST['request'])){
             // print_r($sql);
             print_r($data_minmax_cutbranch);
 
+            if($lack == 1){
+                $sql = "SELECT MAX(`dim-time`.`Date`) AS max_date,`log-raining`.`DIMsubFID` FROM `log-raining` 
+                JOIN `dim-time` ON `log-raining`.`DIMdateID` = `dim-time`.`ID`
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-raining`.`DIMsubFID`
+                GROUP BY `dim-farm`.`dbID` ORDER BY `log-raining`.`DIMsubFID` ASC";
+                $raining = toArray(selectData($sql));
+    
+                // print_r($sql);
+                // print_r("------------------------");
+                // print_r($raining);
+    
+                $sql = "SELECT MAX(`dim-time`.`Date`) AS max_date,`log-watering`.`DIMsubFID` FROM `log-watering` 
+                JOIN `dim-time` ON `log-watering`.`DIMdateID` = `dim-time`.`ID`
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-watering`.`DIMsubFID`
+                GROUP BY `dim-farm`.`dbID` ORDER BY `log-watering`.`DIMsubFID` ASC";
+                $watering = toArray(selectData($sql));
+                // print_r($sql);
+                // print_r($watering);
+                // print_r("------------------------");
+    
+                $sql = "SELECT MAX(`dim-time`.`Date`) AS max_date,`log-farm`.`DIMSubfID` AS DIMsubFID FROM `log-farm` 
+                JOIN `dim-time` ON `log-farm`.`StartID` = `dim-time`.`ID`
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
+                GROUP BY `dim-farm`.`dbID` ORDER BY `log-farm`.`DIMSubfID` ASC";
+                $all = toArray(selectData($sql));
+                // print_r($all);
+    
+                // print_r("------------------------");
+                $arr = compare($all,$raining);
+                $arr = compare($arr,$watering);
+                
+                // print_r($arr);
+    
+                $arr = countDay($arr);
+                // print_r($arr);
+                $data_minmax_lack = toDBID(checkDateMINMAX($arr,$minlack,$maxlack));
+                // echo "date min max ";
+            }else{
+                $data_minmax_lack = toDBID(selectData($sqlAllSubfarm));
+            }         
+            print_r($data_minmax_lack);
+
             $result = array_intersect($data_year,$data_pro_dist);
             $result = array_intersect($result,$data_pesttype);
             $result = array_intersect($result,$data_farmer);
             $result = array_intersect($result,$data_minmax_cutbranch);
+            $result = array_intersect($result,$data_minmax_lack);
 
             print_r($result);
 
         break;
     }
 }
+function checkDateMINMAX($arr,$min,$max){
+    // echo "min ".$min;
+    // echo "/max ".$max;
+    $k = 1;
+    $array = array();
+    $array[0]['numrow'] = 0;
+    $size = key(array_slice($arr, -1, 1, true));
+    for($i=1;$i<=$size;$i++){
+        if(isset($arr[$i])){
+            // echo "arr ".$arr[$i];
 
+            if($arr[$i] >= $min && $arr[$i] <= $max){
+                $array[$k]['DIMsubFID'] = $i;
+                $array[0]['numrow']++;
+                $k++;
+            }
+        }
+    }
+    return $array;
+}
+function countDay($arr){
+    $array = array();
+    $today = date("Y-m-d");
+    $size = key(array_slice($arr, -1, 1, true));
+    for($i=1;$i<=$size;$i++){
+        if(isset($arr[$i])){
+            $array[$i] = datediff($today,$arr[$i]); 
+        }
+    }
+    return $array;
+}
+function datediff($start, $end ) {
+    // echo 'start = '.$start.'//';
+    // echo 'end = '.$end.'//';
+
+    $datediff = strtotime($start) - strtotime($end);
+    return floor($datediff / (60 * 60 * 24));
+}
+function toArray($array1){
+    $array = array();
+    for($i=1;$i<=$array1[0]['numrow'];$i++){
+        $array[$array1[$i]['DIMsubFID']] = $array1[$i]['max_date'];
+    }
+    return $array;
+}
+function compare($array1,$array2){
+    $array = array();
+    $size = key(array_slice($array1, -1, 1, true));
+    // echo 'size = '.$size.'//';
+    for($i=1;$i<=$size;$i++){
+        if(isset($array1[$i]) && isset($array2[$i])){
+            // echo $array1[$i]."+++";
+            // echo $array2[$i]."+++";
+
+            $max = max($array1[$i],$array2[$i]);
+            $array[$i] = $max;
+        }
+
+        if(isset($array1[$i]) && !isset($array2[$i])){
+            $array[$i] = $array1[$i];
+        }
+    }
+    return $array;
+}
 function toDBID($array){
     $arr = array();
  

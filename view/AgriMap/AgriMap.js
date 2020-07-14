@@ -19,19 +19,17 @@ $("#search").click(function(){
     waterlack = $('#waterlack').val();
     wash = $('#wash').val();
     pesttype = $('#pesttype').val();
-    if(!$('#check3').is(':checked') == false){
-        lack = 0;
-        minlack= 0;
-        maxlack = 0;
-    }else{
-        lack = 1;
-    }
-    if(!$('#check4').is(':checked') == false){
+    if($('#check3').is(':checked') == false){
         water = 0;
         minwater= 0;
         maxwater = 0;
     }else{
         water = 1;
+    }
+    if($('#check4').is(':checked') == false){
+        lack = 0;
+    }else{
+        lack = 1;
     }
     if($('#check5').is(':checked') == false){
         cutbranch = 0;
@@ -142,10 +140,12 @@ function data_show(select_id, result, point_id) {
 
 $("#check1").click(function() {
     $("#harvest").attr("disabled", !this.checked);
+    $("#harvest").val(0);
 });
 
 $("#check2").click(function() {
     $("#fertilizer").attr("disabled", !this.checked);
+    $("#fertilizer").val(0);
 });
 
 $("#check3").change(function() {
@@ -168,8 +168,8 @@ $("#check5").change(function() {
 
 $("#check6").click(function() {
     $("#pesttype").attr("disabled", !this.checked);
+    $("#pesttype").val(0);
 });
-
 
 $("#water").ionRangeSlider({
     type: "double",
@@ -195,7 +195,7 @@ $("#waterlack").ionRangeSlider({
     to: 5,
     step: 1,
     min: 0,
-    max: 60,
+    max: 365,
     grid: true,
     grid_num: 10,
     grid_snap: false,
