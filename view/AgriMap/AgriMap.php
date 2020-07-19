@@ -230,13 +230,11 @@ $PESTTYPE = getPestType();
                 </div>
             </div>
         </div>
-    </div>
+    </div >
 </div>
 
 </div>
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"
-    async defer></script>
-
 <script src="AgriMap.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
+
