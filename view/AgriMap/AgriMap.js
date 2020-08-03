@@ -28,8 +28,6 @@ $("#search").click(function(){
     pesttype = $('#pesttype').val();
     if($('#check3').is(':checked') == false){
         water = 0;
-        minwater= 0;
-        maxwater = 0;
     }else{
         water = 1;
     }
@@ -40,8 +38,6 @@ $("#search").click(function(){
     }
     if($('#check5').is(':checked') == false){
         cutbranch = 0;
-        mincutbranch= 0;
-        maxcutbranch = 0;
     }else{
         cutbranch = 1;
     }
@@ -51,8 +47,8 @@ $("#search").click(function(){
     minlack:minlack, maxlack:maxlack, pesttype:pesttype,
     mincutbranch:mincutbranch, maxcutbranch:maxcutbranch,
     lack:lack, water:water, cutbranch:cutbranch}, function(result){
-        // console.log(result);
-        DATA_DB = JSON.parse(result);
+        console.log(result);
+        // DATA_DB = JSON.parse(result);
         // console.log(DATA_DB);
         initMap();
     });
@@ -255,6 +251,5 @@ $("#wash").ionRangeSlider({
         mincutbranch= data.from;
         maxcutbranch = data.to;
         
-
     }
 });

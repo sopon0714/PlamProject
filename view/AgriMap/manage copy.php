@@ -156,7 +156,7 @@ if(isset($_POST['request'])){
 
             // print_r($sql);
             print_r($data_pesttype);
-            
+
             if($mincutbranch == 0 && $maxcutbranch == 0 && $cutbranch != 0){
                 $sql = "SELECT DISTINCT(t1.DIMSubfID) AS DIMsubFID FROM (
                     SELECT MAX(`log-farm`.`ID`),`log-farm`.`DIMSubfID` FROM `log-farm` 
@@ -167,8 +167,10 @@ if(isset($_POST['request'])){
                     SELECT t2.DIMsubFID FROM (
                     SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID` FROM `log-activity`
                     JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
-                    WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
-                    GROUP BY `dim-farm`.`dbID`)AS t2)";
+                    JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
+                    WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1";
+                    if($year != 0) $sql = $sql . " AND `dim-time`.`Year2` = '$year'";
+                    $sql = $sql." GROUP BY `dim-farm`.`dbID`)AS t2)";
             }else if($cutbranch != 0){
                 $sql = "SELECT t1.DIMsubFID FROM (
                     SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID`,
@@ -178,7 +180,9 @@ if(isset($_POST['request'])){
                     WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
                     GROUP BY `dim-farm`.`dbID`)AS t1 ";
                 if($mincutbranch == 0){
-                    $sql = $sqlAllSubfarm." WHERE t1.DIMsubFID NOT IN (".$sql."  WHERE t1.times > '$maxcutbranch')" ;
+                    $sql = $sqlAllSubfarm." WHERE t1.DIMsubFID NOT IN (".$sql."  WHERE t1.times > '$maxcutbranch' " ;
+                    if($year != 0) $sql = $sql . " AND `dim-time`.`Year2`='$year'";
+                    $sql = $sql .")";
                 }else{
                     $sql = $sql . " WHERE t1.times >= '$mincutbranch' AND t1.times <= '$maxcutbranch'";
                     if($year != 0) $sql = $sql . " AND `dim-time`.`Year2`='$year'";
