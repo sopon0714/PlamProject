@@ -7,6 +7,13 @@ maxwater = 5;
 mincutbranch = 1;
 maxcutbranch = 5;
 
+DATA_DB = Array();
+$(document).ready(function() {
+
+    $("#search").trigger("click");
+
+});
+
 $("#search").click(function(){
     console.log('search');
     year = $('#year').val();
@@ -19,24 +26,18 @@ $("#search").click(function(){
     waterlack = $('#waterlack').val();
     wash = $('#wash').val();
     pesttype = $('#pesttype').val();
-    if(!$('#check3').is(':checked') == false){
-        lack = 0;
-        minlack= 0;
-        maxlack = 0;
-    }else{
-        lack = 1;
-    }
-    if(!$('#check4').is(':checked') == false){
+    if($('#check3').is(':checked') == false){
         water = 0;
-        minwater= 0;
-        maxwater = 0;
     }else{
         water = 1;
     }
+    if($('#check4').is(':checked') == false){
+        lack = 0;
+    }else{
+        lack = 1;
+    }
     if($('#check5').is(':checked') == false){
         cutbranch = 0;
-        mincutbranch= 0;
-        maxcutbranch = 0;
     }else{
         cutbranch = 1;
     }
@@ -47,70 +48,93 @@ $("#search").click(function(){
     mincutbranch:mincutbranch, maxcutbranch:maxcutbranch,
     lack:lack, water:water, cutbranch:cutbranch}, function(result){
         console.log(result);
-
-        // console.log('maxc = '+maxcutbranch);
         // DATA_DB = JSON.parse(result);
         // console.log(DATA_DB);
+        initMap();
     });
 });
-function initMap(data) {
+function initMap() {
     //The location of Uluru
-    if (data) {
+    console.log("init map");
+    console.log(DATA_DB);
 
-        var th = {
-            lat: 15.8700,
-            lng: 100.9925
-        };
-
-        var map = new google.maps.Map(
-            document.getElementById('map'), {
-                zoom: 4,
-                center: th
-            });
-
-        var location = JSON.parse(data);
-
-        var marker, i, info;
-
-        //console.log("dododod");
-
-
-
-        for (i = 0; i < location.length; i++) {
-            console.log(location[i].name, location[i].lat, location[i].lng);
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(location[i].lat, location[i].lng),
-                title: location[i].name,
-                map: map
-            });
-
-            info = new google.maps.InfoWindow();
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    info.setContent(location[i].name + "<br/>" + location[i].address + "<br/>" +
-                        "ปริมาณผลผลิต " + location[i].harvest + " กิโลกรัม" + "<br/>" +
-                        '<a href = "../OilPalmAreaVol/OilPalmAreaVol.php">เพิ่มเติม</a>');
-                    info.open(map, marker);
-                }
-            })(marker, i));
-
+    var locations = [];
+    var center = [0, 0];
+    size = DATA_DB.length;
+    console.log(size);
+    for (i = 0; i < size; i++) {
+        la = DATA_DB[i]['Latitude'];
+        long = DATA_DB[i]['Longitude'];
+        nameSub = DATA_DB[i]['Name'];
+        FSID = DATA_DB[i]['FSID'];
+        FMID = DATA_DB[i]['FMID'];
+        laFloat = parseFloat(la);
+        longFloat = parseFloat(long);
+        dist = DATA_DB[i]['Distrinct'];
+        pro = DATA_DB[i]['Province'];
+        if(DATA_DB[i]['EndT'] == 0){
+            color = "green";
+        }else{
+            color = "red";
         }
+        center[0] += laFloat;
+        center[1] += longFloat;
+        data = [la, long, dist, pro, color,nameSub, FSID, FMID];
+        locations.push(data);
 
-    } else {
-        var th = {
-            lat: 15.8700,
-            lng: 100.9925
-        };
-        // The map, centered at Uluru
-        var map = new google.maps.Map(
-            document.getElementById('map'), {
-                zoom: 4,
-                center: th
-            });
-        // The marker, positioned at Uluru
+    }
+    center[0] = center[0] / size;
+    center[1] = center[1] / size;
+
+    if(size == 0){
+      center[0] = 13.736717;
+      center[1] = 100.523186;
     }
 
-    //location.length=0;
+    console.log(center);
+
+    console.log(locations);
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 6,
+        center: new google.maps.LatLng(center[0], center[1]),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker;
+
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+            map: map,
+            icon: "http://maps.google.com/mapfiles/ms/icons/"+locations[i][4]+"-dot.png"
+
+        });
+        console.log('i == ' + i)
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                content = "";
+                if(locations[i][4] == "green"){
+                    content += "<a href='http://127.0.0.1/PalmProject/view/OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID="+
+                    locations[i][6]+"&FMID="+locations[i][7]+"'>"+locations[i][5]+"</a>";
+                }else{
+                    content += locations[i][5];
+                }
+                content += "<br> อ." + locations[i][2] + " จ." + locations[i][3];
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+
+                console.log('i = ' + i)
+                console.log(locations)
+                console.log(locations[i][1])
+
+            }
+        })(marker, i));
+
+    }
+
 }
 
 $("#province").change(function(){
@@ -142,10 +166,12 @@ function data_show(select_id, result, point_id) {
 
 $("#check1").click(function() {
     $("#harvest").attr("disabled", !this.checked);
+    $("#harvest").val(0);
 });
 
 $("#check2").click(function() {
     $("#fertilizer").attr("disabled", !this.checked);
+    $("#fertilizer").val(0);
 });
 
 $("#check3").change(function() {
@@ -168,8 +194,8 @@ $("#check5").change(function() {
 
 $("#check6").click(function() {
     $("#pesttype").attr("disabled", !this.checked);
+    $("#pesttype").val(0);
 });
-
 
 $("#water").ionRangeSlider({
     type: "double",
@@ -195,7 +221,7 @@ $("#waterlack").ionRangeSlider({
     to: 5,
     step: 1,
     min: 0,
-    max: 60,
+    max: 365,
     grid: true,
     grid_num: 10,
     grid_snap: false,
@@ -225,6 +251,5 @@ $("#wash").ionRangeSlider({
         mincutbranch= data.from;
         maxcutbranch = data.to;
         
-
     }
 });
