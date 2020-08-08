@@ -108,11 +108,107 @@ switch ($action) {
                 VALUES (NULL, '0', '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$from_time', '$to_time',
                 '$dimOwnerID', '$dimFarmIDWater', ' $dimSubFarmIDWater', '$Vol', '$min')";
         addinsertData($sql);
-        if ($TypeDetail == "Detail") {
-            header("location:WaterDetail.php?FSID=$FSID&Active=4");
+        //////////////////////// update fact-watering fact-Drying
+        $sql = "SELECT * ,`fact-watering`.`ID` AS factWaterID FROM `fact-watering` 
+        INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-watering`.`DIMsubFID`
+        WHERE `dim-farm`.`dbID` = $FSID AND `fact-watering`.`DIMdateID` = {$DIMDATE[1]['ID']}";
+        $FACTWATERING = selectData($sql);
+        if ($FACTWATERING[0]['numrow'] != 0) {
+            echo "1";
+            $WaterPeriod = $FACTWATERING[1]['WaterPeriod'] + $min;
+            $TotalPeriod = $FACTWATERING[1]['TotalPeriod'] + $min;
+            $sql = "UPDATE `fact-watering` SET `Modify` = '$time', `WaterPeriod` = '$WaterPeriod',
+             `TotalPeriod` = '$TotalPeriod' WHERE `fact-watering`.`ID` = {$FACTWATERING[1]['factWaterID']}";
+            updateData($sql);
         } else {
-            header("location:Water.php?active=2");
+            echo "0";
+            $sql = "INSERT INTO `fact-watering` (`ID`, `Modify`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `WaterPeriod`, `RainPeriod`, `TotalPeriod`) VALUES 
+            (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$dimOwnerID', '$dimFarmIDWater', '$dimSubFarmIDWater', '$min', '0', '$min')";
+            addinsertData($sql);
+            $sql = "SELECT `fact-drying`.*,`dim-time`.`Date` AS StartTime FROM `fact-drying` 
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+            INNER JOIN `dim-time` ON `dim-time`.`ID` = `fact-drying`.`DIMstartDID`
+            WHERE `dim-farm`.`dbID` =$FSID AND `fact-drying`.`DIMstopDID` IS NULL ";
+            $CHECKDrying = selectData($sql);
+            $datetomorrow = date('Y-m-d', strtotime('+1 day', strtotime($dateWater)));
+            $dateyesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateWater)));
+            if ($CHECKDrying[0]['numrow'] != 0) {
+                echo "0";
+                $sql = "SELECT `fact-drying`.*, STARTDATE.`Date` AS StartTime, ENDDATE.`Date` AS EndTime FROM `fact-drying` 
+                INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                INNER JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                 INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                 WHERE `dim-farm`.`dbID` = $FSID AND  STARTDATE.`Date` <= '$dateWater' AND  ENDDATE.`Date` >= '$dateWater'";
+                $FACTDRYING = selectData($sql);
+
+                if ($FACTDRYING[0]['numrow'] != 0) {
+                    echo "0";
+                    if ($FACTDRYING[1]['StartTime'] == $dateWater && $FACTDRYING[1]['Period'] == 1) {
+                        echo "01";
+                        $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        deletedata($sql);
+                    } else if ($FACTDRYING[1]['StartTime'] == $dateWater) {
+                        echo "02";
+                        $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                        $diffPeriod =  $FACTDRYING[1]['Period'] - 1;
+                        $sql = "UPDATE `fact-drying` SET `DIMstartDID` = '{$DIMDATETOMORROW[1]['ID']}',`Modify` = '$time', `Period` = '$diffPeriod'
+                         WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        updateData($sql);
+                    } else if ($FACTDRYING[1]['EndTime'] == $datetomorrow) {
+                        echo "03";
+                        $DIMDATEYESTERDAY = getDIMDate($dateyesterday);
+                        $diffPeriod =  $FACTDRYING[1]['Period'] - 1;
+                        $sql = "UPDATE `fact-drying` SET `DIMstopDID` = '{$DIMDATE[1]['ID']}',`Modify` = '$time', `Period` = '$diffPeriod'
+                         WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        echo $sql;
+                        updateData($sql);
+                    } else if ($FACTDRYING[1]['EndTime'] == $dateWater) {
+                        echo "04";
+                    } else {
+                        echo "05";
+                        $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                        $p1 = date('z', strtotime($dateWater)) - date('z', strtotime($FACTDRYING[1]['StartTime']));
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                        VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$FACTDRYING[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$FACTDRYING[1]['DIMownerID']}', '{$FACTDRYING[1]['DIMfarmID']}', '{$FACTDRYING[1]['DIMsubFID']}', '$p1')";
+                        addinsertData($sql);
+                        $p2 = date('z', strtotime($FACTDRYING[1]['EndTime'])) - date('z', strtotime($datetomorrow));
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                        VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', '{$FACTDRYING[1]['DIMstopDID']}', '{$FACTDRYING[1]['DIMownerID']}', '{$FACTDRYING[1]['DIMfarmID']}', '{$FACTDRYING[1]['DIMsubFID']}', '$p2')";
+                        addinsertData($sql);
+                        $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        deletedata($sql);
+                    }
+                } else {
+                    echo "1";
+                    if ($CHECKDrying[1]['StartTime'] < $dateWater) {
+                        $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                        $p1 = date('z', strtotime($dateWater)) - date('z', strtotime($CHECKDrying[1]['StartTime']));
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                        VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$CHECKDrying[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$CHECKDrying[1]['DIMownerID']}', '{$CHECKDrying[1]['DIMfarmID']}', '{$CHECKDrying[1]['DIMsubFID']}', '$p1')";
+                        addinsertData($sql);
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                        VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', NULL , '$dimOwnerID', '$dimFarmIDWater', '$dimSubFarmIDWater', '0')";
+                        addinsertData($sql);
+                        $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$CHECKDrying[1]['ID']}";
+                        deletedata($sql);
+                        echo "p1" . $p1;
+                    } else {
+                    }
+                }
+            } else {
+                echo "1";
+                $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                        VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', NULL, '$dimOwnerID', '$dimFarmIDWater', '$dimSubFarmIDWater', '0')";
+                addinsertData($sql);
+            }
         }
+        ////////////////////////
+        // if ($TypeDetail == "Detail") {
+        //     header("location:WaterDetail.php?FSID=$FSID&Active=4");
+        // } else {
+        //     header("location:Water.php?active=2");
+        // }
         break;
 }
 function getDIMOwner($dim_farm)

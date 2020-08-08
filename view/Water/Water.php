@@ -124,7 +124,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                 <div class="row">
                                     <div class="col-xl-12 col-12">
                                         <div>
-                                            <b>จำนวนวันให้น้ำ (วัน)</b>
+                                            <b>จำนวนวันที่ขาดน้ำ (วัน)</b>
                                             <input class="js-range-slider" type="text" id="palmvolsilder" value="" />
                                         </div>
                                     </div>
