@@ -182,8 +182,8 @@ if(isset($_POST['request'])){
                         GROUP BY `dim-farm`.`dbID`,`dim-time`.`Year2`)AS t1
                         WHERE 1 AND t1.`Year2`='$year'";
                 }
-                if($harvest == 1) $sql = $sql . " AND t1.`avg_harvest` > $AVERAGE";
-                if($harvest == 2) $sql = $sql . " AND t1.`avg_harvest` < $AVERAGE";
+                if($harvest == 1) $sql = $sql . " AND t1.`avg_harvest` >= $AVERAGE";
+                if($harvest == 2) $sql = $sql . " AND t1.`avg_harvest` <= $AVERAGE";
                 if($harvest == 3) $sql = "SELECT t1.DIMSubfID AS DIMsubFID FROM (
                     SELECT MAX(`log-farm`.`ID`),`log-farm`.`DIMSubfID` FROM `log-farm` 
                     JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
@@ -203,11 +203,69 @@ if(isset($_POST['request'])){
             // print_r($sql);
             print_r($data_harvest);
 
+            $data_lack_ok = array();
+            $data_lack_ok2 = array();
+
+            $sql = "SELECT `dim-farm`.`dbID`,`dim-time`.`Date` ,`fact-drying`.`DIMstopDID`, 
+            `dim-time`.`Year2` ,`fact-drying`.`Period` FROM `fact-drying`  
+            JOIN `dim-time` ON  `dim-time`.`ID` = `fact-drying`.`DIMstartDID`  
+            JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+            ORDER BY `dim-time`.`Date` DESC";
+            // print_r($sql);
+            $data_lack= selectData($sql);
+
+            if($lack == 0){
+                $data_lack_ok = selectData($sqlAllSubfarm);
+                $data_lack_ok = toDBID($data_lack_ok);
+
+            }else if($minlack == 0 && $maxlack != 0){
+                $data_lack_ok = selectData($sqlAllSubfarm);
+                $data_lack_ok = toDBID($data_lack_ok);
+
+            }else if($minlack == 0 && $maxlack == 0){
+                $data_lack_ok = selectData($sqlAllSubfarm);
+                $data_lack_ok = toDBID($data_lack_ok);
+
+                for($i = 1;$i<=$data_lack[0]['numrow'];$i++){
+                    array_push($data_lack_ok2,$data_lack[$i]['dbID']);
+                }
+                $data_lack_ok2 = array_unique($data_lack_ok2);
+                $data_lack_ok = array_diff($data_lack_ok,$data_lack_ok2);
+            }else{
+                $today = date("Y-m-d");
+                for($i = 1;$i<=$data_lack[0]['numrow'];$i++){
+                    if($data_lack[$i]['DIMstopDID'] == NULL){
+                        $data_lack[$i]['Period'] = datediff($today,$data_lack[$i]['Date']);
+                    }
+                    if($year != 0){
+                        if($data_lack[$i]['Year2'] == $year){
+                            if($minlack != 0 && $maxlack != 0){
+                                if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
+                                    array_push($data_lack_ok,$data_lack[$i]['dbID']);
+                                }
+                            }
+                        }
+                    }else{
+                        if($minlack != 0 && $maxlack != 0){
+                            if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
+                                array_push($data_lack_ok,$data_lack[$i]['dbID']);
+                            }
+                        }
+                    }
+                }
+                // print_r("data lack = ");
+                // print_r($data_lack);
+                $data_lack_ok = array_unique($data_lack_ok);
+            }
+            print_r("data lack ok = ");
+            print_r($data_lack_ok);
+
             $result = array_intersect($data_pro_dist,$data_farmer);
             $result = array_intersect($result,$data_pesttype);
             $result = array_intersect($result,$data_minmax_cutbranch);
             $result = array_intersect($result,$data_year);
             $result = array_intersect($result,$data_harvest);
+            $result = array_intersect($result,$data_lack_ok);
 
             print_r($result);
 
