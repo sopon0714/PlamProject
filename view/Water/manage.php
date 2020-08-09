@@ -40,11 +40,13 @@ switch ($action) {
         echo $html;
         break;
     case 'AddRain';
-        $FSID = $_POST['FSID'] ?? "";
         $TypeDetail = $_POST['TypeDetail'] ?? "";
         $dateRain = $_POST['dateRain'];
         $dimFarmIDRian = $_POST['FarmIDRian'];
         $dimSubFarmIDRian = $_POST['SubFarmIDRian'];
+        $sql = "SELECT * FROM `dim-farm` WHERE `dim-farm`.`ID` = $dimSubFarmIDRian";
+        $DATA = selectData($sql);
+        $FSID = $DATA[1]['dbID'];
         $timeStratRian = $_POST['timeStratRian'];
         $timeEndRian = $_POST['timeEndRian'];
         $Type = $_POST['Type'];
@@ -80,7 +82,133 @@ switch ($action) {
                 VALUES (NULL, '0', '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$from_time',
                 '$to_time', '$dimOwnerID', '$dimFarmIDRian', '$dimSubFarmIDRian', '$Vol', $rank, '$min')";
         addinsertData($sql);
-        echo "555";
+        //////////////////////// update fact-watering fact-Drying
+        $sql = "SELECT * ,`fact-watering`.`ID` AS factWaterID FROM `fact-watering` 
+         INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-watering`.`DIMsubFID`
+         WHERE `dim-farm`.`dbID` = $FSID AND `fact-watering`.`DIMdateID` = {$DIMDATE[1]['ID']}";
+        echo $sql;
+        $FACTWATERING = selectData($sql);
+        if ($FACTWATERING[0]['numrow'] != 0) {
+            echo "0";
+            $RainPeriod = $FACTWATERING[1]['RainPeriod'] + $min;
+            $TotalPeriod = $FACTWATERING[1]['TotalPeriod'] + $min;
+            $sql = "UPDATE `fact-watering` SET `Modify` = '$time', `RainPeriod` = '$RainPeriod',
+              `TotalPeriod` = '$TotalPeriod' WHERE `fact-watering`.`ID` = {$FACTWATERING[1]['factWaterID']}";
+            updateData($sql);
+        } else {
+            echo "1";
+            $sql = "INSERT INTO `fact-watering` (`ID`, `Modify`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `WaterPeriod`, `RainPeriod`, `TotalPeriod`) VALUES 
+             (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$dimOwnerID', '$dimFarmIDRian', '$dimSubFarmIDRian', '0', '$min', '$min')";
+            addinsertData($sql);
+            $sql = "SELECT `fact-drying`.*,`dim-time`.`Date` AS StartTime FROM `fact-drying` 
+             INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+             INNER JOIN `dim-time` ON `dim-time`.`ID` = `fact-drying`.`DIMstartDID`
+             WHERE `dim-farm`.`dbID` =$FSID AND `fact-drying`.`DIMstopDID` IS NULL ";
+            $CHECKDrying = selectData($sql);
+            $datetomorrow = date('Y-m-d', strtotime('+1 day', strtotime($dateRain)));
+            $dateyesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateRain)));
+            if ($CHECKDrying[0]['numrow'] != 0) {
+                echo "0";
+                $sql = "SELECT `fact-drying`.*, STARTDATE.`Date` AS StartTime, ENDDATE.`Date` AS EndTime FROM `fact-drying` 
+                 INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                 INNER JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                  INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                  WHERE `dim-farm`.`dbID` = $FSID AND  STARTDATE.`Date` <= '$dateRain' AND  ENDDATE.`Date` >= '$dateRain'";
+                $FACTDRYING = selectData($sql);
+
+                if ($FACTDRYING[0]['numrow'] != 0) {
+                    echo "0";
+                    if ($FACTDRYING[1]['StartTime'] == $dateRain && $FACTDRYING[1]['Period'] == 1) {
+                        echo "01";
+                        $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        deletedata($sql);
+                    } else if ($FACTDRYING[1]['StartTime'] == $dateRain) {
+                        echo "02";
+                        $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                        $diffPeriod =  $FACTDRYING[1]['Period'] - 1;
+                        $sql = "UPDATE `fact-drying` SET `DIMstartDID` = '{$DIMDATETOMORROW[1]['ID']}',`Modify` = '$time', `Period` = '$diffPeriod'
+                          WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        updateData($sql);
+                    } else if ($FACTDRYING[1]['EndTime'] == $datetomorrow) {
+                        echo "03";
+                        $DIMDATEYESTERDAY = getDIMDate($dateyesterday);
+                        $diffPeriod =  $FACTDRYING[1]['Period'] - 1;
+                        $sql = "UPDATE `fact-drying` SET `DIMstopDID` = '{$DIMDATE[1]['ID']}',`Modify` = '$time', `Period` = '$diffPeriod'
+                          WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        echo $sql;
+                        updateData($sql);
+                    } else if ($FACTDRYING[1]['EndTime'] == $dateRain) {
+                        echo "04";
+                    } else {
+                        echo "05";
+                        $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                        $p1 = date_diff(date_create($FACTDRYING[1]['StartTime']), date_create($dateRain))->format("%a");
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$FACTDRYING[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$FACTDRYING[1]['DIMownerID']}', '{$FACTDRYING[1]['DIMfarmID']}', '{$FACTDRYING[1]['DIMsubFID']}', '$p1')";
+                        addinsertData($sql);
+
+                        $p2 =  date_diff(date_create($datetomorrow), date_create($FACTDRYING[1]['EndTime']))->format("%a");
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', '{$FACTDRYING[1]['DIMstopDID']}', '{$FACTDRYING[1]['DIMownerID']}', '{$FACTDRYING[1]['DIMfarmID']}', '{$FACTDRYING[1]['DIMsubFID']}', '$p2')";
+                        addinsertData($sql);
+                        $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$FACTDRYING[1]['ID']}";
+                        deletedata($sql);
+                    }
+                } else {
+                    echo "1";
+                    if ($CHECKDrying[1]['StartTime'] < $dateRain) {
+                        echo "0";
+                        $DIMDATETOMORROW = getDIMDate($datetomorrow);
+
+                        $p1 = date_diff(date_create($CHECKDrying[1]['StartTime']), date_create($dateRain))->format("%a");
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$CHECKDrying[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$CHECKDrying[1]['DIMownerID']}', '{$CHECKDrying[1]['DIMfarmID']}', '{$CHECKDrying[1]['DIMsubFID']}', '$p1')";
+                        addinsertData($sql);
+                        $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', NULL , '$dimOwnerID', '$dimFarmIDRian', '$dimSubFarmIDRian', '0')";
+                        addinsertData($sql);
+                        $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$CHECKDrying[1]['ID']}";
+                        deletedata($sql);
+                        echo "p1" . $p1;
+                    } else {
+                        echo "1";
+                        $sql = "SELECT `fact-drying`.*, STARTDATE.`Date` AS StartTime, ENDDATE.`Date` AS EndTime FROM `fact-drying` 
+                         INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                         INNER JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                          INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                          WHERE `dim-farm`.`dbID` =$FSID AND  ENDDATE.`Date`IS NOT NULL
+                          ORDER BY STARTDATE.`Date` LIMIT 1";
+                        $MINFACTDRAING = selectData($sql);
+                        if ($MINFACTDRAING[0]['numrow'] > 0) {
+                            echo "0";
+                            $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                            $p1 =   date_diff(date_create($DIMDATETOMORROW[1]['Date']), date_create($MINFACTDRAING[1]['EndTime']))->format("%a");
+                            $sql = "UPDATE `fact-drying` SET `Modify` = '$time',`DIMstartDID` = '{$DIMDATETOMORROW[1]['ID']}', `Period` = '$p1' WHERE `fact-drying`.`ID` = {$MINFACTDRAING[1]['ID']}";
+                            updateData($sql);
+                        } else {
+                            echo "1";
+                            $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                            $sql = "SELECT `fact-drying`.*, STARTDATE.`Date` AS StartTime, ENDDATE.`Date` AS EndTime FROM `fact-drying` 
+                             INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                             LEFT JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                             INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                             WHERE `dim-farm`.`dbID` =$FSID AND  ENDDATE.`Date`IS  NULL
+                             ORDER BY STARTDATE.`Date` LIMIT 1";
+                            $MINFACTDRAING = selectData($sql);
+                            $sql = "UPDATE `fact-drying` SET `Modify` = '$time',`DIMstartDID` = '{$DIMDATETOMORROW[1]['ID']}' WHERE `fact-drying`.`ID` = {$MINFACTDRAING[1]['ID']}";
+                            updateData($sql);
+                        }
+                    }
+                }
+            } else {
+                echo "1";
+                $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
+                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', NULL, '$dimOwnerID', '$dimFarmIDRian', '$dimSubFarmIDRian', '0')";
+                addinsertData($sql);
+            }
+        }
+        ////////////////////////////////
         if ($TypeDetail == "Detail") {
             header("location:WaterDetail.php?FSID=$FSID&Active=3");
         } else {
@@ -88,13 +216,16 @@ switch ($action) {
         }
         break;
     case 'AddWater';
-        $FSID = $_POST['FSID'] ?? "";
+
         $TypeDetail = $_POST['TypeDetail'] ?? "";
         $dateWater = $_POST['dateWater'];
         $dimFarmIDWater = $_POST['FarmIDWater'];
         $dimSubFarmIDWater = $_POST['SubFarmIDWater'];
         $timeStratWater = $_POST['timeStratWater'];
         $timeEndWater = $_POST['timeEndWater'];
+        $sql = "SELECT * FROM `dim-farm` WHERE `dim-farm`.`ID` = $dimSubFarmIDWater";
+        $DATA = selectData($sql);
+        $FSID = $DATA[1]['dbID'];
         $to_time = strtotime($dateWater . " " . $timeEndWater);
         $from_time = strtotime($dateWater . " " . $timeStratWater);
         $min = round(abs($to_time - $from_time) / 60, 2);
@@ -114,14 +245,14 @@ switch ($action) {
         WHERE `dim-farm`.`dbID` = $FSID AND `fact-watering`.`DIMdateID` = {$DIMDATE[1]['ID']}";
         $FACTWATERING = selectData($sql);
         if ($FACTWATERING[0]['numrow'] != 0) {
-            echo "1";
+            echo "0";
             $WaterPeriod = $FACTWATERING[1]['WaterPeriod'] + $min;
             $TotalPeriod = $FACTWATERING[1]['TotalPeriod'] + $min;
             $sql = "UPDATE `fact-watering` SET `Modify` = '$time', `WaterPeriod` = '$WaterPeriod',
              `TotalPeriod` = '$TotalPeriod' WHERE `fact-watering`.`ID` = {$FACTWATERING[1]['factWaterID']}";
             updateData($sql);
         } else {
-            echo "0";
+            echo "1";
             $sql = "INSERT INTO `fact-watering` (`ID`, `Modify`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `WaterPeriod`, `RainPeriod`, `TotalPeriod`) VALUES 
             (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATE[1]['ID']}', '$dimOwnerID', '$dimFarmIDWater', '$dimSubFarmIDWater', '$min', '0', '$min')";
             addinsertData($sql);
@@ -167,11 +298,12 @@ switch ($action) {
                     } else {
                         echo "05";
                         $DIMDATETOMORROW = getDIMDate($datetomorrow);
-                        $p1 = date('z', strtotime($dateWater)) - date('z', strtotime($FACTDRYING[1]['StartTime']));
+                        $p1 = date_diff(date_create($FACTDRYING[1]['StartTime']), date_create($dateWater))->format("%a");
                         $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$FACTDRYING[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$FACTDRYING[1]['DIMownerID']}', '{$FACTDRYING[1]['DIMfarmID']}', '{$FACTDRYING[1]['DIMsubFID']}', '$p1')";
                         addinsertData($sql);
-                        $p2 = date('z', strtotime($FACTDRYING[1]['EndTime'])) - date('z', strtotime($datetomorrow));
+
+                        $p2 =  date_diff(date_create($datetomorrow), date_create($FACTDRYING[1]['EndTime']))->format("%a");
                         $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', '{$FACTDRYING[1]['DIMstopDID']}', '{$FACTDRYING[1]['DIMownerID']}', '{$FACTDRYING[1]['DIMfarmID']}', '{$FACTDRYING[1]['DIMsubFID']}', '$p2')";
                         addinsertData($sql);
@@ -181,8 +313,10 @@ switch ($action) {
                 } else {
                     echo "1";
                     if ($CHECKDrying[1]['StartTime'] < $dateWater) {
+                        echo "0";
                         $DIMDATETOMORROW = getDIMDate($datetomorrow);
-                        $p1 = date('z', strtotime($dateWater)) - date('z', strtotime($CHECKDrying[1]['StartTime']));
+
+                        $p1 = date_diff(date_create($CHECKDrying[1]['StartTime']), date_create($dateWater))->format("%a");
                         $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
                         VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$CHECKDrying[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$CHECKDrying[1]['DIMownerID']}', '{$CHECKDrying[1]['DIMfarmID']}', '{$CHECKDrying[1]['DIMsubFID']}', '$p1')";
                         addinsertData($sql);
@@ -193,6 +327,33 @@ switch ($action) {
                         deletedata($sql);
                         echo "p1" . $p1;
                     } else {
+                        echo "1";
+                        $sql = "SELECT `fact-drying`.*, STARTDATE.`Date` AS StartTime, ENDDATE.`Date` AS EndTime FROM `fact-drying` 
+                        INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                        INNER JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                         INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                         WHERE `dim-farm`.`dbID` =$FSID AND  ENDDATE.`Date`IS NOT NULL
+                         ORDER BY STARTDATE.`Date` LIMIT 1";
+                        $MINFACTDRAING = selectData($sql);
+                        if ($MINFACTDRAING[0]['numrow'] > 0) {
+                            echo "0";
+                            $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                            $p1 =   date_diff(date_create($DIMDATETOMORROW[1]['Date']), date_create($MINFACTDRAING[1]['EndTime']))->format("%a");
+                            $sql = "UPDATE `fact-drying` SET `Modify` = '$time',`DIMstartDID` = '{$DIMDATETOMORROW[1]['ID']}', `Period` = '$p1' WHERE `fact-drying`.`ID` = {$MINFACTDRAING[1]['ID']}";
+                            updateData($sql);
+                        } else {
+                            echo "1";
+                            $DIMDATETOMORROW = getDIMDate($datetomorrow);
+                            $sql = "SELECT `fact-drying`.*, STARTDATE.`Date` AS StartTime, ENDDATE.`Date` AS EndTime FROM `fact-drying` 
+                            INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                            LEFT JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                            WHERE `dim-farm`.`dbID` =$FSID AND  ENDDATE.`Date`IS  NULL
+                            ORDER BY STARTDATE.`Date` LIMIT 1";
+                            $MINFACTDRAING = selectData($sql);
+                            $sql = "UPDATE `fact-drying` SET `Modify` = '$time',`DIMstartDID` = '{$DIMDATETOMORROW[1]['ID']}' WHERE `fact-drying`.`ID` = {$MINFACTDRAING[1]['ID']}";
+                            updateData($sql);
+                        }
                     }
                 }
             } else {
@@ -203,12 +364,12 @@ switch ($action) {
                 addinsertData($sql);
             }
         }
-        ////////////////////////
-        // if ($TypeDetail == "Detail") {
-        //     header("location:WaterDetail.php?FSID=$FSID&Active=4");
-        // } else {
-        //     header("location:Water.php?active=2");
-        // }
+        //////////////////////
+        if ($TypeDetail == "Detail") {
+            header("location:WaterDetail.php?FSID=$FSID&Active=4");
+        } else {
+            header("location:Water.php?active=2");
+        }
         break;
 }
 function getDIMOwner($dim_farm)
