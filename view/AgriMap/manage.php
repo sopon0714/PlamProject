@@ -70,7 +70,7 @@ if(isset($_POST['request'])){
             $data_year = toDBID($data_year);
 
             // print_r($sql);
-            print_r($data_year);
+            // print_r($data_year);
 
             $sql = "SELECT DISTINCT(t1.DIMSubfID) AS DIMsubFID FROM (
                 SELECT MAX(`log-farm`.`ID`),`log-farm`.`DIMSubfID` FROM `log-farm` 
@@ -86,7 +86,7 @@ if(isset($_POST['request'])){
             $data_pro_dist = toDBID($data_pro_dist);
 
             // print_r($sql);
-            print_r($data_pro_dist);
+            // print_r($data_pro_dist);
 
             $sql = "SELECT t1.DIMSubfID AS DIMsubFID FROM (
                 SELECT MAX(`log-farm`.`ID`)AS lid, `log-farm`.`DIMSubfID` FROM `log-farm` 
@@ -101,7 +101,7 @@ if(isset($_POST['request'])){
             $data_farmer = toDBID($data_farmer);
 
             // print_r($sql);
-            print_r($data_farmer);
+            // print_r($data_farmer);
 
             if($pesttype == 0){
                 $sql = $sqlAllSubfarm;
@@ -116,8 +116,8 @@ if(isset($_POST['request'])){
             $data_pesttype= selectData($sql);
             // print_r($data_pesttype);
             $data_pesttype = toDBID($data_pesttype);
-            print_r($sql);
-            print_r($data_pesttype);
+            // print_r($sql);
+            // print_r($data_pesttype);
         
             if($mincutbranch == 0 && $maxcutbranch == 0 && $cutbranch != 0){
                 $sql = "SELECT DISTINCT(t1.DIMSubfID) AS DIMsubFID FROM (
@@ -160,7 +160,7 @@ if(isset($_POST['request'])){
             $data_minmax_cutbranch = toDBID($data_minmax_cutbranch);
 
             // print_r($sql);
-            print_r($data_minmax_cutbranch);
+            // print_r($data_minmax_cutbranch);
 
             if($harvest == 0){
                 $sql = $sqlAllSubfarm;
@@ -201,7 +201,7 @@ if(isset($_POST['request'])){
             $data_harvest = toDBID($data_harvest);
 
             // print_r($sql);
-            print_r($data_harvest);
+            // print_r($data_harvest);
 
             $data_lack_ok = array();
             $data_lack_ok2 = array();
@@ -257,8 +257,92 @@ if(isset($_POST['request'])){
                 // print_r($data_lack);
                 $data_lack_ok = array_unique($data_lack_ok);
             }
-            print_r("data lack ok = ");
-            print_r($data_lack_ok);
+            // print_r("data lack ok = ");
+            // print_r($data_lack_ok);
+
+            $data_water = array();
+            if($water == 0){
+                $data_water = selectData($sqlAllSubfarm);
+                $data_water = toDBID($data_water);
+            }else if($minwater == 0 && $maxwater == 0){
+                $sql = "SELECT DISTINCT(`fact-watering`.`DIMsubFID`) FROM `fact-watering`
+                JOIN `dim-time` ON `dim-time`.`ID` = `fact-watering`.`DIMdateID` ";
+                if($year != 0) $sql = $sql." WHERE `dim-time`.`Year2` = '$year'";
+                $sql = $sql." ORDER BY `fact-watering`.`DIMsubFID` ASC";
+                $db = selectData($sql);
+                $db = toDBID($db);
+                $allsub = selectData($sqlAllSubfarm);
+                $allsub= toDBID($allsub);
+                $data_water = array_diff($allsub,$db);
+            }else{
+                $sql = "SELECT `dim-time`.`Date`,`dim-time`.`Year2`,`dim-farm`.`dbID` FROM `fact-watering`
+                JOIN `dim-time` ON `fact-watering`.`DIMdateID` = `dim-time`.`ID`  
+                JOIN  `dim-farm` ON  `dim-farm`.`ID` =  `fact-watering`.`DIMsubFID`";
+                if($year != 0) $sql = $sql." WHERE `dim-time`.`Year2` = '$year'";
+                $sql = $sql."  ORDER BY `dim-farm`.`dbID`,`dim-time`.`Date` ASC";                
+                $fact_watering = selectData($sql);
+                $watering_subfarm = array();
+                $day = 1;
+                for($i=1;$i<=$fact_watering[0]['numrow'];$i++){
+                    if($i != $fact_watering[0]['numrow']){
+                        if($fact_watering[$i]['dbID'] == $fact_watering[$i+1]['dbID']){
+                            $datetomorrow = date('Y-m-d',strtotime('+1 day', strtotime($fact_watering[$i]['Date'])));
+                            if($fact_watering[$i+1]['Date'] == $datetomorrow){
+                                $day++;
+                            }else{
+                                $arr = array();
+                                $arr['dbID'] = $fact_watering[$i]['dbID'];
+                                $arr['day'] = $day;
+    
+                                $watering_subfarm[] = $arr;
+                                $day = 1;  
+                            }
+                        }else{
+                            $arr = array();
+                            $arr['dbID'] = $fact_watering[$i]['dbID'];
+                            $arr['day'] = $day;
+    
+                            $watering_subfarm[] = $arr;
+                            $day = 1;  
+                        }
+                    }else{
+                        $arr = array();
+                        $arr['dbID'] = $fact_watering[$i]['dbID'];
+                        $arr['day'] = $day;
+    
+                        $watering_subfarm[] = $arr;
+                        $day = 1;  
+                    }
+                }
+                // print_r("data watering_subfarm = ");
+                // print_r($watering_subfarm);
+
+                for($i=0;$i<sizeof($watering_subfarm);$i++){
+                    if($watering_subfarm[$i]['day'] >= $minwater && $watering_subfarm[$i]['day'] <= $maxwater){
+                        array_push($data_water,$watering_subfarm[$i]['dbID']);
+                    }       
+                }
+
+                if($minwater == 0 && $maxwater != 0){
+                    $sql = "SELECT DISTINCT(`fact-watering`.`DIMsubFID`) FROM `fact-watering`
+                    JOIN `dim-time` ON `dim-time`.`ID` = `fact-watering`.`DIMdateID` ";
+                    if($year != 0) $sql = $sql." WHERE `dim-time`.`Year2` = '$year'";
+                    $sql = $sql." ORDER BY `fact-watering`.`DIMsubFID` ASC";
+                    $db = selectData($sql);
+                    $db = toDBID($db);
+                    $allsub = selectData($sqlAllSubfarm);
+                    $allsub= toDBID($allsub);
+                    $data_not_water = array_diff($allsub,$db);
+
+                    $data_water = array_merge($data_not_water,$data_water);
+                }
+                // print_r("data water = ");
+                // print_r($data_water);
+                $data_water = array_unique($data_water);
+            }
+                     
+            // print_r("data water = ");
+            // print_r($data_water);
 
             $result = array_intersect($data_pro_dist,$data_farmer);
             $result = array_intersect($result,$data_pesttype);
@@ -266,12 +350,13 @@ if(isset($_POST['request'])){
             $result = array_intersect($result,$data_year);
             $result = array_intersect($result,$data_harvest);
             $result = array_intersect($result,$data_lack_ok);
+            $result = array_intersect($result,$data_water);
 
-            print_r($result);
+            // print_r($result);
 
             $datamap = dataForMap($result);
 
-            // print_r(json_encode($datamap));
+            print_r(json_encode($datamap));
         break;
         
     }
