@@ -2110,7 +2110,7 @@ function getChartPest($year, $fsid)
     return $datapest;
 }
 
-function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &$fmax ,$DBactID)
+function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &$fmax, $DBactID)
 {
     if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
     if (isset($_POST['s_min']))  $fmin = rtrim($_POST['s_min']);
@@ -2122,7 +2122,7 @@ function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
-    if($fmin == 0 && $fmax == 0){
+    if ($fmin == 0 && $fmax == 0) {
         $fmin = -1;
         $fmax = -1;
     }
@@ -2249,7 +2249,7 @@ function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &
     // print_r($LOG);
     return $LOG;
 }
-function getActivityDetail($farmID,$DBactID)
+function getActivityDetail($farmID, $DBactID)
 {
     $sql = "SELECT MAX(`log-farm`.`ID`)AS LFID,`dim-farm`.`dbID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
     `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
@@ -2418,26 +2418,69 @@ function getTableAllRain(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$scor
     if ($INFOSUBFARM[0]['numrow'] == 0) {
         $INFOSUBFARMRAIN = null;
     }
+    if ($score_From == 0 && $score_To == 0) {
+        $checkscore = true;
+    } else {
+        $checkscore = false;
+    }
+    $currentYear = date("Y") + 543;
     for ($i = 1; $i < count($INFOSUBFARM); $i++) {
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
-        $INFORAIN = getInfoRain($INFOSUBFARM[$i]['FSID'], $year);
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['rainDay'] = $INFORAIN['rainDay'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['notrainDay'] = $INFORAIN['notrainDay'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['totalVol'] = $INFORAIN['totalVol'];
-        $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['longDay'] = $INFORAIN['longDay'];
+        if (checkrangDrying($INFOSUBFARM[$i]['FSID'], $year, $score_From, $score_To) || $checkscore || $currentYear == $year) {
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
+            $INFORAIN = getInfoRain($INFOSUBFARM[$i]['FSID'], $year);
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['rainDay'] = $INFORAIN['rainDay'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['notrainDay'] = $INFORAIN['notrainDay'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['totalVol'] = $INFORAIN['totalVol'];
+            $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['longDay'] = $INFORAIN['longDay'];
+        }
     }
     return $INFOSUBFARMRAIN;
+}
+function checkrangDrying($fsid, $year, $start, $end)
+{
+    $sql = "SELECT `dim-farm`.`dbID` FROM `fact-drying` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+    INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+    INNER JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+    WHERE `dim-farm`.`dbID` = $fsid AND STARTDATE.`Year2` = '$year' AND `fact-drying`.`Period`>=$start AND `fact-drying`.`Period`<=$end";
+    $DATA = selectData($sql);
+    if ($DATA[0]['numrow'] > 0) {
+        return true;
+    } else {
+        $currentYear = date("Y") + 543;
+        if ($currentYear == $year) {
+            $sql = "SELECT `dim-farm`.`dbID` FROM `fact-drying` 
+                INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+                INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+                INNER JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+                WHERE `dim-farm`.`dbID` = $fsid AND STARTDATE.`Year2` = '$year' AND  ENDDATE.`Date` IS NULL ";
+            $DATA = selectData($sql);
+            if ($DATA[0]['numrow'] > 0) {
+                $p = date_diff(date_create($DATA[1]['StartTime']), date_create(date("Y-m-d")))->format("%a");
+                if ($p >= $start && $p <= $end) {
+                    return true;
+                }
+            } else {
+                $p = date("z");
+                if ($p >= $start && $p <= $end) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
 function getInfoRain($fsid, $year)
 {
@@ -2548,23 +2591,31 @@ function getTableAllWater(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$sco
     if ($INFOSUBFARM[0]['numrow'] == 0) {
         $INFOSUBFARMWATER = null;
     }
+    if ($score_From == 0 && $score_To == 0) {
+        $checkscore = true;
+    } else {
+        $checkscore = false;
+    }
+    $currentYear = date("Y") + 543;
     for ($i = 1; $i < count($INFOSUBFARM); $i++) {
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
-        $INFO = getInfoWater($INFOSUBFARM[$i]['FSID'], $year);
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['lastDate'] = $INFO['lastDate'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['lastVol'] = $INFO['lastVol'];
-        $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['totalVol'] = $INFO['totalVol'];
+        if (checkrangDrying($INFOSUBFARM[$i]['FSID'], $year, $score_From, $score_To) ||  $checkscore || $currentYear == $year) {
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
+            $INFO = getInfoWater($INFOSUBFARM[$i]['FSID'], $year);
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['lastDate'] = $INFO['lastDate'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['lastVol'] = $INFO['lastVol'];
+            $INFOSUBFARMWATER[$INFOSUBFARM[$i]['FSID']]['totalVol'] = $INFO['totalVol'];
+        }
     }
     return $INFOSUBFARMWATER;
 }
@@ -2756,7 +2807,7 @@ function getChartActivity($year, $fsid)
     $data["labeldata"] = $labelData;
     return $data;
 }
-function getAvgActivity($year,$DBactID)
+function getAvgActivity($year, $DBactID)
 {
     $sql = "SELECT IFNULL(ROUND(ROUND(COUNT(d1.dbID),2)/COUNT(DISTINCT d1.`dbID`),2),0) AS  AVGTime FROM `log-activity` 
     INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-activity`.`DIMdateID`
@@ -2768,8 +2819,9 @@ function getAvgActivity($year,$DBactID)
 
     return $DATA[1]['AVGTime'];
 }
-function getYearAgriMap(){
-    
+function getYearAgriMap()
+{
+
     $sql = "SELECT DISTINCT(Year2) FROM `log-fertilising` 
     JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
     WHERE `log-fertilising`.`isDelete` = 0 
