@@ -183,7 +183,12 @@ textarea {
                         ?>
                                 <tr class="<?php echo 'la'.$lati.'long'.$longi; ?> table-set"
                                     test="test<?php echo $i; ?>">
-                                    <td><?php echo $DATA[$i]["Namesubfarm"] ?></td>
+                                    <?php if($DATA[$i]["EndT_sub"] != NULL){ ?>
+                                        <td><?php echo $DATA[$i]["Namesubfarm"] ?></td>
+                                    <?php }else{ ?>
+                                        <td><a href="http://127.0.0.1/PalmProject/view/OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=<?php echo $DATA[$i]["FSID"] ?>&FMID=<?php echo $DATA[$i]["FMID"] ?>">
+                                        <?php echo $DATA[$i]["Namesubfarm"] ?></a></td>
+                                    <?php }?>
                                     <td class="text-center"><?php echo $date; ?></td>
 
                                     <td style="text-align:center;">

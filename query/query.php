@@ -2324,8 +2324,8 @@ function getActivityDetail($farmID, $DBactID)
         }
 
 
-        $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
-            SELECT `log-farm`.`DIMfarmID` FROM (
+        $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`dbID`,`dim-farm`.`Name`,t4.EndT FROM(
+            SELECT `log-farm`.`DIMfarmID`,`log-farm`.`EndT` FROM (
             SELECT MAX(`log-farm`.`ID`)AS ID FROM (
             SELECT `dim-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM  (
             SELECT `dim-farm`.`dbID` FROM `dim-farm`
@@ -2341,12 +2341,14 @@ function getActivityDetail($farmID, $DBactID)
             $LOG[$i]['check_show'] = 0;
         } else {
             $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
+            $LOG[$i]['FMID'] = $DATA[1]['dbID'];
+            $LOG[$i]['EndT_farm'] = $DATA[1]['EndT'];
             $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
         }
 
 
-        $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`Name` FROM(
-            SELECT `log-farm`.`DIMSubfID` FROM (
+        $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`dbID`,`dim-farm`.`Name`,t4.EndT FROM(
+            SELECT `log-farm`.`DIMSubfID`,`log-farm`.`EndT` FROM (
             SELECT MAX(`log-farm`.`ID`)AS ID FROM (
             SELECT `dim-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM  (
             SELECT `dim-farm`.`dbID` FROM `dim-farm`
@@ -2362,6 +2364,8 @@ function getActivityDetail($farmID, $DBactID)
             $LOG[$i]['check_show'] = 0;
         } else {
             $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
+            $LOG[$i]['FSID'] = $DATA[1]['dbID'];
+            $LOG[$i]['EndT_sub'] = $DATA[1]['EndT'];
             $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
         }
     }
