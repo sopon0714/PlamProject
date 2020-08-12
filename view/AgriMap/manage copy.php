@@ -242,6 +242,88 @@ if(isset($_POST['request'])){
             }         
             print_r($data_minmax_lack);
 
+            $sql = "SELECT `dim-time`.`Date`,`dim-time`.`Year2`,`dim-farm`.`dbID` FROM `fact-watering`
+            JOIN `dim-time` ON `fact-watering`.`DIMdateID` = `dim-time`.`ID`  
+            JOIN  `dim-farm` ON  `dim-farm`.`ID` =  `fact-watering`.`DIMsubFID`
+            ORDER BY `dim-farm`.`dbID`,`dim-time`.`Date` ASC";
+            $fact_watering = selectData($sql);
+            $watering_subfarm = array();
+            $day = 1;
+            for($i=1;$i<=$fact_watering[0]['numrow'];$i++){
+                if($i != $fact_watering[0]['numrow']){
+                    if($fact_watering[$i]['dbID'] == $fact_watering[$i+1]['dbID']){
+                        // print_r("DIMsub //// ");
+                        // print_r($fact_watering[$i]['dbID']);
+                        // print_r(" ");
+                        // print_r($fact_watering[$i+1]['dbID']);
+                        // print_r(" ------------------------------------------- ");
+                        $datetomorrow = date('Y-m-d',strtotime('+1 day', strtotime($fact_watering[$i]['Date'])));
+                        if($fact_watering[$i+1]['Date'] == $datetomorrow){
+                            // print_r("if //// ");
+                            // print_r("dbID = ");
+                            // print_r($fact_watering[$i]['dbID'] );
+                            // print_r(" date = ");
+                            // print_r($fact_watering[$i+1]['Date']);
+                            // print_r(" ");
+                            // print_r($datetomorrow);
+                            // print_r(" ");
+                            $day++;
+                            // print_r("day = ");
+                            // print_r($day);
+                            // print_r(" ");
+                        }else{
+                            // print_r("else //// ");
+                            // print_r("dbID = ");
+                            // print_r($fact_watering[$i]['dbID'] );
+                            // print_r(" date = ");
+                            // print_r($fact_watering[$i+1]['Date']);
+                            // print_r(" ");
+                            // print_r($datetomorrow);
+                            // print_r(" ");
+                            // print_r("day = ");
+                            // print_r($day);
+                            // print_r(" ");
+                            $arr = array();
+                            $arr['dbID'] = $fact_watering[$i]['dbID'];
+                            $arr['year'] = $fact_watering[$i]['Year2'];
+                            $arr['day'] = $day;
+
+                            $watering_subfarm[] = $arr;
+                            $day = 1;  
+                        }
+                    }else{
+                        // print_r("else */// ");
+                        // print_r("dbID = ");
+                        // print_r($fact_watering[$i]['dbID'] );
+                        // print_r(" date = ");
+                        // print_r($fact_watering[$i+1]['Date']);
+                        // print_r(" ");
+                        // print_r($datetomorrow);
+                        // print_r(" ");
+                        // print_r("day = ");
+                        // print_r($day);
+                        // print_r(" ");
+                        $arr = array();
+                        $arr['dbID'] = $fact_watering[$i]['dbID'];
+                        $arr['year'] = $fact_watering[$i]['Year2'];
+                        $arr['day'] = $day;
+
+                        $watering_subfarm[] = $arr;
+                        $day = 1;  
+                    }
+                }else{
+                    $arr = array();
+                    $arr['dbID'] = $fact_watering[$i]['dbID'];
+                    $arr['year'] = $fact_watering[$i]['Year2'];
+                    $arr['day'] = $day;
+
+                    $watering_subfarm[] = $arr;
+                    $day = 1;  
+                }
+            }
+            print_r("data water = ");
+            print_r($watering_subfarm);
+
             $result = array_intersect($data_year,$data_pro_dist);
             $result = array_intersect($result,$data_pesttype);
             $result = array_intersect($result,$data_farmer);
