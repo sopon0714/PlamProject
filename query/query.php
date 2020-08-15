@@ -2907,7 +2907,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'สวน {$INFOFARM[$DATA[$i]['FSID']]['NameFarm']} แปลง {$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']} เก็บเกี่ยวผลผลิค {$DATA[$i]['Weight']} กก.',
+                    title: 'สวน {$INFOFARM[$DATA[$i]['FSID']]['NameFarm']} แปลง {$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']} เก็บเกี่ยวผลผลิต {$DATA[$i]['Weight']} กก.',
                     start: '{$DATA[$i]['Date']}',
                     color: '#47C43F',
                     textColor: '#FFFFFF'
@@ -2925,7 +2925,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
                                 title: 'สวน {$DATASUBFARM[$j]['NameFarm']} แปลง {$DATASUBFARM[$j]['NamesubFarm']}  มีฝนตกปริมาณ {$INFOLOGRAIN[$i]['Vol']} มม.',
                                 start: '$timeStart',
                                 end: '$timeEnd',
-                                color: '#2B9EF7',
+                                color: '#214ACA',
                                 textColor: '#FFFFFF'
                             },";
                 }

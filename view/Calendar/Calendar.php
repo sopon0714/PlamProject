@@ -8,7 +8,7 @@ include_once("./../../query/query.php");
 
 $YEAR = getYearAll();
 $PROVINCE = getProvince();
-$currentYear = date("Y") + 543;
+$currentYear = date("Y");
 if (isset($_GET['isSearch']) && $_GET['isSearch'] == 1) {
   $year = $_POST['year'];
   $fpro = $_POST['s_province'];
@@ -24,7 +24,11 @@ if (isset($_GET['isSearch']) && $_GET['isSearch'] == 1) {
   } else {
     $showAll = false;
   }
-  $showYear = $year;
+  if ($year == 0) {
+    $showYear = $currentYear;
+  } else {
+    $showYear = $year - 543;
+  }
 } else {
   $year = 0;
   $fpro = 0;
@@ -184,41 +188,6 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
   </div>
 </div>
-<!-- Modal -->
-<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <div class="grid-inline">
-            <p class="title-calendar">หัวข้อ :</p>
-            <p id='title' class="content-modal"></p>
-            <p class="title-calendar">ชื่อเกษตรกร :</p>
-            <p id='name-farmer' class="content-modal"></p>
-            <p class="title-calendar">ชื่อสวน :</p>
-            <p id='name-farm' class="content-modal"></p>
-            <p class="title-calendar">ชื่อแปลง :</p>
-            <p id='name-subfarm' class="content-modal"></p>
-            <p class="title-calendar">ที่อยู่แปลง:</p>
-            <p id='address-farm' class="content-modal"></p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary "><a class='link-subfarm' style="color:white;text-decoration:none" href=''>ไปที่แปลง</a></button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <?php include_once("../layout/LayoutFooter.php"); ?>
 
 <script src='../../Calendar/packages/core/main.js'></script>
@@ -230,8 +199,8 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 <script src='../../Calendar/packages/core/locales-all.js'></script>
 <script src="Calendar.js"></script>
 <script>
-  var thisday = new Date().toJSON().slice(0, 10);
   var calendarEl1 = document.getElementById('calendar');
+
   var calendar = new FullCalendar.Calendar(calendarEl1, {
     disableResizing: true,
     locale: 'th',
@@ -246,187 +215,19 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     buttonText: {
       list: 'รายละเอียด'
     },
-
+    eventRender: function(info) {
+      $(info.el).tooltip({
+        title: info.event.title
+      });
+    },
     eventStartEditable: false,
     disableDragging: true,
     editable: false,
-    defaultDate: thisday,
+    defaultDate: '<?php echo $showYear . "-" . date("m-d") ?>',
     navLinks: true,
     businessHours: true,
+
     events: <?php echo getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox); ?>
   });
   calendar.render();
 </script>
-<!-- <script>
-  let calendar
-
-  function setCalendar(id) {
-    let date = new Date();
-    date.setMonth(date.getMonth() - 1);
-    let day = date.getDay();
-    let month = date.getMonth();
-    console.log(month)
-    let year = date.getFullYear();
-    var calendarEl = document.getElementById(id);
-    calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: ['interaction', 'dayGrid', 'timeGrid', 'list', 'bootstrap'],
-      themeSystem: 'bootstrap',
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
-      },
-      eventClick: function(info) {
-        $('#title').html(info.event.title)
-        $('#address-farm').html(info.event.extendedProps.address)
-        $('#name-farmer').html(info.event.extendedProps.name_farmer)
-        $('#name-farm').html(info.event.extendedProps.name_farm)
-        $('#name-subfarm').html(info.event.extendedProps.name_subfarm)
-        $('#exampleModal').modal('show')
-
-        let link
-        switch (info.event.title) {
-          case 'เก็บเกี่ยว':
-            link = '../OilPalmAreaVol/OilPalmAreaVolDetail.php'
-            //post farmid
-            break;
-          case 'ให้ปุ๋ย':
-            link = '../FertilizerUsageList/FertilizerUsageListDetail.php?name=วิชัย&nfarm=แมกนีเซียมซัลเฟต&NumTree=2000&AreaRai=25&AreaNgan=2&AreaWa=130&HarvestVol=3100'
-            break;
-          case 'ให้น้ำ':
-            link = '../Water/WaterDetail.php?type=1'
-            // get type
-            break;
-          case 'ขาดน้ำ':
-            link = '../Water/WaterDetail.php?type=1'
-            // get type
-            break;
-          case 'ล้างคอขวด':
-            link = '../CutBranch/CutBranchDetail.php?name=ทองดี&nfarm=ทุ่งไทสยาม&nsf=ทุ่งไทสยาม1&Year2=2563'
-            break;
-          case 'พบศัตรูพืช':
-            link = '../Pest/Pest.php'
-            break;
-          default:
-            link = '../CutBranch/CutBranchDetail.php?name=ทองดี&nfarm=ทุ่งไทสยาม&nsf=ทุ่งไทสยาม1&Year2=2563'
-        }
-        $('.link-subfarm').attr('href', link)
-      },
-
-      buttonText: {
-        today: 'วันนี้',
-        month: 'เดือน',
-        week: 'สัปดาห์',
-        day: 'วัน',
-        list: 'รายการ',
-
-      },
-
-
-      locale: 'th',
-      navLinks: true, // can click day/week names to navigate views
-      businessHours: true, // display business hours
-      editable: false,
-      eventOverlap: true,
-      /*eventSources:
-      [
-        "activity.php",
-         "load.php"
-      ]*/
-      events: [
-
-      ],
-      // events: "./activity.php",
-      timeZone: 'local',
-      defaultDate: `${year}-${month+1}-01`
-    })
-    calendar.render();
-    console.log('render');
-  }
-  $('.total_check').change(function() {
-
-    $('.checkmark').each(function() {
-      $(this).prop("checked", $('.total_check').prop("checked"));
-    })
-    $('.checkmarkd').each(function() {
-
-      $(this).prop("checked", $('.total_check').prop("checked"));
-    })
-
-  })
-
-  setCalendar('calendar')
-
-  function fetchData() {
-    calendar.destroy();
-    let activity = [];
-    let drying = [];
-    let farmer = $('#farmer_input').val()
-    let distinct = $('#district_select').val()
-    let province = $('#province_select').val()
-    let year = $('#year_select').val()
-    $('.checkmark').each(function() {
-      if ($(this).is(":checked") && $(this).val() != '') {
-        activity.push($(this).val());
-
-      }
-    });
-    $('.checkmarkd').each(function() {
-      if ($(this).is(":checked")) {
-        drying.push($(this).val());
-
-      }
-    });
-    setCalendar("calendar")
-
-    // calendar.getEvents().remove();
-    // alert(activity)
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        // console.log(this.responseText)
-        let result = JSON.parse(this.responseText);
-        // alert(result)
-        calendar.addEventSource(
-          result
-        )
-      }
-    };
-    xhttp.open("POST", "testAjax.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`activity=${activity}&drying=${drying}&province=${province}&distinct=${distinct}&farmer=${farmer}&year=${year}`);
-  }
-  fetchData()
-  $("#search").click(function() {
-    fetchData()
-  });
-
-  function getDistrict(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        let text = "<option value=''>ทั้งหมด</option>"
-        let data = JSON.parse(this.responseText)
-        for (i in data) {
-          if (i > 0) {
-            text += `
-              <option value='${data[i].AD2ID}'>${data[i].Distrinct}</option>
-               `
-          }
-
-        }
-        $('#district_select').html(text)
-        // console.log(this.responseText)
-      }
-    };
-    xhttp.open("POST", "getData.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`id=${id}&&request=getDistrict`);
-  }
-  $('#province_select').change(function() {
-    if ($(this).val() > 0)
-      getDistrict($(this).val())
-    else
-      $('#district_select').html("<option value=''>ทั้งหมด</option>")
-  })
-</script> -->
