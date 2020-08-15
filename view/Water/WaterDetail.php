@@ -346,4 +346,4 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
         });
     });
 </script>
-<script src='./test.js'></script>
+<script src='./WaterDetail.js'></script>

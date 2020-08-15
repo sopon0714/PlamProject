@@ -2858,3 +2858,194 @@ function getYearAgriMap()
     $data = selectData($sql);
     return $data;
 }
+function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
+{
+
+    $INFOLOGDRY = [];
+    $text = "[";
+    $fullname = rtrim($fullname);
+    $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+    $namef = explode(" ", $fullname);
+    if (isset($namef[1])) {
+        $fnamef = $namef[0];
+        $lnamef = $namef[1];
+    } else {
+        $fnamef = $fullname;
+        $lnamef = $fullname;
+    }
+
+    $sql = "SELECT SUBFARM.`dbID` AS FSID,`dim-user`.`FullName`,FARM.`Alias` as NameFarm, SUBFARM.`Alias` as NamesubFarm
+            FROM `log-farm`
+            INNER JOIN `dim-farm` AS SUBFARM ON SUBFARM.`ID` =`log-farm`.`DIMSubfID` 
+            INNER JOIN `dim-farm` AS FARM ON FARM.`ID` =`log-farm`.`DIMfarmID` 
+            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+            INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+            WHERE  `log-farm`.`ID` IN
+            (SELECT MAX(`log-farm`.`ID`)  as ID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMSubfID`
+            GROUP BY `dim-farm`.`dbID` ) ";
+    if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    $sql .= " ORDER BY `dim-user`.`FullName`";
+    $DATASUBFARM = selectData($sql);
+    if ($DATASUBFARM[0]['numrow'] != 0) {
+        $INFOFARM = [];
+        $text1 = "(";
+        for ($i = 1; $i <= $DATASUBFARM[0]['numrow']; $i++) {
+            $text1 .= "'{$DATASUBFARM[$i]['FSID']}',";
+            $INFOFARM[$DATASUBFARM[$i]['FSID']]['NameFarm'] = $DATASUBFARM[$i]['NameFarm'];
+            $INFOFARM[$DATASUBFARM[$i]['FSID']]['NamesubFarm'] = $DATASUBFARM[$i]['NamesubFarm'];
+        }
+        $text1 = substr($text1, 0, -1) . ")";
+        if ($checkbox['เก็บเกี่ยว'] == 1) {
+            $sql = "SELECT `dim-farm`.`dbID` AS FSID , `dim-time`.`Date`,`log-harvest`.`Weight`,`log-harvest`.`UnitPrice`,`log-harvest`.`TotalPrice` FROM `log-harvest`
+            INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-harvest`.`DIMdateID`
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-harvest`.`DIMsubFID`
+             WHERE  `log-harvest`.`isDelete` = 0 AND `dim-farm`.`dbID` IN $text1  ";
+            if ($year != 0) $sql .= "AND `dim-time`.`Year2` = '$year'";
+            $sql .= " ORDER BY `dim-time`.`Date`";
+            $DATA = selectData($sql);
+            for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
+                $text .= "{
+                    title: 'สวน {$INFOFARM[$DATA[$i]['FSID']]['NameFarm']} แปลง {$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']} เก็บเกี่ยวผลผลิค {$DATA[$i]['Weight']} กก.',
+                    start: '{$DATA[$i]['Date']}',
+                    color: '#47C43F',
+                    textColor: '#FFFFFF'
+                },";
+            }
+        }
+        if ($checkbox['ให้น้ำ'] == 1) {
+            for ($j = 1; $j <= $DATASUBFARM[0]['numrow']; $j++) {
+                $INFOLOGRAIN = getLogRain($DATASUBFARM[$j]['FSID']);
+                $INFOLOGWATER = getLogWater($DATASUBFARM[$j]['FSID']);
+                for ($i = 1; $i < count($INFOLOGRAIN); $i++) {
+                    $timeStart = date("Y-m-d\TH:i:s", $INFOLOGRAIN[$i]['StartTime']);
+                    $timeEnd = date("Y-m-d\TH:i:s", $INFOLOGRAIN[$i]['StopTime']);
+                    $text .= "{
+                                title: 'สวน {$DATASUBFARM[$j]['NameFarm']} แปลง {$DATASUBFARM[$j]['NamesubFarm']}  มีฝนตกปริมาณ {$INFOLOGRAIN[$i]['Vol']} มม.',
+                                start: '$timeStart',
+                                end: '$timeEnd',
+                                color: '#2B9EF7',
+                                textColor: '#FFFFFF'
+                            },";
+                }
+
+                for ($i = 1; $i < count($INFOLOGWATER); $i++) {
+                    $timeStart = date("Y-m-d\TH:i:s", $INFOLOGWATER[$i]['StartTime']);
+                    $timeEnd = date("Y-m-d\TH:i:s", $INFOLOGWATER[$i]['StopTime']);
+                    $text .= "{
+                                title: 'สวน {$DATASUBFARM[$j]['NameFarm']} แปลง {$DATASUBFARM[$j]['NamesubFarm']}  รดน้ำปริมาณ {$INFOLOGWATER[$i]['Vol']} ลิตร',
+                                start: '$timeStart',
+                                end: '$timeEnd',
+                                color: '#2B9EF7',
+                                textColor: '#FFFFFF'
+                            },";
+                }
+            }
+        }
+        if ($checkbox['ขาดน้ำ'] == 1) {
+            for ($j = 1; $j <= $DATASUBFARM[0]['numrow']; $j++) {
+                $INFOLOGDRY = getFactDry($DATASUBFARM[$j]['FSID']);
+                for ($i = 1; $i < count($INFOLOGDRY); $i++) {
+                    if ($INFOLOGDRY[$i]['Period'] > 0) {
+                        $day = $INFOLOGDRY[$i]['Period'];
+                        $start = $INFOLOGDRY[$i]['StartT'];
+                        $end = $INFOLOGDRY[$i]['EndT'];
+                    } else {
+                        $date1 = date_create($INFOLOGDRY[$i]['StartT']);
+                        $date2 = date_create(date("Y-m-d"));
+                        $diff = date_diff($date1, $date2);
+                        $day = $diff->format("%a");
+                        $start = $INFOLOGDRY[$i]['StartT'];
+                        $end = date("Y-m-d");
+                    }
+                    $text .= "{
+                                title: 'สวน {$DATASUBFARM[$j]['NameFarm']} แปลง {$DATASUBFARM[$j]['NamesubFarm']} การให้น้ำขาดช่วง $day วัน',
+                                start: '{$start}',
+                                end: '{$end}',
+                                color: '#E51B1B',
+                                textColor: '#FFFFFF'
+                            },";
+                }
+            }
+        }
+        if ($checkbox['ล้างคอขวด'] == 1) {
+            $sql = "SELECT `dim-farm`.`dbID` AS FSID , `dim-time`.`Date` FROM `log-activity` 
+            INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
+            WHERE  `log-activity`.`DBactID` = 1 AND `log-activity`.`isDelete`=0 AND `dim-farm`.`dbID` IN  $text1 ";
+            if ($year != 0) $sql .= "AND `dim-time`.`Year2` = '$year'";
+            $sql .= " ORDER BY `dim-time`.`Date`";
+            $DATA = selectData($sql);
+            for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
+                $text .= "{
+                    title: 'สวน {$INFOFARM[$DATA[$i]['FSID']]['NameFarm']} แปลง {$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']} ทำกิจกรรมล้างคอขวด',
+                    start: '{$DATA[$i]['Date']}',
+                    color: '#F4950B',
+                    textColor: '#FFFFFF'
+                },";
+            }
+        }
+        if ($checkbox['พบศัตรูพืช'] == 1) {
+            $sql = "SELECT `dim-farm`.`dbID` AS FSID , `dim-time`.`Date`,`dim-pest`.`Alias` AS Name  FROM `log-pestalarm` 
+            INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-pestalarm`.`DIMsubFID`
+            INNER JOIN `dim-pest` ON `dim-pest`.`ID` = `log-pestalarm`.`DIMpestID`
+            WHERE    `log-pestalarm`.`isDelete`=0 AND `dim-farm`.`dbID` IN  $text1 ";
+            if ($year != 0) $sql .= "AND `dim-time`.`Year2` = '$year'";
+            $sql .= " ORDER BY `dim-time`.`Date`";
+            $DATA = selectData($sql);
+            for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
+                $text .= "{
+                    title: 'สวน {$INFOFARM[$DATA[$i]['FSID']]['NameFarm']} แปลง {$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']} ตรวจพบ {$DATA[$i]['Name']}',
+                    start: '{$DATA[$i]['Date']}',
+                    color: '#CAC721',
+                    textColor: '#FFFFFF'
+                },";
+            }
+        }
+        if (strlen($text) > 1) {
+            $text = substr($text, 0, -1) . "]";
+        } else {
+            $text = "[]";
+        }
+        return $text;
+    } else {
+        return "[]";
+    }
+
+
+
+
+    for ($i = 1; $i < count($INFOLOGDRY); $i++) {
+        if ($INFOLOGDRY[$i]['Period'] > 0) {
+            $day = $INFOLOGDRY[$i]['Period'];
+            $start = $INFOLOGDRY[$i]['StartT'];
+            $end = $INFOLOGDRY[$i]['EndT'];
+        } else {
+            $date1 = date_create($INFOLOGDRY[$i]['StartT']);
+            $date2 = date_create(date("Y-m-d"));
+            $diff = date_diff($date1, $date2);
+            $day = $diff->format("%a");
+            $start = $INFOLOGDRY[$i]['StartT'];
+            $end = date("Y-m-d");
+        }
+        $text .= "{
+            title: 'การให้น้ำขาดช่วง $day วัน',
+            start: '{$start}',
+            end: '{$end}',
+            color: '#E51B1B',
+            textColor: '#FFFFFF'
+        },";
+    }
+    if ($INFOLOGDRY[0]['numrow'] > 0) {
+        $text = substr($text, 0, -1) . "]";
+    } else {
+        $text = "[]";
+    }
+
+    return $text;
+}
+function INFOCalendar($year, $fpro, $fdist, $fullname, $checkbox)
+{
+}
