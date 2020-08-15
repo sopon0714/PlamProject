@@ -40,6 +40,11 @@ switch ($action) {
                     file_put_contents($path . "/" . $i . $extension, $Pic);
                }
           }
+          // $sql = "SELECT * FROM `dim-farm` WHERE `ID`= $dimfsid";
+          // $DATADIMSUBFARM = selectData($sql);
+          // $sql ="SELECT * FROM `fact-farming` 
+          // WHERE `DIMfarmID` = 1 AND `DIMsubFID` IS NULL
+          // AND `TagetYear` = '2020' AND `isDelete` = 0";
           header("location:./OilPalmAreaVolDetail.php?FMID=$fmid");
           break;
      case 'scanDir';
