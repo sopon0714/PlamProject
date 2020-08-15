@@ -313,7 +313,7 @@ $sumdeadPers = 0;
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-6">
-                            <a href="OilPalmAreaVolDetail.php" style="text-decoration: none;">
+                            <a href="../OilPalmAreaVol/OilPalmAreaVolDetail.php?FMID=<?php echo $fmid ?>">
                                 <h4>ผลผลิต</h4>
                             </a>
                         </div>
@@ -388,7 +388,9 @@ $sumdeadPers = 0;
         <div class="col-xl-12 col-12">
             <div class="card">
                 <div class="card-header card-bg">
-                    <span>การตรวจพบศัตรูพืช</span>
+                    <a href="../Pest/Pest.php">
+                        <span>การตรวจพบศัตรูพืช</span>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -406,7 +408,9 @@ $sumdeadPers = 0;
         <div class="col-xl-12 col-12">
             <div class="card">
                 <div class="card-header card-bg">
-                    <span>การทำกิจกรรมอื่นๆ</span>
+                    <a href="../CutBranch/CutBranchDetail.php?farmID=<?php echo $fmid ?>">
+                        <span>การทำกิจกรรมอื่นๆ</span>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
