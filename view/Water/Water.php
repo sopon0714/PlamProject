@@ -359,7 +359,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                                                                     <td>{$SUBDATA['NameSubfarm']}</td>
                                                                     <td class=\"text-right\">{$SUBDATA['AreaRai']} ไร่ {$SUBDATA['AreaNgan']} งาน</td>
                                                                     <td class=\"text-right\">{$SUBDATA['NumTree']} ต้น</td>
-                                                                    <td class=\"text-right\">{$SUBDATA['lastDate']}</td>
+                                                                    <td class=\"text-center\">{$SUBDATA['lastDate']}</td>
                                                                     <td class=\"text-right\">{$SUBDATA['lastVol']}</td>
                                                                     <td class=\"text-right\">" . number_format($SUBDATA['totalVol'], 2, '.', ',') . "</td>
                                                                     <td class=\"text-center\">

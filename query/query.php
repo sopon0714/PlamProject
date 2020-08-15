@@ -2631,7 +2631,7 @@ function getTableAllWater(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$sco
 function getInfoWater($fsid, $year)
 {
     $DATA = array();
-    $sql = "SELECT `dim-time`.`dd`,  `dim-time`.`Month`, `dim-time`.`Year2`,ROUND(`log-watering`.`Vol`,2) as Vol FROM `log-watering`
+    $sql = "SELECT `dim-time`.`dd`,  `dim-time`.`Month`, `dim-time`.`Year2`,`dim-time`.`Date`,ROUND(`log-watering`.`Vol`,2) as Vol FROM `log-watering`
     INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-watering`.`DIMsubFID`
     INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-watering`.`DIMdateID`
     WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-time`.`Year2`= $year
@@ -2646,7 +2646,13 @@ function getInfoWater($fsid, $year)
         $DATA['lastDate'] = "-";
         $DATA['lastVol'] = "0.00";
     } else {
-        $DATA['lastDate'] = "{$INFO[1]['dd']} {$strMonthCut[$INFO[1]['Month']]} {$INFO[1]['Year2']}";
+        $day = date_diff(date_create($INFO[1]['Date']), date_create(date("Y-m-d")))->format("%a");
+        if ($day == 0) {
+            $DATA['lastDate'] =  "วันนี้";
+        } else {
+            $DATA['lastDate'] =  "เมื่อ " . $day . " วันก่อน";
+        }
+
         $DATA['lastVol'] = $INFO[1]['Vol'];
     }
     $sql = "SELECT IFNULL(ROUND(SUM(`log-watering`.`Vol`),2),0.00) AS totalVol FROM `log-watering`
