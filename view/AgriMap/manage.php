@@ -209,8 +209,9 @@ if(isset($_POST['request'])){
             $sql = "SELECT `dim-farm`.`dbID`,`dim-time`.`Date` ,`fact-drying`.`DIMstopDID`, 
             `dim-time`.`Year2` ,`fact-drying`.`Period` FROM `fact-drying`  
             JOIN `dim-time` ON  `dim-time`.`ID` = `fact-drying`.`DIMstartDID`  
-            JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
-            ORDER BY `dim-time`.`Date` DESC";
+            JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID` ";
+            if($year != 0) $sql = $sql." WHERE `dim-time`.`Year2` = '$year'";
+            $sql = $sql." ORDER BY `dim-time`.`Date` DESC";
             // print_r($sql);
             $data_lack= selectData($sql);
 
@@ -237,19 +238,9 @@ if(isset($_POST['request'])){
                     if($data_lack[$i]['DIMstopDID'] == NULL){
                         $data_lack[$i]['Period'] = datediff($today,$data_lack[$i]['Date']);
                     }
-                    if($year != 0){
-                        if($data_lack[$i]['Year2'] == $year){
-                            if($minlack != 0 && $maxlack != 0){
-                                if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
-                                    array_push($data_lack_ok,$data_lack[$i]['dbID']);
-                                }
-                            }
-                        }
-                    }else{
-                        if($minlack != 0 && $maxlack != 0){
-                            if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
-                                array_push($data_lack_ok,$data_lack[$i]['dbID']);
-                            }
+                    if($minlack != 0 && $maxlack != 0){
+                        if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
+                            array_push($data_lack_ok,$data_lack[$i]['dbID']);
                         }
                     }
                 }
