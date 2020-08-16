@@ -15,7 +15,7 @@ $(document).ready(function() {
 });
 
 $("#search").click(function(){
-    console.log('search');
+    // console.log('search');
     year = $('#year').val();
     province = $('#province').val();
     distrinct = $('#distrinct').val();
@@ -49,19 +49,19 @@ $("#search").click(function(){
     lack:lack, water:water, cutbranch:cutbranch}, function(result){
         // console.log(result);
         DATA_DB = JSON.parse(result);
-        console.log(DATA_DB);
+        // console.log(DATA_DB);
         initMap();
     });
 });
 function initMap() {
     //The location of Uluru
-    console.log("init map");
-    console.log(DATA_DB);
+    // console.log("init map");
+    // console.log(DATA_DB);
 
     var locations = [];
     var center = [0, 0];
     size = DATA_DB.length;
-    console.log(size);
+    // console.log(size);
     for (i = 0; i < size; i++) {
         la = DATA_DB[i]['Latitude'];
         long = DATA_DB[i]['Longitude'];
@@ -91,9 +91,9 @@ function initMap() {
       center[1] = 100.523186;
     }
 
-    console.log(center);
+    // console.log(center);
 
-    console.log(locations);
+    // console.log(locations);
 
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 6,
@@ -112,7 +112,7 @@ function initMap() {
             icon: "http://maps.google.com/mapfiles/ms/icons/"+locations[i][4]+"-dot.png"
 
         });
-        console.log('i == ' + i)
+        // console.log('i == ' + i)
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
                 content = "";
@@ -126,9 +126,9 @@ function initMap() {
                 infowindow.setContent(content);
                 infowindow.open(map, marker);
 
-                console.log('i = ' + i)
-                console.log(locations)
-                console.log(locations[i][1])
+                // console.log('i = ' + i)
+                // console.log(locations)
+                // console.log(locations[i][1])
 
             }
         })(marker, i));
@@ -210,7 +210,7 @@ $("#water").ionRangeSlider({
     disable: true,
     postfix: " วัน",
     onFinish: function(data) {
-        console.log(data.to + " " + data.from);
+        // console.log(data.to + " " + data.from);
         minwater = data.from;
         maxwater = data.to;
     }
@@ -228,7 +228,7 @@ $("#waterlack").ionRangeSlider({
     disable: true,
     postfix: " วัน",
     onFinish: function(data) {
-        console.log(data.to + " " + data.from);
+        // console.log(data.to + " " + data.from);
         minlack = data.from;
         maxlack = data.to;
     }
@@ -246,8 +246,8 @@ $("#wash").ionRangeSlider({
     disable: true,
     postfix: " ครั้ง",
     onFinish: function(data) {
-        console.log(data.to + " " + data.from);
-        console.log('check5 = '+$('#check5').is(':checked'));
+        // console.log(data.to + " " + data.from);
+        // console.log('check5 = '+$('#check5').is(':checked'));
         mincutbranch= data.from;
         maxcutbranch = data.to;
         
