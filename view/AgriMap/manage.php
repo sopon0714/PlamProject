@@ -229,10 +229,6 @@ if(isset($_POST['request'])){
                 $data_lack_ok = selectData($sqlAllSubfarm);
                 $data_lack_ok = toDBID($data_lack_ok);
 
-            }else if($minlack == 0 && $maxlack != 0){
-                $data_lack_ok = selectData($sqlAllSubfarm);
-                $data_lack_ok = toDBID($data_lack_ok);
-
             }else if($minlack == 0 && $maxlack == 0){
                 $data_lack_ok = selectData($sqlAllSubfarm);
                 $data_lack_ok = toDBID($data_lack_ok);
@@ -248,10 +244,20 @@ if(isset($_POST['request'])){
                     if($data_lack[$i]['DIMstopDID'] == NULL){
                         $data_lack[$i]['Period'] = datediff($today,$data_lack[$i]['Date']);
                     }
-                    if($minlack != 0 && $maxlack != 0){
-                        if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
-                            array_push($data_lack_ok,$data_lack[$i]['dbID']);
+                    if($data_lack[$i]['Period'] >= $minlack && $data_lack[$i]['Period'] <= $maxlack){
+                        array_push($data_lack_ok,$data_lack[$i]['dbID']);
+                    }
+                    if($minlack == 0){
+                        $data1 = selectData($sqlAllSubfarm);
+                        $data1 = toDBID($data1);
+        
+                        for($i = 1;$i<=$data_lack[0]['numrow'];$i++){
+                            array_push($data_lack_ok2,$data_lack[$i]['dbID']);
                         }
+                        $data_lack_ok2 = array_unique($data_lack_ok2);
+                        $data2 = array_diff($data1,$data_lack_ok2);
+
+                        $data_lack_ok = array_merge($data2,$data_lack_ok);
                     }
                 }
                 // print_r("data lack = ");
