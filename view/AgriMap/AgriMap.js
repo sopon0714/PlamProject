@@ -47,9 +47,9 @@ $("#search").click(function(){
     minlack:minlack, maxlack:maxlack, pesttype:pesttype,
     mincutbranch:mincutbranch, maxcutbranch:maxcutbranch,
     lack:lack, water:water, cutbranch:cutbranch}, function(result){
-        console.log(result);
-        // DATA_DB = JSON.parse(result);
-        // console.log(DATA_DB);
+        // console.log(result);
+        DATA_DB = JSON.parse(result);
+        console.log(DATA_DB);
         initMap();
     });
 });

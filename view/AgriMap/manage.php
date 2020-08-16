@@ -353,11 +353,11 @@ if(isset($_POST['request'])){
             $result = array_intersect($result,$data_lack_ok);
             $result = array_intersect($result,$data_water);
 
-            print_r($result);
+            // print_r($result);
 
             $datamap = dataForMap($result);
 
-            // print_r(json_encode($datamap));
+            print_r(json_encode($datamap));
         break;
         
     }
