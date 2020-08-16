@@ -19,7 +19,7 @@ $(document).ready(function() {
                 // console.log(result);
 
                 DATA_DB = JSON.parse(result);
-                console.log(DATA_DB);
+                // console.log(DATA_DB);
             }
         });
     }
@@ -87,7 +87,7 @@ $(document).ready(function() {
 
     function checkSameName(name) { // check same name
         for (i in DATA_DB) {
-            console.log(DATA_DB[i].Name);
+            // console.log(DATA_DB[i].Name);
             if (name.val().trim() == DATA_DB[i].Name) {
                 name[0].setCustomValidity('ชื่อทางการนี้ซ้ำ');
                 return false;
@@ -120,7 +120,7 @@ $(document).ready(function() {
             // console.log(typeof string);
             var arr = string.split(',');
 
-            console.log(arr);
+            // console.log(arr);
             // console.log('arr[0]'+arr[0]);
 
             var textPicChar = ''
@@ -428,7 +428,7 @@ $(document).ready(function() {
             var c = content.substr(0, showChar);
             var h = content.substr(showChar, content.length - showChar);
 
-            console.log(h);
+            // console.log(h);
             var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h +
                 '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
 

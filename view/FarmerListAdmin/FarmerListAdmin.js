@@ -126,7 +126,7 @@ $( document ).ready(function() {
         $('#e_formalid').val(formalid);
         $('#e_address').val(address);
 
-        console.log(subdistrinct);
+        // console.log(subdistrinct);
         // console.log(title);
 
         

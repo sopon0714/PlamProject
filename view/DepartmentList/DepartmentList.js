@@ -9,7 +9,6 @@ $( document ).ready(function() {
 
             $("#addModal").modal();
            
-
     });
     function pullData(){
         var xhttp = new XMLHttpRequest();
