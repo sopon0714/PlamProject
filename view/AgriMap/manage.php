@@ -119,46 +119,56 @@ if(isset($_POST['request'])){
             // print_r($sql);
             // print_r($data_pesttype);
         
-            if($mincutbranch == 0 && $maxcutbranch == 0 && $cutbranch != 0){
-                $sql = "SELECT DISTINCT(t1.DIMSubfID) AS DIMsubFID FROM (
-                    SELECT MAX(`log-farm`.`ID`),`log-farm`.`DIMSubfID` FROM `log-farm` 
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
-                    WHERE `dim-farm`.`IsFarm` = 0
-                    GROUP BY `dim-farm`.`ID` )AS t1
-                    WHERE DIMsubFID NOT IN (
-                    SELECT t2.DIMsubFID FROM (
-                    SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID` FROM `log-activity`
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
-                    JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
-                    WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1";
-                    if($year != 0) $sql = $sql . " AND `dim-time`.`Year2` = '$year'";
-                    $sql = $sql." GROUP BY `dim-farm`.`dbID`)AS t2)";
-            }else if($cutbranch != 0){
-                $sql = "SELECT t1.DIMsubFID FROM (
-                    SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID`,
-                    `dim-time`.`Year2` FROM `log-activity`
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
-                    JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
-                    WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1
-                    GROUP BY `dim-farm`.`dbID`,`dim-time`.`Year2`)AS t1 ";
-                if($mincutbranch == 0){
-                    $sql = $sqlAllSubfarm." WHERE t1.DIMsubFID NOT IN (".$sql."  WHERE t1.times > '$maxcutbranch' " ;
-                    if($year != 0) $sql = $sql . " AND t1.`Year2`='$year'";
-                    $sql = $sql .")";
-                }else{
-                    $sql = $sql . " WHERE t1.times >= '$mincutbranch' AND t1.times <= '$maxcutbranch'";
-                    if($year != 0) $sql = $sql . " AND t1.`Year2`='$year'";
-                }
-                
-            } 
             if($cutbranch == 0){
-                $sql = $sqlAllSubfarm;
-            } 
-            // print_r($sql);
-            $data_minmax_cutbranch= selectData($sql);
-            // print_r($data_minmax_cutbranch);
-            $data_minmax_cutbranch = toDBID($data_minmax_cutbranch);
+                $data_minmax_cutbranch = selectData($sqlAllSubfarm);
+                $data_minmax_cutbranch = toDBID($data_minmax_cutbranch);
+            }else if($mincutbranch == 0 && $maxcutbranch == 0){
+                $data1 = selectData($sqlAllSubfarm);
+                $data1 = toDBID($data1);
 
+                $sql = "SELECT `log-activity`.`DIMsubFID`FROM `log-activity`
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
+                JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
+                WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1 ";
+                if($year != 0) $sql = $sql . " AND `dim-time`.`Year2` = '$year'";
+                $sql = $sql." GROUP BY `dim-farm`.`dbID`";
+                $data2 = selectData($sql);
+                $data2 = toDBID($data2);    
+                
+                $data_minmax_cutbranch = array_diff($data1,$data2);
+            }else {
+                $sql = "SELECT t1.DIMsubFID FROM (
+                    SELECT COUNT(`dim-farm`.`dbID`) AS times,`log-activity`.`DIMsubFID`
+                    FROM `log-activity`
+                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
+                    JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
+                    WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1 ";
+                    if($year != 0) $sql = $sql . " AND `dim-time`.`Year2`='$year'";
+                    $sql = $sql." GROUP BY `dim-farm`.`dbID`)AS t1 ";
+                    $sql = $sql . " WHERE t1.times >= '$mincutbranch' AND t1.times <= '$maxcutbranch'";
+                    // print_r($sql);
+
+                    $data_minmax_cutbranch= selectData($sql);
+                    // print_r($data_minmax_cutbranch);
+                    $data_minmax_cutbranch = toDBID($data_minmax_cutbranch);
+                    if($mincutbranch == 0){
+                        $data1 = selectData($sqlAllSubfarm);
+                        $data1 = toDBID($data1);
+
+                        $sql = "SELECT `log-activity`.`DIMsubFID`FROM `log-activity`
+                        JOIN `dim-farm` ON `dim-farm`.`ID` = `log-activity`.`DIMsubFID`
+                        JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
+                        WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = 1 ";
+                        if($year != 0) $sql = $sql . " AND `dim-time`.`Year2` = '$year'";
+                        $sql = $sql." GROUP BY `dim-farm`.`dbID`";
+                        $data2 = selectData($sql);
+                        $data2 = toDBID($data2);    
+                        
+                        $datanocut = array_diff($data1,$data2);
+                        $data_minmax_cutbranch = array_merge($data_minmax_cutbranch,$datanocut);
+
+                    }     
+            }
             // print_r($sql);
             // print_r($data_minmax_cutbranch);
 
@@ -343,11 +353,11 @@ if(isset($_POST['request'])){
             $result = array_intersect($result,$data_lack_ok);
             $result = array_intersect($result,$data_water);
 
-            // print_r($result);
+            print_r($result);
 
             $datamap = dataForMap($result);
 
-            print_r(json_encode($datamap));
+            // print_r(json_encode($datamap));
         break;
         
     }

@@ -47,9 +47,9 @@ $("#search").click(function(){
     minlack:minlack, maxlack:maxlack, pesttype:pesttype,
     mincutbranch:mincutbranch, maxcutbranch:maxcutbranch,
     lack:lack, water:water, cutbranch:cutbranch}, function(result){
-        // console.log(result);
-        DATA_DB = JSON.parse(result);
-        console.log(DATA_DB);
+        console.log(result);
+        // DATA_DB = JSON.parse(result);
+        // console.log(DATA_DB);
         initMap();
     });
 });
@@ -238,7 +238,7 @@ $("#wash").ionRangeSlider({
     from: 1,
     to: 5,
     step: 1,
-    min: 1,
+    min: 0,
     max: 30,
     grid: true,
     grid_num: 5,
