@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log("y");
+    // console.log("y");
     $('.tt').tooltip();
 
     modify_check = 0; 
@@ -62,7 +62,7 @@ $(document).ready(function() {
 
     $('#date').change(function(){
       date = $('#date').val();
-      console.log(date);
+      // console.log(date);
       idSetHtml = "#farm";
       selectFarm(idSetHtml,date);
       $('#pesttype').val('');
@@ -145,7 +145,7 @@ $(document).ready(function() {
     });
 
     $(document).on("click", ".morelink", function() {
-      console.log('morelink');
+      // console.log('morelink');
       if ($(this).hasClass("less")) {
           $(this).removeClass("less");
           $(this).html(moretext);
@@ -277,7 +277,7 @@ function setImgEdit(id,path) {
 
 function showmore(){
   // Configure/customize these variables.
-  console.log('showmore');
+  // console.log('showmore');
 
   $('.more').each(function() {
       var content = $(this).html();
@@ -295,7 +295,7 @@ function showmore(){
       }
 
       if ((content.length-1) > showChar) {
-          console.log('set more text');
+          // console.log('set more text');
           var c = content.substr(0, showChar);
           var h = content.substr(showChar, content.length - showChar);
 
@@ -341,7 +341,7 @@ function selectFarm(idSetHtml,date){
   $.post("manage.php", {request: "selectFarm",date:date}, function(result){
     DATA_DB = JSON.parse(result);
     // console.log('set farm id = '+set)
-    console.log(DATA_DB);
+    // console.log(DATA_DB);
     html = "<option value=''>เลือกสวน</option>";
     for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
       html +='<option value='+DATA_DB[i]['DIMfarmID']+'>'+DATA_DB[i]['Name']+'</option>';
@@ -354,7 +354,7 @@ function selectSubfarm(idSetHtml,id,date){
     // console.log(result);
 
     DATA_DB = JSON.parse(result);
-    console.log(DATA_DB);
+    // console.log(DATA_DB);
     html = "<option selected value=''>เลือกแปลง</option>";
     
     for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
@@ -388,14 +388,14 @@ function initMap() {
     click_map = $('.click-map').html();
     // console.log(click_map);
     size = $('#size').attr('size');
-    console.log('size = '+size);
+    // console.log('size = '+size);
     size_check = size;
 
     for(i = 1 ; i < size ; i++){
       check = parseFloat($('#'+i).attr('check'));
       if(check == 1){
         namesubfarm = $('#'+i).attr('namesubfarm');
-        console.log('map i = '+i);
+        // console.log('map i = '+i);
         la = $('#'+i).attr('la');
         long = $('#'+i).attr('long');
         laFloat = parseFloat($('#'+i).attr('la'));
@@ -413,17 +413,17 @@ function initMap() {
     }
     center[0] = center[0] / (size_check - 1);
     center[1] = center[1] / (size_check - 1);
-    console.log('size_check = '+size_check);
+    // console.log('size_check = '+size_check);
 
     if (size - 1 == 0 || size_check -1 == 0) {
         center[0] = 13.736717;
         center[1] = 100.523186;
     }
 
-    console.log(center);
-    console.log("locations = ");
+    // console.log(center);
+    // console.log("locations = ");
 
-    console.log(locations);
+    // console.log(locations);
 
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 6,
@@ -442,7 +442,7 @@ function initMap() {
             icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
 
         });
-        console.log('i == ' + i)
+        // console.log('i == ' + i)
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
                 content = "";
@@ -452,14 +452,14 @@ function initMap() {
                 infowindow.setContent(content);
                 infowindow.open(map, marker);
 
-                console.log('i = ' + i)
-                console.log('la' + locations[i][1]+'long'+locations[i][2]);
+                // console.log('i = ' + i)
+                // console.log('la' + locations[i][1]+'long'+locations[i][2]);
 
                 // console.log('locations[0][0] = '+locations[0][0]);
-                console.log($('.la' + locations[i][1]+'long'+locations[i][2]).attr("test"));
+                // console.log($('.la' + locations[i][1]+'long'+locations[i][2]).attr("test"));
                 $('.la'+locations[i][1]+'long'+locations[i][2]).each(function(){
-                  console.log("this");
-                  console.log($(this).attr("test"));
+                  // console.log("this");
+                  // console.log($(this).attr("test"));
                 });
 
                 if (i != -1) {
