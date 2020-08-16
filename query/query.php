@@ -2668,41 +2668,45 @@ function getAvgWater($year)
     $sql = "SELECT IFNULL(ROUND(ROUND(SUM(`log-raining`.`Vol`),2)/COUNT(DISTINCT `dim-farm`.`dbID`),2),0) AS  AVGVol  FROM `log-raining` 
     INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-raining`.`DIMdateID`
     INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-raining`.`DIMsubFID`
-    WHERE `dim-time`.`Year2` = $year AND `log-raining`.`isDelete`=0";
+    WHERE `dim-time`.`Year2` = $year AND `log-raining`.`isDelete`=0 ";
     $DATA = selectData($sql);
     return $DATA[1]['AVGVol'];
 }
-function getLogRain($fsid)
+function getLogRain($fsid, $year = 0)
 {
     $sql = "SELECT `log-raining`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
     `log-raining`.`StartTime`,`log-raining`.`StopTime`,`log-raining`.`Period`,`log-raining`.`Vol`
     FROM `log-raining`
     INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-raining`.`DIMdateID`
     INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-raining`.`DIMsubFID`
-    WHERE `log-raining`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid
-    ORDER BY `log-raining`.`StartTime` DESC";
+    WHERE `log-raining`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid ";
+    if ($year != 0) $sql .= " AND `dim-time`.`Year2` = '$year'";
+    $sql .= " ORDER BY `log-raining`.`StartTime` DESC";
     $DATA = selectData($sql);
     return  $DATA;
 }
-function getLogWater($fsid)
+function getLogWater($fsid, $year = 0)
 {
     $sql = "SELECT `log-watering`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
     `log-watering`.`StartTime`,`log-watering`.`StopTime`,`log-watering`.`Period`,`log-watering`.`Vol`
     FROM `log-watering`
     INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-watering`.`DIMdateID`
     INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-watering`.`DIMsubFID`
-    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid
-    ORDER BY `log-watering`.`StartTime` DESC";
+    WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid  ";
+    if ($year != 0) $sql .= " AND `dim-time`.`Year2` = '$year'";
+    $sql .= " ORDER BY `log-watering`.`StartTime` DESC";
     $DATA = selectData($sql);
     return  $DATA;
 }
-function getFactDry($fsid)
+function getFactDry($fsid, $year = 0)
 {
     $sql = "SELECT StartT.`Date` AS StartT,  EndT.`Date` AS  EndT,`fact-drying`.`Period`  FROM `fact-drying` 
     INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`fact-drying`.`DIMsubFID`
     INNER JOIN `dim-time`  AS StartT ON StartT.`ID` = `fact-drying`.`DIMstartDID`
-    LEFT JOIN `dim-time`  AS EndT  ON EndT.`ID` = `fact-drying`.`DIMstopDID`
-    WHERE `dim-farm`.`dbID`=$fsid ORDER BY StartT.`Date` DESC";
+    LEFT JOIN `dim-time`  AS EndT  ON EndT.`ID` = `fact-drying`.`DIMstopDID` 
+    WHERE `dim-farm`.`dbID`=$fsid ";
+    if ($year != 0) $sql .= " AND StartT.`Year2` = '$year'";
+    $sql .= " ORDER BY StartT.`Date` DESC";
     $DATA = selectData($sql);
     return  $DATA;
 }
@@ -2908,7 +2912,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-harvest`.`DIMdateID`
             INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-harvest`.`DIMsubFID`
              WHERE  `log-harvest`.`isDelete` = 0 AND `dim-farm`.`dbID` IN $text1  ";
-            if ($year != 0) $sql .= "AND `dim-time`.`Year2` = '$year'";
+            if ($year != 0) $sql .= " AND `dim-time`.`Year2` = '$year'";
             $sql .= " ORDER BY `dim-time`.`Date`";
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
@@ -2922,8 +2926,8 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
         }
         if ($checkbox['ให้น้ำ'] == 1) {
             for ($j = 1; $j <= $DATASUBFARM[0]['numrow']; $j++) {
-                $INFOLOGRAIN = getLogRain($DATASUBFARM[$j]['FSID']);
-                $INFOLOGWATER = getLogWater($DATASUBFARM[$j]['FSID']);
+                $INFOLOGRAIN = getLogRain($DATASUBFARM[$j]['FSID'], $year);
+                $INFOLOGWATER = getLogWater($DATASUBFARM[$j]['FSID'], $year);
                 for ($i = 1; $i < count($INFOLOGRAIN); $i++) {
                     $timeStart = date("Y-m-d\TH:i:s", $INFOLOGRAIN[$i]['StartTime']);
                     $timeEnd = date("Y-m-d\TH:i:s", $INFOLOGRAIN[$i]['StopTime']);
@@ -2951,7 +2955,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
         }
         if ($checkbox['ขาดน้ำ'] == 1) {
             for ($j = 1; $j <= $DATASUBFARM[0]['numrow']; $j++) {
-                $INFOLOGDRY = getFactDry($DATASUBFARM[$j]['FSID']);
+                $INFOLOGDRY = getFactDry($DATASUBFARM[$j]['FSID'], $year);
                 for ($i = 1; $i < count($INFOLOGDRY); $i++) {
                     if ($INFOLOGDRY[$i]['Period'] > 0) {
                         $day = $INFOLOGDRY[$i]['Period'];

@@ -43,7 +43,6 @@ for ($i = 0; $i < count($event); $i++) {
   $checkbox[$event[$i]] = 1;
 }
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
-
 ?>
 <link href='../../Calendar/packages/core/main.css' rel='stylesheet' />
 <link href='../../Calendar/packages/daygrid/main.css' rel='stylesheet' />
