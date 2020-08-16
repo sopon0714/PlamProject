@@ -2158,7 +2158,9 @@ function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &
             JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
             JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
            JOIN  `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-            WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = '$DBactID'
+            WHERE `log-activity`.`isDelete` = 0 AND `log-activity`.`DBactID` = '$DBactID' ";
+            if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.`Year2` = '$fyear' ";
+            $sql = $sql."
             GROUP BY `dim-address`.`ID`,`log-activity`.`ID`,`log-activity`.`Modify`,`log-activity`.`DIMdateID`,
             `log-activity`.`DIMownerID`,`log-activity`.`DIMfarmID`,`log-activity`.`DIMsubFID`,
             `log-activity`.`Note`,`log-activity`.`PICs`,  `log-farm`.`Latitude`,
@@ -2169,7 +2171,6 @@ function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &
             ORDER BY `log-activity`.`ID` ASC)AS t1 GROUP BY t1.`dbID` ORDER BY `max_date` DESC)AS t2 WHERE 1";
     if ($fpro    != 0)  $sql = $sql . " AND t2.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND t2.dbDistID = '" . $fdist . "' ";
-    if ($fyear   != 0)  $sql = $sql . " AND t2.Year2 = '" . $fyear . "' ";
     if ($fmin != -1 && $fmax != -1)  $sql = $sql . " AND t2.time >= '" . $fmin . "' AND t2.time <= '$fmax'";
 
     $LOG = selectData($sql);
