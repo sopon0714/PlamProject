@@ -1,4 +1,3 @@
-"<?php echo session_start(); ?>"
 $( document ).ready(function() {
 
     $('.tt').tooltip();
@@ -6,7 +5,6 @@ $( document ).ready(function() {
     pullData();
     let dataD;
     $('#addDept').click(function(){
-
             $("#addModal").modal();
            
     });
@@ -38,8 +36,6 @@ $( document ).ready(function() {
         $('#e_o_department').val(department);
         $('#e_o_alias').val(alias);
         $('#e_o_note').val(note);
-
-        
 
     });
     $('#save').click(function(){
