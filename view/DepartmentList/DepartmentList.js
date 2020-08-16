@@ -13,15 +13,14 @@ $( document ).ready(function() {
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             dataD = JSON.parse(this.responseText);
-             console.log(dataD);  
-           
+            //  console.log(dataD);  
         };
         }
         xhttp.open("POST", "manage.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(`request=select`);
     }
-    $(document).on("click", ".btn_edit'", function() {
+    $(document).on("click", ".btn_edit", function() {
         $("#editModal").modal();
         var did = $(this).attr('did');
         var department = $(this).attr('department');
@@ -48,8 +47,6 @@ $( document ).ready(function() {
         if(!check_blank(data)) return;
         if(!check_department(department)) return;
         if(!check_alias(alias)) return;
-
-    
     })  
     function check_blank(selecter){
         for(i in selecter){
