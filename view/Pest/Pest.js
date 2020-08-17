@@ -174,8 +174,8 @@ $(document).ready(function() {
         // console.log(DATA_DB)
         path = "../../icon/pest/" + DATA_DB[1]['dbpestLID'] + "/" + DATA_DB[1]['FileName'];
         $('#data_icon').attr('src',path);
-        $('#data_name').html('ชื่อ : '+DATA_DB[1]["Name"]);
-        $('#data_alias').html('ชื่อทางการ : '+DATA_DB[1]["Alias"]);
+        $('#data_name').html('ชื่อ : '+DATA_DB[1]["Alias"]);
+        $('#data_alias').html('ชื่อทางการ : '+DATA_DB[1]["Name"]);
 
         if(ptid == 1){
           subpath = "insect";
