@@ -43,6 +43,7 @@ for ($i = 0; $i < count($event); $i++) {
   $checkbox[$event[$i]] = 1;
 }
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
+
 ?>
 <link href='../../Calendar/packages/core/main.css' rel='stylesheet' />
 <link href='../../Calendar/packages/daygrid/main.css' rel='stylesheet' />
@@ -207,6 +208,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
+        console.log(xhttp.responseText);
         document.getElementById('InfoData').innerHTML = xhttp.responseText;
       }
     }
@@ -244,7 +246,6 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
     events: <?php echo getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox); ?>,
     eventClick: function(info) {
-      alert(':start: ' + info.event.extendedProps['status'] + ':start: ' + info.event.extendedProps['color'] + ':start: ' + info.event.extendedProps['date']);
       var dateStr = info.event.extendedProps['date'];
       var dArr = dateStr.split("-");
       var fpro = $('#s_province').val();

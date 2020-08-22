@@ -2976,6 +2976,37 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             }
         }
         if ($checkbox['ขาดน้ำ'] == 1) {
+            $myfile = fopen("./infoDrying.json", "r");
+            $INFO = json_decode(fread($myfile, filesize("./infoDrying.json")), true);
+            fclose($myfile);
+            $INFODATE = array();
+            foreach ($INFO as $Date => $FSID) {
+                $num = 0;
+                $DateYear = date("Y", strtotime($Date)) + 543;
+                if ($DateYear == $year || $year == 0) {
+                    foreach ($INFO[$Date] as $FSID => $status) {
+                        if (isset($INFOFARM[$FSID]) && isset($INFO[$Date][$FSID])) {
+                            $num++;
+                        }
+                    }
+                    $INFODATE[$Date] = $num;
+                }
+            }
+            foreach ($INFODATE as $Date => $num) {
+                if ($num != 0) {
+                    $text .= "{
+                    title: 'มีการขาดน้ำ $num แปลง',
+                    start: '$Date',
+                    color: '#E51B1B',
+                    textColor: '#FFFFFF',
+                    extendedProps: {
+                        status: 'ขาดน้ำ',
+                        color: '#E51B1B',
+                        date: '$Date'
+                      }
+                },";
+                }
+            }
         }
         if ($checkbox['ล้างคอขวด'] == 1) {
             $sql = "SELECT `dim-time`.`Date`, COUNT(`dim-farm`.`dbID`) AS numSubFarm FROM `log-activity` 

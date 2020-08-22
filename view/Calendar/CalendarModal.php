@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalInfo" style="margin-top: 10%;margin-left: 5%;">
+<div class="modal fade" id="modalInfo" style="margin-top: 10%;margin-left: 5%;width: 110%;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header header-modal" id="headermodal" style="color: white;">

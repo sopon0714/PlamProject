@@ -202,6 +202,33 @@ if ($result == 'getTextInFo') {
                             <td class=\"text-left\">ตรวจพบ {$DATA[$i]['Alias']} ประเภท {$DATA[$i]['TypeTH']}</td>
                         </tr>";
             }
+        } else  if ($status == 'ขาดน้ำ') {
+            $sql = "SELECT `dim-farm`.`dbID` AS FSID , STARTDATE.`Date` AS startT , 
+            IFNULL(ENDDATE.`Date`,'ปัจจุบัน') AS endT ,`fact-drying`.`Period` FROM `fact-drying` 
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-drying`.`DIMsubFID`
+            INNER JOIN  `dim-time` AS STARTDATE  ON   STARTDATE.`ID` = `fact-drying`.`DIMstartDID`
+            LEFT JOIN  `dim-time` AS ENDDATE  ON   ENDDATE.`ID` = `fact-drying`.`DIMstopDID`
+            WHERE `dim-farm`.`dbID` IN  $text1 AND `STARTDATE`.`Date` <= '$date' AND (`ENDDATE`.`Date` > '$date' OR `ENDDATE`.`Date` IS NULL) ";
+            $DATA = selectData($sql);
+
+            $len = $DATA[0]['numrow'];
+            for ($i = 1; $i <= $len; $i++) {
+                $Period = $DATA[$i]['Period'];
+                $startT = date("d/m/", strtotime($DATA[$i]['startT'])) . (date("Y", strtotime($DATA[$i]['startT'])) + 543);
+                if ($DATA[$i]['endT'] != "ปัจจุบัน") {
+                    $endT = date('d/m/', strtotime('-1 day', strtotime($DATA[$i]['endT']))) . (date('Y', strtotime('-1 day', strtotime($DATA[$i]['endT']))) + 543);
+                } else {
+                    $endT = "ปัจจุบัน";
+                }
+                if ($Period == 0) {
+                    $Period = date_diff(date_create($DATA[$i]['startT']), date_create(date("Y-m-d")))->format("%a");
+                }
+                $text .= "<tr>
+                            <td class=\"text-left\">{$INFOFARM[$DATA[$i]['FSID']]['NameFarm']}</td>
+                            <td class=\"text-left\">{$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']}</td>
+                            <td class=\"text-left\">ช่วงขาดน้ำ $startT - $endT  ระยะเวลา $Period วัน</td>
+                        </tr>";
+            }
         }
         echo $text;
     }
