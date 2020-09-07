@@ -445,12 +445,12 @@ switch ($action) {
                             updateData($sql);
                         } else {
                             echo "1";
-                            $p1 = date_diff(date_create($CHECKDrying[1]['StartTime']), date_create($dateRain))->format("%a");
+                            $p1 = date_diff(date_create($CHECKDrying[1]['StartTime']), date_create($dateWater))->format("%a");
                             $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
                                     VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$CHECKDrying[1]['DIMstartDID']}', '{$DIMDATE[1]['ID']}', '{$CHECKDrying[1]['DIMownerID']}', '{$CHECKDrying[1]['DIMfarmID']}', '{$CHECKDrying[1]['DIMsubFID']}', '$p1')";
                             addinsertData($sql);
                             $sql = "INSERT INTO `fact-drying` (`ID`, `Modify`, `LOGloginID`, `DIMstartDID`, `DIMstopDID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`, `Period`) 
-                                    VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', NULL , '$dimOwnerID', '$dimFarmIDRian', '$dimSubFarmIDRian', '0')";
+                                    VALUES (NULL, '$time', '{$LOG_LOGIN[1]['ID']}', '{$DIMDATETOMORROW[1]['ID']}', NULL , '$dimOwnerID', '$dimFarmIDWater', '$dimSubFarmIDWater', '0')";
                             addinsertData($sql);
                             $sql = "DELETE FROM `fact-drying` WHERE `fact-drying`.`ID` = {$CHECKDrying[1]['ID']}";
                             deletedata($sql);

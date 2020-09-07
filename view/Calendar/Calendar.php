@@ -43,6 +43,7 @@ for ($i = 0; $i < count($event); $i++) {
   $checkbox[$event[$i]] = 1;
 }
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
+
 ?>
 <link href='../../Calendar/packages/core/main.css' rel='stylesheet' />
 <link href='../../Calendar/packages/daygrid/main.css' rel='stylesheet' />
@@ -68,6 +69,10 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
   .fc-month-view span.fc-title {
     white-space: normal;
+  }
+
+  .myCalendar {
+    cursor: pointer;
   }
 </style>
 <div class="container">
@@ -180,13 +185,14 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
       <div class="card">
         <div class="card-body">
-          <div id='calendar'></div>
+          <div id='calendar' style="cursor:pointer;"></div>
         </div>
       </div>
     </div>
 
   </div>
 </div>
+<?php include_once("./CalendarModal.php"); ?>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 
 <script src='../../Calendar/packages/core/main.js'></script>
@@ -198,6 +204,18 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 <script src='../../Calendar/packages/core/locales-all.js'></script>
 <script src="Calendar.js"></script>
 <script>
+  function getTextInFo(fpro, fdist, fullname, status, date) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(xhttp.responseText);
+        document.getElementById('InfoData').innerHTML = xhttp.responseText;
+      }
+    }
+    xhttp.open("POST", "data.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(`fpro=${fpro}&result=getTextInFo&fdist=${fdist}&fullname=${fullname}&status=${status}&date=${date}`);
+  }
   var calendarEl1 = document.getElementById('calendar');
 
   var calendar = new FullCalendar.Calendar(calendarEl1, {
@@ -209,7 +227,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     header: {
       left: 'prevYear,prev,next,nextYear today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,listMonth'
+      right: 'dayGridMonth,listMonth'
     },
     buttonText: {
       list: 'รายละเอียด'
@@ -226,7 +244,20 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     navLinks: true,
     businessHours: true,
 
-    events: <?php echo getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox); ?>
+    events: <?php echo getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox); ?>,
+    eventClick: function(info) {
+      var dateStr = info.event.extendedProps['date'];
+      var dArr = dateStr.split("-");
+      var fpro = $('#s_province').val();
+      var fdist = $('#s_distrinct').val();
+      var fullname = $('#s_name').val();
+      var status = info.event.extendedProps['status'];
+      dateStr = dArr[2] + "/" + dArr[1] + "/" + (Number(dArr[0]) + 543);
+      $('#headertitle').html("ข้อมูล " + info.event.extendedProps['status'] + " : วันที่  " + dateStr);
+      $('#headermodal').css("background-color", info.event.extendedProps['color']);
+      getTextInFo(fpro, fdist, fullname, status, info.event.extendedProps['date']);
+      $("#modalInfo").modal('show');
+    }
   });
   calendar.render();
 </script>
