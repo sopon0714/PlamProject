@@ -111,8 +111,18 @@ function getSubDistrinctInDistrinct($ad2id)
     $SUBDISTRINCT_DISTRINCT = selectData($sql);
     return $SUBDISTRINCT_DISTRINCT;
 }
-//-----------------------FarmerList--------------------------
 
+//-----------------------FarmerList--------------------------
+function getFarmerAll(){
+    $sql = "SELECT `log-farmer`.`ID`,`dim-user`.`dbID`,`dim-user`.`FullName` FROM `log-farmer`
+    JOIN `dim-user` ON `log-farmer`.`DIMuserID` = `dim-user`.`ID`
+    WHERE `log-farmer`.`ID` IN (
+    SELECT MAX(`log-farmer`.`ID`) as max FROM `log-farmer`
+    JOIN `dim-user` ON `log-farmer`.`DIMuserID` = `dim-user`.`ID`
+    GROUP BY `dim-user`.`dbID`)";
+    $data = selectData($sql);
+    return $data;
+}
 function getCountFarmer()
 {
     $sql = "SELECT COUNT(*) AS countFarmer FROM `db-farmer`";

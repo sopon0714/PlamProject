@@ -4,12 +4,9 @@ $idUT = $_SESSION[md5('typeid')];
 $CurrentMenu = "Chart";
 include_once("../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
-$fpesttype = 0;
 
 $PROVINCE = getProvince();
-$YEAR = getYearAgriMap();
-$PESTTYPE = getPestType();
-
+$FARMER = getFarmerAll();
 ?>
 <style>
 .graph {
@@ -176,11 +173,11 @@ $PESTTYPE = getPestType();
                                     <select class="form-control selectpicker" data-live-search="true"
                                         title="กรุณาเลือกหัวข้อ">
                                         <option value="">กรุณาเลือกหัวข้อสวน/แปลง</option>
-                                        <option name="province" id="province" value="province">จังหวัด</option>
-                                        <option name="district" id="district" value="district">อำเภอ</option>
-                                        <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
-                                        <option name="farm" id="farm" value="farm">สวน</option>
-                                        <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
+                                        <option name="province" id="province" value="จังหวัด">จังหวัด</option>
+                                        <option name="district" id="district" value="อำเภอ">อำเภอ</option>
+                                        <option name="subdistrict" id="subdistrict" value="ตำบล">ตำบล</option>
+                                        <option name="farm" id="farm" value="สวน">สวน</option>
+                                        <option name="subfarm" id="subfarm" value="แปลง">แปลง</option>
                                     </select>
                                 </div>
                             </div>
@@ -227,10 +224,10 @@ $PESTTYPE = getPestType();
                             <div class="row mb-3">
                                 <div class="col-4">
                                     <select class="form-control selectpicker" data-live-search="true" id="condition"
-                                        title="กรุณาเลือกหัวข้อ" style="width:307px;">
+                                        title="กรุณาเลือกหัวข้อ" style="width:246px;">
                                         <option value="">ทั้งหมด</option>
-                                        <option name="max" id="max" value="max">มากที่สุด</option>
-                                        <option name="min" id="min" value="min">น้อยที่สุด</option>
+                                        <option name="max" id="max" value="มากที่สุด">มากที่สุด</option>
+                                        <option name="min" id="min" value="น้อยที่สุด">น้อยที่สุด</option>
                                     </select>
                                 </div>
                                 <div class="col-2 maxmin" style="margin-left:13px;">
@@ -256,10 +253,10 @@ $PESTTYPE = getPestType();
                                     <select class="form-control selectpicker" data-live-search="true"
                                         title="กรุณาเลือกหัวข้อ">
                                         <option value="">กรุณาเลือกหน่วยวัด</option>
-                                        <option name="water" id="water" value="water">ให้น้ำ</option>
-                                        <option name="fertilize" id="fertilize" value="fertilize">ให้ปุ๋ย</option>
-                                        <option name="cutbranch" id="cutbranch" value="cutbranch">ล้างคอขวด</option>
-                                        <option name="pestcontrol" id="pestcontrol" value="pestcontrol">กำจัดวัชพืช
+                                        <option name="water" id="water" value="ให้น้ำ">ให้น้ำ</option>
+                                        <option name="fertilize" id="fertilize" value="ให้ปุ๋ย">ให้ปุ๋ย</option>
+                                        <option name="cutbranch" id="cutbranch" value="ล้างคอขวด">ล้างคอขวด</option>
+                                        <option name="pestcontrol" id="pestcontrol" value="กำจัดวัชพืช">กำจัดวัชพืช
                                         </option>
                                         <option name="pest" id="pest" value="pest">ตรวจพบศัตรูพืช</option>
                                     </select>
@@ -275,13 +272,15 @@ $PESTTYPE = getPestType();
                                     <select class="form-control selectpicker" data-live-search="true"
                                         title="กรุณาเลือกหัวข้อ">
                                         <option value="">กรุณาเลือกการคำนวณ</option>
-                                        <option name="maximum" id="maximum" value="maximum">มากที่สุด (maximum)</option>
-                                        <option name="minimum" id="minimum" value="minimum">น้อยที่สุด (minimum)
+                                        <option name="maximum" id="maximum" value="มากที่สุด">มากที่สุด (maximum)
                                         </option>
-                                        <option name="average" id="average" value="average">เฉลี่ย (average)</option>
-                                        <option name="summary" id="summary" value="summary">ผลรวม (summary)</option>
-                                        <option name="sd" id="sd" value="sd">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
-                                        <option name="var" id="var" value="var">ค่าความแปรปรวน (VAR)</option>
+                                        <option name="minimum" id="minimum" value="น้อยที่สุด">น้อยที่สุด (minimum)
+                                        </option>
+                                        <option name="average" id="average" value="เฉลี่ย">เฉลี่ย (average)</option>
+                                        <option name="summary" id="summary" value="ผลรวม">ผลรวม (summary)</option>
+                                        <option name="sd" id="sd" value="ค่าส่วนเบี่ยงเบนมาตรฐาน">
+                                            ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
+                                        <option name="var" id="var" value="ค่าความแปรปรวน">ค่าความแปรปรวน (VAR)</option>
                                     </select>
                                 </div>
                             </div>
@@ -325,9 +324,9 @@ $PESTTYPE = getPestType();
                                 <br>
                                 <ul class="list1 sortable " id="list1">
                                     <?php
-										$ArrayInfoFarmer = getAllFarmer();
-										for ($i = 1; $i <= count($ArrayInfoFarmer); $i++) {
-											echo "<li NameF='{$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}'>$i) {$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}</li>";
+										$ArrayInfo = getProvince();
+										for ($i = 1; $i <= count($ArrayInfo); $i++) {
+											echo "<li Name='{$ArrayInfo[$i]['Province']} '>$i) {$ArrayInfo[$i]['Province']} </li>";
 										}
 										?>
                                 </ul>
@@ -347,15 +346,16 @@ $PESTTYPE = getPestType();
                     <div class="col-sm-3">
                     </div>
                     <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
                         <select id="selectprovince" name="selectprovince" class="form-control " style="width: 200px;">
-                            <option selected value=0>เลือกทั้งหมด</option>
+                            <option selected value=0>เลือกจังหวัด</option>
                             <?php
                                 for ($i = 1; $i < sizeof($PROVINCE); $i++) {
-                                    if ($fpro == $PROVINCE[$i]["AD1ID"])
-                                        echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '" selected>' . $PROVINCE[$i]["Province"] . '</option>';
-                                    else
-                                        echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '">' . $PROVINCE[$i]["Province"] . '</option>';
-                                    }
+                                    echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '">' . $PROVINCE[$i]["Province"] . '</option>';
+                                }
                             ?>
                         </select>
                     </div>
@@ -378,6 +378,19 @@ $PESTTYPE = getPestType();
                         <label for="dist3">เฉพาะอำเภอ</label><br>
                     </div>
                 </div>
+                <div class="row onedist">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectdist" name="selectdist" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกอำเภอ</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <span style="margin-left: 60px;">ตำบล</span>
@@ -393,6 +406,19 @@ $PESTTYPE = getPestType();
                     <div class="col-sm-3">
                         <input type="radio" id="subdist3" name="s_subdist" value="subdist3">
                         <label for="subdist3">เฉพาะตำบล</label><br>
+                    </div>
+                </div>
+                <div class="row onesubdist">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectsubdist" name="selectsubdist" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกตำบล</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -412,6 +438,19 @@ $PESTTYPE = getPestType();
                         <label for="farm3">เฉพาะสวน</label><br>
                     </div>
                 </div>
+                <div class="row onefarm">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectfarm" name="selectfarm" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกสวน</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <span style="margin-left: 60px;">แปลง</span>
@@ -427,6 +466,19 @@ $PESTTYPE = getPestType();
                     <div class="col-sm-3">
                         <input type="radio" id="subfarm3" name="s_subfarm" value="subfarm3">
                         <label for="subfarm3">เฉพาะแปลง</label><br>
+                    </div>
+                </div>
+                <div class="row onesubfarm">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectsubfarm" name="selectsubfarm" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกแปลง</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -451,6 +503,24 @@ $PESTTYPE = getPestType();
                         <label for="farmer3">เฉพาะคน</label><br>
                     </div>
                 </div>
+                <div class="row onefarmer">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectfarmer" name="selectfarmer" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกเกษตรกร</option>
+                            <?php
+                                for ($i = 1; $i < sizeof($FARMER); $i++) {
+                                    echo '<option value="' . $FARMER[$i]["dbID"] . '">' . $FARMER[$i]["FullName"] . '</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <span style="margin-left: 20px;">ระยะเวลากิจกรรม</span>
@@ -473,6 +543,19 @@ $PESTTYPE = getPestType();
                         <label for="year3">เฉพาะปี</label><br>
                     </div>
                 </div>
+                <div class="row oneyear">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectyear" name="selectyear" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกปี</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3">
                         <span style="margin-left: 60px;">เดือน</span>
@@ -488,6 +571,19 @@ $PESTTYPE = getPestType();
                     <div class="col-sm-3">
                         <input type="radio" id="month3" name="s_month" value="month3">
                         <label for="month3">เฉพาะเดือน</label><br>
+                    </div>
+                </div>
+                <div class="row onemonth">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectmonth" name="selectmonth" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกเดือน</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -507,11 +603,24 @@ $PESTTYPE = getPestType();
                         <label for="day3">เฉพาะวัน</label><br>
                     </div>
                 </div>
+                <div class="row oneday">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="selectday" name="selectday" class="form-control " style="width: 200px;">
+                            <option selected value=0>เลือกวัน</option>
+                        </select>
+                    </div>
+                </div>
                 <br>
                 <div class="col-12">
                     <div class="card-footer" align="center">
-                        <button type="button" id="search" name="search" class="btn"
-                            style="background-color: <?= $color ?>; color:white; height:50px; width:100px;">ค้นหา
+                        <button type="button" id="setsubmit" name="setsubmit" class="btn"
+                            style="background-color: <?= $color ?>; color:white; height:50px; width:100px;">นำเสนอ
                             <i class="fas fa-search"></i> </button>
                     </div>
                 </div>
@@ -519,7 +628,16 @@ $PESTTYPE = getPestType();
         </div>
     </div>
 </div>
-
+<div class="container">
+    <div class="row">
+        <div class="col-xl-12 col-12 mb-6">
+            <div class="card">
+                <div class="card-header card-bg" style="background-color: <?= $color ?>; color: white;">
+                    <i class="fas fa-search" id="present"> </i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
