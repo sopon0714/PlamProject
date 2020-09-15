@@ -9,10 +9,34 @@ $PROVINCE = getProvince();
 $FARMER = getFarmerAll();
 ?>
 <style>
-.graph {
-    width: 100px;
-    height: 100px;
-}
+    .graph {
+        width: 100px;
+        height: 100px;
+    }
+    .sortable {
+		list-style-type: none;
+		list-style-position: inside;
+		margin: 0px 12px 8px 0px;
+		width: 80%;
+		height: 200px;
+		padding: 2px;
+		border-width: 1px;
+		border-style: solid;
+		min-height: 100px;
+		overflow: scroll;
+
+	}
+
+	.sortable li {
+		margin: 3px 3px 3px 3px;
+		font-size: 1em;
+		height: 18px;
+		padding-bottom: 30px;
+		padding-left: 10px;
+		border: 2px dashed #d3d3d3;
+		background-color: #eee;
+		cursor: pointer;
+	}
 </style>
 
 <div class="container">
@@ -322,11 +346,11 @@ $FARMER = getFarmerAll();
                             <div class="col-sm-3 ">
                                 จังหวัด
                                 <br>
-                                <ul class="list1 sortable " id="list1">
+                                <ul class="province_list1 sortable " id="province_list1">
                                     <?php
 										$ArrayInfo = getProvince();
-										for ($i = 1; $i <= count($ArrayInfo); $i++) {
-											echo "<li Name='{$ArrayInfo[$i]['Province']} '>$i) {$ArrayInfo[$i]['Province']} </li>";
+										for ($i = 1; $i <= $ArrayInfo[0]['numrow']; $i++) {
+											echo "<li Name='{$ArrayInfo[$i]['Province']}' id_attr='{$ArrayInfo[$i]['AD1ID']}'>{$ArrayInfo[$i]['Province']} </li>";
 										}
 										?>
                                 </ul>
@@ -334,13 +358,12 @@ $FARMER = getFarmerAll();
                             <div class="col-sm-4 ">
                                 จังหวัดที่เลือก
                                 <br>
-                                <ul class="list2 sortable" id="list2">
+                                <ul class="province_list2 sortable" id="province_list2">
 
                                 </ul>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="row oneprovince">
                     <div class="col-sm-3">
@@ -366,16 +389,37 @@ $FARMER = getFarmerAll();
                         <span style="margin-left: 60px;">อำเภอ</span>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="dist1" name="s_dist" value="dist1">
+                        <input class="set_pro" type="radio" id="dist1" name="s_dist" value="dist1">
                         <label for="dist1">ทุกอำเภอ</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="dist2" name="s_dist" value="dist2">
+                        <input class="set_pro" type="radio" id="dist2" name="s_dist" value="dist2">
                         <label for="dist2">หลายอำเภอ</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="dist3" name="s_dist" value="dist3">
+                        <input class="set_pro" type="radio" id="dist3" name="s_dist" value="dist3">
                         <label for="dist3">เฉพาะอำเภอ</label><br>
+                    </div>
+                </div>
+                <div class="row manydist">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                อำเภอ
+                                <br>
+                                <ul class="dist_list1 sortable " id="dist_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                อำเภอที่เลือก
+                                <br>
+                                <ul class="dist_list2 sortable" id="dist_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row onedist">
@@ -396,16 +440,37 @@ $FARMER = getFarmerAll();
                         <span style="margin-left: 60px;">ตำบล</span>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="subdist1" name="s_subdist" value="subdist1">
+                        <input class="set_pro set_dist" type="radio" id="subdist1" name="s_subdist" value="subdist1">
                         <label for="subdist1">ทุกตำบล</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="subdist2" name="s_subdist" value="subdist2">
+                        <input class="set_pro set_dist" type="radio" id="subdist2" name="s_subdist" value="subdist2">
                         <label for="subdist2">หลายตำบล</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="subdist3" name="s_subdist" value="subdist3">
+                        <input class="set_pro set_dist" type="radio" id="subdist3" name="s_subdist" value="subdist3">
                         <label for="subdist3">เฉพาะตำบล</label><br>
+                    </div>
+                </div>
+                <div class="row manysubdist">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                ตำบล
+                                <br>
+                                <ul class="subdist_list1 sortable " id="subdist_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                ตำบลที่เลือก
+                                <br>
+                                <ul class="subdist_list2 sortable" id="subdist_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row onesubdist">
@@ -426,16 +491,37 @@ $FARMER = getFarmerAll();
                         <span style="margin-left: 60px;">สวน</span>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="farm1" name="s_farm" value="farm1">
+                        <input class="set_pro set_dist set_subdist" type="radio" id="farm1" name="s_farm" value="farm1">
                         <label for="farm1">ทุกสวน</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="farm2" name="s_farm" value="farm2">
+                        <input class="set_pro set_dist set_subdist" type="radio" id="farm2" name="s_farm" value="farm2">
                         <label for="farm2">หลายสวน</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="farm3" name="s_farm" value="farm3">
+                        <input class="set_pro set_dist set_subdist" type="radio" id="farm3" name="s_farm" value="farm3">
                         <label for="farm3">เฉพาะสวน</label><br>
+                    </div>
+                </div>
+                <div class="row manyfarm">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                สวน
+                                <br>
+                                <ul class="farm_list1 sortable " id="farm_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                สวนที่เลือก
+                                <br>
+                                <ul class="dist_list2 sortable" id="dist_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row onefarm">
@@ -456,16 +542,37 @@ $FARMER = getFarmerAll();
                         <span style="margin-left: 60px;">แปลง</span>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="subfarm1" name="s_subfarm" value="subfarm1">
+                        <input class="set_pro set_dist set_subdist set_farm" type="radio" id="subfarm1" name="s_subfarm" value="subfarm1">
                         <label for="subfarm1">ทุกแปลง</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="subfarm2" name="s_subfarm" value="subfarm2">
+                        <input class="set_pro set_dist set_subdist set_farm" type="radio" id="subfarm2" name="s_subfarm" value="subfarm2">
                         <label for="subfarm2">หลายแปลง</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="subfarm3" name="s_subfarm" value="subfarm3">
+                        <input class="set_pro set_dist set_subdist set_farm" type="radio" id="subfarm3" name="s_subfarm" value="subfarm3">
                         <label for="subfarm3">เฉพาะแปลง</label><br>
+                    </div>
+                </div>
+                <div class="row manysubfarm">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                แปลง
+                                <br>
+                                <ul class="subfarm_list1 sortable " id="subfarm_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                แปลงที่เลือก
+                                <br>
+                                <ul class="subfarm_list2 sortable" id="subfarm_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row onesubfarm">
@@ -501,6 +608,33 @@ $FARMER = getFarmerAll();
                     <div class="col-sm-3">
                         <input type="radio" id="farmer3" name="s_farmer" value="farmer3">
                         <label for="farmer3">เฉพาะคน</label><br>
+                    </div>
+                </div>
+                <div class="row manyfarmer">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                เกษตรกร
+                                <br>
+                                <ul class="farmer_list1 sortable " id="farmer_list1">
+                                <?php
+										$ArrayInfo = getFarmerAll();
+										for ($i = 1; $i <= $ArrayInfo[0]['numrow']; $i++) {
+											echo "<li Name='{$ArrayInfo[$i]['FullName']}' id_attr='{$ArrayInfo[$i]['dbID']}'>{$ArrayInfo[$i]['FullName']} </li>";
+										}
+								?>
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                เกษตรกรที่เลือก
+                                <br>
+                                <ul class="farmer_list2 sortable" id="farmer_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row onefarmer">
@@ -543,6 +677,27 @@ $FARMER = getFarmerAll();
                         <label for="year3">เฉพาะปี</label><br>
                     </div>
                 </div>
+                <div class="row manyyear">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                ปี
+                                <br>
+                                <ul class="year_list1 sortable " id="year_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                ปีที่เลือก
+                                <br>
+                                <ul class="year_list2 sortable" id="year_list2">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row oneyear">
                     <div class="col-sm-3">
                     </div>
@@ -561,16 +716,37 @@ $FARMER = getFarmerAll();
                         <span style="margin-left: 60px;">เดือน</span>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="month1" name="s_month" value="month1">
+                        <input class="set_year" type="radio" id="month1" name="s_month" value="month1">
                         <label for="month1">ทุกเดือน</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="month2" name="s_month" value="month2">
+                        <input class="set_year" type="radio" id="month2" name="s_month" value="month2">
                         <label for="month2">หลายเดือน</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="month3" name="s_month" value="month3">
+                        <input class="set_year" type="radio" id="month3" name="s_month" value="month3">
                         <label for="month3">เฉพาะเดือน</label><br>
+                    </div>
+                </div>
+                <div class="row manymonth">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                เดือน
+                                <br>
+                                <ul class="dist_list1 sortable " id="dist_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                เดือนที่เลือก
+                                <br>
+                                <ul class="dist_list2 sortable" id="dist_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row onemonth">
@@ -591,16 +767,37 @@ $FARMER = getFarmerAll();
                         <span style="margin-left: 60px;">วัน</span>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="day1" name="s_day" value="day1">
+                        <input class="set_year set_month" type="radio" id="day1" name="s_day" value="day1">
                         <label for="day1">ทุกวัน</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="day2" name="s_day" value="day2">
+                        <input class="set_year set_month" type="radio" id="day2" name="s_day" value="day2">
                         <label for="day2">หลายวัน</label><br>
                     </div>
                     <div class="col-sm-3">
-                        <input type="radio" id="day3" name="s_day" value="day3">
+                        <input class="set_year set_month" type="radio" id="day3" name="s_day" value="day3">
                         <label for="day3">เฉพาะวัน</label><br>
+                    </div>
+                </div>
+                <div class="row manyday">
+                    <div class="col-12">
+                        <div class="row mb-4" id="Infolevel2">
+                            <div class="col-sm-3 ">
+                            </div>
+                            <div class="col-sm-3 ">
+                                วัน
+                                <br>
+                                <ul class="day_list1 sortable " id="day_list1">
+                                </ul>
+                            </div>
+                            <div class="col-sm-4 ">
+                                วันที่เลือก
+                                <br>
+                                <ul class="dday_list2 sortable" id="day_list2">
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row oneday">
