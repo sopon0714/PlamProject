@@ -395,6 +395,74 @@ $(document).ready(function() {
             html += " ที่"+chose_cond+" "+$('#order').val()+" ลำดับ ";
         html += chose_label;
 
+        //pro/dist/subdist/farm/subfarm
+        if($("#pro1").prop('checked')){
+            html += " ของทุกจังหวัด";
+        }else if($("#pro2").prop('checked')){
+            html += " ของจังหวัด....";
+        }else{
+            html += " ของจังหวัด"+$("#selectprovince option:selected").html();
+            if($("#dist1").prop('checked')){
+                html += " ของทุกอำเภอ";
+            }else if($("#dist2").prop('checked')){
+                html += " ของอำเภอ....";
+            }else{
+                html += " ของอำเภอ"+$("#selectdist option:selected").html();
+                if($("#subdist1").prop('checked')){
+                    html += " ของทุกตำบล";
+                }else if($("#subdist2").prop('checked')){
+                    html += " ของตำบล....";
+                }else{
+                    html += " ของตำบล"+$("#selectsubdist option:selected").html();
+                    if($("#farm1").prop('checked')){
+                        html += " ของทุกสวน";
+                    }else if($("#farm2").prop('checked')){
+                        html += " ของสวน....";
+                    }else{
+                        html += " ของสวน"+$("#selectfarm option:selected").html();
+                        if($("#subfarm1").prop('checked')){
+                            html += " ของทุกแปลง";
+                        }else if($("#subfarm2").prop('checked')){
+                            html += " ของแปลง....";
+                        }else{
+                            html += " ของแปลง"+$("#selectsubfarm option:selected").html();
+                        }
+                    }
+                }                
+            }
+            //farmer
+            if($("#farmer1").prop('checked')){
+                html += " ของทุกเกษตรกร";
+            }else if($("#farmer2").prop('checked')){
+                html += " ของเกษตรกร....";
+            }else{
+                html += " ของเกษตรกร"+$("#selectfarmer option:selected").html();
+            }
+            //year/month/day
+            if($("#year1").prop('checked')){
+                html += " ของทุกปี ("+$('#minyear').html()+" - "+$('#maxyear').html()+")";
+            }else if($("#yesr2").prop('checked')){
+                html += " ของปี "+$('#selectyear1').val()+" - "+$('#selectyear2').val();
+            }else{
+                html += " ของปี "+$("#selectyear option:selected").html();
+                if($("#month1").prop('checked')){
+                    html += " ของทุกเดือน";
+                }else if($("#month2").prop('checked')){
+                    html += " ของเดือน "+$('#selectmonth1').val()+" - "+$('#selectmonth2').val();
+                }else{
+                    html += " ของเดือน "+$("#selectmonth option:selected").html();
+                    if($("#day1").prop('checked')){
+                        html += " ของทุกวัน";
+                    }else if($("#day2").prop('checked')){
+                        html += " ของวันที่ "+$('#selectday1').val()+" - "+$('#selectday2').val();
+                    }else{
+                        html += " ของวันที่ "+$("#selectday option:selected").html();
+                        
+                    }
+                }
+            }
+
+        }
         $('#headshow').html(html);
 
     });

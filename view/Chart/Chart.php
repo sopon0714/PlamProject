@@ -727,6 +727,9 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             ?>
                         </select>
                     </div>
+                    <label for="" id="minyear" hidden><?php $YEAR[1]["Year2"] ?></label>
+                    <label for="" id="maxyear" hidden><?php $YEAR[sizeof($YEAR)-1]["Year2"] ?></label>
+
                 </div>
                 <div class="row">
                     <div class="col-sm-3">
