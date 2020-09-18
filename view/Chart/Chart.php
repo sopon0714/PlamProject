@@ -7,6 +7,9 @@ include_once("./../../query/query.php");
 
 $PROVINCE = getProvince();
 $FARMER = getFarmerAll();
+$YEAR = getYearAgriMap();
+$MONTH = array("มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
+
 ?>
 <style>
     .graph {
@@ -195,20 +198,24 @@ $FARMER = getFarmerAll();
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <select class="form-control selectpicker" data-live-search="true"
-                                        title="กรุณาเลือกหัวข้อ">
-                                        <option value="">กรุณาเลือกหัวข้อสวน/แปลง</option>
+                                        title="กรุณาเลือกหัวข้อ" id="chose_label">
+                                        <option value="">กรุณาเลือกหัวข้อ</option>
                                         <option name="province" id="province" value="จังหวัด">จังหวัด</option>
                                         <option name="district" id="district" value="อำเภอ">อำเภอ</option>
                                         <option name="subdistrict" id="subdistrict" value="ตำบล">ตำบล</option>
                                         <option name="farm" id="farm" value="สวน">สวน</option>
                                         <option name="subfarm" id="subfarm" value="แปลง">แปลง</option>
+                                        <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
+                                        <option name="year" id="year" value="year">ปี</option>
+                                        <option name="month" id="month" value="month">เดือน</option>
+                                        <option name="day" id="day" value="day">วัน</option>
                                     </select>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <!-- <div class="col-sm-4">
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-12">
@@ -220,8 +227,8 @@ $FARMER = getFarmerAll();
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4">
+                    </div> -->
+                    <!-- <div class="col-sm-4">
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-12">
@@ -235,7 +242,7 @@ $FARMER = getFarmerAll();
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
@@ -247,9 +254,9 @@ $FARMER = getFarmerAll();
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-4">
-                                    <select class="form-control selectpicker" data-live-search="true" id="condition"
+                                    <select class="form-control selectpicker" data-live-search="true" id="chose_cond"
                                         title="กรุณาเลือกหัวข้อ" style="width:246px;">
-                                        <option value="">ทั้งหมด</option>
+                                        <option value="ทั้งหมด">ทั้งหมด</option>
                                         <option name="max" id="max" value="มากที่สุด">มากที่สุด</option>
                                         <option name="min" id="min" value="น้อยที่สุด">น้อยที่สุด</option>
                                     </select>
@@ -275,7 +282,7 @@ $FARMER = getFarmerAll();
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <select class="form-control selectpicker" data-live-search="true"
-                                        title="กรุณาเลือกหัวข้อ">
+                                        title="กรุณาเลือกหัวข้อ" id="chose_type">
                                         <option value="">กรุณาเลือกหน่วยวัด</option>
                                         <option name="water" id="water" value="ให้น้ำ">ให้น้ำ</option>
                                         <option name="fertilize" id="fertilize" value="ให้ปุ๋ย">ให้ปุ๋ย</option>
@@ -294,7 +301,7 @@ $FARMER = getFarmerAll();
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <select class="form-control selectpicker" data-live-search="true"
-                                        title="กรุณาเลือกหัวข้อ">
+                                        title="กรุณาเลือกหัวข้อ" id="chose_cal">
                                         <option value="">กรุณาเลือกการคำนวณ</option>
                                         <option name="maximum" id="maximum" value="มากที่สุด">มากที่สุด (maximum)
                                         </option>
@@ -678,24 +685,29 @@ $FARMER = getFarmerAll();
                     </div>
                 </div>
                 <div class="row manyyear">
-                    <div class="col-12">
-                        <div class="row mb-4" id="Infolevel2">
-                            <div class="col-sm-3 ">
-                            </div>
-                            <div class="col-sm-3 ">
-                                ปี
-                                <br>
-                                <ul class="year_list1 sortable " id="year_list1">
-                                </ul>
-                            </div>
-                            <div class="col-sm-4 ">
-                                ปีที่เลือก
-                                <br>
-                                <ul class="year_list2 sortable" id="year_list2">
-
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label for="">ตั้งแต่ </label>
+                        <select id="selectyear1" name="selectyear1" class="form-control " style="margin-left: 5px; width: 150px;">
+                            <option selected value=0>เลือกปี</option>
+                            <?php
+                                for ($i = 1; $i <= $YEAR[0]["numrow"]; $i++) {
+                                    echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
+                                }
+                            ?>
+                        </select>
+                        <label for="" style="margin-left:5px;">ถึง </label>
+                        <select id="selectyear2" name="selectyear2" class="form-control " style="margin-left: 5px; width: 150px;">
+                            <option selected value=0>เลือกปี</option>
+                            <?php
+                                for ($i = 1; $i <= $YEAR[0]["numrow"]; $i++) {
+                                    echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
+                                }
+                            ?>
+                        </select>
                     </div>
                 </div>
                 <div class="row oneyear">
@@ -708,6 +720,11 @@ $FARMER = getFarmerAll();
                     <div class="col-sm-3">
                         <select id="selectyear" name="selectyear" class="form-control " style="width: 200px;">
                             <option selected value=0>เลือกปี</option>
+                            <?php
+                                for ($i = 1; $i < sizeof($YEAR); $i++) {
+                                    echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
+                                }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -729,24 +746,29 @@ $FARMER = getFarmerAll();
                     </div>
                 </div>
                 <div class="row manymonth">
-                    <div class="col-12">
-                        <div class="row mb-4" id="Infolevel2">
-                            <div class="col-sm-3 ">
-                            </div>
-                            <div class="col-sm-3 ">
-                                เดือน
-                                <br>
-                                <ul class="dist_list1 sortable " id="dist_list1">
-                                </ul>
-                            </div>
-                            <div class="col-sm-4 ">
-                                เดือนที่เลือก
-                                <br>
-                                <ul class="dist_list2 sortable" id="dist_list2">
-
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label for="">ตั้งแต่ </label>
+                        <select id="selectmonth1" name="selectmonth1" class="form-control " style="margin-left: 5px; width: 150px;">
+                            <option selected value=0>เลือกเดือน</option>
+                            <?php
+                                for ($i = 0; $i < sizeof($MONTH); $i++) {
+                                    echo '<option value="' . ($i+1). '">' . $MONTH[$i]. '</option>';
+                                }
+                            ?>
+                        </select>
+                        <label for="" style="margin-left:5px;">ถึง </label>
+                        <select id="selectmonth2" name="selectmonth2" class="form-control " style="margin-left: 5px; width: 150px;">
+                            <option selected value=0>เลือกเดือน</option>
+                            <?php
+                                for ($i = 0; $i < sizeof($MONTH); $i++) {
+                                    echo '<option value="' . ($i+1). '">' . $MONTH[$i]. '</option>';
+                                }
+                            ?>
+                        </select>
                     </div>
                 </div>
                 <div class="row onemonth">
@@ -759,6 +781,11 @@ $FARMER = getFarmerAll();
                     <div class="col-sm-3">
                         <select id="selectmonth" name="selectmonth" class="form-control " style="width: 200px;">
                             <option selected value=0>เลือกเดือน</option>
+                            <?php
+                                for ($i = 0; $i < sizeof($MONTH); $i++) {
+                                    echo '<option value="' . ($i+1). '">' . $MONTH[$i]. '</option>';
+                                }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -780,24 +807,17 @@ $FARMER = getFarmerAll();
                     </div>
                 </div>
                 <div class="row manyday">
-                    <div class="col-12">
-                        <div class="row mb-4" id="Infolevel2">
-                            <div class="col-sm-3 ">
-                            </div>
-                            <div class="col-sm-3 ">
-                                วัน
-                                <br>
-                                <ul class="day_list1 sortable " id="day_list1">
-                                </ul>
-                            </div>
-                            <div class="col-sm-4 ">
-                                วันที่เลือก
-                                <br>
-                                <ul class="dday_list2 sortable" id="day_list2">
-
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-6 form-inline">
+                        <label for="">ตั้งแต่ </label>
+                        <input style="width: 100px; margin-left:5px;" class="form-control" type="number" 
+                        id="selectday1" name="selectday1" min="1" max="30" value="1">
+                        <label for="" style="margin-left:5px;">ถึง </label>
+                        <input style="width: 100px; margin-left:5px;" class="form-control" type="number" 
+                        id="selectday2" name="selectday2" min="1" max="30" value="2">
                     </div>
                 </div>
                 <div class="row oneday">
@@ -808,9 +828,8 @@ $FARMER = getFarmerAll();
                     <div class="col-sm-3">
                     </div>
                     <div class="col-sm-3">
-                        <select id="selectday" name="selectday" class="form-control " style="width: 200px;">
-                            <option selected value=0>เลือกวัน</option>
-                        </select>
+                        <input style="width: 100px;" class="form-control" type="number" id="selectday" 
+                        name="selectday" min="1" max="31" value="1">
                     </div>
                 </div>
                 <br>
@@ -829,8 +848,8 @@ $FARMER = getFarmerAll();
     <div class="row">
         <div class="col-xl-12 col-12 mb-6">
             <div class="card">
-                <div class="card-header card-bg" style="background-color: <?= $color ?>; color: white;">
-                    <i class="fas fa-search" id="present"> </i>
+                <div class="card-header card-bg " id="headshow" style="background-color: <?= $color ?>; color: white;">
+                    
                 </div>
             </div>
         </div>

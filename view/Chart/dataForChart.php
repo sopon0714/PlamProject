@@ -46,6 +46,9 @@ if(isset($_POST['request'])){
             print_r(json_encode(selectData($sql)));
 
         break;
+        case 'selectyear' :
+            print_r(json_encode(getYearAgriMap()));
+        break;
     }
 }
     

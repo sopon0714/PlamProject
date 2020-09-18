@@ -17,9 +17,9 @@ $(document).ready(function() {
     $(".set_pro").attr("disabled","disabled");
     $(".set_year").attr("disabled","disabled");
 
-    $("#condition").change(function() {
-        condition = $("#condition").val();
-        if(condition == ""){
+    $("#chose_cond").change(function() {
+        chose_cond = $("#chose_cond").val();
+        if(chose_cond == "ทั้งหมด"){
             $(".maxmin").hide();
         }else{
             $(".maxmin").show();
@@ -182,11 +182,13 @@ $(document).ready(function() {
     });
     $('[name="s_farmer"]').change(function() {
         if(document.getElementById("farmer1").checked){
+            $(".manyfarmer").hide();
             $(".onefarmer").hide();
         }else if(document.getElementById("farmer2").checked){
             $(".onefarmer").hide();
             $(".manyfarmer").show();
         }else if(document.getElementById("farmer3").checked){
+            $(".manyfarmer").hide();
             $(".onefarmer").show();
         }
     });
@@ -259,11 +261,13 @@ $(document).ready(function() {
     });
     $('[name="s_day"]').change(function() {
         if(document.getElementById("day1").checked){
+            $(".manyday").hide();
             $(".oneday").hide();
         }else if(document.getElementById("day2").checked){
             $(".oneday").hide();
             $(".manyday").show();
         }else if(document.getElementById("day3").checked){
+            $(".manyday").hide();
             $(".oneday").show();
         }
     });
@@ -342,7 +346,62 @@ $(document).ready(function() {
         html = "";
         $('#present').html();
     });
+    $('#selectyear1').change(function(){
+        $.post("dataForChart.php", {request: "selectyear"}, function(result){
+            select_year = $('#selectyear1').val();
+            result = JSON.parse(result);
+            console.log(result);
+            html="<option selected value=0>เลือกปี</option> ";
+            for (i = 1; i <= result[0]['numrow']; i++) {
+                if(result[i]["Year2"] > select_year)
+                    html += `<option value="${result[i]["Year2"]}">${result[i]["Year2"]}</option>`;
+            }
+            $("#selectyear2").html(html);
+        });
+    });
+    $('#selectmonth1').change(function(){
+        result = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+        select_month = $('#selectmonth1').val();
+        html="<option selected value=0>เลือกเดือน</option> ";
+        for (i = 0; i < result.length ; i++) {
+            if((i+1) > select_month)
+                html += `<option value="${(i+1)}">${result[i]}</option>`;
+        }
+        $("#selectmonth2").html(html);
+    });
+    $('#selectmonth').change(function(){
+        $("#selectday1").val("1");
+        $("#selectday2").val("2");
+        dayin = getDaysInMonth($('#selectmonth').val(),$('#selectyear').val());
+        $("#selectday").attr("max",dayin);
+        $("#selectday1").attr("max",dayin);
+        $("#selectday2").attr("max",dayin);
+    });
+    $('#selectday1').change(function(){
+        select_day = $('#selectday1').val();
+        select_day++;
+        $("#selectday2").attr("min",(select_day));
+    });
+    $('#setsubmit').click(function(){
+        chose_label = $('#chose_label').val();
+        chose_type = $('#chose_type').val();
+        chose_cal = $('#chose_cal').val();
+        chose_cond = $('#chose_cond').val();
+
+        html = chose_type+" "+chose_cal;
+        if(chose_cond == "ทั้งหมด")
+            html += " ตาม ";
+        else
+            html += " ที่"+chose_cond+" "+$('#order').val()+" ลำดับ ";
+        html += chose_label;
+
+        $('#headshow').html(html);
+
+    });
 });
+function getDaysInMonth (month,year) {
+   return new Date(year, month, 0).getDate();
+  }
 function hide1(){
     $(".oneprovince").hide();
     $(".onedist").hide();
