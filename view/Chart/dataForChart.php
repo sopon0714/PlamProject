@@ -49,6 +49,14 @@ if(isset($_POST['request'])){
         case 'selectyear' :
             print_r(json_encode(getYearAgriMap()));
         break;
+        case 'chart':
+            $chose_label = $_POST['chose_label'];
+            $chose_type = $_POST['chose_type'];
+            $chose_cal = $_POST['chose_cal'];
+            $chose_cond = $_POST['chose_cond'];
+            
+
+        break;
     }
 }
     
