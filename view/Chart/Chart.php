@@ -204,7 +204,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <option value="">กรุณาเลือกหัวข้อ</option>
                                             <option name="province" id="province" value="province">จังหวัด</option>
                                             <option name="district" id="district" value="district">อำเภอ</option>
-                                            <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
+                                            <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล
+                                            </option>
                                             <option name="farm" id="farm" value="farm">สวน</option>
                                             <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
                                             <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
@@ -257,7 +258,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 <div class="row mb-3">
                                     <div class="col-4">
                                         <select class="form-control selectpicker" data-live-search="true"
-                                            id="chose_cond" title="กรุณาเลือกหัวข้อ" style="width:246px;" >
+                                            id="chose_cond" title="กรุณาเลือกหัวข้อ" style="width:246px;">
                                             <option value="ทั้งหมด">ทั้งหมด</option>
                                             <option name="max" id="max" value="max">มากที่สุด</option>
                                             <option name="min" id="min" value="min">น้อยที่สุด</option>
@@ -304,7 +305,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <select class="form-control selectpicker" data-live-search="true"
-                                            title="กรุณาเลือกหัวข้อ" id="chose_cal" required> 
+                                            title="กรุณาเลือกหัวข้อ" id="chose_cal" required>
                                             <option value="">กรุณาเลือกการคำนวณ</option>
                                             <option name="maximum" id="maximum" value="MAX">มากที่สุด (maximum)
                                             </option>
@@ -336,7 +337,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <span style="margin-left: 60px;">จังหวัด</span>
                         </div>
                         <div class="col-sm-3">
-                            <input type="radio" id="pro1" name="s_pro" value="pro1">
+                            <input type="radio" id="pro1" name="s_pro" value="pro1" checked="checked">
                             <label for="pro1">ทุกจังหวัด</label><br>
                         </div>
                         <div class="col-sm-3">
@@ -618,7 +619,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <span style="margin-left: 60px;">เกษตรกร</span>
                         </div>
                         <div class="col-sm-3">
-                            <input type="radio" id="farmer1" name="s_farmer" value="farmer1">
+                            <input type="radio" id="farmer1" name="s_farmer" value="farmer1" checked="checked">
                             <label for="farmer1">ทุกคน</label><br>
                         </div>
                         <div class="col-sm-3">
@@ -685,7 +686,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <span style="margin-left: 60px;">ปี</span>
                         </div>
                         <div class="col-sm-3">
-                            <input type="radio" id="year1" name="s_year" value="year1">
+                            <input type="radio" id="year1" name="s_year" value="year1" checked="checked">
                             <label for="year1">ทุกปี</label><br>
                         </div>
                         <div class="col-sm-3">
@@ -872,7 +873,31 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                 <div class="card-header card-bg " id="headshow" style="color: <?= $color ?>; text-align: center;">
 
                 </div>
-                <canvas id="chartjs"><canvas>
+
+            </div>
+            <div class="card">
+                <div class="row">
+                    <div class="col-8">
+                        <canvas id="chartjs"><canvas>
+                    </div>
+                    <div class="col-3">
+                        <table class="table table-bordered" id="dataTable" style="margin-top:10px;" width="100%"
+                            cellspacing="0">
+                            <tr>
+                                <th>หัวข้อ</th>
+                                <th>ข้อมูล</th>
+                            </tr>
+                            <tr>
+                                <td>กานนท์ ไชยา</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>พิมพ์ประภา ทาคำ</td>
+                                <td>3</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
