@@ -68,7 +68,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                         <div class="col-sm-2">
                             <div class="card-body">
                                 <div class="row mb-2">
-                                    <input type="radio" id="table" name="present" value="table" required>
+                                    <input type="radio" id="table" name="present" value="table" checked="checked">
                                 </div>
                                 <div class="row mb-2">
                                     <img class="graph" src="./chart/table2.png">
@@ -190,91 +190,136 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <span style="margin-left: 20px; color: <?= $color ?>;">เลือกหัวข้อ</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <select class="form-control selectpicker" data-live-search="true"
-                                            title="กรุณาเลือกหัวข้อ" id="chose_label" required>
-                                            <option value="">กรุณาเลือกหัวข้อ</option>
-                                            <option name="province" id="province" value="province">จังหวัด</option>
-                                            <option name="district" id="district" value="district">อำเภอ</option>
-                                            <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล
-                                            </option>
-                                            <option name="farm" id="farm" value="farm">สวน</option>
-                                            <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
-                                            <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
-                                            <option name="year" id="year" value="year">ปี</option>
-                                            <option name="month" id="month" value="month">เดือน</option>
-                                            <option name="day" id="day" value="day">วัน</option>
-                                        </select>
-                                    </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span style="margin-left: 20px; color: <?= $color ?>;"
+                                        id="chose_label_span1">เลือกหัวข้อ</span>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <select class="form-control selectpicker" data-live-search="true"
+                                                    title="กรุณาเลือกหัวข้อ" id="chose_label1" required>
+                                                    <option value="">กรุณาเลือกหัวข้อ</option>
+                                                    <option name="province" id="province" value="province">จังหวัด
+                                                    </option>
+                                                    <option name="district" id="district" value="district">อำเภอ
+                                                    </option>
+                                                    <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล
+                                                    </option>
+                                                    <option name="farm" id="farm" value="farm">สวน</option>
+                                                    <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
+                                                    <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
+                                                    <option name="year" id="year" value="year">ปี</option>
+                                                    <option name="month" id="month" value="month">เดือน</option>
+                                                    <option name="day" id="day" value="day">วัน</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-4">
-                        <div class="card-body">
-                            <div class="row mb-3">
+                        <div class="col-8" id="normal_chart">
+                            <div class="row">
                                 <div class="col-12">
-                                    <select class="form-control selectpicker" data-live-search="true"
-                                        title="กรุณาเลือกเกษตรกร">
-                                        <option value="">กรุณาเลือกเกษตรกร</option>
-                                        <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
-                                    </select>
+                                    <span style="margin-left: 20px; color: <?= $color ?>;">เงื่อนไขหัวข้อ</span>
                                 </div>
                             </div>
-                        </div>
-                    </div> -->
-                        <!-- <div class="col-sm-4">
-                        <div class="card-body">
-                            <div class="row mb-3">
+                            <div class="row">
                                 <div class="col-12">
-                                    <select class="form-control selectpicker" data-live-search="true"
-                                        title="กรุณาเลือกหัวข้อ">
-                                        <option value="">กรุณาเลือกหัวข้อเวลา</option>
-                                        <option name="year" id="year" value="year">ปี</option>
-                                        <option name="month" id="month" value="month">เดือน</option>
-                                        <option name="day" id="day" value="day">วัน</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <span style="margin-left: 20px; color: <?= $color ?>;">เงื่อนไขหัวข้อ</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-4">
-                                        <select class="form-control selectpicker" data-live-search="true"
-                                            id="chose_cond" title="กรุณาเลือกหัวข้อ" style="width:246px;">
-                                            <option value="ทั้งหมด">ทั้งหมด</option>
-                                            <option name="max" id="max" value="max">มากที่สุด</option>
-                                            <option name="min" id="min" value="min">น้อยที่สุด</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-2 maxmin" style="margin-left:13px;">
-                                        <input class="form-control" type="number" min="3" name="order" id="order"
-                                            value="3">
-                                    </div>
-                                    <div class="col-2 maxmin">
-                                        <label for="order" style="margin-top:8px;">ลำดับ</label>
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <select class="form-control selectpicker" data-live-search="true"
+                                                    id="chose_cond" title="กรุณาเลือกหัวข้อ" style="width:246px;">
+                                                    <option value="ทั้งหมด">ทั้งหมด</option>
+                                                    <option name="max" id="max" value="max">มากที่สุด</option>
+                                                    <option name="min" id="min" value="min">น้อยที่สุด</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-2 maxmin" style="margin-left:13px;">
+                                                <input class="form-control" type="number" min="3" name="order"
+                                                    id="order" value="3">
+                                            </div>
+                                            <div class="col-2 maxmin">
+                                                <label for="order" style="margin-top:8px;">ลำดับ</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row" id="multi_chart">
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span style="margin-left: 20px; color: <?= $color ?>;"
+                                        id="chose_label_span2">เลือกหัวข้อย่อย</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <select class="form-control selectpicker" data-live-search="true"
+                                                    title="กรุณาเลือกหัวข้อ" id="chose_label2" required>
+                                                    <option value="">กรุณาเลือกหัวข้อ</option>
+                                                    <option name="province" id="province" value="province">จังหวัด</option>
+                                                    <option name="district" id="district" value="district">อำเภอ</option>
+                                                    <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
+                                                    <option name="farm" id="farm" value="farm">สวน</option>
+                                                    <option name="year" id="year" value="year">ปี</option>
+                                                    <option name="month" id="month" value="month">เดือน</option>
+                                                    <option name="day" id="day" value="day">วัน</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span style="margin-left: 20px; color: <?= $color ?>;">เงื่อนไขหัวข้อ</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <select class="form-control selectpicker" data-live-search="true"
+                                                    id="chose_cond2" title="กรุณาเลือกหัวข้อ" style="width:246px;">
+                                                    <option value="ทั้งหมด">ทั้งหมด</option>
+                                                    <option name="max" id="max" value="max">มากที่สุด</option>
+                                                    <option name="min" id="min" value="min">น้อยที่สุด</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-2 maxmin2" style="margin-left:13px;">
+                                                <input class="form-control" type="number" min="3" name="order"
+                                                    id="order2" value="3">
+                                            </div>
+                                            <div class="col-2 maxmin2">
+                                                <label for="order2" style="margin-top:8px;">ลำดับ</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-sm-4">
                             <span style="margin-left: 20px; color: <?= $color ?>;">เลือกหน่วยวัด</span>
@@ -288,8 +333,13 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                         <select class="form-control selectpicker" data-live-search="true"
                                             title="กรุณาเลือกหัวข้อ" id="chose_type" required>
                                             <option value="">กรุณาเลือกหน่วยวัด</option>
-                                            <option name="water" id="water" value="water">ให้น้ำ</option>
-                                            <option name="fertilize" id="fertilize" value="fertilize">ให้ปุ๋ย</option>
+                                            <option name="water1" id="water1" value="water1">วันให้น้ำ</option>
+                                            <option name="water2" id="water2" value="water2">วันขาดน้ำ</option>
+                                            <option name="water3" id="water3" value="water3">ปริมาตรให้น้ำ</option>
+                                            <option name="fertilize1" id="fertilize1" value="fertilize1">
+                                                จำนวนครั่งให้ปุ๋ย</option>
+                                            <option name="fertilize2" id="fertilize2" value="fertilize2">ปริมาณธาตุอาหาร
+                                            </option>
                                             <option name="cutbranch" id="cutbranch" value="cutbranch">ล้างคอขวด</option>
                                             <option name="pestcontrol" id="pestcontrol" value="pestcontrol">กำจัดวัชพืช
                                             </option>

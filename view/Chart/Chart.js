@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $(".maxmin").hide();
+    $(".maxmin2").hide();
     $(".manyprovince").hide();
     $(".manydist").hide();
     $(".manysubdist").hide();
@@ -18,6 +19,7 @@ $(document).ready(function() {
     $(".set_year").attr("disabled","disabled");
 
     $('#show_chart').hide();
+    $("#multi_chart").hide();
 
     $("#chose_cond").change(function() {
         chose_cond = $("#chose_cond").val();
@@ -27,10 +29,61 @@ $(document).ready(function() {
             $(".maxmin").show();
         }
     });
+    $("#chose_cond2").change(function() {
+        chose_cond2 = $("#chose_cond2").val();
+        if(chose_cond2 == "ทั้งหมด"){
+            $(".maxmin2").hide();
+        }else{
+            $(".maxmin2").show();
+        }
+    });
     $(function() {
         $(".province_list1, .province_list2, .dist_list1, .dist_list2, .subdist_list1, .subdist_list2, .farm_list1, .farm_list2,.subfarm_list1, .subfarm_list2, .farmer_list1, .farmer_list2, .year_list1, .year_list2, .month_list1, .month_list2, .day_list1, .day_list2").sortable({
             connectWith: ".sortable"
         });
+    });
+    $('[name="present"]').change(function() {
+        pre = $('input[name="present"]:checked').val(); 
+
+        if(pre == "pie" || pre == "bar"){
+            $("#chose_label_span1").html("เลือกหัวข้อ");
+            html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
+            <option name="province" id="province" value="province">จังหวัด</option>
+            <option name="district" id="district" value="district">อำเภอ</option>
+            <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
+            <option name="farm" id="farm" value="farm">สวน</option>
+            <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
+            <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
+            <option name="year" id="year" value="year">ปี</option>
+            <option name="month" id="month" value="month">เดือน</option>
+            <option name="day" id="day" value="day">วัน</option>`;
+            $("#multi_chart").hide();
+
+        }else if(pre == "line" || pre == "area"){
+            $("#chose_label_span1").html("เลือกหัวข้อ");
+            html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
+            <option name="year" id="year" value="year">ปี</option>
+            <option name="month" id="month" value="month">เดือน</option>
+            <option name="day" id="day" value="day">วัน</option>`;
+            $("#multi_chart").hide();
+
+        }else if(pre == "multiline" || pre == "multibar" || pre == "complexbar" || pre == "multiarea"){
+            $("#chose_label_span1").html("เลือกหัวข้อหลัก");
+            html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
+            <option name="province" id="province" value="province">จังหวัด</option>
+            <option name="district" id="district" value="district">อำเภอ</option>
+            <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
+            <option name="farm" id="farm" value="farm">สวน</option>
+            <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
+            <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
+            <option name="year" id="year" value="year">ปี</option>
+            <option name="month" id="month" value="month">เดือน</option>
+            <option name="day" id="day" value="day">วัน</option>`;
+            $("#multi_chart").show();
+            
+        }
+        $("#chose_label1").html(html1);
+
     });
     $('[name="s_pro"]').change(function() {
         array_set1 = ["#dist1","#dist2","#dist3","#subdist1","#subdist2","#subdist3","#farm1","#farm2","#farm3","#subfarm1","#subfarm2","#subfarm3"];
@@ -387,15 +440,15 @@ $(document).ready(function() {
     $('#setsubmit').click(function(){
         present = $('input[name="present"]:checked').val(); 
             // console.log("present=|"+present+"|");
-            // console.log("chose_label=|"+$('#chose_label').val()+"|");
+            // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
             // console.log("chose_type=|"+$('#chose_type').val()+"|");
             // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
         if(present == "table" || present == "pie" || present == "line" || present == "multiline" || present == "bar" || present == "spider" || 
         present == "multibar" || present == "complexbar" || present == "area" || present == "multiarea" || present == "mix"
         ){
-            if($('#chose_label').val() != "" && $('#chose_type').val() != "" && $('#chose_cal').val() != ""){
+            if($('#chose_label1').val() != "" && $('#chose_type').val() != "" && $('#chose_cal').val() != ""){
                 $('#show_chart').show();
-                chose_label = $("#chose_label option:selected").html();
+                chose_label1 = $("#chose_label1 option:selected").html();
                 chose_type = $("#chose_type option:selected").html();
                 chose_cal = $("#chose_cal option:selected").html();
                 chose_cond = $("#chose_cond option:selected").html();
@@ -405,7 +458,7 @@ $(document).ready(function() {
                     html += " ตาม ";
                 else
                     html += " ที่"+chose_cond+" "+$('#order').val()+" ลำดับ ";
-                html += chose_label;
+                html += chose_label1;
         
                 //pro/dist/subdist/farm/subfarm
                 if($("#pro1").prop('checked')){
@@ -505,7 +558,7 @@ $(document).ready(function() {
                 }
                 $('#headshow').html(html);
     
-                // $.post("dataForChart.php", {request: "chart" ,chose_label: chose_label,chose_type: chose_type,chose_cal: chose_cal,chose_cond: chose_cond }, function(result){
+                // $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_type: chose_type,chose_cal: chose_cal,chose_cond: chose_cond }, function(result){
                 //     result = JSON.parse(result);
                 //     console.log(result);
     
@@ -516,28 +569,58 @@ $(document).ready(function() {
         }else{
             $('#show_chart').hide();
         } 
-
-    });
-
-    var ctx = $('#chartjs');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ]
-            }]
+        var color = Array();
+        for(i=0;i<4;i++){
+            var randomColor = Math.floor(Math.random()*16777215).toString(16);
+            color[i] = '#'+randomColor;
         }
+        var labelChart = ['แปลง1', 'แปลง2', 'แปลง3', 'อื่นๆ'];
+        var dataChart = [20, 12, 5, 30];
+        var ctx = $('#chartjs');
+        if(present == "pie"){
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labelChart,
+                    datasets: [{
+                        label: '# of Votes',
+                        data: dataChart,
+                        backgroundColor: color
+                    }]
+                }
+            });
+            html = `<tr>
+            <th>ลำดับ</th>
+            <th>หัวข้อ</th>
+            <th>ข้อมูล(วัน)</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>แปลง1</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>แปลง2</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>แปลง3</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>อื่นๆ</td>
+                <td>30</td>
+            </tr>`;
+            $('#dataTable').html(html);
+        }
+
     });
+
+    
+    
 });
 function getArrayMany(id_list){
     var children = $(id_list).children();
