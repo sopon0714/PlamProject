@@ -77,7 +77,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     <label for="table">ตาราง</label>
                                 </div>
                                 <div class="row mb-2">
-                                    <input type="radio" id="multibar" name="present" value="multibar">
+                                    <input type="radio" id="multibar" name="present" value="multi_bar">
                                 </div>
                                 <div class="row mb-2">
                                     <img class="graph" src="./chart/graph-13.png">
@@ -99,7 +99,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     <label for="pie">กราฟวงกลม</label>
                                 </div>
                                 <div class="row mb-2">
-                                    <input type="radio" id="complexbar" name="present" value="complexbar">
+                                    <input type="radio" id="complexbar" name="present" value="complex_bar">
                                 </div>
                                 <div class="row mb-2">
                                     <img class="graph" src="./chart/bar-chart(2).png">
@@ -134,7 +134,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                         <div class="col-sm-2">
                             <div class="card-body">
                                 <div class="row mb-2">
-                                    <input type="radio" id="multiline" name="present" value="multiline">
+                                    <input type="radio" id="multiline" name="present" value="multi_line">
                                 </div>
                                 <div class="row mb-2">
                                     <img class="graph" src="./chart/graph-21.png">
@@ -143,7 +143,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     <label for="multiline">กราฟหลายเส้น</label>
                                 </div>
                                 <div class="row mb-2">
-                                    <input type="radio" id="multiarea" name="present" value="multiarea">
+                                    <input type="radio" id="multiarea" name="present" value="multi_area">
                                 </div>
                                 <div class="row mb-2">
                                     <img class="graph" src="./chart/line-chart(1).png">
@@ -178,13 +178,13 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                         <div class="col-sm-2">
                             <div class="card-body">
                                 <div class="row mb-2">
-                                    <input type="radio" id="spider" name="present" value="spider">
+                                    <input type="radio" id="radar" name="present" value="chart_radar">
                                 </div>
                                 <div class="row mb-2">
                                     <img class="graph" src="./chart/diagram.png">
                                 </div>
                                 <div class="row mb-2">
-                                    <label for="spider">กราฟแมงมุม</label>
+                                    <label for="radar">กราฟแมงมุม</label>
                                 </div>
                             </div>
                         </div>
@@ -273,13 +273,13 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label2" required>
                                                     <option value="">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province" id="province" value="province">จังหวัด</option>
-                                                    <option name="district" id="district" value="district">อำเภอ</option>
-                                                    <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
-                                                    <option name="farm" id="farm" value="farm">สวน</option>
-                                                    <option name="year" id="year" value="year">ปี</option>
-                                                    <option name="month" id="month" value="month">เดือน</option>
-                                                    <option name="day" id="day" value="day">วัน</option>
+                                                    <option name="province2" id="province2" value="province">จังหวัด</option>
+                                                    <option name="district2" id="district2" value="district">อำเภอ</option>
+                                                    <option name="subdistrict2" id="subdistrict2" value="subdistrict">ตำบล</option>
+                                                    <option name="farm2" id="farm2" value="farm">สวน</option>
+                                                    <option name="year2" id="year2" value="year">ปี</option>
+                                                    <option name="month2" id="month2" value="month">เดือน</option>
+                                                    <option name="day2" id="day2" value="day">วัน</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -302,12 +302,12 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     id="chose_cond2" title="กรุณาเลือกหัวข้อ" style="width:246px;">
                                                     <option value="ทั้งหมด">ทั้งหมด</option>
-                                                    <option name="max" id="max" value="max">มากที่สุด</option>
-                                                    <option name="min" id="min" value="min">น้อยที่สุด</option>
+                                                    <option name="max2" id="max2" value="max">มากที่สุด</option>
+                                                    <option name="min2" id="min2" value="min">น้อยที่สุด</option>
                                                 </select>
                                             </div>
                                             <div class="col-2 maxmin2" style="margin-left:13px;">
-                                                <input class="form-control" type="number" min="3" name="order"
+                                                <input class="form-control" type="number" min="3" name="order2"
                                                     id="order2" value="3">
                                             </div>
                                             <div class="col-2 maxmin2">
@@ -930,21 +930,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                     <div class="col-8">
                         <canvas id="chartjs"><canvas>
                     </div>
-                    <div class="col-3">
-                        <table class="table table-bordered" id="dataTable" style="margin-top:10px;" width="100%"
-                            cellspacing="0">
-                            <tr>
-                                <th>หัวข้อ</th>
-                                <th>ข้อมูล</th>
-                            </tr>
-                            <tr>
-                                <td>กานนท์ ไชยา</td>
-                                <td>12</td>
-                            </tr>
-                            <tr>
-                                <td>พิมพ์ประภา ทาคำ</td>
-                                <td>3</td>
-                            </tr>
+                    <div class="col-4">
+                        <table class="table table-bordered" name="dataTable" id="dataTable" style="margin-top:10px; width:90%;" >
                         </table>
                     </div>
                 </div>
@@ -952,6 +939,6 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         </div>
     </div>
 </div>
-<?php include_once("../layout/LayoutFooter.php"); ?>
+<?php include_once("../layout/LayoutFooter.php"); ?> 
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="Chart.js"></script>

@@ -59,7 +59,7 @@ $(document).ready(function() {
             <option name="day" id="day" value="day">วัน</option>`;
             $("#multi_chart").hide();
 
-        }else if(pre == "line" || pre == "area"){
+        }else if(pre == "line" || pre == "area" || pre == "table"){
             $("#chose_label_span1").html("เลือกหัวข้อ");
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
             <option name="year" id="year" value="year">ปี</option>
@@ -67,7 +67,7 @@ $(document).ready(function() {
             <option name="day" id="day" value="day">วัน</option>`;
             $("#multi_chart").hide();
 
-        }else if(pre == "multiline" || pre == "multibar" || pre == "complexbar" || pre == "multiarea"){
+        }else if(pre == "multi_line" || pre == "multi_bar" || pre == "complex_bar" || pre == "multi_area" || pre == "chart_radar" || pre == "mix" ){
             $("#chose_label_span1").html("เลือกหัวข้อหลัก");
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
             <option name="province" id="province" value="province">จังหวัด</option>
@@ -415,12 +415,12 @@ $(document).ready(function() {
         });
     });
     $('#selectmonth1').change(function(){
-        result = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+        month = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
         select_month = $('#selectmonth1').val();
         html="<option selected value=0>เลือกเดือน</option> ";
-        for (i = 0; i < result.length ; i++) {
+        for (i = 0; i < month.length ; i++) {
             if((i+1) > select_month)
-                html += `<option value="${(i+1)}">${result[i]}</option>`;
+                html += `<option value="${(i+1)}">${month[i]}</option>`;
         }
         $("#selectmonth2").html(html);
     });
@@ -443,8 +443,8 @@ $(document).ready(function() {
             // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
             // console.log("chose_type=|"+$('#chose_type').val()+"|");
             // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
-        if(present == "table" || present == "pie" || present == "line" || present == "multiline" || present == "bar" || present == "spider" || 
-        present == "multibar" || present == "complexbar" || present == "area" || present == "multiarea" || present == "mix"
+        if(present == "table" || present == "pie" || present == "line" || present == "multi_line" || present == "bar" || present == "chart_radar" || 
+        present == "multi_bar" || present == "complex_bar" || present == "area" || present == "multi_area" || present == "mix"
         ){
             if($('#chose_label1').val() != "" && $('#chose_type').val() != "" && $('#chose_cal').val() != ""){
                 $('#show_chart').show();
@@ -569,59 +569,163 @@ $(document).ready(function() {
         }else{
             $('#show_chart').hide();
         } 
-        var color = Array();
-        for(i=0;i<4;i++){
-            var randomColor = Math.floor(Math.random()*16777215).toString(16);
-            color[i] = '#'+randomColor;
+        //data for chart
+        html = "";
+        labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
+        dataChart1 = [20, 12, 10, 8, 5, 30];
+        unit1 = "วัน";
+        color1 = Array();
+        colorBorder1 = Array();
+        for(i=0;i<dataChart1.length;i++){
+            // var randomColor = Math.floor(Math.random()*16777215).toString(16);
+            var r = Math.floor(Math.random() * 256);
+            var g = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            var randomColor = "rgba("+r + ", " + g + ", " + b;
+            if(checkDup(color1,randomColor)){
+                color1[i] = randomColor+",0.6)";
+                colorBorder1[i] = randomColor+",0.8)"; 
+            }
         }
-        var labelChart = ['แปลง1', 'แปลง2', 'แปลง3', 'อื่นๆ'];
-        var dataChart = [20, 12, 5, 30];
+        console.log(color1);
+        console.log("present = "+present);
+
+        //data for chart
+        fillChart = false; 
+        if(present == "area" || present == "multi_area" || present == "chart_radar"){
+            console.log("fill");
+            fillChart = true;
+        }
         var ctx = $('#chartjs');
-        if(present == "pie"){
+        if(present == "pie" || present == "bar" || present == "line" || present == "area"){
+            if(present == "area") typeChart = "line";
+            else typeChart = present;  
             var myChart = new Chart(ctx, {
-                type: 'pie',
+                type: typeChart,
                 data: {
-                    labels: labelChart,
+                    labels: labelChart1,
                     datasets: [{
-                        label: '# of Votes',
-                        data: dataChart,
-                        backgroundColor: color
+                        label: chose_type,
+                        data: dataChart1,
+                        fill: fillChart,
+                        backgroundColor: color1,
+                        borderColor : colorBorder1
                     }]
                 }
             });
+        }else{            
+            if(present == "multi_area"){
+                typeChart = "line";
+            }else{
+                t = present.split("_");
+                typeChart = t[1];
+                console.log("typeChart = "+typeChart);
+            }
+            
+            if(present == "complex_bar"){
+                optionChart = {
+                    scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+                };
+            }else{
+                optionChart = "";
+            }
+            //data for chart
+            month = ["มกราคม","พฤษภาคม","สิงหาคม","อื่นๆ"];
+            datainChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0],[1, 2, 3, 0, 2, 1]];
+            labelChart2 = month;
+            unit2 = "วัน";
+            color2 = Array();
+            colorBorder2 = Array();
+
+            for(i=0;i<labelChart2.length;i++){
+                // var randomColor = Math.floor(Math.random()*16777215).toString(16);
+                var r = Math.floor(Math.random() * 256);
+                var g = Math.floor(Math.random() * 256);
+                var b = Math.floor(Math.random() * 256);
+                var randomColor = "rgba("+r + ", " + g + ", " + b;
+                if(checkDup(color2,randomColor)){
+                    if(present == "rader"){
+                        color2[i] = randomColor+",0.1)";
+                    }else{
+                        color2[i] = randomColor+",0.6)";
+                    }
+                    colorBorder2[i] = randomColor+",0.8)"; 
+                }
+            }                
+            console.log(color2);
+            dataChart2 = [];
+            for(i=0;i<labelChart2.length;i++){
+                dataChart2[i] = {
+                    label: labelChart2[i],
+                    data: datainChart[i],
+                    fill: fillChart,
+                    backgroundColor: color2[i],
+                    borderColor : colorBorder2[i]
+                };
+            }
+            // data for chart
+            console.log("optionChart = "+optionChart);
+            var myChart = new Chart(ctx, {
+                type: typeChart,
+                data: {
+                    labels: labelChart1,
+                    datasets: dataChart2
+                },
+                options: optionChart
+            });
+        }
+
+        if(present == "pie" ||  present == "line" || present == "bar"){
             html = `<tr>
             <th>ลำดับ</th>
             <th>หัวข้อ</th>
-            <th>ข้อมูล(วัน)</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>แปลง1</td>
-                <td>20</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>แปลง2</td>
-                <td>12</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>แปลง3</td>
-                <td>5</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>อื่นๆ</td>
-                <td>30</td>
+            <th>ข้อมูล (${unit1}) </th>
             </tr>`;
-            $('#dataTable').html(html);
+            for(i=0;i<dataChart1.length;i++){
+                j=i+1;
+                html+=`<tr>
+                <td>${j}</td>
+                <td>${labelChart1[i]}</td>
+                <td>${dataChart1[i]}</td>
+                </tr>`;
+            }
+        }else{
+            html = `<tr>
+            <th>ลำดับ</th>
+            <th>หัวข้อหลัก</th>
+            <th>ข้อมูล (${unit1}) </th>
+            </tr>`;
+            for(i=0;i<dataChart1.length;i++){
+                j=i+1;
+                html+=`<tr>
+                <td>${j}</td>
+                <td>${labelChart1[i]}</td>
+                <td>${dataChart1[i]}</td>
+                </tr>`;
+            }
         }
 
-    });
+        $('#dataTable').html(html);
 
-    
+
+    });
     
 });
+function checkDup(arr,dt){
+    for(i=0;i<arr.length;i++){
+        if(arr[i] == dt){
+            return false;
+        }
+    }
+    return true;
+}
 function getArrayMany(id_list){
     var children = $(id_list).children();
     var ArrayData = [];
