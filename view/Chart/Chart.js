@@ -45,8 +45,14 @@ $(document).ready(function() {
     $('[name="present"]').change(function() {
         pre = $('input[name="present"]:checked').val(); 
 
-        if(pre == "pie" || pre == "bar"){
-            $("#chose_label_span1").html("เลือกหัวข้อ");
+        if(pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
+            if(pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
+                $("#chose_label_span1").html("เลือกหัวข้อหลัก");
+                $("#multi_chart").show();
+            }else if(pre == "pie" || pre == "bar"){
+                $("#chose_label_span1").html("เลือกหัวข้อ");
+                $("#multi_chart").hide();
+            }
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
             <option name="province" id="province" value="province">จังหวัด</option>
             <option name="district" id="district" value="district">อำเภอ</option>
@@ -57,30 +63,19 @@ $(document).ready(function() {
             <option name="year" id="year" value="year">ปี</option>
             <option name="month" id="month" value="month">เดือน</option>
             <option name="day" id="day" value="day">วัน</option>`;
-            $("#multi_chart").hide();
 
-        }else if(pre == "line" || pre == "area" || pre == "table"){
-            $("#chose_label_span1").html("เลือกหัวข้อ");
+        }else if(pre == "line" || pre == "area" || pre == "table" || pre == "multi_line" || pre == "multi_area"){
+            if(pre == "multi_line" || pre == "multi_area"){
+                $("#chose_label_span1").html("เลือกหัวข้อหลัก");
+                $("#multi_chart").show();
+            }else{
+                $("#chose_label_span1").html("เลือกหัวข้อ");
+                $("#multi_chart").hide();
+            }
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
             <option name="year" id="year" value="year">ปี</option>
             <option name="month" id="month" value="month">เดือน</option>
             <option name="day" id="day" value="day">วัน</option>`;
-            $("#multi_chart").hide();
-
-        }else if(pre == "multi_line" || pre == "multi_bar" || pre == "complex_bar" || pre == "multi_area" || pre == "chart_radar" || pre == "mix" ){
-            $("#chose_label_span1").html("เลือกหัวข้อหลัก");
-            html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
-            <option name="province" id="province" value="province">จังหวัด</option>
-            <option name="district" id="district" value="district">อำเภอ</option>
-            <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล</option>
-            <option name="farm" id="farm" value="farm">สวน</option>
-            <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
-            <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
-            <option name="year" id="year" value="year">ปี</option>
-            <option name="month" id="month" value="month">เดือน</option>
-            <option name="day" id="day" value="day">วัน</option>`;
-            $("#multi_chart").show();
-            
         }
         $("#chose_label1").html(html1);
 
@@ -700,15 +695,19 @@ $(document).ready(function() {
             html = `<tr>
             <th>ลำดับ</th>
             <th>หัวข้อหลัก</th>
+            <th>หัวข้อรอง</th>
             <th>ข้อมูล (${unit1}) </th>
             </tr>`;
             for(i=0;i<dataChart1.length;i++){
-                j=i+1;
-                html+=`<tr>
-                <td>${j}</td>
-                <td>${labelChart1[i]}</td>
-                <td>${dataChart1[i]}</td>
-                </tr>`;
+                for(j=0;j<dataChart2.length;j++){
+                    k=i+1;
+                    html+=`<tr>
+                    <td>${k}</td>
+                    <td>${labelChart1[i]}</td>
+                    <td>${labelChart2[j]}</td>
+                    <td>${datainChart[j][i]}</td>
+                    </tr>`;
+                }
             }
         }
 
