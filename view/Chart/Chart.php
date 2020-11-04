@@ -205,18 +205,18 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label1" required>
                                                     <option value="">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province" id="province" value="province">จังหวัด
+                                                    <option name="province" id="province" value="Province">จังหวัด
                                                     </option>
-                                                    <option name="district" id="district" value="district">อำเภอ
+                                                    <option name="district" id="district" value="District">อำเภอ
                                                     </option>
-                                                    <option name="subdistrict" id="subdistrict" value="subdistrict">ตำบล
+                                                    <option name="subdistrict" id="subdistrict" value="SubDistrinct">ตำบล
                                                     </option>
-                                                    <option name="farm" id="farm" value="farm">สวน</option>
-                                                    <option name="subfarm" id="subfarm" value="subfarm">แปลง</option>
-                                                    <option name="farmer" id="farmer" value="farmer">เกษตรกร</option>
-                                                    <option name="year" id="year" value="year">ปี</option>
-                                                    <option name="month" id="month" value="month">เดือน</option>
-                                                    <option name="day" id="day" value="day">วัน</option>
+                                                    <option name="farm" id="farm" value="F_name">สวน</option>
+                                                    <option name="subfarm" id="subfarm" value="SF_name">แปลง</option>
+                                                    <option name="farmer" id="farmer" value="FM_name">เกษตรกร</option>
+                                                    <option name="year" id="year" value="Year2">ปี</option>
+                                                    <option name="month" id="month" value="Month">เดือน</option>
+                                                    <option name="day" id="day" value="dd">วัน</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -335,9 +335,9 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <option value="">กรุณาเลือกหน่วยวัด</option>
                                             <option name="water1" id="water1" value="water1">วันให้น้ำ</option>
                                             <option name="water2" id="water2" value="water2">วันขาดน้ำ</option>
-                                            <option name="water3" id="water3" value="water3">ปริมาตรให้น้ำ</option>
+                                            <!-- <option name="water3" id="water3" value="water3">ปริมาตรให้น้ำ</option> -->
                                             <option name="fertilize1" id="fertilize1" value="fertilize1">
-                                                จำนวนครั่งให้ปุ๋ย</option>
+                                                จำนวนครั้งให้ปุ๋ย</option>
                                             <option name="fertilize2" id="fertilize2" value="fertilize2">ปริมาณธาตุอาหาร
                                             </option>
                                             <option name="cutbranch" id="cutbranch" value="cutbranch">ล้างคอขวด</option>
@@ -357,14 +357,14 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                         <select class="form-control selectpicker" data-live-search="true"
                                             title="กรุณาเลือกหัวข้อ" id="chose_cal" required>
                                             <option value="">กรุณาเลือกการคำนวณ</option>
-                                            <option name="maximum" id="maximum" value="MAX">มากที่สุด (maximum)
+                                            <option name="maximum" id="maximum" value="MAX" show="มากที่สุด">มากที่สุด (maximum)
                                             </option>
-                                            <option name="minimum" id="minimum" value="MIN">น้อยที่สุด (minimum)
+                                            <option name="minimum" id="minimum" value="MIN" show="น้อยที่สุด">น้อยที่สุด (minimum)
                                             </option>
-                                            <option name="average" id="average" value="AVG">เฉลี่ย (average)</option>
-                                            <option name="summary" id="summary" value="SUM">ผลรวม (summary)</option>
-                                            <option name="sd" id="sd" value="SD">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
-                                            <option name="var" id="var" value="VAR">ค่าความแปรปรวน (VAR)
+                                            <option name="average" id="average" value="AVG" show="เฉลี่ย">เฉลี่ย (average)</option>
+                                            <option name="summary" id="summary" value="SUM" show="ผลรวม">ผลรวม (summary)</option>
+                                            <option name="sd" id="sd" value="STDDEV" show="ค่าส่วนเบี่ยงเบนมาตรฐาน">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
+                                            <!-- <option name="var" id="var" value="VAR">ค่าความแปรปรวน (VAR) -->
                                             </option>
                                         </select>
                                     </div>
