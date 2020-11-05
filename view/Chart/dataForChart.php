@@ -54,8 +54,30 @@ if(isset($_POST['request'])){
             $chose_type = $_POST['chose_type'];
             $chose_cal = $_POST['chose_cal'];
             $chose_cond = $_POST['chose_cond'];
-            $PRO = $_POST['PRO'];
-            // print_r("chose_label1 = ".$chose_label1);
+            $SET1 = $_POST['SET1'];
+            $SET2 = $_POST['SET2'];
+            $SET3 = $_POST['SET3'];
+
+            $WHERE = "";
+            if($SET1 != null){
+                $WHERE = "AND t7.".$SET1[0]. "= \"".$SET1[1]."\"";
+                for($i=2;$i<count($SET1);$i++){
+                    $WHERE = $WHERE." OR t7.".$SET1[0]." = \"".$SET1[$i]."\"";
+                }
+            }
+            if($SET2 != null){
+                $WHERE = "AND t7.".$SET2[0]. "= \"".$SET2[1]."\"";
+                for($i=2;$i<count($SET2);$i++){
+                    $WHERE = $WHERE." OR t7.".$SET2[0]." = \"".$SET2[$i]."\"";
+                }
+            }
+            if($SET3 != null){
+                $WHERE = "AND t7.".$SET3[0]. "= \"".$SET3[1]."\"";
+                for($i=2;$i<count($SET3);$i++){
+                    $WHERE = $WHERE." OR t7.".$SET3[0]." = \"".$SET3[$i]."\"";
+                }
+            }
+            //sql
             if($chose_type == "cutbranch" || $chose_type == "pestcontrol"){
                 if($chose_type == "cutbranch"){
                     $DBactID = 1;
@@ -66,6 +88,7 @@ if(isset($_POST['request'])){
                 }else if($chose_type == "pest"){
                     $log = "`log-pestalarm`";
                 }
+
                 $sql = "SELECT t9.".$chose_label1." AS label , ".$chose_cal."(t9.times) AS data FROM (
                     SELECT t7.SF_dbID,COUNT(t7.SF_dbID) AS times,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t7.`FullName` AS FM_name FROM (
                     SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID`,`dim-user`.`FullName` FROM (
@@ -89,7 +112,7 @@ if(isset($_POST['request'])){
                     JOIN `dim-user` ON `dim-user`.`ID` = `log-user`.`DIMuserID`
                     GROUP BY `dim-user`.`dbID`) AS t8
                     ON t7.`dbID` = t8.`dbID`
-                    WHERE 1 
+                    WHERE 1 ".$WHERE." 
                     GROUP BY t7.SF_dbID,t7.".$chose_label1.")AS t9
                     GROUP BY t9.".$chose_label1." ";
                 // print_r($sql);
@@ -161,6 +184,8 @@ if(isset($_POST['request'])){
                 // print_r($DATA);
                 $DATA[0]['unit'] = "วัน";
             }         
+
+
             if($chose_label1 == "Month"){
                 for($i=1;$i<=$DATA[0]['numrow'];$i++){
                     $DATA[$i]['label'] = numberToMonth($DATA[$i]['label']);

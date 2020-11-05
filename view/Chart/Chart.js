@@ -456,63 +456,89 @@ $(document).ready(function() {
                 html += chose_label1;
         
                 //pro/dist/subdist/farm/subfarm
+                SET1 = Array();
+
+                SET2 = Array();
+                TOPIC2 = "";
+
+                SET3 = Array();
+                TOPIC3 = "";
+
                 if($("#pro1").prop('checked')){
-                    PRO = null;
+                    SET1 = null;
                     html += " ของทุกจังหวัด";
                 }else if($("#pro2").prop('checked')){
                     ArrayData = getArrayMany("#province_list2");
-                    PRO = ArrayData;
+                    SET1 = ArrayData;
+                    SET1[0] = "Province";
                     html += " ของจังหวัด";
-                    for(i=0;i<ArrayData.length;i++){
+                    for(i=1;i<ArrayData.length;i++){
                         html += ArrayData[i];
                         if(i != ArrayData.length-1) html += ", ";
                     }
                 }else if($("#pro3").prop('checked')){
-                    PRO = $("#selectprovince option:selected").html();
+                    SET1[1] = $("#selectprovince option:selected").html();
+                    SET1[0] = "Province";
                     html += " ของจังหวัด"+$("#selectprovince option:selected").html();
                     if($("#dist1").prop('checked')){
                         html += " ของทุกอำเภอ";
                     }else if($("#dist2").prop('checked')){
                         ArrayData = getArrayMany("#dist_list2");
+                        SET1 = ArrayData;
+                        SET1[0] = "Distrinct";
                         html += " ของอำเภอ";
-                        for(i=0;i<ArrayData.length;i++){
+                        for(i=1;i<ArrayData.length;i++){
                             html += ArrayData[i];
                             if(i != ArrayData.length-1) html += ", ";
                         }
                     }else if($("#dist3").prop('checked')){
+                        SET1[1] = $("#selectdist option:selected").html();
+                        SET1[0] = "Distrinct";
                         html += " ของอำเภอ"+$("#selectdist option:selected").html();
                         if($("#subdist1").prop('checked')){
                             html += " ของทุกตำบล";
                         }else if($("#subdist2").prop('checked')){
                             ArrayData = getArrayMany("#subdist_list2");
+                            SET1 = ArrayData;
+                            SET1[0] = "SubDistrinct";
                             html += " ของตำบล";
-                            for(i=0;i<ArrayData.length;i++){
+                            for(i=1;i<ArrayData.length;i++){
                                 html += ArrayData[i];
                                 if(i != ArrayData.length-1) html += ", ";
                             }
                         }else if($("#subdist3").prop('checked')){
+                            SET1[1] = $("#selectsubdist option:selected").html();
+                            SET1[0] = "SubDistrinct";
                             html += " ของตำบล"+$("#selectsubdist option:selected").html();
                             if($("#farm1").prop('checked')){
                                 html += " ของทุกสวน";
                             }else if($("#farm2").prop('checked')){
                                 ArrayData = getArrayMany("#farm_list2");
+                                SET1 = ArrayData;
+                                SET1[0] = "F_name";
                                 html += " ของสวน";
-                                for(i=0;i<ArrayData.length;i++){
+                                for(i=1;i<ArrayData.length;i++){
                                     html += ArrayData[i];
                                     if(i != ArrayData.length-1) html += ", ";
                                 }
                             }else if($("#farm3").prop('checked')){
+                                SET1[1] = $("#selectfarm option:selected").html();
+                                SET1[0] = "F_name";
                                 html += " ของสวน"+$("#selectfarm option:selected").html();
                                 if($("#subfarm1").prop('checked')){
                                     html += " ของทุกแปลง";
                                 }else if($("#subfarm2").prop('checked')){
                                     ArrayData = getArrayMany("#subfarm_list2");
+                                    SET1 = ArrayData;
+                                    SET1[0] = "SF_name";
                                     html += " ของแปลง";
-                                    for(i=0;i<ArrayData.length;i++){
+                                    for(i=1;i<ArrayData.length;i++){
                                         html += ArrayData[i];
                                         if(i != ArrayData.length-1) html += ", ";
                                     }
                                 }else if($("#subfarm3").prop('checked')){
+                                    SET1[1] = $("#selectsubfarm option:selected").html();
+                                    SET1[0] = "SF_name";
                                     html += " ของแปลง"+$("#selectsubfarm option:selected").html();
                                 }
                             }
@@ -521,36 +547,56 @@ $(document).ready(function() {
                 }
                 //farmer
                 if($("#farmer1").prop('checked')){
-                    ArrayData2 = null;
+                    SET2 = null;
                     html += " ของทุกเกษตรกร";
                 }else if($("#farmer2").prop('checked')){
                     ArrayData2 = getArrayMany("#farmer_list2");
+                    SET2 = ArrayData2;
+                    SET2[0] = "FM_name";
                     html += " ของเกษตรกร";
-                    for(i=0;i<ArrayData2.length;i++){
+                    for(i=1;i<ArrayData2.length;i++){
                         html += ArrayData2[i];
                         if(i != ArrayData2.length-1) html += ", ";
                     }
                 }else if($("#farmer3").prop('checked')){
+                    SET2[1] = $("#selectfarmer option:selected").html();
+                    SET2[0] = "FM_name";
                     html += " ของเกษตรกร"+$("#selectfarmer option:selected").html();
                 }
                 //year/month/day
                 if($("#year1").prop('checked')){
+                    SET3 = null;
                     html += " ของทุกปี ("+$('#minyear').html()+" - "+$('#maxyear').html()+")";
                 }else if($("#year2").prop('checked')){
+                    SET3[1] = $('#selectyear1').val();
+                    SET3[2] = $('#selectyear2').val();
+                    SET3[0] = "Year2";
                     html += " ของปี "+$('#selectyear1').val()+" - "+$('#selectyear2').val();
                 }else if($("#year3").prop('checked')){
+                    SET3[1] = $("#selectyear option:selected").html();
+                    SET3[0] = "Year2";
                     html += " ของปี "+$("#selectyear option:selected").html();
                     if($("#month1").prop('checked')){
                         html += " ของทุกเดือน";
                     }else if($("#month2").prop('checked')){
+                        SET3[1] = $("#selectmonth1 option:selected").html();
+                        SET3[2] = $("#selectmonth2 option:selected").html();
+                        SET3[0] = "Month";
                         html += " ของเดือน "+$("#selectmonth1 option:selected").html()+" - "+$("#selectmonth2 option:selected").html();
                     }else if($("#month3").prop('checked')){
+                        SET3[1] = $("#selectmonth option:selected").html();
+                        SET3[0] = "Month";
                         html += " ของเดือน "+$("#selectmonth option:selected").html();
                         if($("#day1").prop('checked')){
                             html += " ของทุกวัน";
                         }else if($("#day2").prop('checked')){
+                            SET3[1] = $('#selectday1').val()
+                            SET3[2] = $('#selectday2').val();
+                            SET3[0] = "dd";
                             html += " ของวันที่ "+$('#selectday1').val()+" - "+$('#selectday2').val();
                         }else if($("#day3").prop('checked')){
+                            SET3[1] = $("#selectday").val();
+                            SET3[0] = "dd";
                             html += " ของวันที่ "+$("#selectday").val();
                         }
                     }
@@ -566,7 +612,8 @@ $(document).ready(function() {
                 chose_cond = $("#chose_cond option:selected").val();
 
                 console.log(label1);
-                $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_type: chose_type,chose_cal: chose_cal,chose_cond: chose_cond,PRO,PRO }, function(result){
+                $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_type: chose_type,
+                chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
                     result = JSON.parse(result);
                     console.log(result);
                     labelChart1 = Array();
@@ -749,7 +796,7 @@ function getArrayMany(id_list){
     var children = $(id_list).children();
     var ArrayData = [];
     var currentChild;
-    for (var i = 0; i < children.length; i++) {
+    for (var i = 1; i < children.length; i++) {
         currentChild = children.eq(i);
         ArrayData[i] = currentChild.attr('Name');
     }
