@@ -273,13 +273,13 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label2" required>
                                                     <option value="">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province2" id="province2" value="province">จังหวัด</option>
-                                                    <option name="district2" id="district2" value="district">อำเภอ</option>
-                                                    <option name="subdistrict2" id="subdistrict2" value="subdistrict">ตำบล</option>
-                                                    <option name="farm2" id="farm2" value="farm">สวน</option>
-                                                    <option name="year2" id="year2" value="year">ปี</option>
-                                                    <option name="month2" id="month2" value="month">เดือน</option>
-                                                    <option name="day2" id="day2" value="day">วัน</option>
+                                                    <option name="province_2" id="province_2" value="Province">จังหวัด</option>
+                                                    <option name="district_2" id="district_2" value="District">อำเภอ</option>
+                                                    <option name="subdistrict_2" id="subdistrict_2" value="SubDistrinct">ตำบล</option>
+                                                    <option name="farm_2" id="farm_2" value="F_name">สวน</option>
+                                                    <option name="year_2" id="year_2" value="Year2">ปี</option>
+                                                    <option name="month_2" id="month_2" value="Month">เดือน</option>
+                                                    <option name="day_2" id="day_2" value="dd">วัน</option>
                                                 </select>
                                             </div>
                                         </div>

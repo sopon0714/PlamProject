@@ -447,6 +447,7 @@ $(document).ready(function() {
                 chose_type = $("#chose_type option:selected").html();
                 chose_cal = $("#chose_cal option:selected").html();
                 chose_cond = $("#chose_cond option:selected").html();
+                
         
                 html = chose_type+" "+chose_cal;
                 if(chose_cond == "ทั้งหมด")
@@ -454,6 +455,10 @@ $(document).ready(function() {
                 else
                     html += " ที่"+chose_cond+" "+$('#order').val()+" ลำดับ ";
                 html += chose_label1;
+                if($('#chose_label2').val() != ""){
+                    chose_label2 = $("#chose_label2 option:selected").html();
+                    html += " และ "+chose_label2;
+                }
         
                 //pro/dist/subdist/farm/subfarm
                 SET1 = Array();
@@ -564,6 +569,9 @@ $(document).ready(function() {
                     html += " ของเกษตรกร"+$("#selectfarmer option:selected").html();
                 }
                 //year/month/day
+                SET3[3] = "";
+                SET3[6] = "";
+
                 if($("#year1").prop('checked')){
                     SET3 = null;
                     html += " ของทุกปี ("+$('#minyear').html()+" - "+$('#maxyear').html()+")";
@@ -574,52 +582,59 @@ $(document).ready(function() {
                     html += " ของปี "+$('#selectyear1').val()+" - "+$('#selectyear2').val();
                 }else if($("#year3").prop('checked')){
                     SET3[1] = $("#selectyear option:selected").html();
+                    SET3[2] = $("#selectyear option:selected").html();
                     SET3[0] = "Year2";
                     html += " ของปี "+$("#selectyear option:selected").html();
                     if($("#month1").prop('checked')){
                         html += " ของทุกเดือน";
                     }else if($("#month2").prop('checked')){
-                        SET3[1] = $("#selectmonth1 option:selected").html();
-                        SET3[2] = $("#selectmonth2 option:selected").html();
-                        SET3[0] = "Month";
+                        SET3[4] = monthToNumber($("#selectmonth1 option:selected").html());
+                        SET3[5] = monthToNumber($("#selectmonth2 option:selected").html());
+                        SET3[3] = "Month";
                         html += " ของเดือน "+$("#selectmonth1 option:selected").html()+" - "+$("#selectmonth2 option:selected").html();
                     }else if($("#month3").prop('checked')){
-                        SET3[1] = $("#selectmonth option:selected").html();
-                        SET3[0] = "Month";
+                        SET3[4] = monthToNumber($("#selectmonth option:selected").html());
+                        SET3[5] = monthToNumber($("#selectmonth option:selected").html());
+                        SET3[3] = "Month";
                         html += " ของเดือน "+$("#selectmonth option:selected").html();
                         if($("#day1").prop('checked')){
                             html += " ของทุกวัน";
                         }else if($("#day2").prop('checked')){
-                            SET3[1] = $('#selectday1').val()
-                            SET3[2] = $('#selectday2').val();
-                            SET3[0] = "dd";
+                            SET3[7] = $('#selectday1').val()
+                            SET3[8] = $('#selectday2').val();
+                            SET3[6] = "dd";
                             html += " ของวันที่ "+$('#selectday1').val()+" - "+$('#selectday2').val();
                         }else if($("#day3").prop('checked')){
-                            SET3[1] = $("#selectday").val();
-                            SET3[0] = "dd";
+                            SET3[8] = $("#selectday").val();
+                            SET3[7] = $("#selectday").val();
+                            SET3[6] = "dd";
                             html += " ของวันที่ "+$("#selectday").val();
                         }
                     }
                 }
                 $('#headshow').html(html);
+                //for show in table
                 label1 = $("#chose_label1 option:selected").html();
+                label2 = $("#chose_label2 option:selected").html();
                 data1 = $("#chose_type option:selected").html();
                 cal1 = $("#chose_cal option:selected").attr("show");
 
+                //for sent to php
                 chose_label1 = $("#chose_label1 option:selected").val();
+                chose_label2 = $("#chose_label2 option:selected").val();
                 chose_type = $("#chose_type option:selected").val();
                 chose_cal = $("#chose_cal option:selected").val();
                 chose_cond = $("#chose_cond option:selected").val();
 
                 console.log(label1);
-                $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_type: chose_type,
+                $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
                     result = JSON.parse(result);
                     console.log(result);
                     labelChart1 = Array();
                     dataChart1 = Array();
                     for(i=1;i<=result[0]['numrow'];i++){
-                        labelChart1[i-1] = result[i]['label'];
+                        labelChart1[i-1] = result[i]['label1'];
                         dataChart1[i-1] = result[i]['data'];
                     }
 
@@ -691,10 +706,58 @@ $(document).ready(function() {
                             optionChart = "";
                         }
                         //data for chart
-                        month = ["มกราคม","พฤษภาคม","สิงหาคม","อื่นๆ"];
-                        datainChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0],[1, 2, 3, 0, 2, 1]];
-                        labelChart2 = month;
-                        unit2 = "วัน";
+                        labelChart1 = Array();//
+                        labelChart2 = Array();
+                        dataInChart = Array();
+                        arrInData = Array();
+
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            labelChart2[i-1] = result[i]['label1']; //year/month/day
+                            labelChart1[i-1] = result[i]['label2']; 
+                        }
+                        labelChart1 = unique(labelChart1);
+                        labelChart2 = unique(labelChart2);
+
+                        console.log("labelChart1");
+                        console.log(labelChart1);
+                        console.log("labelChart2");
+                        console.log(labelChart2);
+
+                        for(i=0;i<labelChart1.length;i++){
+                            arrInData[labelChart1[i]] = Array();
+                        }
+
+                        for(i=0;i<labelChart1.length;i++){
+                            for(j=0;j<labelChart2.length;j++){
+                                arrInData[labelChart1[i]][labelChart2[j]] = "0";
+                            }
+                        }
+                        // console.log("arrInData");
+                        // console.log(arrInData);
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
+                        }
+                        for(i=0;i<labelChart1.length;i++){
+                            arrToData = Array();
+                            for(j=0;j<labelChart2.length;j++){
+                                arrToData.push(arrInData[labelChart1[i]][labelChart2[j]]);
+                            }
+                            dataInChart.push(arrToData);
+                        }
+                        console.log("arrInData");
+                        console.log(arrInData);
+                        console.log("dataInChart");
+                        console.log(dataInChart);
+
+
+                        // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
+                        // month = ["มกราคม","พฤษภาคม","อื่นๆ"]; //
+                        // dataInChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0]];
+                        // labelChart1 = ['บจ.', 'สวน1'];
+                        // month = ["2","11","13","18","26"]; //
+                        // dataInChart = [[1,2,1,1,0],[0,0,0,0,1]];
+                        // labelChart2 = month; //
+                        unit2 = result[0]['unit'];
                         color2 = Array();
                         colorBorder2 = Array();
 
@@ -715,10 +778,10 @@ $(document).ready(function() {
                         }                
                         console.log(color2);
                         dataChart2 = [];
-                        for(i=0;i<labelChart2.length;i++){
+                        for(i=0;i<labelChart1.length;i++){
                             dataChart2[i] = {
-                                label: labelChart2[i],
-                                data: datainChart[i],
+                                label: labelChart1[i],
+                                data: dataInChart[i],
                                 fill: fillChart,
                                 backgroundColor: color2[i],
                                 borderColor : colorBorder2[i]
@@ -729,7 +792,7 @@ $(document).ready(function() {
                         myChart = new Chart(ctx, {
                             type: typeChart,
                             data: {
-                                labels: labelChart1,
+                                labels: labelChart2,
                                 datasets: dataChart2
                             },
                             options: optionChart
@@ -753,18 +816,18 @@ $(document).ready(function() {
                     }else{
                         html = `<tr>
                         <th>ลำดับ</th>
-                        <th>หัวข้อหลัก</th>
-                        <th>หัวข้อรอง</th>
-                        <th>ข้อมูล (${unit1}) </th>
+                        <th>${label2}</th>
+                        <th>${label1}</th>
+                        <th>${data1}${cal1} (${unit1}) </th>
                         </tr>`;
-                        for(i=0;i<dataChart1.length;i++){
-                            for(j=0;j<dataChart2.length;j++){
-                                k=i+1;
+                        k = 1;
+                        for(i=0;i<labelChart1.length;i++){
+                            for(j=0;j<labelChart2.length;j++){
                                 html+=`<tr>
-                                <td>${k}</td>
+                                <td>${k++}</td>
                                 <td>${labelChart1[i]}</td>
                                 <td>${labelChart2[j]}</td>
-                                <td>${datainChart[j][i]}</td>
+                                <td>${dataInChart[i][j]}</td>
                                 </tr>`;
                             }
                         }
@@ -784,6 +847,22 @@ $(document).ready(function() {
     });
     
 });
+function unique(list) {
+    var result = [];
+    $.each(list, function(i, e) {
+      if ($.inArray(e, result) == -1) result.push(e);
+    });
+    return result;
+  }
+function monthToNumber(month){
+    monthArr = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+    for(i=0;i<monthArr.length;i++){
+        if(monthArr[i] == month){
+            return i+1;
+        }
+    }  
+    return 0;
+}
 function checkDup(arr,dt){
     for(i=0;i<arr.length;i++){
         if(arr[i] == dt){
@@ -804,7 +883,7 @@ function getArrayMany(id_list){
 }
 function getDaysInMonth (month,year) {
    return new Date(year, month, 0).getDate();
-  }
+}
 function hide1(){
     $(".oneprovince").hide();
     $(".onedist").hide();
