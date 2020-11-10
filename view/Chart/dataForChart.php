@@ -104,8 +104,8 @@ if(isset($_POST['request'])){
                 }
                 
             }
-            //sql
-            if($chose_type == "cutbranch" || $chose_type == "pestcontrol" || $chose_type == "pest"){
+            //sql 
+            if($chose_type == "cutbranch" || $chose_type == "pestcontrol" || $chose_type == "pest" || $chose_type == "fertilize1"){
                 if($chose_type == "cutbranch"){
                     $log = "`log-activity`";
                     $DBactID = "AND ".$log.".`DBactID` = 1";
@@ -115,6 +115,9 @@ if(isset($_POST['request'])){
                     $DBactID = "AND ".$log.".`DBactID` = 2";
                 }else if($chose_type == "pest"){
                     $log = "`log-pestalarm`";
+                    $DBactID = "";
+                }else if($chose_type == "fertilize1"){
+                    $log = "`log-fertilising`";
                     $DBactID = "";
                 }
 
