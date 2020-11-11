@@ -165,19 +165,6 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     <label for="bar">กราฟแท่ง</label>
                                 </div>
                                 <div class="row mb-2">
-                                    <input type="radio" id="mix" name="present" value="mix">
-                                </div>
-                                <div class="row mb-2">
-                                    <img class="graph" src="./chart/graph-5.png">
-                                </div>
-                                <div class="row mb-2">
-                                    <label for="mix">กราฟผสม</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="card-body">
-                                <div class="row mb-2">
                                     <input type="radio" id="radar" name="present" value="chart_radar">
                                 </div>
                                 <div class="row mb-2">
@@ -188,6 +175,19 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 </div>
                             </div>
                         </div>
+                        <!-- <div class="col-sm-2">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <input type="radio" id="mix" name="present" value="mix">
+                                </div>
+                                <div class="row mb-2">
+                                    <img class="graph" src="./chart/graph-5.png">
+                                </div>
+                                <div class="row mb-2">
+                                    <label for="mix">กราฟผสม</label>
+                                </div>
+                            </div>
+                        </div> -->
                     </div>
                     <div class="row">
                         <div class="col-4">
@@ -338,7 +338,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <!-- <option name="water3" id="water3" value="water3">ปริมาตรให้น้ำ</option> -->
                                             <option name="fertilize1" id="fertilize1" value="fertilize1">
                                                 จำนวนครั้งให้ปุ๋ย</option>
-                                            <option name="fertilize2" id="fertilize2" value="fertilize2">ปริมาณธาตุอาหาร
+                                            <option name="fertilize2" id="fertilize2" value="fertilize2">ปริมาณธาตุอาหาร (หลัก/รอง)
                                             </option>
                                             <option name="cutbranch" id="cutbranch" value="cutbranch">ล้างคอขวด</option>
                                             <option name="pestcontrol" id="pestcontrol" value="pestcontrol">กำจัดวัชพืช

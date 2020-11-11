@@ -2874,7 +2874,7 @@ function getYearAgriMap()
     UNION
     SELECT DISTINCT(Year2) FROM `log-activity` 
     JOIN `dim-time` ON `dim-time`.`ID` = `log-activity`.`DIMdateID`
-    WHERE `log-activity`.`isDelete` = 0 
+    WHERE `log-activity`.`isDelete` = 0 ORDER BY `Year2` ASC
     ";
     $data = selectData($sql);
     return $data;

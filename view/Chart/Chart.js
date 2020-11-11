@@ -808,9 +808,9 @@ $(document).ready(function() {
                         for(i=0;i<dataChart1.length;i++){
                             j=i+1;
                             html+=`<tr>
-                            <td>${j}</td>
+                            <td align="right">${j}</td>
                             <td>${labelChart1[i]}</td>
-                            <td>${dataChart1[i]}</td>
+                            <td align="right">${dataChart1[i]}</td>
                             </tr>`;
                         }
                     }else{
@@ -824,10 +824,10 @@ $(document).ready(function() {
                         for(i=0;i<labelChart1.length;i++){
                             for(j=0;j<labelChart2.length;j++){
                                 html+=`<tr>
-                                <td>${k++}</td>
+                                <td align="right">${k++}</td>
                                 <td>${labelChart1[i]}</td>
                                 <td>${labelChart2[j]}</td>
-                                <td>${dataInChart[i][j]}</td>
+                                <td align="right">${dataInChart[i][j]}</td>
                                 </tr>`;
                             }
                         }
