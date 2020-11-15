@@ -805,31 +805,27 @@ $(document).ready(function() {
                         <th>${label1}</th>
                         <th>${data1}${cal1} (${unit1}) </th>
                         </tr>`;
-                        for(i=0;i<dataChart1.length;i++){
-                            j=i+1;
+                        for(i=1;i<=result[0]['numrow'];i++){
                             html+=`<tr>
-                            <td align="right">${j}</td>
-                            <td>${labelChart1[i]}</td>
-                            <td align="right">${dataChart1[i]}</td>
+                            <td align="right">${i}</td>
+                            <td>${result[i]['label1']}</td>
+                            <td align="right">${result[i]['data']}</td>
                             </tr>`;
                         }
                     }else{
                         html = `<tr>
                         <th>ลำดับ</th>
-                        <th>${label2}</th>
                         <th>${label1}</th>
+                        <th>${label2}</th>
                         <th>${data1}${cal1} (${unit1}) </th>
                         </tr>`;
-                        k = 1;
-                        for(i=0;i<labelChart1.length;i++){
-                            for(j=0;j<labelChart2.length;j++){
-                                html+=`<tr>
-                                <td align="right">${k++}</td>
-                                <td>${labelChart1[i]}</td>
-                                <td>${labelChart2[j]}</td>
-                                <td align="right">${dataInChart[i][j]}</td>
-                                </tr>`;
-                            }
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            html+=`<tr>
+                            <td align="right">${i}</td>
+                            <td>${result[i]['label1']}</td>
+                            <td>${result[i]['label2']}</td>
+                            <td align="right">${result[i]['data']}</td>
+                            </tr>`;
                         }
                     }
 
