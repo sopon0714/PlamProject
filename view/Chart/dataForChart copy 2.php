@@ -69,45 +69,72 @@ if(isset($_POST['request'])){
 
             $WHERE = "";
             if($SET1 != null){
-                $WHERE = " AND t9.".$SET1[0]. "= \"".$SET1[1]."\"";
+                $WHERE = " AND t7.".$SET1[0]. "= \"".$SET1[1]."\"";
                 for($i=2;$i<count($SET1);$i++){
-                    $WHERE = $WHERE." OR t9.".$SET1[0]." = \"".$SET1[$i]."\"";
+                    $WHERE = $WHERE." OR t7.".$SET1[0]." = \"".$SET1[$i]."\"";
                 }
             }
             if($SET2 != null){
-                $WHERE =$WHERE." AND t9.".$SET2[0]. "= \"".$SET2[1]."\"";
+                $WHERE =$WHERE." AND t7.".$SET2[0]. "= \"".$SET2[1]."\"";
                 for($i=2;$i<count($SET2);$i++){
-                    $WHERE = $WHERE." OR t9.".$SET2[0]." = \"".$SET2[$i]."\"";
+                    $WHERE = $WHERE." OR t7.".$SET2[0]." = \"".$SET2[$i]."\"";
                 }
             }
             if($SET3 != null){
                 if($SET3[0] == "Year2"){
-                    $WHERE = $WHERE." AND t9.".$SET3[0]." BETWEEN ".$SET3[1]." AND ".$SET3[2];
+                    $WHERE = $WHERE." AND t7.".$SET3[0]." BETWEEN ".$SET3[1]." AND ".$SET3[2];
                 }
                 if($SET3[3] == "Month"){
-                    $WHERE = $WHERE." AND t9.".$SET3[0]." = ".$SET3[1];
-                    $WHERE = $WHERE." AND t9.".$SET3[3]." BETWEEN ".$SET3[4]." AND ".$SET3[5];
+                    $WHERE = $WHERE." AND t7.".$SET3[0]." = ".$SET3[1];
+                    $WHERE = $WHERE." AND t7.".$SET3[3]." BETWEEN ".$SET3[4]." AND ".$SET3[5];
                 }
                 if($SET3[6] == "dd"){
-                    $WHERE = $WHERE." AND t9.".$SET3[3]." = ".$SET3[4];
-                    $WHERE = $WHERE." AND t9.".$SET3[6]." BETWEEN ".$SET3[7]." AND ".$SET3[8];
+                    $WHERE = $WHERE." AND t7.".$SET3[3]." = ".$SET3[4];
+                    $WHERE = $WHERE." AND t7.".$SET3[6]." BETWEEN ".$SET3[7]." AND ".$SET3[8];
                 }
             }
 
             if($chose_label2 != ""){
-                $label2 = ",t10.".$chose_label2." AS label2";
-                $groupBy1 = ",t9.".$chose_label2;
-                $groupBy2 = ",t10.".$chose_label2;
-                if($chose_type == "water2" || $chose_type == "fertilize2"){
+                if($chose_type == "water2"){
+                    $label2 = ",t10.".$chose_label2." AS label2";
                     $label2Add = ",t9.".$chose_label2;
+                    $groupBy1 = ",t9.".$chose_label2;
+                    $groupBy2 = ",t10.".$chose_label2;
+                }else if($chose_type == "fertilize2"){
+                    $label2 = ",t9.".$chose_label2." AS label2";
+                    $label2Add = ",t8.".$chose_label2;
+                    $groupBy1 = ",t8.".$chose_label2;
+                    $groupBy2 = ",t9.".$chose_label2;
+                }else{
+                    $label2 = ",t9.".$chose_label2." AS label2";
+                    $groupBy1 = ",t7.".$chose_label2;
+                    $groupBy2 = ",t9.".$chose_label2;
                 }
             }
-            if($chose_label1 == "dd" || $chose_label2 == "dd"){
-                $dmy1 = ",t10.Month,t10.Year2";
-                $dmy2 = ",t9.Month,t9.Year2";
-            }else if($chose_label1 == "Month" || $chose_label2 == "Month"){
-                $dmy1 = ",t10.Year2";
-                $dmy2 = ",t9.Year2";
+            if($chose_type == "water2"){
+                if($chose_label1 == "dd" || $chose_label2 == "dd"){
+                    $dmy1 = ",t10.Month,t10.Year2";
+                    $dmy2 = ",t9.Month,t9.Year2";
+                }else if($chose_label1 == "Month" || $chose_label2 == "Month"){
+                    $dmy1 = ",t10.Year2";
+                    $dmy2 = ",t9.Year2";
+                }
+            }else if($chose_type == "fertilize2"){
+                if($chose_label1 == "dd" || $chose_label2 == "dd"){
+                    $dmy1 = ",t9.Month,t9.Year2";
+                    $dmy2 = ",t8.Month,t8.Year2";
+                }else if($chose_label1 == "Month" || $chose_label2 == "Month"){
+                    $dmy1 = ",t9.Year2";
+                    $dmy2 = ",t8.Year2";
+                }
+            }else{
+                if($chose_label1 == "dd" || $chose_label2 == "dd"){
+                    $dmy1 = ",t9.Month,t9.Year2";
+                    $dmy2 = ",t7.Month,t7.Year2";
+                }else if($chose_label1 == "Month" || $chose_label2 == "Month"){
+                    $dmy1 = ",t9.Year2";
+                    $dmy2 = ",t7.Year2";
+                }
             }
 
             $label2 = $label2." ".$dmy1;
@@ -131,9 +158,8 @@ if(isset($_POST['request'])){
                     $DBactID = "";
                 }
 
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.times),2) AS data FROM (
-                    SELECT t9.SF_dbID,COUNT(t9.SF_dbID) AS times,t9.F_dbID,t9.F_name,t9.SF_name ,t9.SubDistrinct,t9.Distrinct,t9.Province,t9.dd,t9.Month,t9.Year2,t9.FM_dbID,t9.FM_name  FROM (
-                    SELECT t7.SF_dbID,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name  FROM (
+                $sql = "SELECT t9.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t9.times),2) AS data FROM (
+                    SELECT t7.SF_dbID,COUNT(t7.SF_dbID) AS times,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name  FROM (
                         SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID` FROM (
                         SELECT t5.F_dbID,t5.F_name,t5.SF_dbID ,t5.SF_name,t5.SubDistrinct,t5.Distrinct,t5.Province,`dim-time`.dd,`dim-time`.Month,`dim-time`.Year2,t5.`DIMownerID` FROM (
                         SELECT t2.F_dbID,t2.F_name,t4.dbID AS SF_dbID,t4.Name AS SF_name,t2.SubDistrinct,t2.Distrinct,t2.Province,t2.`DIMdateID`,t2.`DIMownerID`  FROM (
@@ -165,21 +191,20 @@ if(isset($_POST['request'])){
                         GROUP BY `dim-user`.`dbID`)AS FM
                         JOIN `log-farmer` ON `log-farmer`.`ID`= FM.max_lfID
                         JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`) AS t8
-                        ON t7.`dbID` = t8.`dbID`)AS t9
+                        ON t7.`dbID` = t8.`dbID`
                     WHERE 1 ".$WHERE." 
-                    GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
-                    GROUP BY t10.".$chose_label1." ".$groupBy2."
+                    GROUP BY t7.SF_dbID,t7.".$chose_label1." ".$groupBy1.")AS t9
+                    GROUP BY t9.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                print_r($sql);
+                // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "ครั้ง";
                 
             }else if($chose_type == "water1"){
                 $log = "`fact-watering`";
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (
-                    SELECT t9.SF_dbID,COUNT(DISTINCT(t9.Date)) AS days,t9.F_dbID,t9.F_name,t9.SF_name ,t9.SubDistrinct,t9.Distrinct,t9.Province,t9.dd,t9.Month,t9.Year2,t9.FM_dbID,t9.FM_name  FROM (
-                    SELECT t7.SF_dbID,t7.Date,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name FROM (
+                $sql = "SELECT t9.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t9.days),2) AS data FROM (
+                    SELECT t7.SF_dbID,COUNT(DISTINCT(t7.Date)) AS days,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name FROM (
                     SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.Date,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID` FROM (
                     SELECT t5.F_dbID,t5.F_name,t5.SF_dbID ,t5.SF_name,t5.SubDistrinct,t5.Distrinct,t5.Province,`dim-time`.Date,`dim-time`.dd,`dim-time`.Month,`dim-time`.Year2,t5.`DIMownerID` FROM (
                     SELECT t2.F_dbID,t2.F_name,t4.dbID AS SF_dbID,t4.Name AS SF_name,t2.SubDistrinct,t2.Distrinct,t2.Province,t2.`DIMdateID`,t2.`DIMownerID`  FROM (
@@ -210,10 +235,10 @@ if(isset($_POST['request'])){
                     GROUP BY `dim-user`.`dbID`)AS FM
                     JOIN `log-farmer` ON `log-farmer`.`ID`= FM.max_lfID
                     JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`) AS t8
-                    ON t7.`dbID` = t8.`dbID`)AS t9
+                    ON t7.`dbID` = t8.`dbID`
                     WHERE 1 ".$WHERE." 
-                    GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
-                    GROUP BY t10.".$chose_label1." ".$groupBy2."
+                    GROUP BY t7.SF_dbID,t7.".$chose_label1." ".$groupBy1.")AS t9
+                    GROUP BY t9.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
                 print_r($sql);
                 $DATA = selectData($sql);
@@ -254,19 +279,18 @@ if(isset($_POST['request'])){
                     GROUP BY `dim-user`.`dbID`)AS FM
                     JOIN `log-farmer` ON `log-farmer`.`ID`= FM.max_lfID
                     JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`) AS t8
-                    ON t7.`dbID` = t8.`dbID`)AS t9
-                    WHERE 1 ".$WHERE." 
+                    ON t7.`dbID` = t8.`dbID`
+                    WHERE 1 ".$WHERE." )AS t9
                     GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.") AS t10
                     GROUP BY t10.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                print_r($sql);
+                // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "วัน";
             }else if($chose_type == "fertilize2"){
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Type`,".$chose_cal."(t10.sumAll) AS data FROM (
-                    SELECT t9.SF_dbID,t9.".$chose_label1." ".$label2Add.",t9.`Type`,ROUND(SUM( IF(t9.`Unit`=1,t9.`Vol`,t9.`Vol`/1000) ),2)AS sumAll FROM (
-                    SELECT t8.`Vol`,t8.`Unit`,t8.`Type`,t8.LID,t8.SF_dbID,t8.F_dbID,t8.F_name,t8.SF_name ,t8.SubDistrinct,t8.Distrinct,t8.Province,t8.dd,t8.Month,t8.Year2,t8.FM_dbID,t8.FM_name FROM (
+                $sql = "SELECT t9.".$chose_label1." AS label1 ".$label2." ".",t9.`Type`,".$chose_cal."(t9.sumAll) AS data FROM (
+                    SELECT t8.SF_dbID,t8.".$chose_label1." ".$label2Add.",t8.`Type`,ROUND(SUM( IF(t8.`Unit`=1,t8.`Vol`,t8.`Vol`/1000) ),2)AS sumAll FROM (
                     SELECT `log-fertilisingdetail`.`Vol`,`log-fertilisingdetail`.`Unit`,`log-nutrient`.`Type`,t7.LID,t7.SF_dbID,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8f.FullName AS FM_name FROM (
                     SELECT t6.LID,t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID` FROM (
                     SELECT t5.LID,t5.F_dbID,t5.F_name,t5.SF_dbID ,t5.SF_name,t5.SubDistrinct,t5.Distrinct,t5.Province,`dim-time`.dd,`dim-time`.Month,`dim-time`.Year2,t5.`DIMownerID` FROM (
@@ -302,13 +326,11 @@ if(isset($_POST['request'])){
                     ON t7.`dbID` = t8f.`dbID`
                     JOIN `log-fertilisingdetail` ON `log-fertilisingdetail`.`fertilisingID` = t7.LID
                     JOIN `log-nutrient` ON `log-nutrient`.`ID` = `log-fertilisingdetail`.`logNID`
-                    )AS t8
-                    )AS t9
-                    WHERE 1 ".$WHERE." 
-                    GROUP BY t9.SF_dbID,t9.`Type`,t9.".$chose_label1." ".$groupBy1.")AS t10
-                    GROUP BY t10.Type,t10.".$chose_label1." ".$groupBy2."
+                    WHERE 1 ".$WHERE." )AS t8
+                    GROUP BY t8.SF_dbID,t8.`Type`,t8.".$chose_label1." ".$groupBy1.")AS t9
+                    GROUP BY t9.Type,t9.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                    print_r($sql);
+                    // print_r($sql);
                     $DATA = selectData($sql);
                     // print_r($DATA);
                     $DATA[0]['unit'] = "กิโลกรัม";

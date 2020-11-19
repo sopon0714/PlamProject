@@ -207,7 +207,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                     <option value="">กรุณาเลือกหัวข้อ</option>
                                                     <option name="province" id="province" value="Province">จังหวัด
                                                     </option>
-                                                    <option name="district" id="district" value="District">อำเภอ
+                                                    <option name="district" id="district" value="Distrinct">อำเภอ
                                                     </option>
                                                     <option name="subdistrict" id="subdistrict" value="SubDistrinct">ตำบล
                                                     </option>
@@ -274,7 +274,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label2" required>
                                                     <option value="">กรุณาเลือกหัวข้อ</option>
                                                     <option name="province_2" id="province_2" value="Province">จังหวัด</option>
-                                                    <option name="district_2" id="district_2" value="District">อำเภอ</option>
+                                                    <option name="district_2" id="district_2" value="Distrinct">อำเภอ</option>
                                                     <option name="subdistrict_2" id="subdistrict_2" value="SubDistrinct">ตำบล</option>
                                                     <option name="farm_2" id="farm_2" value="F_name">สวน</option>
                                                     <option name="year_2" id="year_2" value="Year2">ปี</option>

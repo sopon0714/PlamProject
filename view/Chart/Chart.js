@@ -55,7 +55,7 @@ $(document).ready(function() {
             }
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
             <option name="province" id="province" value="Province">จังหวัด</option>
-            <option name="district" id="district" value="District">อำเภอ</option>
+            <option name="district" id="district" value="Distrinct">อำเภอ</option>
             <option name="subdistrict" id="subdistrict" value="SubDistrinct">ตำบล</option>
             <option name="farm" id="farm" value="F_name">สวน</option>
             <option name="subfarm" id="subfarm" value="SF_name">แปลง</option>
@@ -629,7 +629,7 @@ $(document).ready(function() {
                 console.log(label1);
                 $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
-                    result = JSON.parse(result);
+                    // result = JSON.parse(result);
                     console.log(result);
                     labelChart1 = Array();
                     dataChart1 = Array();
