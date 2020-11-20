@@ -6,8 +6,8 @@ $PROVINCE = getProvince();
 $FARMER = getFarmerAll();
 $YEAR = getYearAgriMap();
 
-$set_chose_label1 = array("Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year","Month","dd");
-$set_chose_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year","Month","dd");
+$set_chose_label1 = array("Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$set_chose_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
 $set_chose_type = array("water1","water2","fertilize1","fertilize2","cutbranch","pestcontrol","pest");
 $set_chose_cal = array("MAX","MIN","AVG","SUM","STDDEV");
 $set_chose_cond = array("max","min");
