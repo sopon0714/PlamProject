@@ -474,6 +474,7 @@ $(document).ready(function() {
                     html += " ของทุกจังหวัด";
                 }else if($("#pro2").prop('checked')){
                     ArrayData = getArrayMany("#province_list2");
+                    // console.log(ArrayData);
                     SET1 = ArrayData;
                     SET1[0] = "Province";
                     html += " ของจังหวัด";
@@ -629,7 +630,7 @@ $(document).ready(function() {
                 console.log(label1);
                 $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
-                    // result = JSON.parse(result);
+                    result = JSON.parse(result);
                     console.log(result);
                     labelChart1 = Array();
                     dataChart1 = Array();
@@ -869,13 +870,13 @@ function checkDup(arr,dt){
 }
 function getArrayMany(id_list){
     var children = $(id_list).children();
-    var ArrayData = [];
+    var Array_Data = [];
     var currentChild;
-    for (var i = 1; i < children.length; i++) {
+    for (var i = 0; i < children.length; i++) {
         currentChild = children.eq(i);
-        ArrayData[i] = currentChild.attr('Name');
+        Array_Data[i+1] = currentChild.attr('Name');
     }
-    return ArrayData;
+    return Array_Data;
 }
 function getDaysInMonth (month,year) {
    return new Date(year, month, 0).getDate();

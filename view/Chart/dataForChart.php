@@ -55,7 +55,7 @@ if(isset($_POST['request'])){
             $chose_type = $_POST['chose_type'];
             $chose_cal = $_POST['chose_cal'];
             $chose_cond = $_POST['chose_cond'];
-            $SET1 = $_POST['SET1']; //for where
+            $SET1 = $_POST['SET1']; //FOR WHERE
             $SET2 = $_POST['SET2'];
             $SET3 = $_POST['SET3'];
 
@@ -170,7 +170,7 @@ if(isset($_POST['request'])){
                     GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
                     GROUP BY t10.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                print_r($sql);
+                // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "ครั้ง";
@@ -215,7 +215,7 @@ if(isset($_POST['request'])){
                     GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
                     GROUP BY t10.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                print_r($sql);
+                // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "วัน";
@@ -259,7 +259,7 @@ if(isset($_POST['request'])){
                     GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.") AS t10
                     GROUP BY t10.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                print_r($sql);
+                // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "วัน";
@@ -308,7 +308,7 @@ if(isset($_POST['request'])){
                     GROUP BY t9.SF_dbID,t9.`Type`,t9.".$chose_label1." ".$groupBy1.")AS t10
                     GROUP BY t10.Type,t10.".$chose_label1." ".$groupBy2."
                     ORDER BY `data` ASC";
-                    print_r($sql);
+                    // print_r($sql);
                     $DATA = selectData($sql);
                     // print_r($DATA);
                     $DATA[0]['unit'] = "กิโลกรัม";
