@@ -1,5 +1,5 @@
 <?php
-set_time_limit(1800);
+set_time_limit(7200);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
 $PROVINCE = getProvince();

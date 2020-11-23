@@ -613,6 +613,11 @@ $(document).ready(function() {
                         }
                     }
                 }
+                console.log(SET1);
+                console.log(SET2);
+                console.log(SET3);
+
+
                 $('#headshow').html(html);
                 //for show in table
                 label1 = $("#chose_label1 option:selected").html();
