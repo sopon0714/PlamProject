@@ -349,6 +349,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 จำนวนครั้งให้ปุ๋ย</option>
                                             <option name="fertilize2" id="fertilize2" value="fertilize2">ปริมาณธาตุอาหาร (หลัก/รอง)
                                             </option>
+                                            <!-- <option name="fertilize3" id="fertilize3" value="fertilize3">ปริมาณแต่ละธาตุอาหารหลัก
+                                            </option> -->
                                             <option name="cutbranch" id="cutbranch" value="cutbranch">ล้างคอขวด</option>
                                             <option name="pestcontrol" id="pestcontrol" value="pestcontrol">กำจัดวัชพืช
                                             </option>

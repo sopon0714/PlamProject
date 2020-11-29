@@ -1,5 +1,5 @@
 <?php
-set_time_limit(7200);
+// set_time_limit(1800);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
 $PROVINCE = getProvince();
@@ -13,7 +13,7 @@ $set_chose_cal = array("MAX","MIN","AVG","SUM","STDDEV");
 $set_chose_cond = array("max","min");
 
 $YEAR2= getYearAgriMap();
-$MONTH = array("มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
+$MONTH = array(1,2,3,4,5,6,7,8,9,10,11,12);
 $MONTH_ARR = array("");
 $DAY = array (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
 $DAY_ARR = array("");
