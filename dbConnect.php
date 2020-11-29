@@ -10,8 +10,8 @@ function connectDB()
 	$db_name = "palm3";//"palm3";
 
 	// $servername = "localhost";
-	// $username = "palmWeb2561";
-	// $password = "palmWeb@2561";
+	// $username = "root";
+	// $password = "Palmweb@1";
 
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$db_name;charset=utf8", $username, $password);

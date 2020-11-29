@@ -97,6 +97,22 @@ function getProvince()
     $PROVINCE = selectData($sql);
     return $PROVINCE;
 }
+//อำเภอทั้งหมด
+function getDistrinct()
+{
+    $sql = "SELECT * FROM `db-distrinct`  
+    ORDER BY `db-distrinct`.`AD1ID` ASC, `db-distrinct`.`Distrinct` ASC";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+//ตำบลทั้งหมด
+function getSubDistrinct()
+{
+    $sql = "SELECT * FROM `db-subdistrinct`  
+    ORDER BY `db-subdistrinct`.`AD2ID` ASC, `db-subdistrinct`.`subDistrinct` ASC";
+    $DATA = selectData($sql);
+    return $DATA;
+}
 //อำเภอในจังหวัด ตาม id จังหวัด
 function getDistrinctInProvince($ad1id)
 {
@@ -3077,4 +3093,41 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 }
 function INFOCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 {
+}
+
+function getFarmAll(){
+    $sql = "SELECT `log-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` AS F_name,`dim-address`.`dbsubDID` FROM `log-farm`
+	JOIN `dim-address` ON `dim-address`.`ID` =  `log-farm`.`DIMaddrID`
+    JOIN `dim-farm` ON `log-farm`.`DIMfarmID` = `dim-farm`.`ID`
+    WHERE `log-farm`.`ID` IN (
+    SELECT MAX(`log-farm`.`ID`) as max FROM `log-farm`
+    JOIN `dim-farm` ON `log-farm`.`DIMfarmID`= `dim-farm`.`ID`
+    GROUP BY `dim-farm`.`dbID`)  
+    ORDER BY `dim-address`.`dbsubDID` ASC, `dim-farm`.`Name` ASC";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+function getSubfarmAll(){
+    $sql = "SELECT t1.`ID`,t1.`dbID` AS sb_dbID,t1.`Name` AS SF_name,`dim-farm`.`dbID` AS f_dbID FROM (
+    SELECT `log-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name`,`log-farm`.`DIMfarmID` FROM `log-farm`
+    JOIN `dim-farm` ON `log-farm`.`DIMSubfID` = `dim-farm`.`ID`
+    WHERE `log-farm`.`ID` IN (
+    SELECT MAX(`log-farm`.`ID`) as max FROM `log-farm`
+    JOIN `dim-farm` ON `log-farm`.`DIMSubfID`= `dim-farm`.`ID`
+    GROUP BY `dim-farm`.`dbID`)
+    )AS t1
+    JOIN `dim-farm` ON t1.`DIMfarmID`= `dim-farm`.`ID`  
+    ORDER BY `f_dbID` ASC,sf_name ASC";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+function getFarmerAll_Chart(){
+    $sql = "SELECT `log-farmer`.`ID`,`dim-user`.`dbID`,`dim-user`.`FullName` AS FM_name FROM `log-farmer`
+    JOIN `dim-user` ON `log-farmer`.`DIMuserID` = `dim-user`.`ID`
+    WHERE `log-farmer`.`ID` IN (
+    SELECT MAX(`log-farmer`.`ID`) as max FROM `log-farmer`
+    JOIN `dim-user` ON `log-farmer`.`DIMuserID` = `dim-user`.`ID`
+    GROUP BY `dim-user`.`dbID`)";
+    $data = selectData($sql);
+    return $data;
 }

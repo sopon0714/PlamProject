@@ -44,6 +44,15 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 </style>
 
 <div class="container">
+    <div class="row">    
+        <div class="col-xl-8 col-8 mb-6">
+            <label class="form-control" for="">วันที่อัพเดตล่าสุด</label> 
+        </div>
+        <div class="col-xl-4 col-4 mb-6" style="width: 10px;">
+            <button class="form-control btn btn-warning" >อัพเดต</button>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xl-12 col-12 mb-6">
             <div class="card">
