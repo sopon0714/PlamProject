@@ -1,10 +1,17 @@
 <?php
-// set_time_limit(1800);
+set_time_limit(1800);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
 $PROVINCE = getProvince();
 $FARMER = getFarmerAll();
 $YEAR = getYearAgriMap();
+
+//for name of file
+$name_label1 = array("Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$name_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$name_type = array("water1","water2","fertilize1","fertilize2","cutbranch","pestcontrol","pest");
+$name_cal = array("","MAX","MIN","AVG","SUM","STDDEV");
+
 
 $set_chose_label1 = array("Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
 $set_chose_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
@@ -31,7 +38,7 @@ $SUBDISTINCT_ALL = array();
 
 $FARM = getFarmAll();
 $FARM_ALL = array();
-$SUBFARM = getsubfarmAll();
+$SUBFARM = getSubfarmAll();
 $SUBFARM_ALL = array();
 
 $SET2_TITLE = array("FM_name"=>array());
@@ -45,6 +52,9 @@ $SET1 = array();
 $SET2 = array();
 $SET3 = array();
 
+$SET1_ID = array();
+$SET2_ID = array();
+$SET3_ID = array();
 // echo "<br><br><br>";
 // print_r($SET1_TITLE);
 // echo "<br>";
@@ -158,6 +168,13 @@ for($i=0;$i<count($set_chose_label1);$i++){
                             echo "<br>SET3 =";
                             print_r($SET3);
                             echo "<br>";
+
+                            $SET1_ID = dataToID($SET1);
+                            echo "SET1_ID = ";
+                            print_r($SET1_ID);
+                            $SET2_ID = dataToID($SET2);
+                            echo "<br>SET2_ID = ";
+                            print_r($SET2_ID);
 
                             print("chose_label1 = ".$chose_label1);
                             echo "<br>";
@@ -463,7 +480,26 @@ for($i=0;$i<count($set_chose_label1);$i++){
                             echo "<br>";
 
                             // print_r(json_encode($DATA));
+                            $lb1 = array_search($chose_label1, $name_label1);
+                            $lb2 = array_search($chose_label2, $name_label2);
+                            $type = array_search($chose_type, $name_type);
+                            $cal = array_search($chose_cal, $name_cal);
 
+                            $filename = "";
+                            $filename = $lb1."-".$lb2."-".$type."-".$cal."-";
+                            echo $filename;
+                            $filename = $filename.$SET1_ID[0];
+                            for($i=1;$i<count($SET1_ID);$i++){
+                                $filename = ",".$filename.$SET1_ID[$i];
+                            }
+                            $filename = $filename.$SET2_ID[0];
+                            for($i=1;$i<count($SET2_ID);$i++){
+                                $filename = ",".$filename.$SET2_ID[$i];
+                            }
+                            $filename = $filename.$SET3[0];
+                            for($i=1;$i<count($SET3);$i++){
+                                $filename = ",".$filename.$SET3[$i];
+                            }
 
                         }
                         echo "********************************<br>";
@@ -553,6 +589,50 @@ function eachID($ARR,$id){
     return $ARR_ALL;
 }
 
+function dataToID($ARR2){
+    $array = array();
+    $ARR1 = array();
+
+    if($ARR2 != ''){
+        if($ARR2[0] == 'Province'){
+            $ARR1 = getProvince(); 
+            $id = "AD1ID";
+            $title = 1;
+        }else if($ARR2[0] == 'Distrinct'){
+            $ARR1 = getDistrinct(); 
+            $id = "AD2ID";
+            $title = 2;
+        }else if($ARR2[0] == 'subDistrinct'){
+            $ARR1 = getSubDistrinct();
+            $id = "AD3ID";
+            $title = 3;
+        }else if($ARR2[0] == 'F_name'){
+            $ARR1 = getFarmAll();
+            $id = "dbID";
+            $title = 4;
+        }else if($ARR2[0] == 'SF_name'){
+            $ARR1 = getSubfarmAll();
+            $id = "sb_dbID";
+            $title = 5;
+        }else if($ARR2[0] == 'FM_name'){
+            $ARR1 = getFarmerAll_Chart();
+            $id = "dbID";
+            $title = 1;
+        }
+        $array[0] = $title;
+        for($i=1;$i<count($ARR2);$i++){
+            for($j=1;$j<=$ARR1[0]['numrow'];$j++){
+                if($ARR2[$i] == $ARR1[$j][$ARR2[0]]){
+                    $array[$i] = $ARR1[$j][$id];
+                    break;
+                }
+            }
+        }
+    }
+    
+    return $array;
+
+}
 //WRITE FILE
 // $myfile = fopen("./filedata/newfile.txt", "w") or die("Unable to open file!");
 // $txt = "John Doe\n";
