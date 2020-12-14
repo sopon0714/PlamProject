@@ -49,6 +49,57 @@ if(isset($_POST['request'])){
         case 'selectyear' :
             print_r(json_encode(getYearAgriMap()));
         break;
+        case 'chartTest':
+            // echo "test json file<br>";
+            $chose_label1 = $_POST['chose_label1'];
+            $chose_label2 = $_POST['chose_label2'];
+            $chose_type = $_POST['chose_type'];
+            $chose_cal = $_POST['chose_cal'];
+            // $chose_cond = $_POST['chose_cond'];
+            $SET1 = $_POST['SET1']; //FOR WHERE
+            $SET2 = $_POST['SET2'];
+            $SET3 = $_POST['SET3'];
+
+            $filename = $chose_label1."-".$chose_label2."-".$chose_type."-".$chose_cal."-";
+            if($SET1 != null){
+                $filename = $filename.$SET1[0];
+                for($i=1;$i<count($SET1);$i++){
+                    $filename = $filename.",".$SET1[$i];
+                }
+            }
+            if($SET2 != null){
+                $filename = $filename."-".$SET2[0];
+                for($i=1;$i<count($SET2);$i++){
+                    $filename = $filename.",".$SET2D[$i];
+                }
+            }else{
+                $filename = $filename."-";
+            }
+            if($SET3 != null){
+                $filename = $filename."-".$SET3[0];
+                if($SET3[0] != ''){ 
+                    for($i=1;$i<count($SET3);$i++){
+                        $filename = $filename.",".$SET3[$i];
+                    }
+                }
+            }else{
+                $filename = $filename."-";
+            }
+            
+            // echo $filename;
+            // $filename = "1-0-1-1---";
+            $filename = "./filedata/".$filename.".json";
+            // echo $namefile."<br>";
+            if(file_exists($filename)){
+                $myfile = file_get_contents($filename);
+                print_r($myfile);
+            }else{
+                $check = array();
+                $check[0]["numrow"] = -1;
+                print_r(json_encode($check));
+            }
+
+        break;
         case 'chart':
             $chose_label1 = $_POST['chose_label1'];
             $chose_label2 = $_POST['chose_label2'];

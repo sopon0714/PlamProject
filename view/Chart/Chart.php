@@ -46,10 +46,10 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 <div class="container">
     <div class="row">    
         <div class="col-xl-8 col-8 mb-6">
-            <label class="form-control" for="">วันที่อัพเดตล่าสุด</label> 
+            <label class="form-control" for="" style="background-color: #f0ad4e; color: white;">วันที่อัพเดตล่าสุด</label> 
         </div>
         <div class="col-xl-4 col-4 mb-6" style="width: 10px;">
-            <button class="form-control btn btn-warning" >อัพเดต</button>
+            <button class="form-control btn btn-success" >อัพเดต</button>
         </div>
     </div>
 
@@ -213,19 +213,19 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <div class="col-12">
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label1" required>
-                                                    <option value="">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province" id="province" value="Province">จังหวัด
+                                                    <option value="" code="0">กรุณาเลือกหัวข้อ</option>
+                                                    <option name="province" id="province" value="Province" code="1">จังหวัด
                                                     </option>
-                                                    <option name="district" id="district" value="Distrinct">อำเภอ
+                                                    <option name="district" id="district" value="Distrinct" code="2">อำเภอ
                                                     </option>
-                                                    <option name="subdistrict" id="subdistrict" value="SubDistrinct">ตำบล
+                                                    <option name="subdistrict" id="subdistrict" value="SubDistrinct" code="3">ตำบล
                                                     </option>
-                                                    <option name="farm" id="farm" value="F_name">สวน</option>
-                                                    <option name="subfarm" id="subfarm" value="SF_name">แปลง</option>
-                                                    <option name="farmer" id="farmer" value="FM_name">เกษตรกร</option>
-                                                    <option name="year" id="year" value="Year2">ปี</option>
-                                                    <option name="month" id="month" value="Month">เดือน</option>
-                                                    <option name="day" id="day" value="dd">วัน</option>
+                                                    <option name="farm" id="farm" value="F_name" code="4">สวน</option>
+                                                    <option name="subfarm" id="subfarm" value="SF_name" code="5">แปลง</option>
+                                                    <option name="farmer" id="farmer" value="FM_name" code="6">เกษตรกร</option>
+                                                    <option name="year" id="year" value="Year2" code="7">ปี</option>
+                                                    <option name="month" id="month" value="Month" code="8">เดือน</option>
+                                                    <option name="day" id="day" value="dd" code="9">วัน</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -281,14 +281,14 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <div class="col-12">
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label2" required>
-                                                    <option value="">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province_2" id="province_2" value="Province">จังหวัด</option>
-                                                    <option name="district_2" id="district_2" value="Distrinct">อำเภอ</option>
-                                                    <option name="subdistrict_2" id="subdistrict_2" value="SubDistrinct">ตำบล</option>
-                                                    <option name="farm_2" id="farm_2" value="F_name">สวน</option>
-                                                    <option name="year_2" id="year_2" value="Year2">ปี</option>
-                                                    <option name="month_2" id="month_2" value="Month">เดือน</option>
-                                                    <option name="day_2" id="day_2" value="dd">วัน</option>
+                                                    <option value="" code="0">กรุณาเลือกหัวข้อ</option>
+                                                    <option name="province_2" id="province_2" value="Province" code="1">จังหวัด</option>
+                                                    <option name="district_2" id="district_2" value="Distrinct" code="2">อำเภอ</option>
+                                                    <option name="subdistrict_2" id="subdistrict_2" value="SubDistrinct" code="3">ตำบล</option>
+                                                    <option name="farm_2" id="farm_2" value="F_name" code="4">สวน</option>
+                                                    <option name="year_2" id="year_2" value="Year2" code="7">ปี</option>
+                                                    <option name="month_2" id="month_2" value="Month" code="8">เดือน</option>
+                                                    <option name="day_2" id="day_2" value="dd" code="9">วัน</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -341,20 +341,20 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     <div class="col-12">
                                         <select class="form-control selectpicker" data-live-search="true"
                                             title="กรุณาเลือกหัวข้อ" id="chose_type" required>
-                                            <option value="">กรุณาเลือกหน่วยวัด</option>
-                                            <option name="water1" id="water1" value="water1">วันให้น้ำ</option>
-                                            <option name="water2" id="water2" value="water2">วันขาดน้ำ</option>
+                                            <option value="" code="0">กรุณาเลือกหน่วยวัด</option>
+                                            <option name="water1" id="water1" value="water1" code="1">วันให้น้ำ</option>
+                                            <option name="water2" id="water2" value="water2" code="2">วันขาดน้ำ</option>
                                             <!-- <option name="water3" id="water3" value="water3">ปริมาตรให้น้ำ</option> -->
-                                            <option name="fertilize1" id="fertilize1" value="fertilize1">
+                                            <option name="fertilize1" id="fertilize1" value="fertilize1" code="3">  
                                                 จำนวนครั้งให้ปุ๋ย</option>
-                                            <option name="fertilize2" id="fertilize2" value="fertilize2">ปริมาณธาตุอาหาร (หลัก/รอง)
+                                            <option name="fertilize2" id="fertilize2" value="fertilize2" code="4">ปริมาณธาตุอาหาร (หลัก/รอง)
                                             </option>
-                                            <!-- <option name="fertilize3" id="fertilize3" value="fertilize3">ปริมาณแต่ละธาตุอาหารหลัก
+                                            <!-- <option name="fertilize3" id="fertilize3" value="fertilize3" code="5">ปริมาณแต่ละธาตุอาหารหลัก
                                             </option> -->
-                                            <option name="cutbranch" id="cutbranch" value="cutbranch">ล้างคอขวด</option>
-                                            <option name="pestcontrol" id="pestcontrol" value="pestcontrol">กำจัดวัชพืช
+                                            <option name="cutbranch" id="cutbranch" value="cutbranch" code="6">ล้างคอขวด</option>
+                                            <option name="pestcontrol" id="pestcontrol" value="pestcontrol" code="7">กำจัดวัชพืช
                                             </option>
-                                            <option name="pest" id="pest" value="pest">ตรวจพบศัตรูพืช</option>
+                                            <option name="pest" id="pest" value="pest" code="8">ตรวจพบศัตรูพืช</option>
                                         </select>
                                     </div>
                                 </div>
@@ -367,14 +367,14 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     <div class="col-12">
                                         <select class="form-control selectpicker" data-live-search="true"
                                             title="กรุณาเลือกหัวข้อ" id="chose_cal" required>
-                                            <option value="">กรุณาเลือกการคำนวณ</option>
-                                            <option name="maximum" id="maximum" value="MAX" show="มากที่สุด">มากที่สุด (maximum)
+                                            <option value="" code="0">กรุณาเลือกการคำนวณ</option>
+                                            <option name="maximum" id="maximum" value="MAX" show="มากที่สุด" code="1">มากที่สุด (maximum)
                                             </option>
-                                            <option name="minimum" id="minimum" value="MIN" show="น้อยที่สุด">น้อยที่สุด (minimum)
+                                            <option name="minimum" id="minimum" value="MIN" show="น้อยที่สุด" code="2">น้อยที่สุด (minimum)
                                             </option>
-                                            <option name="average" id="average" value="AVG" show="เฉลี่ย">เฉลี่ย (average)</option>
-                                            <option name="summary" id="summary" value="SUM" show="ผลรวม">ผลรวม (summary)</option>
-                                            <option name="sd" id="sd" value="STDDEV" show="ค่าส่วนเบี่ยงเบนมาตรฐาน">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
+                                            <option name="average" id="average" value="AVG" show="เฉลี่ย" code="3">เฉลี่ย (average)</option>
+                                            <option name="summary" id="summary" value="SUM" show="ผลรวม" code="4">ผลรวม (summary)</option>
+                                            <option name="sd" id="sd" value="STDDEV" show="ค่าส่วนเบี่ยงเบนมาตรฐาน" code="5">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
                                             <!-- <option name="var" id="var" value="VAR">ค่าความแปรปรวน (VAR) -->
                                             </option>
                                         </select>
@@ -450,7 +450,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 <option selected value=0>เลือกจังหวัด</option>
                                 <?php
                                 for ($i = 1; $i < sizeof($PROVINCE); $i++) {
-                                    echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '">' . $PROVINCE[$i]["Province"] . '</option>';
+                                    echo '<option value="'.$PROVINCE[$i]["AD1ID"].'">' . $PROVINCE[$i]["Province"] . '</option>';
                                 }
                             ?>
                             </select>
@@ -768,7 +768,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <label for="">ตั้งแต่ </label>
                             <select id="selectyear1" name="selectyear1" class="form-control "
                                 style="margin-left: 5px; width: 150px;">
-                                <option selected value=0>เลือกปี</option>
+                                <!-- <option selected value=0>เลือกปี</option> -->
                                 <?php
                                 for ($i = 1; $i <= $YEAR[0]["numrow"]; $i++) {
                                     echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
@@ -778,9 +778,9 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <label for="" style="margin-left:5px;">ถึง </label>
                             <select id="selectyear2" name="selectyear2" class="form-control "
                                 style="margin-left: 5px; width: 150px;">
-                                <option selected value=0>เลือกปี</option>
+                                <!-- <option selected value=0>เลือกปี</option> -->
                                 <?php
-                                for ($i = 1; $i <= $YEAR[0]["numrow"]; $i++) {
+                                for ($i = 2; $i <= $YEAR[0]["numrow"]; $i++) {
                                     echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
                                 }
                             ?>
@@ -796,7 +796,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                         </div>
                         <div class="col-sm-3">
                             <select id="selectyear" name="selectyear" class="form-control " style="width: 200px;">
-                                <option selected value=0>เลือกปี</option>
+                                <!-- <option selected value=0>เลือกปี</option> -->
                                 <?php
                                 for ($i = 1; $i < sizeof($YEAR); $i++) {
                                     echo '<option value="' . $YEAR[$i]["Year2"] . '">' . $YEAR[$i]["Year2"] . '</option>';
@@ -834,7 +834,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <label for="">ตั้งแต่ </label>
                             <select id="selectmonth1" name="selectmonth1" class="form-control "
                                 style="margin-left: 5px; width: 150px;">
-                                <option selected value=0>เลือกเดือน</option>
+                                <!-- <option selected value=0>เลือกเดือน</option> -->
                                 <?php
                                 for ($i = 0; $i < sizeof($MONTH); $i++) {
                                     echo '<option value="' . ($i+1). '">' . $MONTH[$i]. '</option>';
@@ -844,9 +844,9 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <label for="" style="margin-left:5px;">ถึง </label>
                             <select id="selectmonth2" name="selectmonth2" class="form-control "
                                 style="margin-left: 5px; width: 150px;">
-                                <option selected value=0>เลือกเดือน</option>
+                                <!-- <option selected value=0>เลือกเดือน</option> -->
                                 <?php
-                                for ($i = 0; $i < sizeof($MONTH); $i++) {
+                                for ($i = 1; $i < sizeof($MONTH); $i++) {
                                     echo '<option value="' . ($i+1). '">' . $MONTH[$i]. '</option>';
                                 }
                             ?>
@@ -862,7 +862,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                         </div>
                         <div class="col-sm-3">
                             <select id="selectmonth" name="selectmonth" class="form-control " style="width: 200px;">
-                                <option selected value=0>เลือกเดือน</option>
+                                <!-- <option selected value=0>เลือกเดือน</option> -->
                                 <?php
                                 for ($i = 0; $i < sizeof($MONTH); $i++) {
                                     echo '<option value="' . ($i+1). '">' . $MONTH[$i]. '</option>';
@@ -950,6 +950,19 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         </div>
     </div>
 </div>
+<div class="container" id="show_error">
+    <div class="row">
+        <div class="col-xl-12 col-12 mb-6">
+            <div class="card">
+                <div class="card-header card-bg " id="headshow" style="color: #d9534f; text-align: center;">
+                    คัดกรองข้อมูลไม่ถูกต้อง
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
 <?php include_once("../layout/LayoutFooter.php"); ?> 
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="Chart.js"></script>

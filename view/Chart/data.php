@@ -1,15 +1,22 @@
 <?php
-set_time_limit(1800);
+
+ini_set('memory_limit', '-1');
+set_time_limit(7800);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
+
+$myConDB = connectDB();
+$sql = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+$myConDB->exec($sql);
+
 $PROVINCE = getProvince();
 $FARMER = getFarmerAll();
 $YEAR = getYearAgriMap();
 
 //for name of file
-$name_label1 = array("Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$name_label1 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
 $name_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
-$name_type = array("water1","water2","fertilize1","fertilize2","cutbranch","pestcontrol","pest");
+$name_type = array("","water1","water2","fertilize1","fertilize2","cutbranch","pestcontrol","pest");
 $name_cal = array("","MAX","MIN","AVG","SUM","STDDEV");
 
 
@@ -101,7 +108,36 @@ $SET3[6] = "";
 $SET3[7] = "";
 $SET3[8] = "";
 array_push($SET3_ALL,$SET3); 
+
+
 $SET3[0]="Year2";
+for($y1=1;$y1<count($YEAR2);$y1++){
+    $SET3[1] = $YEAR2[$y1]["Year2"];
+    $SET3[2] = $YEAR2[$y1]["Year2"];
+    $SET3[3] = "";
+    $SET3[4] = "";
+    $SET3[5] = "";
+    $SET3[6] = "";
+    $SET3[7] = "";
+    $SET3[8] = "";
+    array_push($SET3_ALL,$SET3); 
+}
+for($y1=1;$y1<count($YEAR2);$y1++){
+    $SET3[1] = $YEAR2[$y1]["Year2"];
+    $SET3[2] = $YEAR2[$y1]["Year2"];
+    $SET3[3] = "Month";
+    $MONTH_FOR = $MONTH;
+    for($m1=0;$m1<count($MONTH_FOR);$m1++){
+        $SET3[4] = $MONTH_FOR[$m1];
+        $SET3[5] = $MONTH_FOR[$m1];
+        $SET3[6] = "";
+        $SET3[7] = "";
+        $SET3[8] = "";
+    }
+    array_push($SET3_ALL,$SET3); 
+}
+
+// $SET3[0]="Year2";
 for($y1=1;$y1<count($YEAR2);$y1++){
     for($y2=$y1;$y2<count($YEAR2);$y2++){
         $SET3[1] = $YEAR2[$y1]["Year2"];
@@ -140,6 +176,9 @@ for($y1=1;$y1<count($YEAR2);$y1++){
 
 echo "<br>";
 
+
+
+
 // for($m=1;$m<$PROVINCE[0]['numrow'];$m++){
 //         print("Province = ");
 //         for($n=1;$n<$PROVINCE[0]['numrow'];$n++){
@@ -147,7 +186,7 @@ echo "<br>";
 //     } 
 // }
 
-print_r($set_chose_label1);
+// print_r($set_chose_label1);
 for($i=0;$i<count($set_chose_label1);$i++){
     $chose_label1 = $set_chose_label1[$i];
     for($j=0;$j<count($set_chose_label2);$j++){
@@ -161,20 +200,13 @@ for($i=0;$i<count($set_chose_label1);$i++){
                     foreach ($SET2_ALL as $SET2){
                         foreach($SET3_ALL as $SET3){
 
-                            echo "SET1 = ";
+                            echo "<br>SET1 = ";
                             print_r($SET1);
                             echo "<br>SET2 = ";
                             print_r($SET2);
                             echo "<br>SET3 =";
                             print_r($SET3);
                             echo "<br>";
-
-                            $SET1_ID = dataToID($SET1);
-                            echo "SET1_ID = ";
-                            print_r($SET1_ID);
-                            $SET2_ID = dataToID($SET2);
-                            echo "<br>SET2_ID = ";
-                            print_r($SET2_ID);
 
                             print("chose_label1 = ".$chose_label1);
                             echo "<br>";
@@ -474,7 +506,7 @@ for($i=0;$i<count($set_chose_label1);$i++){
                                     $DATA[$i][$label] = $DATA[$i][$label]." (".$DATA[$i]['Type'].")";
                                 }
                             }
-                            echo "<br>";
+                            // echo "<br>";
                             echo "data = ";
                             print_r($DATA);
                             echo "<br>";
@@ -485,21 +517,38 @@ for($i=0;$i<count($set_chose_label1);$i++){
                             $type = array_search($chose_type, $name_type);
                             $cal = array_search($chose_cal, $name_cal);
 
+                            $SET1_ID = dataToID($SET1);
+                            echo "SET1_ID = ";
+                            print_r($SET1_ID);
+                            $SET2_ID = dataToID($SET2);
+                            echo "<br>SET2_ID = ";
+                            print_r($SET2_ID);
+                            echo "<br>";
+
                             $filename = "";
                             $filename = $lb1."-".$lb2."-".$type."-".$cal."-";
-                            echo $filename;
+
                             $filename = $filename.$SET1_ID[0];
                             for($i=1;$i<count($SET1_ID);$i++){
-                                $filename = ",".$filename.$SET1_ID[$i];
+                                $filename = $filename.",".$SET1_ID[$i];
                             }
-                            $filename = $filename.$SET2_ID[0];
+
+                            $filename = $filename."-".$SET2_ID[0];
                             for($i=1;$i<count($SET2_ID);$i++){
-                                $filename = ",".$filename.$SET2_ID[$i];
+                                $filename = $filename.",".$SET2_ID[$i];
                             }
-                            $filename = $filename.$SET3[0];
-                            for($i=1;$i<count($SET3);$i++){
-                                $filename = ",".$filename.$SET3[$i];
+                            $filename = $filename."-".$SET3[0];
+                            if($SET3[0] != ''){ 
+                                for($i=1;$i<count($SET3);$i++){
+                                    $filename = $filename.",".$SET3[$i];
+                                }
                             }
+
+                            echo $filename."<br>";
+
+                            $myfile = fopen("./filedata/".$filename.".json", "w");
+                            fwrite($myfile, json_encode($DATA,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                            fclose($myfile);
 
                         }
                         echo "********************************<br>";
@@ -628,6 +677,8 @@ function dataToID($ARR2){
                 }
             }
         }
+    }else{
+        $array[0] = '';
     }
     
     return $array;
