@@ -1,14 +1,14 @@
 <?php
 // $time_start = microtime(true);
 
-ini_set('memory_limit', '-1');
+// ini_set('memory_limit', '-1');
 set_time_limit(0);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
 
-$myConDB = connectDB();
-$sql = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-$myConDB->exec($sql);
+// $myConDB = connectDB();
+// $sql = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+// $myConDB->exec($sql);
 
 $PROVINCE = getProvince();
 $FARMER = getFarmerAll();

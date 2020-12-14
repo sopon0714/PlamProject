@@ -1,8 +1,18 @@
 <?php
     // echo "hello";
-set_time_limit(3000);
+    $time_start = microtime(true);
+    ini_set('memory_limit', '-1');
+
+set_time_limit(0);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
+
+
+$myConDB = connectDB();
+$sql = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+$myConDB->exec($sql);
+
+
 $YEAR22= getYearAgriMap();
 print_r($YEAR22);
 echo "<br>";
@@ -231,5 +241,10 @@ function convertToHoursMins($time, $format = '%d:%d') {
     return sprintf($format, $hours, $minutes);
 }
 // echo convertToHoursMins(70);
+
+$time_end = microtime(true);
+$time = $time_end - $time_start; #เวลาเริ่มต้น – เวลาท้ายสุด
+
+echo "เวลาที่ใช้ในการประมวลทั้งหมด $time วินาที\n";
 
 ?>
