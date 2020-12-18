@@ -2,7 +2,7 @@
 <?php
     echo "test json file<br>";
     $namefile = "1-0-1-1---";
-    $namefile = "./filedata/".$namefile.".json";
+    $namefile = "./JsonData/".$namefile.".json";
     echo $namefile."<br>";
 
     $myfile = file_get_contents($namefile);

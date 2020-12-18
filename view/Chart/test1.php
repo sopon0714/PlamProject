@@ -540,7 +540,7 @@ for($i=0;$i<count($set_chose_label1);$i++){
 
                             echo $filename."<br>";
 
-                            $myfile = fopen("./filedata/".$filename.".json", "w");
+                            $myfile = fopen("./JsonData/".$filename.".json", "w");
                             fwrite($myfile, json_encode($DATA,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                             fclose($myfile);
 
@@ -679,7 +679,7 @@ function dataToID($ARR2){
 
 }
 //WRITE FILE
-// $myfile = fopen("./filedata/newfile.txt", "w") or die("Unable to open file!");
+// $myfile = fopen("./JsonData/newfile.txt", "w") or die("Unable to open file!");
 // $txt = "John Doe\n";
 // fwrite($myfile, $txt);
 // $txt = "Jane Doe\n";

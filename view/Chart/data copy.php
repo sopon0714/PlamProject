@@ -339,7 +339,7 @@ function convertToHoursMins($time, $format = '%d:%d') {
 }    
 
 //WRITE FILE
-// $myfile = fopen("./filedata/newfile.txt", "w") or die("Unable to open file!");
+// $myfile = fopen("./JsonData/newfile.txt", "w") or die("Unable to open file!");
 // $txt = "John Doe\n";
 // fwrite($myfile, $txt);
 // $txt = "Jane Doe\n";

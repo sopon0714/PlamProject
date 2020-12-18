@@ -88,7 +88,7 @@ if(isset($_POST['request'])){
             
             // echo $filename;
             // $filename = "1-0-1-1---";
-            $filename = "./filedata/".$filename.".json";
+            $filename = "./JsonData/".$filename.".json";
             // echo $namefile."<br>";
             if(file_exists($filename)){
                 $myfile = file_get_contents($filename);
