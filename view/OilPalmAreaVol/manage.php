@@ -40,11 +40,32 @@ switch ($action) {
                     file_put_contents($path . "/" . $i . $extension, $Pic);
                }
           }
-          // $sql = "SELECT * FROM `dim-farm` WHERE `ID`= $dimfsid";
-          // $DATADIMSUBFARM = selectData($sql);
-          // $sql ="SELECT * FROM `fact-farming` 
-          // WHERE `DIMfarmID` = 1 AND `DIMsubFID` IS NULL
-          // AND `TagetYear` = '2020' AND `isDelete` = 0";
+          //////////// fact-farming ////////////////////
+          $tagetYear = $DIMTIME[1]['Year1'] + 1;
+          $sql = "SELECT * FROM `dim-farm` WHERE`ID` = $dimfsid";
+          $DIMSUBFARM = selectData($sql);
+          $sql = "SELECT `fact-farming`.* ,`dim-farm`.`dbID` AS FSID FROM `fact-farming` 
+          INNER JOIN `dim-farm`ON `dim-farm`.`ID` = `fact-farming`.`DIMsubFID`
+          WHERE TagetYear = $tagetYear AND `dim-farm`.`dbID` ={$DIMSUBFARM[1]['dbID']}";
+          $FACTFARMING = selectData($sql);
+          if ($FACTFARMING[0]['numrow'] == 0) {
+               $sql = "SELECT * FROM `log-farm` 
+               INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
+               WHERE   `dim-farm`.`dbID`={$DIMSUBFARM[1]['dbID']}
+               ORDER BY `log-farm`.`ID` DESC 
+               LIMIT 1";
+               $DATA = selectData($sql);
+               $sql = "INSERT INTO `fact-farming` (`ID`, `isDelete`, `TagetYear`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`,  `NumTree`, `HarvestVol`, `AreaRai`, `AreaNgan`, `AreaWa`, `AreaTotal`) 
+               VALUES (NULL, '0', '$tagetYear', '{$LOG_LOGIN[1]['ID']}', '{$DIMTIME[1]['ID']}', '{$DIMFARMER[1]['ID']}', '{$DIMFARM[1]['ID']}', '$dimfsid', '{$DATA[1]['NumTree']}', '$weight', '{$DATA[1]['AreaRai']}', '{$DATA[1]['AreaNgan']}', '{$DATA[1]['AreaWa']}', '{$DATA[1]['AreaTotal']}')";
+               addinsertData($sql);
+          } else {
+               $Vol = $FACTFARMING[1]['HarvestVol'] + $weight;
+               $sql = "UPDATE `fact-farming` SET `HarvestVol` = '$Vol' WHERE `fact-farming`.`ID` = {$FACTFARMING[1]['ID']}";
+               updateData($sql);
+          }
+
+          //////////// fact-farming ////////////////////
+
           header("location:./OilPalmAreaVolDetail.php?FMID=$fmid");
           break;
      case 'scanDir';
@@ -66,6 +87,24 @@ switch ($action) {
 
           $sql = "UPDATE `log-harvest` SET `isDelete` = '1' WHERE `log-harvest`.`ID` = $id ";
           $o_did = updateData($sql);
+
+          //////////// fact-farming ////////////////////
+          $sql = "SELECT * FROM `log-harvest` WHERE `ID` = $id";
+          $DATA = selectData($sql);
+          $sql = "SELECT * FROM `dim-time`  WHERE ID = {$DATA[1]['DIMdateID']}";
+          $DIMTIME = selectData($sql);
+          $tagetYear = $DIMTIME[1]['Year1'] + 1;
+          $sql = "SELECT * FROM `dim-farm` WHERE`ID` = {$DATA[1]['DIMsubFID']}";
+          $DIMSUBFARM = selectData($sql);
+          $sql = "SELECT `fact-farming`.* ,`dim-farm`.`dbID` AS FSID FROM `fact-farming` 
+          INNER JOIN `dim-farm`ON `dim-farm`.`ID` = `fact-farming`.`DIMsubFID`
+          WHERE TagetYear = $tagetYear AND `dim-farm`.`dbID` ={$DIMSUBFARM[1]['dbID']}";
+          $FACTFARMING = selectData($sql);
+          $Vol = $FACTFARMING[1]['HarvestVol'] - $DATA[1]['Weight'];
+          $sql = "UPDATE `fact-farming` SET `HarvestVol` = '$Vol' WHERE `fact-farming`.`ID` = {$FACTFARMING[1]['ID']}";
+          updateData($sql);
+
+          //////////// fact-farming ////////////////////
           break;
      case 'setSelectSubfarm';
           $FIMD = $_POST['FIMD'];

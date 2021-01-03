@@ -16,7 +16,6 @@ $INFOAREASUBFARM = getAreatotalByIdSubFarm($fsid);
 $INNFOCOORSUBFRAM = getCoorsSubFarm($fsid);
 $OLDPALMSUBFARM = getOldPalmByIdSubFarm($fsid);
 $LOGPLANTTING = getLogPlantingBySubfarmId($fsid);
-$INFOFERT = getVolFertilising($fsid);
 $YEAR = getYear($fsid, false);
 $ChartPest = getChartPest($YEAR[1]['Year2'], $fsid);
 $ChartActivity = getChartActivity($YEAR[1]['Year2'], $fsid);
@@ -343,45 +342,7 @@ $sumdeadPers = 0;
             </div>
         </div>
     </div>
-    <div class="row mt-4 mb-4">
-        <div class="col-xl-12 col-12">
-            <div class="card">
-                <div class="card-header card-bg">
-                    <h4>ปริมาณการใส่ปุ๋ย</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-xl-12 col-12">
-                            <div class="row">
-                                <?php
-                                if ($INFOFERT[0]['numrow'] != 0) {
-                                    for ($i = 1; $i <= $INFOFERT[0]['numrow']; $i++) {
-                                        echo "
-                                <div class=\"col-4 \" style=\"margin: 25px 0px 25px 0px;\">
-                                    <div class=\"row\">
-                                        <div class=\"col-12\">
-                                            <canvas id=\"ferYear" . $i . "\" style=\"height:250px;\"></canvas>
-                                        </div> 
-                                    </div> 
-                                    <div class=\"row\">
-                                        <div class=\"col-12 text-center\">
-                                            <span   style=\"margin-left: 17%; align: center\">" . $INFOFERT[$i]['Name'] . "</span>
-                                        </div> 
-                                    </div>
-                                </div>";
-                                    }
-                                } else {
-                                    echo "<h4>ไม่มีข้อมูล</h4>";
-                                }
-                                ?>
-                            </div>
-                            <!-- <span style=\"margin-left: 17%;\">" . $INFOFERT[$i]['Name'] . "</span> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="row mt-4">
         <div id="maxyear" hidden maxyear="<?= $YEAR[1]['Year2'] ?>"></div>
         <div id="FMID" hidden FMID="<?= $fmid ?>"></div>
@@ -460,72 +421,7 @@ $sumdeadPers = 0;
 
     // //Fer section////////////////////////////////////////////////////////
     <?php
-
-
-
     $MaxYear = ((int) date("Y")) + 543;
-    for ($i = 1; $i <= $INFOFERT[0]['numrow']; $i++) {
-        if ($INFOFERT[$i]['Unit'] == 1) {
-            $unit = "ก.ก";
-        } else {
-            $unit = "กรัม";
-        }
-        echo "  var chartOptions$i = {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        legend: {
-                            display: false,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 80,
-                                fontColor: 'black'
-                            }
-                        },
-                        scales: {
-                            yAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'ปริมาณปุ๋ย ($unit)'
-                                },
-                                gridLines: {
-                                    display: true
-                                },
-                                ticks: {
-                                    min: 0
-                                }
-                            }]
-                            ,
-                            xAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'รายปี'
-                                },
-                                gridLines: {
-                                    display: false
-                                }
-                            }],
-                        }
-                    };
-
-                    var speedData$i = {
-                        labels: [\"" . ($MaxYear - 2) . "\", \"" . ($MaxYear - 1) . "\", \"$MaxYear\"],
-                        datasets: [
-                            {
-                                label: \"ปริมาณปุ๋ยที่ใส่ ($unit)\",
-                                data: {$INFOFERT[$i]['dataVol']},
-                                backgroundColor: '#05acd3'
-                            }
-                        ]
-                    };
-
-                    var ctx = $(\"#ferYear$i\");
-                    var plantPie = new Chart(ctx, {
-                        type: 'bar',
-                        data: speedData$i,
-                        options: chartOptions$i
-                    });";
-    }
-
     ?>
     var chartOptions = {
         responsive: true,

@@ -28,24 +28,18 @@ $(document).ready(function() {
 
     $(document).on('click', '.editF', function() { // set data in edit modal
         let index = $(this).attr('index');
-        console.log('edit *-* -*-*-*-*---' + conditionF)
         setValue(index);
         $("input[name='id']").val(idF);
         $("input[name='name']").val(nameF);
-        $("input[name='alias']").val(aliasF);
-        let icon = '';
-        if (dataF[i].Icon == "defultF.png") {
-            $("#img-update").attr('src', `../../icon/fertilizer/0/defultF.png`);
+        if (TypeF == "ธาตุอาหารหลัก") {
+            $("#Type1").prop('checked', true);
         } else {
-            $("#img-update").attr('src', `../../icon/fertilizer/${idF}/${iconF}`);
+            $("#Type2").prop('checked', true);
         }
-
         $('#addCondition').empty();
-
         let j = 0;
-        // console.log("numcon :"+Object.keys(conditionF).length); // fetch data condition
+
         if (conditionF != "") {
-            // console.log("...................................." + conditionF + " " + j + " *-*-*-\n")
             for (i in conditionF) {
                 if (j > 0) {
                     $('#addCondition').append(`<input type="text" class="form-control conditionInput" name="condition[]" id="">
@@ -68,7 +62,6 @@ $(document).ready(function() {
             `)
         }
         if (startF == '0101' && endF == '3112') { // set start end
-            console.log('set4');
             $("#exampleRadios4").prop('checked', true);
             mountYearChecked = false;
             $("#add-mount-year").empty()
@@ -111,10 +104,7 @@ $(document).ready(function() {
     }
     $(document).on('click', '.editSubmit', function() { // submit to update
         $('.editSubmit').attr('type', 'submit')
-            // check_dep(name,alias,a,b,start,end)
-            // let re = /^[0-9]/
         let name = $("input[name='name']");
-        let alias = $("input[name='alias']");
         let a = $("input[name='a']");
         let b = $("input[name='b']");
         let d1 = setZero($('#D1').val());
@@ -123,22 +113,15 @@ $(document).ready(function() {
         let m2 = setZero($('#M2').val());
         let start = d1 + m1
         let end = d2 + m2
-            // alert(end)
         let con = $("input[name='condition[]']").map(function() { return $(this).val().trim(); }).get();
         let condition = []
-            // let unit = $("input")
 
-        // console.log("test"+re.test(name.val()))
-        let dataNull = [name, alias, a, b]
-        let dataStartNum = [name, alias]
+        let dataNull = [name, a, b]
+        let dataStartNum = [name]
         if (start != undefined) {
             dataNull.push[start, end]
         }
         let dataNegative = [a, b]
-
-        // console.log("connnnnn"+String(con[1]).trim())
-        // console.log(name.val().trim())
-        // alert('ss')
         if (!checkNull(dataNull)) return;
         if (startInputNum(dataStartNum)) return;
         if (isNaN(a.val())) {
@@ -151,24 +134,11 @@ $(document).ready(function() {
         }
         if (!checkNegative(dataNegative)) return;
         if (!checkSameName(name, idF)) return;
-        if (!checkSameAlias(alias, idF)) return;
-        // if(!checkSameName(alias,idF)) return;
-        // event.preventDefault();
-        // $('#edit').attr("data-dismiss","modal")
-        // $('#edit').modal('hide')
-
 
         let form = new FormData($('.modal-update')[0]);
-        if (check_IU) {
-            form.append('imagebase64', $('#img-update').attr('src'))
-            check_IU = false
-        }
         form.append('start', start)
         form.append('end', end)
         form.append('dimid', DIMID)
-        form.append('icon', iconF)
-            // $('.modal').hide();
-            // $('.modal-backdrop').hide()
         $.ajax({ // update data
             type: "POST",
             data: form,
@@ -179,45 +149,18 @@ $(document).ready(function() {
             processData: false,
 
             success: function(result) {
-                // alert(result)
                 loadDataF();
-                //   $('.modal').show();
-                //   $('.modal-backdrop').show()
             }
         });
-        console.log("update");
-
-
     })
     $(document).on('click', '.insertSubmit', function(e) { // insert submit
-        // console.log('sss');
-        // e.preventdefault()
-
         let name = $("input[name='name_insert']");
-        // let name = $(this).parent().prev().children().children().children().children().first().next()
-        let alias = $("input[name='alias_insert']");
-        let icon = $("#pic-logo");
-        // console.log("name = "+name)
-
-        let dataNull = [name, alias]
-        let dataStartNum = [name, alias]
+        let dataNull = [name]
+        let dataStartNum = [name]
         if (!checkNull(dataNull)) return;
         if (startInputNum(dataStartNum)) return;
-        // console.log('sssssssssssssssss');
-
-        // console.log('pppp');
         if (!checkSameName(name, -1)) return;
-        if (!checkSameAlias(alias, -1)) return;
-        // console.log('bb');
-        // // if(!checkSameName(alias,-1)) return;
-
-        // console.log('insert');
         let form = new FormData($('#form-insert')[0]);
-        if (check_II) {
-            form.append('imagebase64', $('#img-insert').attr('src'))
-            check_II = false
-        }
-
         insertF(form); // insert data
     })
 
@@ -234,6 +177,7 @@ $(document).ready(function() {
             async: false,
             success: function(result) {
                 dataF = result;
+                console.log(dataF);
 
 
                 // alert(data)
@@ -248,11 +192,11 @@ $(document).ready(function() {
                         j++
                         let icon = '';
                         if (dataF[i].Icon == "defultF.png") {
-                            icon = `<img src="../../icon/fertilizer/0/defultF.png" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
+                            icon = `<img src="../../icon/nutrient/0/defultF.png" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
                         } else {
-                            icon = `<img src="../../icon/fertilizer/${dataF[i].FID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
+                            icon = `<img src="../../icon/nutrient/${dataF[i].NID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
                         }
-                        // let icon = `<img src="../../icon/fertilizer/${dataF[i].FID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
+                        // let icon = `<img src="../../icon/fertilizer/${dataF[i].NID}/${dataF[i].Icon}" id="pic-Fertilizer" class="" style="border-radius: 150px;width:200px;"; >`;
                         // if (dataF[i].Icon == '') {
                         //     icon = `<img src="https://imbindonesia.com/images/placeholder/camera.jpg" id="pic-Fertilizer" class="" width="150px" height="200px" >`;
                         // }
@@ -260,35 +204,35 @@ $(document).ready(function() {
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between header-fertilizer"  >
                 <h6 class="m-0 font-weight-bold text-white">${dataF[i].Name}</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle editF tt" title="แก้ไขข้อมูล" index=${i}  id="FID${dataF[i].FID}" data-toggle="modal" data-target="#edit" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle editF tt" title="แก้ไขข้อมูล" index=${i}  id="NID${dataF[i].NID}" data-toggle="modal" data-target="#edit" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-cog fa-lg mr-3 curser"  style="color:#FDFEFE;padding-left: 25px"></i>
-                    </a>
-                    <a class="dropdown-toggle deleteF tt" title="ลบปุ๋ย" index=${i}  id=${dataF[i].FID} DIMID = ${dataF[i].ID} data-name=${dataF[i].Name}>
-                        <i class="fas fa-trash-alt curser" style="color:#FDFEFE"></i>
-                    </a>
+                    </a>`;
+                        if (dataF[i].NID != 1 && dataF[i].NID != 2 && dataF[i].NID != 3) {
+                            text += `
+                        <a class="dropdown-toggle deleteF tt" title="ลบธาตุอาหาร" index=${i}  id=${dataF[i].NID} DIMID = ${dataF[i].ID} data-name=${dataF[i].Name}>
+                            <i class="fas fa-trash-alt curser" style="color:#FDFEFE"></i>
+                        </a>`
+                        }
+
+                        text += `
                 </div>
             </div>
             <!-- Card Body -->
             <div class="card-body shadow" id="card1-detail">
                 <div class="grid-fer-card">
                     <div class="fer-column1">
-                    <br>
-                        <center>
-                        <div class="upload-btn-wrapper">
-                            ${icon}
-                            
-                        </div>
-                            
-                            <br>
-                            <br>
-        
-                            <h5>${dataF[i].Name}</h5>
-                        </center>
+                        <h4>ชื่อธาตุอาหาร</h4>
+                        ${dataF[i].Name}
+                        </br>
+                        </br>
+                        <h4>ประเภทธาตุอาหาร</h4>
+                        ${dataF[i].Type}
+                        
                     </div>
                     <div class="fer-column2">
-                        <h4> ระยะเวลาในการใส่ปุ๋ย </h4>`
+                        <h4> ระยะเวลาในการใส่ธาตุอาหาร </h4>`
                         if (dataF[i].Start == "0101" && dataF[i].End == "3112") {
-                            text += `สามารถใส่ปุ๋ยได้ทั้งปี`
+                            text += `สามารถใส่ธาตุอาหารได้ทั้งปี`
                         } else {
                             text += ` ช่วงเดือนที่ใส่ ${dS}/${mS} - ${dE}/${mE} `
                         }
@@ -298,7 +242,7 @@ $(document).ready(function() {
                         <h4> ข้อห้าม/คำเตือน </h4>
                         <div>
                         `
-                        loadCondition(dataF[i].FID);
+                        loadCondition(dataF[i].NID);
                         if (conditionF != "") {
                             for (k in conditionF) {
                                 text += `
@@ -422,7 +366,6 @@ $(document).ready(function() {
             processData: false,
 
             success: function(result) {
-                // alert(result);
                 loadDataF();
             }
         });
@@ -443,7 +386,7 @@ $(document).ready(function() {
     function setValue(i) { // function set value when click edit modal
 
         DIMID = dataF[i].ID;
-        idF = dataF[i].FID;
+        idF = dataF[i].NID;
         startF = dataF[i].Start;
         endF = dataF[i].End;
         nameF = dataF[i].Name;
@@ -452,9 +395,8 @@ $(document).ready(function() {
         aF = dataF[i].EQ1;
         bF = dataF[i].EQ2;
         iconF = dataF[i].Icon;
-        aliasF = dataF[i].Alias;
-        //   conditionF = "";
-        console.log("DIMID " + DIMID);
+        TypeF = dataF[i].Type;
+        console.log(dataF[i]);
         loadCondition(idF)
 
 
@@ -701,7 +643,7 @@ $(document).ready(function() {
         mountYearChecked = true;
     }
 
-    function loadCondition(FID) { // load condition from database
+    function loadCondition(NID) { // load condition from database
         conditionF = "";
         $.ajax({
             type: "POST",
@@ -709,7 +651,7 @@ $(document).ready(function() {
 
             data: {
                 request: 'selectCondition',
-                id: FID,
+                id: NID,
             },
             async: false,
             url: "dbF.php",
@@ -726,26 +668,8 @@ $(document).ready(function() {
 
         for (i in dataF) {
             console.log(dataF[i].Name);
-            if (name.val().trim().replace(/\s\s+/g, ' ') == dataF[i].Name && dataF[i].FID != id) {
+            if (name.val().trim().replace(/\s\s+/g, ' ') == dataF[i].Name && dataF[i].NID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
-                return false;
-            } else {
-                name[0].setCustomValidity('');
-            }
-        }
-
-
-
-        return true;
-
-    }
-
-    function checkSameAlias(name, id) { // check same Alias
-
-        for (i in dataF) {
-            console.log(dataF[i].Alias);
-            if (name.val().trim().replace(/\s\s+/g, ' ') == dataF[i].Alias && dataF[i].FID != id) {
-                name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;
             } else {
                 name[0].setCustomValidity('');
@@ -944,7 +868,7 @@ $(document).ready(function() {
         let dimid = me.attr('DIMID')
         swal({
                 title: "คุณต้องการลบ",
-                text: "ปุ๋ย " + name + " หรือไม่?",
+                text: "ธาตุอาหาร " + name + " หรือไม่?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
@@ -982,7 +906,7 @@ $(document).ready(function() {
                                 url: "dbF.php",
                                 success: function(result) {
                                     loadDataF(result)
-                                    window.location = './FertilizerList.php';
+                                    window.location = './NutrientList.php';
                                 }
                             });
                         } else {}

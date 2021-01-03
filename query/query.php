@@ -23,7 +23,52 @@ function creatCard($styleC, $headC, $textC, $iconC, $size = 3)
         </div>
     </div>";
 }
-
+//-----------------FertilizerList --------------------
+function getCountFertilizer()
+{
+    $sql = "SELECT COUNT(*) AS countFertilizer FROM `log-fertilizer` WHERE `log-fertilizer`.`isDelete`= 0";
+    $countFertilizer = selectData($sql)[1]['countFertilizer'];
+    return $countFertilizer;
+}
+function getFertilizer()
+{
+    $sql = "SELECT * FROM `log-fertilizer` WHERE `log-fertilizer`.`isDelete`=0 ORDER BY `log-fertilizer`.`Name`";
+    $DATAFER = selectData($sql);
+    $INFO = array();
+    for ($i = 1; $i <= $DATAFER[0]['numrow']; $i++) {
+        $INFO[$DATAFER[$i]['ID']]['FID'] = $DATAFER[$i]['ID'];
+        $INFO[$DATAFER[$i]['ID']]['Name'] = $DATAFER[$i]['Name'];
+        $INFO[$DATAFER[$i]['ID']]['Alias'] = $DATAFER[$i]['Alias'];
+        $INFO[$DATAFER[$i]['ID']]['composition']['หลัก'] = array();
+        $INFO[$DATAFER[$i]['ID']]['composition']['รอง'] = array();
+        $sql = "SELECT * FROM `log-fertilizercomposition` WHERE `FerID` = {$DATAFER[$i]['ID']} ORDER BY `log-fertilizercomposition`.`NID`";
+        $DATANUTR = selectData($sql);
+        for ($j = 1; $j <= $DATANUTR[0]['numrow']; $j++) {
+            $sql = "SELECT`dim-nutrient`.`Name`, `log-nutrient`.`Type` FROM `log-nutrient` 
+            INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` = `log-nutrient`.`DIMnutrID`
+            WHERE `dim-nutrient`.`dbID` = {$DATANUTR[$j]['NID']} ORDER BY `log-nutrient`.`ID` DESC LIMIT 1";
+            $DATADETAILNUTR = selectData($sql);
+            if ($DATADETAILNUTR[1]['Type'] == 'ธาตุอาหารหลัก') {
+                array_push($INFO[$DATAFER[$i]['ID']]['composition']['หลัก'], $DATADETAILNUTR[1]['Name']);
+            } else if ($DATADETAILNUTR[1]['Type']  == 'ธาตุอาหารรอง') {
+                array_push($INFO[$DATAFER[$i]['ID']]['composition']['รอง'], $DATADETAILNUTR[1]['Name']);
+            }
+        }
+    }
+    return $INFO;
+}
+function getMainNutr()
+{
+    $sql = "SELECT * FROM `db-nutrient`WHERE `Type` = 'ธาตุอาหารหลัก' ORDER BY `db-nutrient`.`Name`";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+function getSubNutr()
+{
+    $sql = "SELECT * FROM `db-nutrient`WHERE `Type` = 'ธาตุอาหารรอง' ORDER BY `db-nutrient`.`Name`";
+    $DATA = selectData($sql);
+    return $DATA;
+}
 //-----------------Department.php---------------------
 //จำนวนหน่วยงานทั้งหมด
 function getCountDepartment()
@@ -320,13 +365,20 @@ function getOwnerFarm($ufid)
     $ownerFarm = selectData($sql);
     return $ownerFarm;
 }
-//----------------------------Fertilizer--------------------------------------
+//----------------------------Nutrient--------------------------------------
 
-function getCountFertilizer()
+function getCountNutrientM()
 {
-    $sql = "SELECT COUNT(*) AS countFer FROM `db-fertilizer` 
-    join `dim-fertilizer` on (`dbID` = `db-fertilizer`.`FID`) 
-    WHERE `db-fertilizer`.`Name` = `dim-fertilizer`.`Name` AND `db-fertilizer`.`Alias` = `dim-fertilizer`.`Alias`";
+    $sql = "SELECT COUNT(*) AS countFer FROM `db-nutrient` 
+    join `dim-nutrient` on (`dbID` = `db-nutrient`.`NID`) 
+    WHERE `db-nutrient`.`Name` = `dim-nutrient`.`Name` AND `db-nutrient`.`Type` ='ธาตุอาหารหลัก' ";
+    return selectData($sql)[1]['countFer'];
+}
+function getCountNutrientS()
+{
+    $sql = "SELECT COUNT(*) AS countFer FROM `db-nutrient` 
+    join `dim-nutrient` on (`dbID` = `db-nutrient`.`NID`) 
+    WHERE `db-nutrient`.`Name` = `dim-nutrient`.`Name` AND `db-nutrient`.`Type` ='ธาตุอาหารรอง'";
     return selectData($sql)[1]['countFer'];
 }
 
@@ -785,15 +837,15 @@ function getMaxyear($logfarmID)
 // sql ค่าของ TempVOL มีการรับค่า ID ของ logfarmID
 function getTempVOL($logfarmID)
 {
-    $sql = "SELECT `dim-fertilizer`.`ID`,`dim-fertilizer`.`Name` AS ferName,`dim-time`.`Year2` AS YY,
+    $sql = "SELECT `dim-nutrient`.`ID`,`dim-nutrient`.`Name` AS ferName,`dim-time`.`Year2` AS YY,
     SUM(`log-fertilising`.`Vol`) AS sumvol 
     FROM `log-fertilising` 
     INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
-    INNER JOIN `dim-fertilizer` ON `dim-fertilizer`.`ID` = `log-fertilising`.`DIMferID`  
+    INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` = `log-fertilising`.`DIMferID`  
     INNER JOIN `dim-farm` on `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID`
     where `DIMfarmID`= '$logfarmID' AND `DIMsubFID`=' $logfarmID'
-    GROUP BY `dim-fertilizer`.`Name` ,`dim-time`.`Year2`
-    ORDER BY `dim-fertilizer`.`Name` ,`dim-time`.`Year2` ";
+    GROUP BY `dim-nutrient`.`Name` ,`dim-time`.`Year2`
+    ORDER BY `dim-nutrient`.`Name` ,`dim-time`.`Year2` ";
     $TempVOL = selectData($sql);
     return $TempVOL;
 }
@@ -814,23 +866,23 @@ function getYearvol($logfarmID)
 // sql ค่าของ Namevol มีการรับค่า ID ของ logfarmID
 function getNamevol($suid)
 {
-    $sql = "SELECT `dim-fertilizer`.`ID`,`dim-fertilizer`.`Name`as namevol , `dim-farm`.`Name` FROM `log-fertilising` 
+    $sql = "SELECT `dim-nutrient`.`ID`,`dim-nutrient`.`Name`as namevol , `dim-farm`.`Name` FROM `log-fertilising` 
     INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
-    INNER JOIN `dim-fertilizer` ON `dim-fertilizer`.`ID` = `log-fertilising`.`DIMferID`  
+    INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` = `log-fertilising`.`DIMferID`  
     INNER JOIN `dim-farm` on `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID`
     INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`
     where `dim-farm`.`dbID` = '$suid'
-    GROUP BY `dim-fertilizer`.`Name` 
-    ORDER BY `dim-fertilizer`.`Name`";
+    GROUP BY `dim-nutrient`.`Name` 
+    ORDER BY `dim-nutrient`.`Name`";
     $Namevol = selectData($sql);
     return $Namevol;
 }
 // sql ค่าของ Numvol มีการรับค่า ID ของ logfarmID
 function getNumvol($suid)
 {
-    $sql = "SELECT  `db-fertilizer`.`EQ1`,`db-fertilizer`.`EQ2` , `dim-farm`.`Name` FROM `db-fertilizer`
-    INNER JOIN `dim-fertilizer` ON `dim-fertilizer`.`dbID` = `db-fertilizer`.`FID`
-    INNER JOIN `log-fertilising` ON `log-fertilising`.`DIMferID` = `dim-fertilizer`.`ID`
+    $sql = "SELECT  `db-nutrient`.`EQ1`,`db-nutrient`.`EQ2` , `dim-farm`.`Name` FROM `db-nutrient`
+    INNER JOIN `dim-nutrient` ON `dim-nutrient`.`dbID` = `db-nutrient`.`NID`
+    INNER JOIN `log-fertilising` ON `log-fertilising`.`DIMferID` = `dim-nutrient`.`ID`
     INNER JOIN `dim-farm` on `dim-farm`.`ID`= `log-fertilising`.`DIMsubFID`
     INNER JOIN `db-subfarm` ON `db-subfarm`.`FSID` = `dim-farm`.`dbID`
     where `dim-farm`.`dbID` = '$suid'";
@@ -864,10 +916,10 @@ function getIdfarmSubDetail($suid)
 function getVolFertilising($fsid)
 {
 
-    $sql = "SELECT * FROM `db-fertilizer` ORDER BY `db-fertilizer`.`Name`";
+    $sql = "SELECT * FROM `db-nutrient` ORDER BY `db-nutrient`.`Name`";
     $INFOFERT = selectData($sql);
     for ($i = 1; $i < count($INFOFERT); $i++) {
-        $INFOFERT[$i]['dataVol'] = getVolFertYear($fsid, $INFOFERT[$i]['FID']);
+        $INFOFERT[$i]['dataVol'] = getVolFertYear($fsid, $INFOFERT[$i]['NID']);
     }
     return  $INFOFERT;
 }
@@ -877,12 +929,12 @@ function getVolFertYear($fsid, $fid)
     $dataVol = [];
     for ($i = 2; $i >= 0; $i--) {
         $thisYear =  $MaxYear - $i;
-        $sql = "SELECT `dim-time`.`Year2`,`dim-farm`.`dbID` as FSID,`dim-fertilizer`.`dbID`AS FID,SUM(`log-fertilising`.`Vol`) as Vol
+        $sql = "SELECT `dim-time`.`Year2`,`dim-farm`.`dbID` as FSID,`dim-nutrient`.`dbID`AS NID,SUM(`log-fertilising`.`Vol`) as Vol
         FROM `log-fertilising` INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-fertilising`.`DIMdateID`
         INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-fertilising`.`DIMsubFID`
-        INNER JOIN `dim-fertilizer` ON `dim-fertilizer`.`ID` =`log-fertilising`.`DIMferID`
-        WHERE  `log-fertilising`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-fertilizer`.`dbID`=$fid AND `dim-time`.`Year2`= $thisYear
-        GROUP BY    `dim-time`.`Year2`,`dim-farm`.`dbID`,`dim-fertilizer`.`dbID`";
+        INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` =`log-fertilising`.`DIMferID`
+        WHERE  `log-fertilising`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid AND `dim-nutrient`.`dbID`=$fid AND `dim-time`.`Year2`= $thisYear
+        GROUP BY    `dim-time`.`Year2`,`dim-farm`.`dbID`,`dim-nutrient`.`dbID`";
         $VOL = selectData($sql);
         if ($VOL[0]['numrow'] != 0) {
             array_push($dataVol, round($VOL[1]['Vol'], 2));
@@ -947,7 +999,7 @@ function getDetailLogSubFarm($fsid)
     $sql = "SELECT f.`dbID` AS FMID  ,f.`ID` AS DIMfarmID , sf.`dbID` AS FSID  ,
             sf.`ID` AS DIMSubfarmID ,`dim-user`.`dbID`AS UFID,
             `dim-user`.`ID` AS DIMownerID ,`dim-user`.`Title`,`dim-user`.`FullName`,
-            f.`Name` as NameFarm ,sf.`Name` as NameSubfarm
+            f.`Name` as NameFarm ,sf.`Name` as NameSubfarm  , `log-farm`.`NumTree` 
              FROM `log-farm`
             INNER JOIN `dim-farm` as sf ON sf.`ID` =`log-farm`.`DIMSubfID`
             INNER JOIN `dim-farm`  as f ON f.`ID` =`log-farm`.`DIMfarmID`
@@ -2673,6 +2725,13 @@ function getAvgWater($year)
     $DATA = selectData($sql);
     return $DATA[1]['AVGVol'];
 }
+function getAvgFertilising($year)
+{
+    $sql = "SELECT IFNULL(ROUND(COUNT(*)/COUNT(DISTINCT `dim-farm`.`dbID`),2),0) AS AVGfertilising FROM `log-fertilising` INNER JOIN `dim-time` ON `dim-time`.`ID`=`log-fertilising`.`DIMdateID` INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID` 
+    WHERE `dim-time`.`Year2` = $year AND `log-fertilising`.`isDelete`=0";
+    $DATA = selectData($sql);
+    return $DATA[1]['AVGfertilising'];
+}
 function getLogRain($fsid, $year = 0)
 {
     $sql = "SELECT `log-raining`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
@@ -3031,6 +3090,30 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
                 },";
             }
         }
+        if ($checkbox['ให้ปุ๋ย'] == 1) {
+            $sql = "SELECT `dim-time`.`Date`, COUNT(`dim-farm`.`dbID`) AS numSubFarm  FROM `log-fertilising`
+             INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-fertilising`.`DIMsubFID`
+            INNER JOIN  `dim-time` ON   `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
+            INNER JOIN `log-fertilizer` ON `log-fertilizer`.`ID` = `log-fertilising`.`ferID`
+            WHERE `log-fertilising`.`isDelete`=0 AND `dim-farm`.`dbID` IN  $text1 ";
+            if ($year != 0) $sql .= "AND `dim-time`.`Year2` = '$year'";
+            $sql .= "   GROUP BY  `dim-time`.`Date`
+                        ORDER BY  `dim-time`.`Date`";
+            $DATA = selectData($sql);
+            for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
+                $text .= "{
+                    title: 'มีการใส่ปุ๋ย {$DATA[$i]['numSubFarm']} แปลง',
+                    start: '{$DATA[$i]['Date']}',
+                    color: '#665561',
+                    textColor: '#FFFFFF',
+                    extendedProps: {
+                        status: 'ให้ปุ๋ย',
+                        color: '#665561',
+                        date: '{$DATA[$i]['Date']}'
+                      }
+                },";
+            }
+        }
         if ($checkbox['พบศัตรูพืช'] == 1) {
             $sql = "SELECT `dim-time`.`Date`, COUNT(`dim-farm`.`dbID`) AS numSubFarm  FROM `log-pestalarm` 
             INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
@@ -3067,4 +3150,224 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 }
 function INFOCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 {
+}
+function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist)
+{
+    $idformal = '';
+    $fpro = 0;
+    $fdist = 0;
+    $fullname = '';
+    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+    if (isset($_POST['year']))  $year = $_POST['year'];
+    if (isset($_POST['s_province']))  $fpro = $_POST['s_province'];
+    if (isset($_POST['s_distrinct'])) $fdist = $_POST['s_distrinct'];
+    if (isset($_POST['s_name'])) {
+        $fullname = rtrim($_POST['s_name']);
+        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+        $namef = explode(" ", $fullname);
+        if (isset($namef[1])) {
+            $fnamef = $namef[0];
+            $lnamef = $namef[1];
+        } else {
+            $fnamef = $fullname;
+            $lnamef = $fullname;
+        }
+    }
+    $sql = "SELECT  sf.`dbID` AS FSID ,f.`dbID` AS FMID,`dim-user`.`FullName`,f.`Name` as NameFarm ,sf.`Name` as NameSubfarm ,
+            `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`Latitude`,
+            `log-farm`.`Longitude`,`log-farm`.`NumTree`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM `log-farm`
+            INNER JOIN `dim-farm`as f ON f.`ID` =`log-farm`.`DIMfarmID` 
+            INNER JOIN `dim-farm` as sf ON sf.`ID` =`log-farm`.`DIMSubfID` 
+            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID`
+            INNER JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+            WHERE  `log-farm`.`ID` IN
+            (SELECT MAX(`log-farm`.`ID`)  as LogID FROM `log-farm` INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-farm`.`DIMSubfID` 
+            WHERE `log-farm`.`DIMSubfID` IS NOT NULL";
+    if ($idformal != '') $sql .= " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+
+    $sql .= " GROUP BY `dim-farm`.`dbID`) ORDER BY `dim-user`.`FullName`,f.`Name`  ,sf.`Name`";
+    $INFOSUBFARM =  selectData($sql);
+    $INFOSUBFARMFertilising = array();
+    if ($INFOSUBFARM[0]['numrow'] == 0) {
+        $INFOSUBFARMFertilising = null;
+    }
+    for ($i = 1; $i < count($INFOSUBFARM); $i++) {
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NameFarm'] = $INFOSUBFARM[$i]['NameFarm'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NameSubfarm'] = $INFOSUBFARM[$i]['NameSubfarm'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['AreaRai'] = $INFOSUBFARM[$i]['AreaRai'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
+        $INFO = getInfoFertilising($INFOSUBFARM[$i]['FSID'], $year);
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['countFertilising'] =  $INFO['countFertilising'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] =  $INFO['N']['sumVol'] . "/" . $INFO['N']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] .= ($INFO['N']['Unit'] == 1) ? "Kg" : "g";
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] =  $INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] .= ($INFO['P']['Unit'] == 1) ? "Kg" : "g";
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] =  $INFO['K']['sumVol'] . "/" . $INFO['K']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] .= ($INFO['K']['Unit'] == 1) ? "Kg" : "g";
+    }
+    return $INFOSUBFARMFertilising;
+}
+function getInfoFertilising($FSID, $year)
+{
+    $INFO = array();
+    $sql = "SELECT COUNT(*) as countFertilising FROM `log-fertilising` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
+    WHERE `dim-farm`.`dbID`=$FSID AND `dim-time`.`Year2` = $year AND `log-fertilising`.`isDelete`=0";
+    $DATA = selectData($sql);
+    $INFO['countFertilising'] = $DATA[1]['countFertilising'];
+
+    $DATA = getSumVolFertilising($FSID, $year, 1);
+
+    if ($DATA[0]['numrow'] != 0) {
+        $INFO['N']['sumVol'] = $DATA[1]['sumVol'];
+        $INFO['N']['Unit'] = $DATA[1]['Unit'];
+    } else {
+        $INFO['N']['sumVol'] = 0;
+        $INFO['N']['Unit'] = 1;
+    }
+    $INFO['N']['UnitUse'] =  getVolUseFertilising($FSID, 1, $year);
+    $DATA = getSumVolFertilising($FSID, $year, 2);
+    $vol = 0;
+    if ($DATA[0]['numrow'] != 0) {
+        $INFO['P']['sumVol'] = $DATA[1]['sumVol'];
+        $INFO['P']['Unit'] = $DATA[1]['Unit'];
+    } else {
+        $INFO['P']['sumVol'] = 0;
+        $INFO['P']['Unit'] = 1;
+    }
+    $INFO['P']['UnitUse'] =  getVolUseFertilising($FSID, 2, $year);
+    $DATA = getSumVolFertilising($FSID, $year, 3);
+    if ($DATA[0]['numrow'] != 0) {
+        $INFO['K']['sumVol'] = $DATA[1]['sumVol'];
+        $INFO['K']['Unit'] = $DATA[1]['Unit'];
+    } else {
+        $INFO['K']['sumVol'] = 0;
+        $INFO['K']['Unit'] = 1;
+    }
+    $INFO['K']['UnitUse'] =  getVolUseFertilising($FSID, 3, $year);
+    return $INFO;
+}
+function getVolUseFertilising($FSID, $NID, $year)
+{
+    $sql = "SELECT * FROM `log-nutrient`
+    INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` = `log-nutrient`.`DIMnutrID`
+    WHERE `dim-nutrient`.`dbID` =$NID 
+    ORDER BY `log-nutrient`.`ID` DESC
+    LIMIT 1";
+    $DATANUTR = selectData($sql);
+    $Usage = $DATANUTR[1]['Usage'];
+    $EQ1 = $DATANUTR[1]['EQ1'];
+    $EQ2 = $DATANUTR[1]['EQ2'];
+    $sql = "SELECT * FROM `log-farm` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
+    WHERE `dim-farm`.`dbID` =$FSID 
+    ORDER BY `log-farm`.`ID` DESC
+    LIMIT 1";
+    $DATSUBFARM = selectData($sql);
+    $NumTree = $DATSUBFARM[1]['NumTree'];
+    if ($Usage == 1) {
+        $sql = "SELECT $year -`dim-time`.`Year2`+1 as AgeTree FROM `log-planting` 
+        INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-planting`.`DIMsubFID`
+        INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-planting`.`DIMdateID`
+        WHERE `log-planting`.`isDelete` = 0 AND `dim-farm`.`dbID` = $FSID AND `log-planting`.`NumGrowth1` IS NOT NULL";
+        $DATA = selectData($sql);
+        if ($DATA[0]['numrow'] == 0) {
+            $AgeTree = 0;
+        } else {
+            $AgeTree = $DATA[1]['AgeTree'];
+        }
+        $Vol = $NumTree * (($AgeTree * $EQ1) + $EQ2);
+    } else if ($Usage == 2) {
+        $sql = "SELECT `HarvestVol` FROM `fact-farming` 
+        INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-farming`.`DIMsubFID`
+        WHERE `dim-farm`.`dbID`=$FSID AND `fact-farming`.`TagetYear`=$year-543";
+        $DATA = selectData($sql);
+        if ($DATA[0]['numrow'] == 0) {
+            $HarvestVol = 0;
+        } else {
+            $HarvestVol = $DATA[1]['HarvestVol'] / 1000;
+        }
+        $Vol = $NumTree * (($HarvestVol * $EQ1) + $EQ2);
+    } else {
+        $Vol = $NumTree * $EQ2;
+    }
+    return round($Vol, 2);
+}
+function getinfoFertilisingDetail($FSID)
+{
+    $sql = "SELECT `log-fertilising`.`ID`,`dim-time`.`dd` AS day,`dim-time`.`Month`,
+    `dim-time`.`Year2` ,`dim-time`.`Date`  ,`log-fertilizer`.`Name`,ROUND(`log-fertilising`.`Vol`,2) AS Vol,IF(`log-fertilising`.`Unit`=1,'Kg','g') AS Unit
+    FROM `log-fertilising` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
+    INNER JOIN `log-fertilizer` ON `log-fertilizer`.`ID` = `log-fertilising`.`ferID`
+    WHERE `dim-farm`.`dbID` = $FSID AND `log-fertilising`.`isDelete`=0
+    ORDER BY `dim-time`.`Date` DESC";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+function getSumVolFertilising($FSID, $year, $NID)
+{
+    $sql = "SELECT ROUND(SUM(`log-fertilisingdetail`.`Vol`),2) AS sumVol,`log-nutrient`.`Unit` FROM `log-fertilising` 
+    INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID`
+    INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
+    INNER JOIN `log-fertilisingdetail` ON `log-fertilisingdetail`.`fertilisingID` = `log-fertilising`.`ID`
+    INNER JOIN `log-nutrient` ON `log-nutrient`.`ID` = `log-fertilisingdetail`.`logNID`
+    INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` = `log-nutrient`.`DIMnutrID`
+    WHERE `dim-farm`.`dbID`=$FSID AND `dim-time`.`Year2` =$year AND `dim-nutrient`.`dbID` = $NID AND `log-fertilising`.`isDelete`=0
+    GROUP BY `log-nutrient`.`Unit`";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+
+function getFertilizerList()
+{
+    $sql = "SELECT * FROM `log-fertilizer`
+    WHERE `isDelete` = 0
+    ORDER BY `Name`";
+    $DATA = selectData($sql);
+    return $DATA;
+}
+function getTextEventFertilising($fsid)
+{
+    $INFOLOGFertilising = getinfoFertilisingDetail($fsid);
+    $text = "[";
+    for ($i = 1; $i <= $INFOLOGFertilising[0]['numrow']; $i++) {
+        $timeStart = $INFOLOGFertilising[$i]['Date'];
+        $text .= "{
+            title: 'มีการใส่{$INFOLOGFertilising[$i]['Name']}  จำนวน {$INFOLOGFertilising[$i]['Vol']} {$INFOLOGFertilising[$i]['Unit']}.',
+            start: '$timeStart',
+            color: '#665561',
+            textColor: '#FFFFFF'
+        },";
+    }
+
+    if ($INFOLOGFertilising[0]['numrow'] > 0) {
+        $text = substr($text, 0, -1) . "]";
+    } else {
+        $text = "[]";
+    }
+
+    return $text;
+}
+function getInfoNutr()
+{
+    $sql = "SELECT   `dim-nutrient`.`dbID` AS NID ,`dim-nutrient`.`Name`,`log-nutrient`.`Type`,IF(`log-nutrient`.`Unit`=1,'Kg','g') AS  Unit ,`log-nutrient`.`Unit` AS UnitNum FROM `log-nutrient`
+        INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID`= `log-nutrient`.`DIMnutrID`
+        WHERE `log-nutrient`.`EndT` IS NULL
+        ORDER BY `log-nutrient`.`Type` ,`dim-nutrient`.`dbID`";
+    $DATA = selectData($sql);
+    return $DATA;
 }

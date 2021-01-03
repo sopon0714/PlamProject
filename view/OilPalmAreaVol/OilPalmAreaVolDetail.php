@@ -286,23 +286,7 @@ $Check = CheckHaveFarm($fmid)
         </div>
         <!-- ผลผลิตรายปี -->
     </div>
-    <div class="row mt-4">
-        <div class="col-xl-12 col-12">
-            <div class="card">
-                <div class="card-header card-bg">
-                    <span>ผลผลิตต่อปี / ปริมาณปุ๋ยที่ใส่ต่อต้น</span>
-                </div>
-                <div class="card-body">
-                    <div class="row">
 
-                        <div class="col-xl-12 col-12 PDY2">
-                            <canvas id="tradFer" style="height:200px;"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 

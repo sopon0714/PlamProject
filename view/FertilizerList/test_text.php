@@ -1,1 +1,0 @@
-VALUES ($LOGloginID,$StartT,$StartID,$EndT,$EndID,$DIMfertID,$StartDD,$StartMM,$EndDD,$EndMM,$Usage,$EQ1,$EQ2);";

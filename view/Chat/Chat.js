@@ -3,11 +3,11 @@ $(document).ready(function() {
     $("#level").change(function(e) {
         var level = $("#level").val();
         $("#Infolevel").empty();
-        if (level == 2) {
+        if (level == 'เกษตรกร') {
             document.getElementById("Infolevel2").style.display = '';
             document.getElementById("Infolevel3").style.display = 'none ';
 
-        } else if (level == 3) {
+        } else if (level == 'จังหวัด') {
 
             $("#province").val("กรุงเทพมหานคร");
             document.getElementById("Infolevel2").style.display = 'none ';
@@ -28,15 +28,19 @@ $(document).ready(function() {
         var provinceP = $('#province').val();
         var optradioP = $('input[name="optradio"]:checked').val();
         var optradio2P = $('input[name="optradio2"]:checked').val();
+        var optradioSendType = $('input[name="optradioSendType"]:checked').val();
         var textotherP = $('#txt2').val();
         var children = $('#list2').children();
         var ArrayNamefarmerP = [];
+        var ArrayIDfarmerP = [];
         var currentChild;
         for (var i = 0; i < children.length; i++) {
             currentChild = children.eq(i);
             ArrayNamefarmerP[i] = currentChild.attr('NameF');
+            ArrayIDfarmerP[i] = currentChild.attr('UFID');
         }
         var jsonArrayNamefarmer = JSON.stringify(ArrayNamefarmerP);
+        var jsonArrayIDfarmer = JSON.stringify(ArrayIDfarmerP);
         $.ajax({
             url: "./line.php",
             method: "POST",
@@ -46,10 +50,14 @@ $(document).ready(function() {
                 optradio: optradioP,
                 optradio2: optradio2P,
                 textother: textotherP,
-                ArrayNamefarmer: jsonArrayNamefarmer
+                optradioSendType: optradioSendType,
+                ArrayNamefarmer: jsonArrayNamefarmer,
+                ArrayIDfarmer: jsonArrayIDfarmer
             },
             async: false,
             success: function(data) {
+                console.log(data);
+                console.log("pass");
                 swal({
                     title: "",
                     text: "การส่งข้อความเรียบร้อย",

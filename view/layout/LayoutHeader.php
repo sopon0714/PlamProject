@@ -105,7 +105,7 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                               <i class='material-icons'>" . $icon . "</i>
                               <span>" . $DATA[$i]['wm-name'] . "</span>
                             </a>
-                            <div id='link-" . $i ."' ".$classShow ." aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
+                            <div id='link-" . $i . "' " . $classShow . " aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
                               <div class=' py-2 collapse-inner rounded' style='border-left: 2px solid white; border-radius: 0% !important;'>";
       } else {
         $strMenu .= " <li class='nav-item'>
@@ -113,7 +113,7 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                               <i class='material-icons'>" . $icon . "</i>
                               <span>" . $DATA[$i]['wm-name'] . "</span>
                             </a>
-                            <div id='link-" . $i ."' ".$classShow ." aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
+                            <div id='link-" . $i . "' " . $classShow . " aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
                               <div class=' py-2 collapse-inner rounded' style='border-left: 2px solid white; border-radius: 0% !important;'>";
       }
     }

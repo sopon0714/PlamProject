@@ -91,9 +91,9 @@ $CurrentMenu = "Chat";
 								</div>
 								<div class="col-xl-3 col-12">
 									<select class="form-control" id="level" name="level" required>
-										<option value='1'>ทั้งหมด</option>
-										<option value='2'>เกษตรกร</option>
-										<option value='3'>จังหวัด</option>
+										<option value='ทั้งหมด'>ทั้งหมด</option>
+										<option value='เกษตรกร'>เกษตรกร</option>
+										<option value='จังหวัด'>จังหวัด</option>
 									</select>
 								</div>
 							</div>
@@ -108,7 +108,7 @@ $CurrentMenu = "Chat";
 										<?php
 										$ArrayInfoFarmer = getAllFarmer();
 										for ($i = 1; $i <= count($ArrayInfoFarmer); $i++) {
-											echo "<li NameF='{$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}'>$i) {$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}</li>";
+											echo "<li NameF='{$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}' UFID='{$ArrayInfoFarmer[$i]['UFID']}' >$i) {$ArrayInfoFarmer[$i]['FirstName']} {$ArrayInfoFarmer[$i]['LastName']}</li>";
 										}
 										?>
 									</ul>
@@ -130,7 +130,7 @@ $CurrentMenu = "Chat";
 										<?php
 										$ArrayInfoProvince = getAllProvince();
 										for ($i = 1; $i <= count($ArrayInfoProvince); $i++) {
-											echo "<option value='{$ArrayInfoProvince[$i]['Province']}'>{$ArrayInfoProvince[$i]['Province']}</option>";
+											echo "<option value='{$ArrayInfoProvince[$i]['AD1ID']} {$ArrayInfoProvince[$i]['Province']}'>{$ArrayInfoProvince[$i]['Province']}</option>";
 										}
 										?>
 									</select>
@@ -176,6 +176,19 @@ $CurrentMenu = "Chat";
 								</div>
 								<div class="col-xl-9 col-12">
 									<input class="form-control" type="text" name="textother" id="txt2" />
+								</div>
+							</div>
+							<div class="row mb-4">
+								<div class="col-xl-3 col-12 text-right">
+									<span>ประเภทการส่ง</span>
+								</div>
+								<div class="col-xl-9 col-12">
+									<label class="radio-inline">
+										<input type="radio" name="optradioSendType" value="line" id="line" checked> <img for="line" src="../../icon/logo/line.png" width="50px" />
+									</label> &nbsp;&nbsp;&nbsp;&nbsp;
+									<label class="radio-inline">
+										<input type="radio" name="optradioSendType" value="mobile" id="mobile"> <img for="mobile" src="../../icon/logo/phone.png" width="50px" />
+									</label>
 								</div>
 							</div>
 							<div class="modal-footer">

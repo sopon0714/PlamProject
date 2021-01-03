@@ -229,7 +229,23 @@ if ($result == 'getTextInFo') {
                             <td class=\"text-left\">ช่วงขาดน้ำ $startT - $endT  ระยะเวลา $Period วัน</td>
                         </tr>";
             }
+        } else  if ($status == 'ให้ปุ๋ย') {
+            $sql = "SELECT `dim-farm`.`dbID` AS FSID ,`log-fertilizer`.`Name`,`log-fertilising`.`Vol` ,IF(`log-fertilising`.`Unit`=1,'Kg','g') AS Unit FROM `log-fertilising`
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` =`log-fertilising`.`DIMsubFID`
+            INNER JOIN  `dim-time` ON   `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
+            INNER JOIN `log-fertilizer` ON `log-fertilizer`.`ID` = `log-fertilising`.`ferID`
+            WHERE `log-fertilising`.`isDelete`=0 AND `dim-farm`.`dbID` IN  $text1 AND `dim-time`.`Date` = '$date' ";
+            $DATA = selectData($sql);
+            $len = $DATA[0]['numrow'];
+            for ($i = 1; $i <= $len; $i++) {
+                $text .= "<tr>
+                            <td class=\"text-left\">{$INFOFARM[$DATA[$i]['FSID']]['NameFarm']}</td>
+                            <td class=\"text-left\">{$INFOFARM[$DATA[$i]['FSID']]['NamesubFarm']}</td>
+                            <td class=\"text-left\">ใส่ปุ๋ย {$DATA[$i]['Name']} ปริมาณ {$DATA[$i]['Vol']} {$DATA[$i]['Unit']}</td>
+                        </tr>";
+            }
         }
+
         echo $text;
     }
 }

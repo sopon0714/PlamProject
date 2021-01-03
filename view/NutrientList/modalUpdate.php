@@ -1,10 +1,10 @@
 <div class="edit-modal">
-    <div class="modal fade mb-6" id="edit" tabindex="-1" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel" aria-hidden="true">
+    <div class="modal fade mb-6" id="edit" tabindex="-1" tabindex="-1" role="dialog" style="width: 70%;margin-left: 20%;" aria-labelledby="smallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg2" role="document">
             <div class="modal-content">
                 <!-- -----------------header------------------------------ -->
                 <div class="modal-header header-modal" id="header-card">
-                    <h4 class="modal-title" id="largeModalLabel">แก้ไขข้อมูลปุ๋ย</h4>
+                    <h4 class="modal-title" id="largeModalLabel">แก้ไขข้อมูลธาตุอาหาร</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -15,36 +15,25 @@
                     <form class="modal-update" action="#" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="request" value="update">
                         <input type="hidden" name="id" value="">
-                        <!-- grid name alias icon -------------------------------------- -->
-                        <div class="divCU ">
-                            <center>
-                                <!-- <input id='pic-logo' type='file' class='item-img file center-block' name='icon_insert' /> -->
-                                <!-- <img id="img-insert" src="https://via.placeholder.com/200x200.png" alt="" width="200" height="200"> -->
-                                <div id="upload-demo2" class="center-block"></div>
-                            </center>
-                        </div>
+
                         <div class="divU grid-body-modal ">
-                            <div class="grid-icon-name">
-                                <label>ขื่อปุ๋ย<span class="ml-2"> *</span></label>
-                                <input type="text" class="form-control col-8" id="nameF" name="name" required="" oninput="setCustomValidity(' ')">
-                                <label ">ขื่อย่อปุ๋ย<span class=" ml-2"> *</span></label>
-                                <input type="text" class="form-control col-8" id="aliasF" name="alias" required="" oninput="setCustomValidity(' ')">
-                                <label for="iconF">ไอคอนปุ๋ย</label>
-                                <!-- <img id="icon" style="width : 100px;height : 150;"  src="" alt=""> -->
-                                <!-- <input  onchange="changeIcon(this);" type="file" accept=".jpg,.png"  id="iconF" name="icon" > -->
-                                <div class="upload-btn-wrapper ">
-                                    <!-- <button class="btn btn-warning">แก้ไขไอคอน</button> -->
-                                    <img id="img-update" src="https://imbindonesia.com/images/placeholder/camera.jpg" alt="" width="200" height="200">
-                                    <input type="file" accept=".jpg,.png" id="iconF" name="icon" />
-                                    <label>**กดที่รูปเมื่อต้องการเปลี่ยนแปลง icon**</label>
-                                </div>
 
-
-                            </div>
-
-                            <!-- end grid name alias icon------------------------------------- -->
-                            <!-- start usage             ------------------------------------- -->
                             <div class="grid-form-condition">
+                                <label>ชื่อธาตุ<span class="ml-2"> *</span></label>
+                                <input type="text" class="form-control col-8" id="nameF" name="name" required="" oninput="setCustomValidity(' ')">
+                                <label>ประเภท<span class=" ml-2"> *</span></label>
+                                <div class="form-check ml-5">
+                                    <input class="form-check-input" type="radio" name="Type" id="Type1" value="ธาตุอาหารหลัก">
+                                    <label class="form-check-label" for="Type1">
+                                        ธาตุอาหารหลัก
+                                    </label>
+                                </div>
+                                <div class="form-check ml-5">
+                                    <input class="form-check-input" type="radio" name="Type" id="Type2" value="ธาตุอาหารรอง">
+                                    <label class="form-check-label" for="Type2">
+                                        ธาตุอาหารรอง
+                                    </label>
+                                </div>
                                 <div class="form-group" id="parm-age">
                                     <label for="nameF">ปริมาณที่ใส่ตาม</label>
                                     <div class="form-check ml-5">
@@ -142,11 +131,6 @@
                         <button type="button" class="btn btn-success editSubmit " style="margin-left:15px;">ยืนยัน</button>
                         <button type="button" class="btn btn-danger " data-dismiss="modal">ยกเลิก</button>
                     </div>
-                    <div class="divBCU">
-                        <button type="button" id="cropImageBtn2" class="btn btn-primary">ยืนยัน</button>
-                        <button type="button" class="btn btn-default" id="cancelCrop2">ยกเลิก</button>
-                    </div>
-
                 </div>
                 </form>
                 <!--end grid body --------------------------------------------------------  -->
