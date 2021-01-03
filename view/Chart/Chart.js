@@ -22,6 +22,13 @@ $(document).ready(function() {
     $('#show_error').hide();
     $("#multi_chart").hide();
 
+    $("#loading").hide();
+
+    $("#update").click(function(){
+        updateData();
+        
+
+    });
     $("#chose_cond").change(function() {
         chose_cond = $("#chose_cond").val();
         if(chose_cond == "ทั้งหมด"){
@@ -960,4 +967,49 @@ function hide1_time(){
 function hide2_time(){
     $(".onemonth").hide();
     $(".oneday").hide();
+}
+
+function updateData() {
+
+    swal({
+            title: "การอัพเดตใช้เวลามากกว่า 1 ชั่วโมง",
+            text: `คุณยืนยันที่จะอัพเดตหรือไม่ ?`,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            cancelButtonClass: "btn-secondary",
+            confirmButtonText: "ยืนยัน",
+            cancelButtonText: "ยกเลิก",
+            closeOnConfirm: false,
+            closeOnCancel: function() {
+                $('[data-toggle=tooltip]').tooltip({
+                    boundary: 'window',
+                    trigger: 'hover'
+                });
+                return true;
+            },
+            closeOnConfirm: function(){
+                $('[data-toggle=tooltip]').tooltip({
+                    boundary: 'window',
+                    trigger: 'hover'
+                });
+                return true;
+            }
+        },
+        function(isConfirm) {
+            if (isConfirm) {
+                // system();
+                $("#loading").show();
+                $("#update").hide();
+                    $('[data-toggle=tooltip]').tooltip({
+                        boundary: 'window',
+                        trigger: 'hover'
+                    });
+                    return true;
+                
+            } else {
+    
+            }
+        });
+    
 }

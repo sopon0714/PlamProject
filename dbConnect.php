@@ -3,15 +3,15 @@
 
 function connectDB()
 {
-	// $servername = "localhost";
-	// $username = "root";
-	// $password = ""; //"cabku";
-	// $db_name = "palm3";//"palm3";
-
 	$servername = "localhost";
 	$username = "root";
-	$password = "Palmweb@1";
+	$password = ""; //"cabku";
 	$db_name = "palm3";//"palm3";
+
+	// $servername = "localhost";
+	// $username = "root";
+	// $password = "Palmweb@1";
+	// $db_name = "palm3";//"palm3";
 
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$db_name;charset=utf8", $username, $password);

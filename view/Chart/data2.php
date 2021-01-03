@@ -1,45 +1,42 @@
 <?php
-// $time_start = microtime(true);
+$time_start = microtime(true);
 
 ini_set('memory_limit', '-1');
 set_time_limit(0);
 require_once("../../dbConnect.php");
 include_once("./../../query/query.php");
 
-$myfile = fopen(getcwd()."/JsonData/test.txt", "w");
-fwrite($myfile, json_encode($DATA,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-fclose($myfile);
-
 $myConDB = connectDB();
 $sql = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
 $myConDB->exec($sql);
 
+$numFile = 0;
 $PROVINCE = getProvince();
 $FARMER = getFarmerAll();
 $YEAR = getYearAgriMap();
 
 //for name of file
-$name_label1 = array("","Province","Distrinct");
-$name_label2 = array("","Province","Distrinct");
-$name_type = array("","fertilize3","fertilize4","cutbranch");
-$name_cal = array("","MAX","SUM");
+$name_label1 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$name_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$name_type = array("","water1","water2","fertilize1","fertilize2","fertilize3","fertilize4","cutbranch","pestcontrol","pest");
+$name_cal = array("","MAX","MIN","AVG","SUM","STDDEV");
 
 
-$set_chose_label1 = array("Province","Distrinct");
-$set_chose_label2 = array("","Province","Distrinct");
-$set_chose_type = array("fertilize3","fertilize4","cutbranch");
-$set_chose_cal = array("MAX","SUM");
+$set_chose_label1 = array("Distrinct");
+$set_chose_label2 = array("","Province","Distrinct","SubDistrinct","F_name","SF_name","FM_name","Year2","Month","dd");
+$set_chose_type = array("water1","water2","fertilize1","fertilize2","fertilize3","fertilize4","cutbranch","pestcontrol","pest");
+$set_chose_cal = array("MAX","MIN","AVG","SUM","STDDEV");
 $set_chose_cond = array("max","min");
 
 $YEAR2= getYearAgriMap();
-$MONTH = array(1,2,3,4);
+$MONTH = array(1,2,3,4,5,6,7,8,9,10,11,12);
 $MONTH_ARR = array("");
-$DAY = array (1,2,3,4,5,6,7,8,9,10,11);
+$DAY = array (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
 $DAY_ARR = array("");
 
 $FARMER = getFarmerAll_Chart();
     
-$SET1_TITLE = array("Province"=>array(),"Distrinct"=>array());
+$SET1_TITLE = array("Province"=>array(),"Distrinct"=>array(),"subDistrinct"=>array(),"F_name"=>array(),"SF_name"=>array());
 
 $PROVINCE = getProvince();
 $PROVINCE_ALL = array();
@@ -612,10 +609,12 @@ for($i=0;$i<count($set_chose_label1);$i++){
 
                             echo $filename."<br>";
 
-                            $myfile = fopen(getcwd()."/JsonData/".$filename.".json", "w");
+                            $myfile = fopen("./JsonData/".$filename.".json", "w");
                             fwrite($myfile, json_encode($DATA,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                             fclose($myfile);
 
+                            $numFile++;
+                            
                         }
                         echo "********************************<br>";
                     }
@@ -753,8 +752,10 @@ function dataToID($ARR2){
 
 }
 
-// $time_end = microtime(true);
-// $time = $time_end - $time_start; #เวลาเริ่มต้น – เวลาท้ายสุด
+echo  "<br>numfile = ".$numFile."<br>";
 
-// echo "เวลาที่ใช้ในการประมวลทั้งหมด $time วินาที\n";
+$time_end = microtime(true);
+$time = $time_end - $time_start; #เวลาเริ่มต้น – เวลาท้ายสุด
+
+echo "เวลาที่ใช้ในการประมวลทั้งหมด $time วินาที\n";
 ?>

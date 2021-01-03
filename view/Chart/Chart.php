@@ -48,8 +48,12 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         <div class="col-xl-8 col-8 mb-6">
             <label class="form-control" for="" style="background-color: #f0ad4e; color: white;">วันที่อัพเดตล่าสุด</label> 
         </div>
-        <div class="col-xl-4 col-4 mb-6" style="width: 10px;">
-            <button class="form-control btn btn-success" >อัพเดต</button>
+        <div class="col-xl-4 col-4 mb-6" id="up_load" style="width: 10px;" center>
+            <button class="form-control btn btn-success" id="update">อัพเดต</button>
+            
+            <center class="form-control" id="loading">
+                <img src="./chart/loading.gif" alt="Loading..." style="width: 25px; height: 25px; "> กำลังอัพเดต...
+            </center>
         </div>
     </div>
 
