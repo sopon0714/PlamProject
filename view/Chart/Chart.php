@@ -44,19 +44,6 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 </style>
 
 <div class="container">
-    <div class="row">    
-        <div class="col-xl-8 col-8 mb-6">
-            <label class="form-control" for="" style="background-color: #f0ad4e; color: white;">วันที่อัพเดตล่าสุด</label> 
-        </div>
-        <div class="col-xl-4 col-4 mb-6" id="up_load" style="width: 10px;" center>
-            <button class="form-control btn btn-success" id="update">อัพเดต</button>
-            
-            <center class="form-control" id="loading">
-                <img src="./chart/loading.gif" alt="Loading..." style="width: 25px; height: 25px; "> กำลังอัพเดต...
-            </center>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-xl-12 col-12 mb-6">
             <div class="card">
@@ -218,17 +205,23 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label1" required>
                                                     <option value="" code="0">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province" id="province" value="Province" code="1">จังหวัด
+                                                    <option name="province" id="province" value="Province" code="1">
+                                                        จังหวัด
                                                     </option>
-                                                    <option name="district" id="district" value="Distrinct" code="2">อำเภอ
+                                                    <option name="district" id="district" value="Distrinct" code="2">
+                                                        อำเภอ
                                                     </option>
-                                                    <option name="subdistrict" id="subdistrict" value="SubDistrinct" code="3">ตำบล
+                                                    <option name="subdistrict" id="subdistrict" value="SubDistrinct"
+                                                        code="3">ตำบล
                                                     </option>
                                                     <option name="farm" id="farm" value="F_name" code="4">สวน</option>
-                                                    <option name="subfarm" id="subfarm" value="SF_name" code="5">แปลง</option>
-                                                    <option name="farmer" id="farmer" value="FM_name" code="6">เกษตรกร</option>
+                                                    <option name="subfarm" id="subfarm" value="SF_name" code="5">แปลง
+                                                    </option>
+                                                    <option name="farmer" id="farmer" value="FM_name" code="6">เกษตรกร
+                                                    </option>
                                                     <option name="year" id="year" value="Year2" code="7">ปี</option>
-                                                    <option name="month" id="month" value="Month" code="8">เดือน</option>
+                                                    <option name="month" id="month" value="Month" code="8">เดือน
+                                                    </option>
                                                     <option name="day" id="day" value="dd" code="9">วัน</option>
                                                 </select>
                                             </div>
@@ -286,12 +279,17 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     title="กรุณาเลือกหัวข้อ" id="chose_label2" required>
                                                     <option value="" code="0">กรุณาเลือกหัวข้อ</option>
-                                                    <option name="province_2" id="province_2" value="Province" code="1">จังหวัด</option>
-                                                    <option name="district_2" id="district_2" value="Distrinct" code="2">อำเภอ</option>
-                                                    <option name="subdistrict_2" id="subdistrict_2" value="SubDistrinct" code="3">ตำบล</option>
-                                                    <option name="farm_2" id="farm_2" value="F_name" code="4">สวน</option>
+                                                    <option name="province_2" id="province_2" value="Province" code="1">
+                                                        จังหวัด</option>
+                                                    <option name="district_2" id="district_2" value="Distrinct"
+                                                        code="2">อำเภอ</option>
+                                                    <option name="subdistrict_2" id="subdistrict_2" value="SubDistrinct"
+                                                        code="3">ตำบล</option>
+                                                    <option name="farm_2" id="farm_2" value="F_name" code="4">สวน
+                                                    </option>
                                                     <option name="year_2" id="year_2" value="Year2" code="7">ปี</option>
-                                                    <option name="month_2" id="month_2" value="Month" code="8">เดือน</option>
+                                                    <option name="month_2" id="month_2" value="Month" code="8">เดือน
+                                                    </option>
                                                     <option name="day_2" id="day_2" value="dd" code="9">วัน</option>
                                                 </select>
                                             </div>
@@ -349,16 +347,21 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <option name="water1" id="water1" value="water1" code="1">วันให้น้ำ</option>
                                             <option name="water2" id="water2" value="water2" code="2">วันขาดน้ำ</option>
                                             <!-- <option name="water3" id="water3" value="water3">ปริมาตรให้น้ำ</option> -->
-                                            <option name="fertilize1" id="fertilize1" value="fertilize1" code="3">  
+                                            <option name="fertilize1" id="fertilize1" value="fertilize1" code="3">
                                                 จำนวนครั้งให้ปุ๋ย</option>
-                                            <option name="fertilize2" id="fertilize2" value="fertilize2" code="4">ปริมาณธาตุอาหาร (หลัก/รอง)
+                                            <option name="fertilize2" id="fertilize2" value="fertilize2" code="4">
+                                                ปริมาณธาตุอาหาร (หลัก/รอง)
                                             </option>
-                                            <option name="fertilize3" id="fertilize3" value="fertilize3" code="5">ปริมาณแต่ละธาตุอาหารหลัก
+                                            <option name="fertilize3" id="fertilize3" value="fertilize3" code="5">
+                                                ปริมาณแต่ละธาตุอาหารหลัก
                                             </option>
-                                            <option name="fertilize4" id="fertilize4" value="fertilize4" code="6">ปริมาณแต่ละธาตุอาหารรอง
+                                            <option name="fertilize4" id="fertilize4" value="fertilize4" code="6">
+                                                ปริมาณแต่ละธาตุอาหารรอง
                                             </option>
-                                            <option name="cutbranch" id="cutbranch" value="cutbranch" code="7">ล้างคอขวด</option>
-                                            <option name="pestcontrol" id="pestcontrol" value="pestcontrol" code="8">กำจัดวัชพืช
+                                            <option name="cutbranch" id="cutbranch" value="cutbranch" code="7">ล้างคอขวด
+                                            </option>
+                                            <option name="pestcontrol" id="pestcontrol" value="pestcontrol" code="8">
+                                                กำจัดวัชพืช
                                             </option>
                                             <option name="pest" id="pest" value="pest" code="9">ตรวจพบศัตรูพืช</option>
                                         </select>
@@ -374,13 +377,18 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                         <select class="form-control selectpicker" data-live-search="true"
                                             title="กรุณาเลือกหัวข้อ" id="chose_cal" required>
                                             <option value="" code="0">กรุณาเลือกการคำนวณ</option>
-                                            <option name="maximum" id="maximum" value="MAX" show="มากที่สุด" code="1">มากที่สุด (maximum)
+                                            <option name="maximum" id="maximum" value="MAX" show="มากที่สุด" code="1">
+                                                มากที่สุด (maximum)
                                             </option>
-                                            <option name="minimum" id="minimum" value="MIN" show="น้อยที่สุด" code="2">น้อยที่สุด (minimum)
+                                            <option name="minimum" id="minimum" value="MIN" show="น้อยที่สุด" code="2">
+                                                น้อยที่สุด (minimum)
                                             </option>
-                                            <option name="average" id="average" value="AVG" show="เฉลี่ย" code="3">เฉลี่ย (average)</option>
-                                            <option name="summary" id="summary" value="SUM" show="ผลรวม" code="4">ผลรวม (summary)</option>
-                                            <option name="sd" id="sd" value="STDDEV" show="ค่าส่วนเบี่ยงเบนมาตรฐาน" code="5">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
+                                            <option name="average" id="average" value="AVG" show="เฉลี่ย" code="3">
+                                                เฉลี่ย (average)</option>
+                                            <option name="summary" id="summary" value="SUM" show="ผลรวม" code="4">ผลรวม
+                                                (summary)</option>
+                                            <option name="sd" id="sd" value="STDDEV" show="ค่าส่วนเบี่ยงเบนมาตรฐาน"
+                                                code="5">ค่าส่วนเบี่ยงเบนมาตรฐาน (SD)</option>
                                             <!-- <option name="var" id="var" value="VAR">ค่าความแปรปรวน (VAR) -->
                                             </option>
                                         </select>
@@ -933,42 +941,50 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         </div>
     </div>
 </div>
-<div class="container" id="show_chart">
+<div class="container">
     <div class="row">
         <div class="col-xl-12 col-12 mb-6">
-            <div class="card">
-                <div class="card-header card-bg " id="headshow" style="color: <?= $color ?>; text-align: center;">
+            <div id="show_chart">
+                <div class="card">
+                    <div class="card-header card-bg headshow " name="headshow" style="color: <?= $color ?>; text-align: center;">
+
+                    </div>
 
                 </div>
-
-            </div>
-            <div class="card">
-                <div class="row">
-                    <div class="col-8">
-                        <canvas id="chartjs"><canvas>
-                    </div>
-                    <div class="col-4">
-                        <table class="table table-bordered" name="dataTable" id="dataTable" style="margin-top:10px; width:90%;" >
-                        </table>
+                <div class="card">
+                    <div class="row">
+                        <div class="col-8">
+                            <canvas id="chartjs"><canvas>
+                        </div>
+                        <div class="col-4">
+                            <table class="table table-bordered" name="dataTable" id="dataTable"
+                                style="margin-top:10px; width:90%;">
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="card-header card-bg " id="show_error" style="color: #d9534f; text-align: center;">
+                คัดกรองข้อมูลไม่ถูกต้อง
+            </div>
+            <div class="card-header card-bg " id="show_nodata" style="color: #d9534f; text-align: center;">
+                <div class="card">
+                    <div class="card-header card-bg headshow " name="headshow" style="color: <?= $color ?>; text-align: center;">
+
+                    </div>
+                </div>
+                <div class="card">
+                    ไม่มีข้อมูล
+                </div>
+            </div>
+            <center class="form-control" id="show_loading" style="height: 110px;">
+                <img src="./chart/loading.gif" alt="Loading..." style="width: 70px; height: 70px; "><br>
+                <label for=""></label> กำลังโหลดข้อมูล...
+            </center>
         </div>
     </div>
 </div>
-<div class="container" id="show_error">
-    <div class="row">
-        <div class="col-xl-12 col-12 mb-6">
-            <div class="card">
-                <div class="card-header card-bg " id="headshow" style="color: #d9534f; text-align: center;">
-                    คัดกรองข้อมูลไม่ถูกต้อง
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-        
-<?php include_once("../layout/LayoutFooter.php"); ?> 
+<?php include_once("../layout/LayoutFooter.php"); ?>
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="Chart.js"></script>

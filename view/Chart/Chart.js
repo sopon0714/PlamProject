@@ -20,15 +20,10 @@ $(document).ready(function() {
 
     $('#show_chart').hide();
     $('#show_error').hide();
+    $('#show_nodata').hide();
+    $('#show_loading').hide();
     $("#multi_chart").hide();
 
-    $("#loading").hide();
-
-    $("#update").click(function(){
-        updateData();
-        
-
-    });
     $("#chose_cond").change(function() {
         chose_cond = $("#chose_cond").val();
         if(chose_cond == "ทั้งหมด"){
@@ -62,15 +57,15 @@ $(document).ready(function() {
                 $("#multi_chart").hide();
             }
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
-            <option name="province" id="province" value="Province" code="1">จังหวัด</option>
-            <option name="district" id="district" value="Distrinct" code="2">อำเภอ</option>
-            <option name="subdistrict" id="subdistrict" value="SubDistrinct" code="3">ตำบล</option>
-            <option name="farm" id="farm" value="F_name" code="4">สวน</option>
-            <option name="subfarm" id="subfarm" value="SF_name" code="5">แปลง</option>
-            <option name="farmer" id="farmer" value="FM_name" code="6">เกษตรกร</option>
-            <option name="year" id="year" value="Year2" code="7">ปี</option>
-            <option name="month" id="month" value="Month" code="8">เดือน</option>
-            <option name="day" id="day" value="dd" code="9">วัน</option>`;
+            <option name="province" id="province" value="Province">จังหวัด</option>
+            <option name="district" id="district" value="Distrinct">อำเภอ</option>
+            <option name="subdistrict" id="subdistrict" value="SubDistrinct">ตำบล</option>
+            <option name="farm" id="farm" value="F_name">สวน</option>
+            <option name="subfarm" id="subfarm" value="SF_name">แปลง</option>
+            <option name="farmer" id="farmer" value="FM_name">เกษตรกร</option>
+            <option name="year" id="year" value="Year2">ปี</option>
+            <option name="month" id="month" value="Month">เดือน</option>
+            <option name="day" id="day" value="dd">วัน</option>`;
 
         }else if(pre == "line" || pre == "area" || pre == "table" || pre == "multi_line" || pre == "multi_area"){
             if(pre == "multi_line" || pre == "multi_area"){
@@ -81,9 +76,9 @@ $(document).ready(function() {
                 $("#multi_chart").hide();
             }
             html1 = `<option value="">กรุณาเลือกหัวข้อ</option>
-            <option name="year" id="year" value="Year2" code="7">ปี</option>
-            <option name="month" id="month" value="Month" code="8">เดือน</option>
-            <option name="day" id="day" value="dd" code="9">วัน</option>`;
+            <option name="year" id="year" value="Year2">ปี</option>
+            <option name="month" id="month" value="Month">เดือน</option>
+            <option name="day" id="day" value="dd">วัน</option>`;
         }
         $("#chose_label1").html(html1);
 
@@ -441,8 +436,10 @@ $(document).ready(function() {
         select_day = $('#selectday1').val();
         select_day++;
         $("#selectday2").attr("min",(select_day));
+        $("#selectday2").val(select_day);
     });
     $('#setsubmit').click(function(){
+        
         present = $('input[name="present"]:checked').val(); 
             // console.log("present=|"+present+"|");
             // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
@@ -452,7 +449,11 @@ $(document).ready(function() {
         present == "multi_bar" || present == "complex_bar" || present == "area" || present == "multi_area" || present == "mix"
         ){
             if($('#chose_label1').val() != "" && $('#chose_type').val() != "" && $('#chose_cal').val() != ""){
-                // $('#show_chart').show();
+                $('#show_chart').hide();
+                $('#show_error').hide();
+                $('#show_nodata').hide();
+                $('#show_loading').show();
+
                 chose_label1 = $("#chose_label1 option:selected").html();
                 chose_type = $("#chose_type option:selected").html();
                 chose_cal = $("#chose_cal option:selected").html();
@@ -493,14 +494,9 @@ $(document).ready(function() {
                         if(i != ArrayData.length-1) html += ", ";
                     }
                 }else if($("#pro3").prop('checked')){
-                    if($("#selectprovince option:selected").val() != 0){
-                        SET1[1] = $("#selectprovince option:selected").val();
-                        SET1[0] = "Province";
-                        html += " ของจังหวัด"+$("#selectprovince option:selected").html();
-                    }else{
-                        SET1 = null;
-                        html += " ของทุกจังหวัด";
-                    }
+                    SET1[1] = $("#selectprovince option:selected").html();
+                    SET1[0] = "Province";
+                    html += " ของจังหวัด"+$("#selectprovince option:selected").html();
                     if($("#dist1").prop('checked')){
                         html += " ของทุกอำเภอ";
                     }else if($("#dist2").prop('checked')){
@@ -513,11 +509,9 @@ $(document).ready(function() {
                             if(i != ArrayData.length-1) html += ", ";
                         }
                     }else if($("#dist3").prop('checked')){
-                        if($("#selectdist option:selected").val() != 0){
-                            SET1[1] = $("#selectdist option:selected").val();
-                            SET1[0] = "Distrinct";
-                            html += " ของอำเภอ"+$("#selectdist option:selected").html();
-                        }
+                        SET1[1] = $("#selectdist option:selected").html();
+                        SET1[0] = "Distrinct";
+                        html += " ของอำเภอ"+$("#selectdist option:selected").html();
                         if($("#subdist1").prop('checked')){
                             html += " ของทุกตำบล";
                         }else if($("#subdist2").prop('checked')){
@@ -530,11 +524,9 @@ $(document).ready(function() {
                                 if(i != ArrayData.length-1) html += ", ";
                             }
                         }else if($("#subdist3").prop('checked')){
-                            if($("#selectsubdist option:selected").val() != 0){
-                                SET1[1] = $("#selectsubdist option:selected").val();
-                                SET1[0] = "SubDistrinct";
-                                html += " ของตำบล"+$("#selectsubdist option:selected").html();
-                            }
+                            SET1[1] = $("#selectsubdist option:selected").html();
+                            SET1[0] = "SubDistrinct";
+                            html += " ของตำบล"+$("#selectsubdist option:selected").html();
                             if($("#farm1").prop('checked')){
                                 html += " ของทุกสวน";
                             }else if($("#farm2").prop('checked')){
@@ -547,11 +539,9 @@ $(document).ready(function() {
                                     if(i != ArrayData.length-1) html += ", ";
                                 }
                             }else if($("#farm3").prop('checked')){
-                                if($("#selectfarm option:selected").val() != 0){
-                                    SET1[1] = $("#selectfarm option:selected").val();
-                                    SET1[0] = "F_name";
-                                    html += " ของสวน"+$("#selectfarm option:selected").html();
-                                }
+                                SET1[1] = $("#selectfarm option:selected").html();
+                                SET1[0] = "F_name";
+                                html += " ของสวน"+$("#selectfarm option:selected").html();
                                 if($("#subfarm1").prop('checked')){
                                     html += " ของทุกแปลง";
                                 }else if($("#subfarm2").prop('checked')){
@@ -564,11 +554,9 @@ $(document).ready(function() {
                                         if(i != ArrayData.length-1) html += ", ";
                                     }
                                 }else if($("#subfarm3").prop('checked')){
-                                    if($("#selectsubfarm option:selected").val() != 0){
-                                        SET1[1] = $("#selectsubfarm option:selected").val();
-                                        SET1[0] = "SF_name";
-                                        html += " ของแปลง"+$("#selectsubfarm option:selected").html();
-                                    }                         
+                                    SET1[1] = $("#selectsubfarm option:selected").html();
+                                    SET1[0] = "SF_name";
+                                    html += " ของแปลง"+$("#selectsubfarm option:selected").html();
                                 }
                             }
                         }                
@@ -588,26 +576,13 @@ $(document).ready(function() {
                         if(i != ArrayData2.length-1) html += ", ";
                     }
                 }else if($("#farmer3").prop('checked')){
-                    if($("#selectfarmer option:selected").val() != 0){
-                        SET2[1] = $("#selectfarmer option:selected").val();
-                        SET2[0] = "FM_name";
-                        html += " ของเกษตรกร"+$("#selectfarmer option:selected").html();
-                    }else{
-                        SET2 = null;
-                        html += " ของทุกเกษตรกร";
-                    }
-                    
+                    SET2[1] = $("#selectfarmer option:selected").html();
+                    SET2[0] = "FM_name";
+                    html += " ของเกษตรกร"+$("#selectfarmer option:selected").html();
                 }
                 //year/month/day
-                SET3[0] = "";
-                SET3[1] = "";
-                SET3[2] = "";
                 SET3[3] = "";
-                SET3[4] = "";
-                SET3[5] = "";
                 SET3[6] = "";
-                SET3[7] = "";
-                SET3[8] = "";
 
                 if($("#year1").prop('checked')){
                     SET3 = null;
@@ -654,7 +629,7 @@ $(document).ready(function() {
                 console.log(SET3);
 
 
-                $('#headshow').html(html);
+                $('.headshow').html(html);
                 //for show in table
                 label1 = $("#chose_label1 option:selected").html();
                 label2 = $("#chose_label2 option:selected").html();
@@ -662,237 +637,235 @@ $(document).ready(function() {
                 cal1 = $("#chose_cal option:selected").attr("show");
 
                 //for sent to php
-                chose_label1 = $("#chose_label1 option:selected").attr("code");
-                chose_label2 = $("#chose_label2 option:selected").attr("code");
-                chose_type = $("#chose_type option:selected").attr("code");
-                chose_cal = $("#chose_cal option:selected").attr("code");
-                chose_cond = $("#chose_cond option:selected").attr("code");
+                chose_label1 = $("#chose_label1 option:selected").val();
+                chose_label2 = $("#chose_label2 option:selected").val();
+                chose_type = $("#chose_type option:selected").val();
+                chose_cal = $("#chose_cal option:selected").val();
+                chose_cond = $("#chose_cond option:selected").val();
 
                 console.log(label1);
-                $.post("dataForChart.php", {request: "chartTest" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
+                $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
+                    
                     result = JSON.parse(result);
                     console.log(result);
-                    
-                    if(result[0]["numrow"] == -1){
-                        //คัดกรองข้อมูลไม่ถูกต้อง
-                        $('#show_chart').hide();
-                        $('#show_error').show();
 
+                    if(result[0]['numrow']  <= 0){
+                        $('#show_chart').hide();
+                        $('#show_error').hide();
+                        $('#show_nodata').show();
+                        $('#show_loading').hide();
                     }else{
-                        // result = JSON.parse(result);
-                        // console.log(result);
-                        labelChart1 = Array();
-                        dataChart1 = Array();
-                        for(i=1;i<=result[0]['numrow'];i++){
-                            labelChart1[i-1] = result[i]['label1'];
-                            dataChart1[i-1] = result[i]['data'];
+                        $('#show_chart').show();
+                        $('#show_error').hide();
+                        $('#show_nodata').hide();
+                        $('#show_loading').hide();
+                    }
+                    labelChart1 = Array();
+                    dataChart1 = Array();
+                    for(i=1;i<=result[0]['numrow'];i++){
+                        labelChart1[i-1] = result[i]['label1'];
+                        dataChart1[i-1] = result[i]['data'];
+                    }
+
+                    //data for chart
+                    html = "";
+                    // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
+                    // dataChart1 = [20, 12, 10, 8, 5, 30];
+                    unit1 = result[0]['unit'];
+                    color1 = Array();
+                    colorBorder1 = Array();
+                    for(i=0;i<dataChart1.length;i++){
+                        // var randomColor = Math.floor(Math.random()*16777215).toString(16);
+                        var r = Math.floor(Math.random() * 256);
+                        var g = Math.floor(Math.random() * 256);
+                        var b = Math.floor(Math.random() * 256);
+                        var randomColor = "rgba("+r + ", " + g + ", " + b;
+                        if(checkDup(color1,randomColor)){
+                            color1[i] = randomColor+",0.6)";
+                            colorBorder1[i] = randomColor+",0.8)"; 
                         }
-    
+                    }
+                    console.log(color1);
+                    console.log("present = "+present);
+
+                    //data for chart
+                    fillChart = false; 
+                    if(present == "area" || present == "multi_area" || present == "chart_radar"){
+                        console.log("fill");
+                        fillChart = true;
+                    }
+                    var ctx = $('#chartjs');
+                    if(present == "pie" || present == "bar" || present == "line" || present == "area"){
+                        if(present == "area") typeChart = "line";
+                        else typeChart = present;
+                        myChart = new Chart(ctx, {
+                            type: typeChart,
+                            data: {
+                                labels: labelChart1,
+                                datasets: [{
+                                    label: chose_type,
+                                    data: dataChart1,
+                                    fill: fillChart,
+                                    backgroundColor: color1,
+                                    borderColor : colorBorder1
+                                }]
+                            }
+                        });
+                    }else{            
+                        if(present == "multi_area"){
+                            typeChart = "line";
+                        }else{
+                            t = present.split("_");
+                            typeChart = t[1];
+                            console.log("typeChart = "+typeChart);
+                        }
+                        
+                        if(present == "complex_bar"){
+                            optionChart = {
+                                scales: {
+                                    xAxes: [{
+                                        stacked: true,
+                                    }],
+                                    yAxes: [{
+                                        stacked: true
+                                    }]
+                                }
+                            };
+                        }else{
+                            optionChart = "";
+                        }
                         //data for chart
-                        html = "";
+                        labelChart1 = Array();//
+                        labelChart2 = Array();
+                        dataInChart = Array();
+                        arrInData = Array();
+
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            labelChart2[i-1] = result[i]['label1']; //year/month/day
+                            labelChart1[i-1] = result[i]['label2']; 
+                        }
+                        labelChart1 = unique(labelChart1);
+                        labelChart2 = unique(labelChart2);
+
+                        console.log("labelChart1");
+                        console.log(labelChart1);
+                        console.log("labelChart2");
+                        console.log(labelChart2);
+
+                        for(i=0;i<labelChart1.length;i++){
+                            arrInData[labelChart1[i]] = Array();
+                        }
+
+                        for(i=0;i<labelChart1.length;i++){
+                            for(j=0;j<labelChart2.length;j++){
+                                arrInData[labelChart1[i]][labelChart2[j]] = "0";
+                            }
+                        }
+                        // console.log("arrInData");
+                        // console.log(arrInData);
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
+                        }
+                        for(i=0;i<labelChart1.length;i++){
+                            arrToData = Array();
+                            for(j=0;j<labelChart2.length;j++){
+                                arrToData.push(arrInData[labelChart1[i]][labelChart2[j]]);
+                            }
+                            dataInChart.push(arrToData);
+                        }
+                        console.log("arrInData");
+                        console.log(arrInData);
+                        console.log("dataInChart");
+                        console.log(dataInChart);
+
+
                         // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
-                        // dataChart1 = [20, 12, 10, 8, 5, 30];
-                        unit1 = result[0]['unit'];
-                        color1 = Array();
-                        colorBorder1 = Array();
-                        for(i=0;i<dataChart1.length;i++){
+                        // month = ["มกราคม","พฤษภาคม","อื่นๆ"]; //
+                        // dataInChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0]];
+                        // labelChart1 = ['บจ.', 'สวน1'];
+                        // month = ["2","11","13","18","26"]; //
+                        // dataInChart = [[1,2,1,1,0],[0,0,0,0,1]];
+                        // labelChart2 = month; //
+                        unit2 = result[0]['unit'];
+                        color2 = Array();
+                        colorBorder2 = Array();
+
+                        for(i=0;i<labelChart2.length;i++){
                             // var randomColor = Math.floor(Math.random()*16777215).toString(16);
                             var r = Math.floor(Math.random() * 256);
                             var g = Math.floor(Math.random() * 256);
                             var b = Math.floor(Math.random() * 256);
                             var randomColor = "rgba("+r + ", " + g + ", " + b;
-                            if(checkDup(color1,randomColor)){
-                                color1[i] = randomColor+",0.6)";
-                                colorBorder1[i] = randomColor+",0.8)"; 
-                            }
-                        }
-                        console.log(color1);
-                        console.log("present = "+present);
-    
-                        //data for chart
-                        fillChart = false; 
-                        if(present == "area" || present == "multi_area" || present == "chart_radar"){
-                            console.log("fill");
-                            fillChart = true;
-                        }
-                        var ctx = $('#chartjs');
-                        if(present == "pie" || present == "bar" || present == "line" || present == "area"){
-                            if(present == "area") typeChart = "line";
-                            else typeChart = present;
-                            myChart = new Chart(ctx, {
-                                type: typeChart,
-                                data: {
-                                    labels: labelChart1,
-                                    datasets: [{
-                                        label: chose_type,
-                                        data: dataChart1,
-                                        fill: fillChart,
-                                        backgroundColor: color1,
-                                        borderColor : colorBorder1
-                                    }]
+                            if(checkDup(color2,randomColor)){
+                                if(present == "rader"){
+                                    color2[i] = randomColor+",0.1)";
+                                }else{
+                                    color2[i] = randomColor+",0.6)";
                                 }
-                            });
-                        }else{            
-                            if(present == "multi_area"){
-                                typeChart = "line";
-                            }else{
-                                t = present.split("_");
-                                typeChart = t[1];
-                                console.log("typeChart = "+typeChart);
+                                colorBorder2[i] = randomColor+",0.8)"; 
                             }
-                            
-                            if(present == "complex_bar"){
-                                optionChart = {
-                                    scales: {
-                                        xAxes: [{
-                                            stacked: true,
-                                        }],
-                                        yAxes: [{
-                                            stacked: true
-                                        }]
-                                    }
-                                };
-                            }else{
-                                optionChart = "";
-                            }
-                            //data for chart
-                            labelChart1 = Array();//
-                            labelChart2 = Array();
-                            dataInChart = Array();
-                            arrInData = Array();
-    
-                            for(i=1;i<=result[0]['numrow'];i++){
-                                labelChart2[i-1] = result[i]['label1']; //year/month/day
-                                labelChart1[i-1] = result[i]['label2']; 
-                            }
-                            labelChart1 = unique(labelChart1);
-                            labelChart2 = unique(labelChart2);
-    
-                            console.log("labelChart1");
-                            console.log(labelChart1);
-                            console.log("labelChart2");
-                            console.log(labelChart2);
-    
-                            for(i=0;i<labelChart1.length;i++){
-                                arrInData[labelChart1[i]] = Array();
-                            }
-    
-                            for(i=0;i<labelChart1.length;i++){
-                                for(j=0;j<labelChart2.length;j++){
-                                    arrInData[labelChart1[i]][labelChart2[j]] = "0";
-                                }
-                            }
-                            // console.log("arrInData");
-                            // console.log(arrInData);
-                            for(i=1;i<=result[0]['numrow'];i++){
-                                arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
-                            }
-                            for(i=0;i<labelChart1.length;i++){
-                                arrToData = Array();
-                                for(j=0;j<labelChart2.length;j++){
-                                    arrToData.push(arrInData[labelChart1[i]][labelChart2[j]]);
-                                }
-                                dataInChart.push(arrToData);
-                            }
-                            console.log("arrInData");
-                            console.log(arrInData);
-                            console.log("dataInChart");
-                            console.log(dataInChart);
-    
-    
-                            // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
-                            // month = ["มกราคม","พฤษภาคม","อื่นๆ"]; //
-                            // dataInChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0]];
-                            // labelChart1 = ['บจ.', 'สวน1'];
-                            // month = ["2","11","13","18","26"]; //
-                            // dataInChart = [[1,2,1,1,0],[0,0,0,0,1]];
-                            // labelChart2 = month; //
-                            unit2 = result[0]['unit'];
-                            color2 = Array();
-                            colorBorder2 = Array();
-    
-                            for(i=0;i<labelChart2.length;i++){
-                                // var randomColor = Math.floor(Math.random()*16777215).toString(16);
-                                var r = Math.floor(Math.random() * 256);
-                                var g = Math.floor(Math.random() * 256);
-                                var b = Math.floor(Math.random() * 256);
-                                var randomColor = "rgba("+r + ", " + g + ", " + b;
-                                if(checkDup(color2,randomColor)){
-                                    if(present == "rader"){
-                                        color2[i] = randomColor+",0.1)";
-                                    }else{
-                                        color2[i] = randomColor+",0.6)";
-                                    }
-                                    colorBorder2[i] = randomColor+",0.8)"; 
-                                }
-                            }                
-                            console.log(color2);
-                            dataChart2 = [];
-                            for(i=0;i<labelChart1.length;i++){
-                                dataChart2[i] = {
-                                    label: labelChart1[i],
-                                    data: dataInChart[i],
-                                    fill: fillChart,
-                                    backgroundColor: color2[i],
-                                    borderColor : colorBorder2[i]
-                                };
-                            }
-                            // data for chart
-                            console.log("optionChart = "+optionChart);
-                            myChart = new Chart(ctx, {
-                                type: typeChart,
-                                data: {
-                                    labels: labelChart2,
-                                    datasets: dataChart2
-                                },
-                                options: optionChart
-                            });
+                        }                
+                        console.log(color2);
+                        dataChart2 = [];
+                        for(i=0;i<labelChart1.length;i++){
+                            dataChart2[i] = {
+                                label: labelChart1[i],
+                                data: dataInChart[i],
+                                fill: fillChart,
+                                backgroundColor: color2[i],
+                                borderColor : colorBorder2[i]
+                            };
                         }
-    
-                        if(present == "pie" ||  present == "line" || present == "bar"){
-                            html = `<tr>
-                            <th>ลำดับ</th>
-                            <th>${label1}</th>
-                            <th>${data1}${cal1} (${unit1}) </th>
-                            </tr>`;
-                            for(i=1;i<=result[0]['numrow'];i++){
-                                html+=`<tr>
-                                <td align="right">${i}</td>
-                                <td>${result[i]['label1']}</td>
-                                <td align="right">${result[i]['data']}</td>
-                                </tr>`;
-                            }
-                        }else{
-                            html = `<tr>
-                            <th>ลำดับ</th>
-                            <th>${label1}</th>
-                            <th>${label2}</th>
-                            <th>${data1}${cal1} (${unit1}) </th>
-                            </tr>`;
-                            for(i=1;i<=result[0]['numrow'];i++){
-                                html+=`<tr>
-                                <td align="right">${i}</td>
-                                <td>${result[i]['label1']}</td>
-                                <td>${result[i]['label2']}</td>
-                                <td align="right">${result[i]['data']}</td>
-                                </tr>`;
-                            }
-                        }
-    
-                        $('#dataTable').html(html);
-                        $('#show_chart').show();
-                        $('#show_error').hide();
+                        // data for chart
+                        console.log("optionChart = "+optionChart);
+                        myChart = new Chart(ctx, {
+                            type: typeChart,
+                            data: {
+                                labels: labelChart2,
+                                datasets: dataChart2
+                            },
+                            options: optionChart
+                        });
                     }
-                   
+
+                    if(present == "pie" ||  present == "line" || present == "bar"){
+                        html = `<tr>
+                        <th>ลำดับ</th>
+                        <th>${label1}</th>
+                        <th>${data1}${cal1} (${unit1}) </th>
+                        </tr>`;
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            html+=`<tr>
+                            <td align="right">${i}</td>
+                            <td>${result[i]['label1']}</td>
+                            <td align="right">${result[i]['data']}</td>
+                            </tr>`;
+                        }
+                    }else{
+                        html = `<tr>
+                        <th>ลำดับ</th>
+                        <th>${label1}</th>
+                        <th>${label2}</th>
+                        <th>${data1}${cal1} (${unit1}) </th>
+                        </tr>`;
+                        for(i=1;i<=result[0]['numrow'];i++){
+                            html+=`<tr>
+                            <td align="right">${i}</td>
+                            <td>${result[i]['label1']}</td>
+                            <td>${result[i]['label2']}</td>
+                            <td align="right">${result[i]['data']}</td>
+                            </tr>`;
+                        }
+                    }
+
+                    $('#dataTable').html(html);
                 });
             }else{
                 $('#show_chart').hide();
-                $('#show_error').hide();
             }
         }else{
             $('#show_chart').hide();
-            $('#show_error').hide();
         } 
         
 
@@ -930,7 +903,7 @@ function getArrayMany(id_list){
     var currentChild;
     for (var i = 0; i < children.length; i++) {
         currentChild = children.eq(i);
-        Array_Data[i+1] = currentChild.attr('id_attr');
+        Array_Data[i+1] = currentChild.attr('Name');
     }
     return Array_Data;
 }
@@ -968,33 +941,15 @@ function hide2_time(){
     $(".onemonth").hide();
     $(".oneday").hide();
 }
-
 function updateData() {
 
     swal({
-            title: "การอัพเดตใช้เวลามากกว่า 1 ชั่วโมง",
-            text: `คุณยืนยันที่จะอัพเดตหรือไม่ ?`,
+            title: "กำลังโหลดข้อมูล...",
             type: "warning",
             showCancelButton: true,
             confirmButtonClass: "btn-danger",
             cancelButtonClass: "btn-secondary",
-            confirmButtonText: "ยืนยัน",
-            cancelButtonText: "ยกเลิก",
             closeOnConfirm: false,
-            closeOnCancel: function() {
-                $('[data-toggle=tooltip]').tooltip({
-                    boundary: 'window',
-                    trigger: 'hover'
-                });
-                return true;
-            },
-            closeOnConfirm: function(){
-                $('[data-toggle=tooltip]').tooltip({
-                    boundary: 'window',
-                    trigger: 'hover'
-                });
-                return true;
-            }
         },
         function(isConfirm) {
             if (isConfirm) {
