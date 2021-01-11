@@ -231,40 +231,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8" id="normal_chart">
-                            <div class="row">
-                                <div class="col-12">
-                                    <span style="margin-left: 20px; color: <?= $color ?>;">เงื่อนไขหัวข้อ</span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col-4">
-                                                <select class="form-control selectpicker" data-live-search="true"
-                                                    id="chose_cond" title="กรุณาเลือกหัวข้อ" style="width:246px;">
-                                                    <option value="ทั้งหมด">ทั้งหมด</option>
-                                                    <option name="max" id="max" value="max">มากที่สุด</option>
-                                                    <option name="min" id="min" value="min">น้อยที่สุด</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-2 maxmin" style="margin-left:13px;">
-                                                <input class="form-control" type="number" min="3" name="order"
-                                                    id="order" value="3">
-                                            </div>
-                                            <div class="col-2 maxmin">
-                                                <label for="order" style="margin-top:8px;">ลำดับ</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" id="multi_chart">
-                        <div class="col-4">
+                        <div class="col-4" id="multi_chart"></div>
                             <div class="row">
                                 <div class="col-12">
                                     <span style="margin-left: 20px; color: <?= $color ?>;"
@@ -299,6 +266,39 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row" >
+                        <div class="col-8" id="normal_chart">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span style="margin-left: 20px; color: <?= $color ?>;">เงื่อนไขหัวข้อ</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <select class="form-control selectpicker" data-live-search="true"
+                                                    id="chose_cond" title="กรุณาเลือกหัวข้อ" style="width:246px;">
+                                                    <option value="">ทั้งหมด</option>
+                                                    <option name="max" id="max" value="DESC">มากที่สุด</option>
+                                                    <option name="min" id="min" value="ASC">น้อยที่สุด</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-2 maxmin" style="margin-left:13px;">
+                                                <input class="form-control" type="number" min="3" name="order"
+                                                    id="order" value="3">
+                                            </div>
+                                            <div class="col-2 maxmin">
+                                                <label for="order" style="margin-top:8px;">ลำดับ</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- <div class="col-8">
                             <div class="row">
                                 <div class="col-12">
@@ -312,7 +312,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                             <div class="col-4">
                                                 <select class="form-control selectpicker" data-live-search="true"
                                                     id="chose_cond2" title="กรุณาเลือกหัวข้อ" style="width:246px;">
-                                                    <option value="ทั้งหมด">ทั้งหมด</option>
+                                                    <option value="">ทั้งหมด</option>
                                                     <option name="max2" id="max2" value="max">มากที่สุด</option>
                                                     <option name="min2" id="min2" value="min">น้อยที่สุด</option>
                                                 </select>

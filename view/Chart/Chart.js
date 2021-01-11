@@ -26,7 +26,7 @@ $(document).ready(function() {
 
     $("#chose_cond").change(function() {
         chose_cond = $("#chose_cond").val();
-        if(chose_cond == "ทั้งหมด"){
+        if(chose_cond == ""){
             $(".maxmin").hide();
         }else{
             $(".maxmin").show();
@@ -34,7 +34,7 @@ $(document).ready(function() {
     });
     $("#chose_cond2").change(function() {
         chose_cond2 = $("#chose_cond2").val();
-        if(chose_cond2 == "ทั้งหมด"){
+        if(chose_cond2 == ""){
             $(".maxmin2").hide();
         }else{
             $(".maxmin2").show();
@@ -646,24 +646,35 @@ $(document).ready(function() {
                 console.log(label1);
                 $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
-                    
-                    result = JSON.parse(result);
-                    console.log(result);
-
-                    if(result[0]['numrow']  <= 0){
+                    try{
+                        result = JSON.parse(result);
+                        console.log(result);
+                        if(result[0]['numrow']  <= 0){
                         $('#show_chart').hide();
                         $('#show_error').hide();
                         $('#show_nodata').show();
                         $('#show_loading').hide();
-                    }else{
-                        $('#show_chart').show();
-                        $('#show_error').hide();
+                        }else{
+                            $('#show_chart').show();
+                            $('#show_error').hide();
+                            $('#show_nodata').hide();
+                            $('#show_loading').hide();
+                        }
+                    }catch{
+                        $('#show_chart').hide();
+                        $('#show_error').show();
                         $('#show_nodata').hide();
                         $('#show_loading').hide();
                     }
+                    
                     labelChart1 = Array();
                     dataChart1 = Array();
-                    for(i=1;i<=result[0]['numrow'];i++){
+                    round = $("#order").val();
+                    if(round > result[0]['numrow'] || chose_cond == ""){
+                        round = result[0]['numrow'];
+                    }
+
+                    for(i=1;i<=round;i++){
                         labelChart1[i-1] = result[i]['label1'];
                         dataChart1[i-1] = result[i]['data'];
                     }
@@ -741,7 +752,7 @@ $(document).ready(function() {
                         dataInChart = Array();
                         arrInData = Array();
 
-                        for(i=1;i<=result[0]['numrow'];i++){
+                        for(i=1;i<=round;i++){
                             labelChart2[i-1] = result[i]['label1']; //year/month/day
                             labelChart1[i-1] = result[i]['label2']; 
                         }
@@ -764,7 +775,7 @@ $(document).ready(function() {
                         }
                         // console.log("arrInData");
                         // console.log(arrInData);
-                        for(i=1;i<=result[0]['numrow'];i++){
+                        for(i=1;i<=round;i++){
                             arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
                         }
                         for(i=0;i<labelChart1.length;i++){
@@ -835,7 +846,7 @@ $(document).ready(function() {
                         <th>${label1}</th>
                         <th>${data1}${cal1} (${unit1}) </th>
                         </tr>`;
-                        for(i=1;i<=result[0]['numrow'];i++){
+                        for(i=1;i<=round;i++){
                             html+=`<tr>
                             <td align="right">${i}</td>
                             <td>${result[i]['label1']}</td>
@@ -849,7 +860,7 @@ $(document).ready(function() {
                         <th>${label2}</th>
                         <th>${data1}${cal1} (${unit1}) </th>
                         </tr>`;
-                        for(i=1;i<=result[0]['numrow'];i++){
+                        for(i=1;i<=round;i++){
                             html+=`<tr>
                             <td align="right">${i}</td>
                             <td>${result[i]['label1']}</td>
