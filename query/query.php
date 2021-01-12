@@ -3004,7 +3004,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'มีการเก็บเกี่ยว  {$DATA[$i]['numSubFarm']} แปลง',
+                    title: 'เก็บเกี่ยว {$DATA[$i]['numSubFarm']} แปลง',
                     start: '{$DATA[$i]['Date']}',
                     color: '#47C43F',
                     textColor: '#FFFFFF',
@@ -3027,7 +3027,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'มีฝนตก  {$DATA[$i]['numSubFarm']} แปลง',
+                    title: 'ฝนตก {$DATA[$i]['numSubFarm']} แปลง',
                     start: '{$DATA[$i]['Date']}',
                     color: '#214ACA',
                     textColor: '#FFFFFF',
@@ -3049,7 +3049,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'มีการรดน้ำ  {$DATA[$i]['numSubFarm']} แปลง',
+                    title: 'รดน้ำ {$DATA[$i]['numSubFarm']} แปลง',
                     start: '{$DATA[$i]['Date']}',
                     color: '#21CCEA',
                     textColor: '#FFFFFF',
@@ -3081,7 +3081,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             foreach ($INFODATE as $Date => $num) {
                 if ($num != 0) {
                     $text .= "{
-                    title: 'มีการขาดน้ำ $num แปลง',
+                    title: 'ขาดน้ำ $num แปลง',
                     start: '$Date',
                     color: '#E51B1B',
                     textColor: '#FFFFFF',
@@ -3105,7 +3105,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'มีการล้างคอขวด {$DATA[$i]['numSubFarm']} แปลง',
+                    title: 'ล้างคอขวด {$DATA[$i]['numSubFarm']} แปลง',
                     start: '{$DATA[$i]['Date']}',
                     color: '#F4950B',
                     textColor: '#FFFFFF',
@@ -3129,7 +3129,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'มีการใส่ปุ๋ย {$DATA[$i]['numSubFarm']} แปลง',
+                    title: 'ใส่ปุ๋ย {$DATA[$i]['numSubFarm']} แปลง',
                     start: '{$DATA[$i]['Date']}',
                     color: '#665561',
                     textColor: '#FFFFFF',
@@ -3153,7 +3153,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
             $DATA = selectData($sql);
             for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
                 $text .= "{
-                    title: 'มีการพบศัตรูพืช {$DATA[$i]['numSubFarm']} แปลง',
+                    title: 'พบศัตรูพืช {$DATA[$i]['numSubFarm']} แปลง',
                     start: '{$DATA[$i]['Date']}',
                     color: '#CAC721',
                     textColor: '#FFFFFF',
