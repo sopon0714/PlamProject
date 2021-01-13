@@ -47,7 +47,6 @@ $(document).ready(function() {
     });
     $('[name="present"]').change(function() {
         pre = $('input[name="present"]:checked').val(); 
-
         if(pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
             if(pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
                 $("#chose_label_span1").html("เลือกหัวข้อหลัก");

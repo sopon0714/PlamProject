@@ -231,7 +231,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4" id="multi_chart"></div>
+                        <div class="col-4" id="multi_chart">
                             <div class="row">
                                 <div class="col-12">
                                     <span style="margin-left: 20px; color: <?= $color ?>;"
