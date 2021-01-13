@@ -645,6 +645,8 @@ $(document).ready(function() {
                 console.log(label1);
                 $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
+                    // console.log(result);
+
                     try{
                         result = JSON.parse(result);
                         console.log(result);

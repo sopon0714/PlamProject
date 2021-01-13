@@ -120,16 +120,18 @@ if(isset($_POST['request'])){
 
             $WHERE = "";
             if($SET1 != null){
-                $WHERE = " AND t9.".$SET1[0]. "= \"".$SET1[1]."\"";
+                $WHERE = " AND ( t9.".$SET1[0]. "= \"".$SET1[1]."\"";
                 for($i=2;$i<count($SET1);$i++){
                     $WHERE = $WHERE." OR t9.".$SET1[0]." = \"".$SET1[$i]."\"";
                 }
+                $WHERE = $WHERE . " )";
             }
             if($SET2 != null){
-                $WHERE =$WHERE." AND t9.".$SET2[0]. "= \"".$SET2[1]."\"";
+                $WHERE =$WHERE." AND ( t9.".$SET2[0]. "= \"".$SET2[1]."\"";
                 for($i=2;$i<count($SET2);$i++){
                     $WHERE = $WHERE." OR t9.".$SET2[0]." = \"".$SET2[$i]."\"";
                 }
+                $WHERE = $WHERE . " )";
             }
             if($SET3 != null){
                 if($SET3[0] == "Year2"){
