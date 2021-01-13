@@ -10,7 +10,7 @@
             <div class="modal-body" id="addModalBody1">
                 <div class="row mb-4">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-data " id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
                             <colgroup>
                                 <col width="30%">
                                 <col width="30%">
