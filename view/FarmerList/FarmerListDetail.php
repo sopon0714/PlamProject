@@ -80,14 +80,17 @@ $FARM = getOwnerFarmer($farmerID);
                             <div class="card-body" >
                                         
                                         <div align="center">
-                                            
-                                            <img src=<?php 
-                                            if ($PROFILE[1]["Icon"] != NULL)
-                                            echo $src = "../../icon/farmer/".$farmerID."/".$PROFILE[1]["Icon"]; 
-                                            else
-                                            echo $src = "../../picture/default.jpg" 
-                                            ?> 
-                                             alt="User" style="border-radius: 100%;width: 300px;height: 300px;">
+                                            <?php
+                                            if ($PROFILE[1]['Icon'] == "default.jpg") {
+                                                if ($PROFILE[1]['Title'] == "นาย") {
+                                                    echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/0/man.jpg\" >";
+                                                } else {
+                                                    echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/0/woman.jpg\" >";
+                                                }
+                                            } else {
+                                                echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/{$PROFILE[1]['UFID']}/{$PROFILE[1]['Icon']}\" >";
+                                            }
+                                            ?>
                                         </div>
 
                                         <div class="row mb-4 mt-3">

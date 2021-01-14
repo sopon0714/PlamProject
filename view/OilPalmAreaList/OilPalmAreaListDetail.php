@@ -79,9 +79,9 @@ $COUNTCOORFRAM = getCountCoor($fmid);
                         <?php
                         if ($INFOFARMER[1]['Icon'] == "default.jpg") {
                             if ($INFOFARMER[1]['Title2'] == "นาย") {
-                                echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/man.jpg\" >";
+                                echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/0/man.jpg\" >";
                             } else {
-                                echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/woman.jpg\" >";
+                                echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/0/woman.jpg\" >";
                             }
                         } else {
                             echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/{$INFOFARMER[1]['UFID']}/{$INFOFARMER[1]['Icon']}\" >";
