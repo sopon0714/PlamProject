@@ -1,4 +1,6 @@
 <?php
+set_time_limit(0);
+$start = time();
 require_once(dirname(__FILE__) . "/../../dbConnect.php");
 date_default_timezone_set("Asia/Bangkok");
 $sql = "SELECT `dim-farm`.`dbID`, StartT.`Date` AS StartT,  EndT.`Date` AS  EndT,`fact-drying`.`Period`  FROM `fact-drying` 
@@ -24,3 +26,7 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
 $myfile = fopen(dirname(__FILE__) . "/infoDrying.json", "w");
 fwrite($myfile, json_encode($INFO));
 fclose($myfile);
+$end = time();
+$diff = $end - $start;
+$sql = "INSERT INTO `test` (`text`, `time`) VALUES (autoRunDrying run procress '$diff Sec', CURRENT_TIMESTAMP)";
+addinsertData($sql);
