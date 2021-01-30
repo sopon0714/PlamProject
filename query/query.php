@@ -57,6 +57,12 @@ function getFertilizer()
     }
     return $INFO;
 }
+function getNutr()
+{
+    $sql = "SELECT * FROM `db-nutrient` ORDER BY `db-nutrient`.`Name`";
+    $DATA = selectData($sql);
+    return $DATA;
+}
 function getMainNutr()
 {
     $sql = "SELECT * FROM `db-nutrient`WHERE `Type` = 'ธาตุอาหารหลัก' ORDER BY `db-nutrient`.`Name`";

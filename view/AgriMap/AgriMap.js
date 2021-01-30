@@ -14,45 +14,69 @@ $(document).ready(function() {
 
 });
 
-$("#search").click(function(){
+$("#search").click(function() {
     // console.log('search');
     year = $('#year').val();
     province = $('#province').val();
     distrinct = $('#distrinct').val();
     farmer = $('#farmer').val();
     harvest = $('#harvest').val();
+    NutrList = $('#NutrList').val();
     fertilizer = $('#fertilizer').val();
     water = $('#water').val();
     waterlack = $('#waterlack').val();
     wash = $('#wash').val();
     pesttype = $('#pesttype').val();
-    if($('#check3').is(':checked') == false){
+    Nutr = 0;
+    if ($('#check2').is(':checked') == false) {
+        Nutr = 0;
+    } else {
+        Nutr = 1;
+    }
+    if ($('#check3').is(':checked') == false) {
         water = 0;
-    }else{
+    } else {
         water = 1;
     }
-    if($('#check4').is(':checked') == false){
+    if ($('#check4').is(':checked') == false) {
         lack = 0;
-    }else{
+    } else {
         lack = 1;
     }
-    if($('#check5').is(':checked') == false){
+    if ($('#check5').is(':checked') == false) {
         cutbranch = 0;
-    }else{
+    } else {
         cutbranch = 1;
     }
 
-    $.post("manage.php", {request: "search", year:year, province:province, distrinct:distrinct,
-    farmer:farmer, harvest:harvest, fertilizer:fertilizer, minwater:minwater, maxwater:maxwater, 
-    minlack:minlack, maxlack:maxlack, pesttype:pesttype,
-    mincutbranch:mincutbranch, maxcutbranch:maxcutbranch,
-    lack:lack, water:water, cutbranch:cutbranch}, function(result){
-        // console.log(result);
+    $.post("manage.php", {
+        request: "search",
+        year: year,
+        province: province,
+        distrinct: distrinct,
+        farmer: farmer,
+        harvest: harvest,
+        Nutr: Nutr,
+        NutrList,
+        fertilizer: fertilizer,
+        minwater: minwater,
+        maxwater: maxwater,
+        minlack: minlack,
+        maxlack: maxlack,
+        pesttype: pesttype,
+        mincutbranch: mincutbranch,
+        maxcutbranch: maxcutbranch,
+        lack: lack,
+        water: water,
+        cutbranch: cutbranch
+    }, function(result) {
+        //console.log(result);
         DATA_DB = JSON.parse(result);
         // console.log(DATA_DB);
         initMap();
     });
 });
+
 function initMap() {
     //The location of Uluru
     // console.log("init map");
@@ -72,23 +96,23 @@ function initMap() {
         longFloat = parseFloat(long);
         dist = DATA_DB[i]['Distrinct'];
         pro = DATA_DB[i]['Province'];
-        if(DATA_DB[i]['EndT'] == 0){
+        if (DATA_DB[i]['EndT'] == 0) {
             color = "green";
-        }else{
+        } else {
             color = "red";
         }
         center[0] += laFloat;
         center[1] += longFloat;
-        data = [la, long, dist, pro, color,nameSub, FSID, FMID];
+        data = [la, long, dist, pro, color, nameSub, FSID, FMID];
         locations.push(data);
 
     }
     center[0] = center[0] / size;
     center[1] = center[1] / size;
 
-    if(size == 0){
-      center[0] = 13.736717;
-      center[1] = 100.523186;
+    if (size == 0) {
+        center[0] = 13.736717;
+        center[1] = 100.523186;
     }
 
     // console.log(center);
@@ -109,17 +133,17 @@ function initMap() {
         marker = new google.maps.Marker({
             position: new google.maps.LatLng(locations[i][0], locations[i][1]),
             map: map,
-            icon: "http://maps.google.com/mapfiles/ms/icons/"+locations[i][4]+"-dot.png"
+            icon: "http://maps.google.com/mapfiles/ms/icons/" + locations[i][4] + "-dot.png"
 
         });
         // console.log('i == ' + i)
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
                 content = "";
-                if(locations[i][4] == "green"){
-                    content += "<a href='http://127.0.0.1/PalmProject/view/OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID="+
-                    locations[i][6]+"&FMID="+locations[i][7]+"'>"+locations[i][5]+"</a>";
-                }else{
+                if (locations[i][4] == "green") {
+                    content += "<a href='http://127.0.0.1/PalmProject/view/OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=" +
+                        locations[i][6] + "&FMID=" + locations[i][7] + "'>" + locations[i][5] + "</a>";
+                } else {
                     content += locations[i][5];
                 }
                 content += "<br> อ." + locations[i][2] + " จ." + locations[i][3];
@@ -137,13 +161,13 @@ function initMap() {
 
 }
 
-$("#province").change(function(){
+$("#province").change(function() {
     // console.log('pro = '+$("#province").val());
     select_id = $('#province').val();
-    if(select_id == 0){
+    if (select_id == 0) {
         $("#distrinct").val("0");
         $("#distrinct").attr("disabled", "disabled");
-    }else{
+    } else {
         $("#distrinct").removeAttr("disabled");
         data_show(select_id, "distrinct", '');
     }
@@ -170,8 +194,8 @@ $("#check1").click(function() {
 });
 
 $("#check2").click(function() {
+    $("#NutrList").attr("disabled", !this.checked);
     $("#fertilizer").attr("disabled", !this.checked);
-    $("#fertilizer").val(0);
 });
 
 $("#check3").change(function() {
@@ -248,8 +272,8 @@ $("#wash").ionRangeSlider({
     onFinish: function(data) {
         // console.log(data.to + " " + data.from);
         // console.log('check5 = '+$('#check5').is(':checked'));
-        mincutbranch= data.from;
+        mincutbranch = data.from;
         maxcutbranch = data.to;
-        
+
     }
 });
