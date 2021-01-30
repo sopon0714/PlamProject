@@ -22,7 +22,22 @@ $(document).ready(function() {
     $('#show_error').hide();
     $('#show_nodata').hide();
     $('#show_loading').hide();
-    $("#multi_chart").hide();
+    // $("#multi_chart").hide();
+
+    $('#yes_table').hide();
+    $('#no_table').hide();
+
+    $('#chose_cal').hide();
+
+    $('#chose_type').change(function() {
+        chose_type = $("#chose_type").val();
+
+        if(chose_type == "water1" || chose_type == "water2"){
+            $('#summary').hide();
+        }else{
+            $('#summary').show();
+        }
+    });
 
     $("#chose_cond").change(function() {
         chose_cond = $("#chose_cond").val();
@@ -47,8 +62,18 @@ $(document).ready(function() {
     });
     $('[name="present"]').change(function() {
         pre = $('input[name="present"]:checked').val(); 
-        if(pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
-            if(pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
+        if(pre == "table"){
+            $('#chose_cal').hide();
+            $('#chose_cal').attr('required',false);
+            $('#chose_cal').val("all");
+        }
+        else{
+            $('#chose_cal').show(); 
+            $('#chose_cal').attr('required',true);
+            $('#chose_cal').val("");
+        }
+        if(pre == "table" || pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
+            if(pre == "table" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
                 $("#chose_label_span1").html("เลือกหัวข้อหลัก");
                 $("#multi_chart").show();
             }else if(pre == "pie" || pre == "bar"){
@@ -66,7 +91,7 @@ $(document).ready(function() {
             <option name="month" id="month" value="Month">เดือน</option>
             <option name="day" id="day" value="dd">วัน</option>`;
 
-        }else if(pre == "line" || pre == "area" || pre == "table" || pre == "multi_line" || pre == "multi_area"){
+        }else if(pre == "line" || pre == "area" || pre == "multi_line" || pre == "multi_area"){
             if(pre == "multi_line" || pre == "multi_area"){
                 $("#chose_label_span1").html("เลือกหัวข้อหลัก");
                 $("#multi_chart").show();
@@ -394,10 +419,10 @@ $(document).ready(function() {
             $("#subfarm_list2").html("");
         });
     });
-    $('#setsubmit').click(function(){
-        html = "";
-        $('#present').html();
-    });
+    // $('#setsubmit').click(function(){
+    //     html = "";
+    //     $('#present').html();
+    // });
     $('#selectyear1').change(function(){
         $.post("dataForChart.php", {request: "selectyear"}, function(result){
             select_year = $('#selectyear1').val();
@@ -440,10 +465,11 @@ $(document).ready(function() {
     $('#setsubmit').click(function(){
         
         present = $('input[name="present"]:checked').val(); 
-            // console.log("present=|"+present+"|");
+            console.log("present=|"+present+"|");
             // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
             // console.log("chose_type=|"+$('#chose_type').val()+"|");
             // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
+        
         if(present == "table" || present == "pie" || present == "line" || present == "multi_line" || present == "bar" || present == "chart_radar" || 
         present == "multi_bar" || present == "complex_bar" || present == "area" || present == "multi_area" || present == "mix"
         ){
@@ -643,7 +669,7 @@ $(document).ready(function() {
                 chose_cond = $("#chose_cond option:selected").val();
 
                 console.log(label1);
-                $.post("dataForChart.php", {request: "chart" ,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
+                $.post("dataForChart.php", {request: "chart" ,present: present,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
                     // console.log(result);
 
@@ -667,211 +693,266 @@ $(document).ready(function() {
                         $('#show_nodata').hide();
                         $('#show_loading').hide();
                     }
-                    
-                    labelChart1 = Array();
-                    dataChart1 = Array();
                     round = $("#order").val();
                     if(round > result[0]['numrow'] || chose_cond == ""){
                         round = result[0]['numrow'];
                     }
-
-                    for(i=1;i<=round;i++){
-                        labelChart1[i-1] = result[i]['label1'];
-                        dataChart1[i-1] = result[i]['data'];
-                    }
-
-                    //data for chart
-                    html = "";
-                    // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
-                    // dataChart1 = [20, 12, 10, 8, 5, 30];
                     unit1 = result[0]['unit'];
-                    color1 = Array();
-                    colorBorder1 = Array();
-                    for(i=0;i<dataChart1.length;i++){
-                        // var randomColor = Math.floor(Math.random()*16777215).toString(16);
-                        var r = Math.floor(Math.random() * 256);
-                        var g = Math.floor(Math.random() * 256);
-                        var b = Math.floor(Math.random() * 256);
-                        var randomColor = "rgba("+r + ", " + g + ", " + b;
-                        if(checkDup(color1,randomColor)){
-                            color1[i] = randomColor+",0.6)";
-                            colorBorder1[i] = randomColor+",0.8)"; 
-                        }
-                    }
-                    console.log(color1);
-                    console.log("present = "+present);
 
-                    //data for chart
-                    fillChart = false; 
-                    if(present == "area" || present == "multi_area" || present == "chart_radar"){
-                        console.log("fill");
-                        fillChart = true;
-                    }
-                    var ctx = $('#chartjs');
-                    if(present == "pie" || present == "bar" || present == "line" || present == "area"){
-                        if(present == "area") typeChart = "line";
-                        else typeChart = present;
-                        myChart = new Chart(ctx, {
-                            type: typeChart,
-                            data: {
-                                labels: labelChart1,
-                                datasets: [{
-                                    label: chose_type,
-                                    data: dataChart1,
-                                    fill: fillChart,
-                                    backgroundColor: color1,
-                                    borderColor : colorBorder1
-                                }]
-                            }
-                        });
-                    }else{            
-                        if(present == "multi_area"){
-                            typeChart = "line";
-                        }else{
-                            t = present.split("_");
-                            typeChart = t[1];
-                            console.log("typeChart = "+typeChart);
-                        }
+                    if(present == "table"){
                         
-                        if(present == "complex_bar"){
-                            optionChart = {
-                                scales: {
-                                    xAxes: [{
-                                        stacked: true,
-                                    }],
-                                    yAxes: [{
-                                        stacked: true
-                                    }]
-                                }
-                            };
-                        }else{
-                            optionChart = "";
+                        html = `
+                        <thead>
+                            <tr>
+                                <th>ลำดับ</th>
+                                <th>${label1}</th>
+                                <th>${label2}</th>
+                                <th>${data1} มากที่สุด (${unit1}) </th>
+                                <th>${data1} น้อยที่สุด (${unit1}) </th>
+                                <th>${data1} เฉลี่ย (${unit1}) </th>`;
+                            if(chose_type != "water1" && chose_type != "water2")
+                                html += `<th>${data1} ผลรวม (${unit1}) </th>`;
+                            html += `<th>${data1} ค่าส่วนเบี่ยงเบนมาตรฐาน (${unit1}) </th>
+                            </tr> 
+                        </thead>`;
+                        html += `
+                        <tfoot>
+                            <tr>
+                                <th>ลำดับ</th>
+                                <th>${label1}</th>
+                                <th>${label2}</th>
+                                <th>${data1} มากที่สุด (${unit1}) </th>
+                                <th>${data1} น้อยที่สุด (${unit1}) </th>
+                                <th>${data1} เฉลี่ย (${unit1}) </th>`;
+                            if(chose_type != "water1" && chose_type != "water2")
+                                html += `<th>${data1} ผลรวม (${unit1}) </th>`;
+                            html += `<th>${data1} ค่าส่วนเบี่ยงเบนมาตรฐาน (${unit1}) </th>
+                            </tr> 
+                        </tfoot>`;
+                            for(i=1;i<=round;i++){
+                                html+=`<tbody><tr>
+                                <td align="right">${i}</td>
+                                <td>${result[i]['label1']}</td>
+                                <td>${result[i]['label2']}</td>
+                                <td align="right">${result[i]['max']}</td>
+                                <td align="right">${result[i]['min']}</td>
+                                <td align="right">${result[i]['avg']}</td>`;
+                            if(chose_type != "water1" && chose_type != "water2")
+                                html += `<td align="right">${result[i]['sum']}</td>`;
+                            html += `<td align="right">${result[i]['sd']}</td>
+                                </tr><tbody>`;
+                            }
+                        $('#yes_table').show();
+                        $('#no_table').hide();
+
+                        $('#dataTable_table').html(html);
+
+                    }else{
+                        labelChart1 = Array();
+                        dataChart1 = Array();
+                        
+                        for(i=1;i<=round;i++){
+                            labelChart1[i-1] = result[i]['label1'];
+                            dataChart1[i-1] = result[i]['data'];
                         }
+
                         //data for chart
-                        labelChart1 = Array();//
-                        labelChart2 = Array();
-                        dataInChart = Array();
-                        arrInData = Array();
-
-                        for(i=1;i<=round;i++){
-                            labelChart2[i-1] = result[i]['label1']; //year/month/day
-                            labelChart1[i-1] = result[i]['label2']; 
-                        }
-                        labelChart1 = unique(labelChart1);
-                        labelChart2 = unique(labelChart2);
-
-                        console.log("labelChart1");
-                        console.log(labelChart1);
-                        console.log("labelChart2");
-                        console.log(labelChart2);
-
-                        for(i=0;i<labelChart1.length;i++){
-                            arrInData[labelChart1[i]] = Array();
-                        }
-
-                        for(i=0;i<labelChart1.length;i++){
-                            for(j=0;j<labelChart2.length;j++){
-                                arrInData[labelChart1[i]][labelChart2[j]] = "0";
-                            }
-                        }
-                        // console.log("arrInData");
-                        // console.log(arrInData);
-                        for(i=1;i<=round;i++){
-                            arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
-                        }
-                        for(i=0;i<labelChart1.length;i++){
-                            arrToData = Array();
-                            for(j=0;j<labelChart2.length;j++){
-                                arrToData.push(arrInData[labelChart1[i]][labelChart2[j]]);
-                            }
-                            dataInChart.push(arrToData);
-                        }
-                        console.log("arrInData");
-                        console.log(arrInData);
-                        console.log("dataInChart");
-                        console.log(dataInChart);
-
-
+                        html = "";
                         // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
-                        // month = ["มกราคม","พฤษภาคม","อื่นๆ"]; //
-                        // dataInChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0]];
-                        // labelChart1 = ['บจ.', 'สวน1'];
-                        // month = ["2","11","13","18","26"]; //
-                        // dataInChart = [[1,2,1,1,0],[0,0,0,0,1]];
-                        // labelChart2 = month; //
-                        unit2 = result[0]['unit'];
-                        color2 = Array();
-                        colorBorder2 = Array();
-
-                        for(i=0;i<labelChart2.length;i++){
+                        // dataChart1 = [20, 12, 10, 8, 5, 30];
+                        color1 = Array();
+                        colorBorder1 = Array();
+                        for(i=0;i<dataChart1.length;i++){
                             // var randomColor = Math.floor(Math.random()*16777215).toString(16);
                             var r = Math.floor(Math.random() * 256);
                             var g = Math.floor(Math.random() * 256);
                             var b = Math.floor(Math.random() * 256);
                             var randomColor = "rgba("+r + ", " + g + ", " + b;
-                            if(checkDup(color2,randomColor)){
-                                if(present == "rader"){
-                                    color2[i] = randomColor+",0.1)";
-                                }else{
-                                    color2[i] = randomColor+",0.6)";
-                                }
-                                colorBorder2[i] = randomColor+",0.8)"; 
+                            if(checkDup(color1,randomColor)){
+                                color1[i] = randomColor+",0.6)";
+                                colorBorder1[i] = randomColor+",0.8)"; 
                             }
-                        }                
-                        console.log(color2);
-                        dataChart2 = [];
-                        for(i=0;i<labelChart1.length;i++){
-                            dataChart2[i] = {
-                                label: labelChart1[i],
-                                data: dataInChart[i],
-                                fill: fillChart,
-                                backgroundColor: color2[i],
-                                borderColor : colorBorder2[i]
-                            };
                         }
-                        // data for chart
-                        console.log("optionChart = "+optionChart);
-                        myChart = new Chart(ctx, {
-                            type: typeChart,
-                            data: {
-                                labels: labelChart2,
-                                datasets: dataChart2
-                            },
-                            options: optionChart
-                        });
-                    }
+                        console.log(color1);
+                        console.log("present = "+present);
 
-                    if(present == "pie" ||  present == "line" || present == "bar"){
-                        html = `<tr>
-                        <th>ลำดับ</th>
-                        <th>${label1}</th>
-                        <th>${data1}${cal1} (${unit1}) </th>
-                        </tr>`;
-                        for(i=1;i<=round;i++){
-                            html+=`<tr>
-                            <td align="right">${i}</td>
-                            <td>${result[i]['label1']}</td>
-                            <td align="right">${result[i]['data']}</td>
-                            </tr>`;
+                        //data for chart
+                        fillChart = false; 
+                        if(present == "area" || present == "multi_area" || present == "chart_radar"){
+                            console.log("fill");
+                            fillChart = true;
                         }
-                    }else{
-                        html = `<tr>
-                        <th>ลำดับ</th>
-                        <th>${label1}</th>
-                        <th>${label2}</th>
-                        <th>${data1}${cal1} (${unit1}) </th>
-                        </tr>`;
-                        for(i=1;i<=round;i++){
-                            html+=`<tr>
-                            <td align="right">${i}</td>
-                            <td>${result[i]['label1']}</td>
-                            <td>${result[i]['label2']}</td>
-                            <td align="right">${result[i]['data']}</td>
-                            </tr>`;
-                        }
-                    }
+                        var ctx = $('#chartjs');
+                        if(present == "pie" || present == "bar" || present == "line" || present == "area"){
+                            if(present == "area") typeChart = "line";
+                            else typeChart = present;
+                            myChart = new Chart(ctx, {
+                                type: typeChart,
+                                data: {
+                                    labels: labelChart1,
+                                    datasets: [{
+                                        label: chose_type,
+                                        data: dataChart1,
+                                        fill: fillChart,
+                                        backgroundColor: color1,
+                                        borderColor : colorBorder1
+                                    }]
+                                }
+                            });
+                        }else{            
+                            if(present == "multi_area"){
+                                typeChart = "line";
+                            }else{
+                                t = present.split("_");
+                                typeChart = t[1];
+                                console.log("typeChart = "+typeChart);
+                            }
+                            
+                            if(present == "complex_bar"){
+                                optionChart = {
+                                    scales: {
+                                        xAxes: [{
+                                            stacked: true,
+                                        }],
+                                        yAxes: [{
+                                            stacked: true
+                                        }]
+                                    }
+                                };
+                            }else{
+                                optionChart = "";
+                            }
+                            //data for chart
+                            labelChart1 = Array();//
+                            labelChart2 = Array();
+                            dataInChart = Array();
+                            arrInData = Array();
 
-                    $('#dataTable').html(html);
+                            for(i=1;i<=round;i++){
+                                labelChart2[i-1] = result[i]['label1']; //year/month/day
+                                labelChart1[i-1] = result[i]['label2']; 
+                            }
+                            labelChart1 = unique(labelChart1);
+                            labelChart2 = unique(labelChart2);
+
+                            console.log("labelChart1");
+                            console.log(labelChart1);
+                            console.log("labelChart2");
+                            console.log(labelChart2);
+
+                            for(i=0;i<labelChart1.length;i++){
+                                arrInData[labelChart1[i]] = Array();
+                            }
+
+                            for(i=0;i<labelChart1.length;i++){
+                                for(j=0;j<labelChart2.length;j++){
+                                    arrInData[labelChart1[i]][labelChart2[j]] = "0";
+                                }
+                            }
+                            // console.log("arrInData");
+                            // console.log(arrInData);
+                            for(i=1;i<=round;i++){
+                                arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
+                            }
+                            for(i=0;i<labelChart1.length;i++){
+                                arrToData = Array();
+                                for(j=0;j<labelChart2.length;j++){
+                                    arrToData.push(arrInData[labelChart1[i]][labelChart2[j]]);
+                                }
+                                dataInChart.push(arrToData);
+                            }
+                            console.log("arrInData");
+                            console.log(arrInData);
+                            console.log("dataInChart");
+                            console.log(dataInChart);
+
+
+                            // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
+                            // month = ["มกราคม","พฤษภาคม","อื่นๆ"]; //
+                            // dataInChart = [[5, 3, 2, 6, 6, 8],[3, 2, 1, 1, 2, 6],[6, 0, 2, 1, 3, 0]];
+                            // labelChart1 = ['บจ.', 'สวน1'];
+                            // month = ["2","11","13","18","26"]; //
+                            // dataInChart = [[1,2,1,1,0],[0,0,0,0,1]];
+                            // labelChart2 = month; //
+                            unit2 = result[0]['unit'];
+                            color2 = Array();
+                            colorBorder2 = Array();
+
+                            for(i=0;i<labelChart2.length;i++){
+                                // var randomColor = Math.floor(Math.random()*16777215).toString(16);
+                                var r = Math.floor(Math.random() * 256);
+                                var g = Math.floor(Math.random() * 256);
+                                var b = Math.floor(Math.random() * 256);
+                                var randomColor = "rgba("+r + ", " + g + ", " + b;
+                                if(checkDup(color2,randomColor)){
+                                    if(present == "rader"){
+                                        color2[i] = randomColor+",0.1)";
+                                    }else{
+                                        color2[i] = randomColor+",0.6)";
+                                    }
+                                    colorBorder2[i] = randomColor+",0.8)"; 
+                                }
+                            }                
+                            console.log(color2);
+                            dataChart2 = [];
+                            for(i=0;i<labelChart1.length;i++){
+                                dataChart2[i] = {
+                                    label: labelChart1[i],
+                                    data: dataInChart[i],
+                                    fill: fillChart,
+                                    backgroundColor: color2[i],
+                                    borderColor : colorBorder2[i]
+                                };
+                            }
+                            // data for chart
+                            console.log("optionChart = "+optionChart);
+                            myChart = new Chart(ctx, {
+                                type: typeChart,
+                                data: {
+                                    labels: labelChart2,
+                                    datasets: dataChart2
+                                },
+                                options: optionChart
+                            });
+                        }
+
+                        if(present == "pie" ||  present == "line" || present == "bar"){
+                            html = `<tr>
+                            <th>ลำดับ</th>
+                            <th>${label1}</th>
+                            <th>${data1}${cal1} (${unit1}) </th>
+                            </tr>`;
+                            for(i=1;i<=round;i++){
+                                html+=`<tr>
+                                <td align="right">${i}</td>
+                                <td>${result[i]['label1']}</td>
+                                <td align="right">${result[i]['data']}</td>
+                                </tr>`;
+                            }
+                        }else{
+                            html = `<tr>
+                            <th>ลำดับ</th>
+                            <th>${label1}</th>
+                            <th>${label2}</th>
+                            <th>${data1}${cal1} (${unit1}) </th>
+                            </tr>`;
+                            for(i=1;i<=round;i++){
+                                html+=`<tr>
+                                <td align="right">${i}</td>
+                                <td>${result[i]['label1']}</td>
+                                <td>${result[i]['label2']}</td>
+                                <td align="right">${result[i]['data']}</td>
+                                </tr>`;
+                            }
+                        }
+                        $('#yes_table').hide();
+                        $('#no_table').show();
+
+                        $('#dataTable').html(html);
+
+                    }
+                    
+
                 });
             }else{
                 $('#show_chart').hide();

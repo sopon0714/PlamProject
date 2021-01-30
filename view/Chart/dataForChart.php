@@ -101,6 +101,7 @@ if(isset($_POST['request'])){
 
         break;
         case 'chart':
+            $present = $_POST['present'];
             $chose_label1 = $_POST['chose_label1'];
             $chose_label2 = $_POST['chose_label2'];
             $chose_type = $_POST['chose_type'];
@@ -109,7 +110,6 @@ if(isset($_POST['request'])){
             $SET1 = $_POST['SET1']; //FOR WHERE
             $SET2 = $_POST['SET2'];
             $SET3 = $_POST['SET3'];
-
             $dmy1 = "";
             $dmy2 = "";
 
@@ -119,6 +119,8 @@ if(isset($_POST['request'])){
             $groupBy2 = "";
 
             $WHERE = "";
+            $select = "";
+
             if($SET1 != null){
                 $WHERE = " AND ( t9.".$SET1[0]. "= \"".$SET1[1]."\"";
                 for($i=2;$i<count($SET1);$i++){
@@ -167,6 +169,7 @@ if(isset($_POST['request'])){
             $label2Add = $label2Add." ".$dmy2;
             $groupBy1 = $groupBy1." ".$dmy2;
             $groupBy2 = $groupBy2." ".$dmy1;
+
             //sql 
             if($chose_type == "cutbranch" || $chose_type == "pestcontrol" || $chose_type == "pest" || $chose_type == "fertilize1"){
                 if($chose_type == "cutbranch"){
@@ -184,45 +187,58 @@ if(isset($_POST['request'])){
                     $DBactID = "";
                 }
 
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.times),2) AS data FROM (
-                    SELECT t9.SF_dbID,COUNT(t9.SF_dbID) AS times,t9.F_dbID,t9.F_name,t9.SF_name ,t9.SubDistrinct,t9.Distrinct,t9.Province,t9.dd,t9.Month,t9.Year2,t9.FM_dbID,t9.FM_name  FROM (
-                    SELECT t7.SF_dbID,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name  FROM (
-                    SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID` FROM (
-                    SELECT t5.F_dbID,t5.F_name,t5.SF_dbID ,t5.SF_name,t5.SubDistrinct,t5.Distrinct,t5.Province,`dim-time`.dd,`dim-time`.Month,`dim-time`.Year2,t5.`DIMownerID` FROM (
-                    SELECT t2.F_dbID,t2.F_name,t4.dbID AS SF_dbID,t4.Name AS SF_name,t2.SubDistrinct,t2.Distrinct,t2.Province,t2.`DIMdateID`,t2.`DIMownerID`  FROM (
-                    SELECT t00.F_dbID,t00.F_name,`dim-farm`.`dbID`,t00.SubDistrinct,t00.Distrinct,t00.Province,t00.`DIMdateID`,t00.`DIMownerID` FROM (
-                    SELECT t1.dbID AS F_dbID,t1.Name AS F_name,".$log.".`DIMsubFID`,t1.SubDistrinct,t1.Distrinct,t1.Province,".$log.".`DIMdateID`,".$log.".`DIMownerID` FROM (
-                    SELECT t0.max_lfID ,`dim-farm`.`dbID`,`dim-farm`.`Name`,`dim-address`.`SubDistrinct`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM (
-                    SELECT MAX(`log-farm`.`ID`) AS max_lfID FROM `log-farm`
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-                    GROUP BY `dim-farm`.`dbID`)AS t0
-                    JOIN `log-farm` ON `log-farm`.`ID` = t0.max_lfID
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
-                    JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`) AS t1        
-                    JOIN `dim-farm` ON `dim-farm`.`dbID` = t1.dbID
-                    JOIN ".$log." ON  ".$log.".`DIMfarmID` =  `dim-farm`.`ID`
-                    WHERE ".$log.".`isDelete` = 0  ".$DBactID.")AS t00
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = t00.DIMsubFID)AS t2
-                    JOIN (SELECT SF.max_lfID,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM (
-                    SELECT MAX(`log-farm`.`ID`) AS max_lfID FROM `log-farm`
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
-                    GROUP BY `dim-farm`.`dbID`)AS SF
-                    JOIN `log-farm` ON `log-farm`.`ID` = SF.max_lfID
-                    JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`)AS t4 
-                    ON t4.dbID =  t2.dbID)AS t5
-                    JOIN `dim-time` ON `dim-time`.`ID` = t5.`DIMdateID`)AS t6
-                    JOIN `dim-user` ON t6.`DIMownerID` = `dim-user`.`ID`)AS t7
-                    JOIN (SELECT `dim-user`.`dbID`,`dim-user`.`FullName` FROM (
-                    SELECT MAX(`log-farmer`.`ID`) AS max_lfID ,`dim-user`.`dbID` FROM `log-farmer`
-                    JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`
-                    GROUP BY `dim-user`.`dbID`)AS FM
-                    JOIN `log-farmer` ON `log-farmer`.`ID`= FM.max_lfID
-                    JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`) AS t8
-                    ON t7.`dbID` = t8.`dbID`)AS t9
-                    WHERE 1 ".$WHERE." 
-                    GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
-                    GROUP BY t10.".$chose_label1." ".$groupBy2."
-                    ORDER BY `data` ".$chose_cond;
+                if($present == "table"){
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(MAX(t10.times),2) AS max, ROUND(MIN(t10.times),2) AS min, 
+                    ROUND(AVG(t10.times),2) AS avg, ROUND(SUM(t10.times),2) AS sum, ROUND(STDDEV(t10.times),2) AS sd FROM (";
+                }else{
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.times),2) AS data FROM (";
+                }
+    
+                $sql = $sql . "
+                SELECT t9.SF_dbID,COUNT(t9.SF_dbID) AS times,t9.F_dbID,t9.F_name,t9.SF_name ,t9.SubDistrinct,t9.Distrinct,t9.Province,t9.dd,t9.Month,t9.Year2,t9.FM_dbID,t9.FM_name  FROM (
+                SELECT t7.SF_dbID,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name  FROM (
+                SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID` FROM (
+                SELECT t5.F_dbID,t5.F_name,t5.SF_dbID ,t5.SF_name,t5.SubDistrinct,t5.Distrinct,t5.Province,`dim-time`.dd,`dim-time`.Month,`dim-time`.Year2,t5.`DIMownerID` FROM (
+                SELECT t2.F_dbID,t2.F_name,t4.dbID AS SF_dbID,t4.Name AS SF_name,t2.SubDistrinct,t2.Distrinct,t2.Province,t2.`DIMdateID`,t2.`DIMownerID`  FROM (
+                SELECT t00.F_dbID,t00.F_name,`dim-farm`.`dbID`,t00.SubDistrinct,t00.Distrinct,t00.Province,t00.`DIMdateID`,t00.`DIMownerID` FROM (
+                SELECT t1.dbID AS F_dbID,t1.Name AS F_name,".$log.".`DIMsubFID`,t1.SubDistrinct,t1.Distrinct,t1.Province,".$log.".`DIMdateID`,".$log.".`DIMownerID` FROM (
+                SELECT t0.max_lfID ,`dim-farm`.`dbID`,`dim-farm`.`Name`,`dim-address`.`SubDistrinct`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM (
+                SELECT MAX(`log-farm`.`ID`) AS max_lfID FROM `log-farm`
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
+                GROUP BY `dim-farm`.`dbID`)AS t0
+                JOIN `log-farm` ON `log-farm`.`ID` = t0.max_lfID
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMfarmID`
+                JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`) AS t1        
+                JOIN `dim-farm` ON `dim-farm`.`dbID` = t1.dbID
+                JOIN ".$log." ON  ".$log.".`DIMfarmID` =  `dim-farm`.`ID`
+                WHERE ".$log.".`isDelete` = 0  ".$DBactID.")AS t00
+                JOIN `dim-farm` ON `dim-farm`.`ID` = t00.DIMsubFID)AS t2
+                JOIN (SELECT SF.max_lfID,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM (
+                SELECT MAX(`log-farm`.`ID`) AS max_lfID FROM `log-farm`
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`
+                GROUP BY `dim-farm`.`dbID`)AS SF
+                JOIN `log-farm` ON `log-farm`.`ID` = SF.max_lfID
+                JOIN `dim-farm` ON `dim-farm`.`ID` = `log-farm`.`DIMSubfID`)AS t4 
+                ON t4.dbID =  t2.dbID)AS t5
+                JOIN `dim-time` ON `dim-time`.`ID` = t5.`DIMdateID`)AS t6
+                JOIN `dim-user` ON t6.`DIMownerID` = `dim-user`.`ID`)AS t7
+                JOIN (SELECT `dim-user`.`dbID`,`dim-user`.`FullName` FROM (
+                SELECT MAX(`log-farmer`.`ID`) AS max_lfID ,`dim-user`.`dbID` FROM `log-farmer`
+                JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`
+                GROUP BY `dim-user`.`dbID`)AS FM
+                JOIN `log-farmer` ON `log-farmer`.`ID`= FM.max_lfID
+                JOIN `dim-user` ON `dim-user`.`ID` = `log-farmer`.`DIMuserID`) AS t8
+                ON t7.`dbID` = t8.`dbID`)AS t9
+                WHERE 1 ".$WHERE." 
+                GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
+                GROUP BY t10.".$chose_label1." ".$groupBy2;
+
+                if($present == "table"){
+
+                }else{
+                    $sql = $sql." ORDER BY `data` ".$chose_cond;
+                }
+
                     // print_r($sql);
                     $DATA = selectData($sql);
                     // print_r($DATA);
@@ -230,7 +246,15 @@ if(isset($_POST['request'])){
             
             }else if($chose_type == "water1"){
                 $log = "`fact-watering`";
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (
+
+                if($present == "table"){
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(MAX(t10.days),2) AS max, ROUND(MIN(t10.days),2) AS min, 
+                    ROUND(AVG(t10.days),2) AS avg, ROUND(STDDEV(t10.days),2) AS sd FROM (";
+                }else{
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (";
+                }
+
+                $sql = $sql . "
                 SELECT t9.SF_dbID,COUNT(DISTINCT(t9.Date)) AS days,t9.F_dbID,t9.F_name,t9.SF_name ,t9.SubDistrinct,t9.Distrinct,t9.Province,t9.dd,t9.Month,t9.Year2,t9.FM_dbID,t9.FM_name  FROM (
                 SELECT t7.SF_dbID,t7.Date,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name FROM (
                 SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.Date,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID` FROM (
@@ -266,15 +290,28 @@ if(isset($_POST['request'])){
                 ON t7.`dbID` = t8.`dbID`)AS t9
                 WHERE 1 ".$WHERE." 
                 GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.")AS t10
-                GROUP BY t10.".$chose_label1." ".$groupBy2."
-                ORDER BY `data` ".$chose_cond;
-                // print_r($sql);
+                GROUP BY t10.".$chose_label1." ".$groupBy2;
+                
+                if($present == "table"){
+
+                }else{
+                    $sql = $sql." ORDER BY `data` ".$chose_cond;
+                }
+                                // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "วัน";
             }else if($chose_type == "water2"){
                 $log = "`fact-drying`";
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (
+
+                if($present == "table"){
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(MAX(t10.days),2) AS max, ROUND(MIN(t10.days),2) AS min, 
+                    ROUND(AVG(t10.days),2) AS avg, ROUND(STDDEV(t10.days),2) AS sd FROM (";
+                }else{
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (";
+                }
+
+                $sql = $sql . "
                 SELECT t9.".$chose_label1." ".$label2Add.",t9.SF_dbID,SUM(t9.days) AS days FROM (
                 SELECT t7.SF_dbID,t7.`Period` AS days,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.Date,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8.FullName AS FM_name FROM (
                 SELECT t6.F_dbID,t6.F_name,t6.SF_dbID ,t6.SF_name ,t6.SubDistrinct,t6.Distrinct,t6.Province,t6.Date,t6.dd,t6.Month,t6.Year2,`dim-user`.`dbID`,t6.`Period` FROM (
@@ -310,14 +347,26 @@ if(isset($_POST['request'])){
                 ON t7.`dbID` = t8.`dbID`)AS t9
                 WHERE 1 ".$WHERE." 
                 GROUP BY t9.SF_dbID,t9.".$chose_label1." ".$groupBy1.") AS t10
-                GROUP BY t10.".$chose_label1." ".$groupBy2."
-                ORDER BY `data` ".$chose_cond;
+                GROUP BY t10.".$chose_label1." ".$groupBy2;
+
+                if($present == "table"){
+
+                }else{
+                    $sql = $sql." ORDER BY `data` ".$chose_cond;
+                }                
                 // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
                 $DATA[0]['unit'] = "วัน";
             }else if($chose_type == "fertilize2"){
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Type`,ROUND(".$chose_cal."(t10.sumAll),2) AS data FROM (
+                if($present == "table"){
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Type`,ROUND(MAX(t10.sumAll),2) AS max,ROUND(MIN(t10.sumAll),2) AS min,
+                    ROUND(AVG(t10.sumAll),2) AS avg, ROUND(SUM(t10.sumAll),2) AS sum, ROUND(STDDEV(t10.sumAll),2) AS sd FROM (";
+                }else{
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Type`,ROUND(".$chose_cal."(t10.sumAll),2) AS data FROM (";
+                }
+    
+                $sql = $sql . "
                 SELECT t9.SF_dbID,t9.".$chose_label1." ".$label2Add.",t9.`Type`,ROUND(SUM( IF(t9.`Unit`=1,t9.`Vol`,t9.`Vol`/1000) ),2)AS sumAll FROM (
                 SELECT t8.`Vol`,t8.`Unit`,t8.`Type`,t8.LID,t8.SF_dbID,t8.F_dbID,t8.F_name,t8.SF_name ,t8.SubDistrinct,t8.Distrinct,t8.Province,t8.dd,t8.Month,t8.Year2,t8.FM_dbID,t8.FM_name FROM (
                 SELECT `log-fertilisingdetail`.`Vol`,`log-fertilisingdetail`.`Unit`,`log-nutrient`.`Type`,t7.LID,t7.SF_dbID,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8f.FullName AS FM_name FROM (
@@ -359,8 +408,13 @@ if(isset($_POST['request'])){
                 )AS t9
                 WHERE 1 ".$WHERE." 
                 GROUP BY t9.SF_dbID,t9.`Type`,t9.".$chose_label1." ".$groupBy1.")AS t10
-                GROUP BY t10.Type,t10.".$chose_label1." ".$groupBy2."
-                ORDER BY `data` ".$chose_cond;
+                GROUP BY t10.Type,t10.".$chose_label1." ".$groupBy2;
+
+                if($present == "table"){
+
+                }else{
+                    $sql = $sql." ORDER BY `data` ".$chose_cond;
+                }
                 // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
@@ -371,7 +425,15 @@ if(isset($_POST['request'])){
                 }else{
                     $typeNutrient = "ธาตุอาหารรอง";
                 }
-                $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Nutrient`,ROUND(".$chose_cal."(t10.sumAll),2) AS data FROM (
+
+                if($present == "table"){
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Nutrient`,ROUND(MAX(t10.sumAll),2) AS max, ROUND(MIN(t10.sumAll),2) AS min,
+                    ROUND(AVG(t10.sumAll),2) AS avg, ROUND(SUM(t10.sumAll),2) AS sum, ROUND(STDDEV(t10.sumAll),2) AS sd FROM (";
+                }else{
+                    $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2." ".",t10.`Nutrient`,ROUND(".$chose_cal."(t10.sumAll),2) AS data FROM (";
+                }
+                
+                $sql = $sql . "
                 SELECT t9.SF_dbID,t9.".$chose_label1." ".$label2Add.",t9.`Nutrient`,ROUND(SUM( IF(t9.`Unit`=1,t9.`Vol`,t9.`Vol`/1000) ),2)AS sumAll FROM (
                 SELECT t8.`Vol`,t8.`Unit`,t8.`Type`,t8.Nutrient,t8.LID,t8.SF_dbID,t8.F_dbID,t8.F_name,t8.SF_name ,t8.SubDistrinct,t8.Distrinct,t8.Province,t8.dd,t8.Month,t8.Year2,t8.FM_dbID,t8.FM_name FROM (
                 SELECT `log-fertilisingdetail`.`Vol`,`log-fertilisingdetail`.`Unit`,`log-nutrient`.`Type`,`dim-nutrient`.`Name` AS Nutrient,t7.LID,t7.SF_dbID,t7.F_dbID,t7.F_name,t7.SF_name ,t7.SubDistrinct,t7.Distrinct,t7.Province,t7.dd,t7.Month,t7.Year2,t7.`dbID`AS FM_dbID,t8f.FullName AS FM_name FROM (
@@ -415,8 +477,13 @@ if(isset($_POST['request'])){
                 )AS t9
                 WHERE 1 ".$WHERE." 
                 GROUP BY t9.SF_dbID,t9.`Nutrient`,t9.".$chose_label1." ".$groupBy1.")AS t10
-                GROUP BY t10.Nutrient,t10.".$chose_label1." ".$groupBy2."
-                ORDER BY `data` ".$chose_cond;
+                GROUP BY t10.Nutrient,t10.".$chose_label1." ".$groupBy2;
+
+                if($present == "table"){
+
+                }else{
+                    $sql = $sql." ORDER BY `data` ".$chose_cond;
+                }
                 // print_r($sql);
                 $DATA = selectData($sql);
                 // print_r($DATA);
