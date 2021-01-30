@@ -1,5 +1,5 @@
 <?php
-require_once("../../dbConnect.php");
+require_once(dirname(__FILE__) . "/../../dbConnect.php");
 date_default_timezone_set("Asia/Bangkok");
 $sql = "SELECT `dim-farm`.`dbID`, StartT.`Date` AS StartT,  EndT.`Date` AS  EndT,`fact-drying`.`Period`  FROM `fact-drying` 
         INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`fact-drying`.`DIMsubFID`
@@ -21,6 +21,6 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
         $num++;
     }
 }
-$myfile = fopen("./infoDrying.json", "w");
+$myfile = fopen(dirname(__FILE__) . "/infoDrying.json", "w");
 fwrite($myfile, json_encode($INFO));
 fclose($myfile);
