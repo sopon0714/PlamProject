@@ -61,16 +61,15 @@ $(document).ready(function() {
         });
     });
     $('[name="present"]').change(function() {
-        pre = $('input[name="present"]:checked').val(); 
+        pre = $('input[name="present"]:checked').val();
+        $('#show_chart').hide(); 
         if(pre == "table"){
             $('#chose_cal').hide();
-            $('#chose_cal').attr('required',false);
-            $('#chose_cal').val("all");
+            $('#chose_cal').removeAttr('required');
         }
         else{
-            $('#chose_cal').show(); 
-            $('#chose_cal').attr('required',true);
-            $('#chose_cal').val("");
+            $('#chose_cal').show();
+            $('#chose_cal').prop('required',true);
         }
         if(pre == "table" || pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
             if(pre == "table" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
@@ -468,12 +467,15 @@ $(document).ready(function() {
             console.log("present=|"+present+"|");
             // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
             // console.log("chose_type=|"+$('#chose_type').val()+"|");
-            // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
-        
+            console.log("chose_cal=|"+$('#chose_cal').val()+"|");
+            check_chose_cal = $('#chose_cal').val();
+        if(present == "table"){
+            check_chose_cal = "-1";
+        }
         if(present == "table" || present == "pie" || present == "line" || present == "multi_line" || present == "bar" || present == "chart_radar" || 
         present == "multi_bar" || present == "complex_bar" || present == "area" || present == "multi_area" || present == "mix"
         ){
-            if($('#chose_label1').val() != "" && $('#chose_type').val() != "" && $('#chose_cal').val() != ""){
+            if($('#chose_label1').val() != "" && $('#chose_type').val() != "" && check_chose_cal != ""){
                 $('#show_chart').hide();
                 $('#show_error').hide();
                 $('#show_nodata').hide();
@@ -701,36 +703,19 @@ $(document).ready(function() {
 
                     if(present == "table"){
                         
-                        html = `
-                        <thead>
-                            <tr>
-                                <th>ลำดับ</th>
+                        html = `<tr>
+                                <th style="width:60px;">ลำดับ</th>
                                 <th>${label1}</th>
                                 <th>${label2}</th>
-                                <th>${data1} มากที่สุด (${unit1}) </th>
-                                <th>${data1} น้อยที่สุด (${unit1}) </th>
-                                <th>${data1} เฉลี่ย (${unit1}) </th>`;
+                                <th>${data1}มากที่สุด <br/> (${unit1}) </th>
+                                <th>${data1}น้อยที่สุด <br/> (${unit1}) </th>
+                                <th>${data1}เฉลี่ย <br/> (${unit1}) </th>`;
                             if(chose_type != "water1" && chose_type != "water2")
-                                html += `<th>${data1} ผลรวม (${unit1}) </th>`;
-                            html += `<th>${data1} ค่าส่วนเบี่ยงเบนมาตรฐาน (${unit1}) </th>
-                            </tr> 
-                        </thead>`;
-                        html += `
-                        <tfoot>
-                            <tr>
-                                <th>ลำดับ</th>
-                                <th>${label1}</th>
-                                <th>${label2}</th>
-                                <th>${data1} มากที่สุด (${unit1}) </th>
-                                <th>${data1} น้อยที่สุด (${unit1}) </th>
-                                <th>${data1} เฉลี่ย (${unit1}) </th>`;
-                            if(chose_type != "water1" && chose_type != "water2")
-                                html += `<th>${data1} ผลรวม (${unit1}) </th>`;
-                            html += `<th>${data1} ค่าส่วนเบี่ยงเบนมาตรฐาน (${unit1}) </th>
-                            </tr> 
-                        </tfoot>`;
+                                html += `<th>${data1}ผลรวม <br/> (${unit1}) </th>`;
+                            html += `<th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1}) </th>
+                            </tr>`;
                             for(i=1;i<=round;i++){
-                                html+=`<tbody><tr>
+                                html+=`<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
@@ -740,7 +725,7 @@ $(document).ready(function() {
                             if(chose_type != "water1" && chose_type != "water2")
                                 html += `<td align="right">${result[i]['sum']}</td>`;
                             html += `<td align="right">${result[i]['sd']}</td>
-                                </tr><tbody>`;
+                                </tr>`;
                             }
                         $('#yes_table').show();
                         $('#no_table').hide();
@@ -918,9 +903,9 @@ $(document).ready(function() {
 
                         if(present == "pie" ||  present == "line" || present == "bar"){
                             html = `<tr>
-                            <th>ลำดับ</th>
+                            <th  style="width:60px;">ลำดับ</th>
                             <th>${label1}</th>
-                            <th>${data1}${cal1} (${unit1}) </th>
+                            <th>${data1}${cal1} <br/> (${unit1}) </th>
                             </tr>`;
                             for(i=1;i<=round;i++){
                                 html+=`<tr>
@@ -931,10 +916,10 @@ $(document).ready(function() {
                             }
                         }else{
                             html = `<tr>
-                            <th>ลำดับ</th>
+                            <th  style="width:60px;">ลำดับ</th>
                             <th>${label1}</th>
                             <th>${label2}</th>
-                            <th>${data1}${cal1} (${unit1}) </th>
+                            <th>${data1}${cal1} <br/> (${unit1}) </th>
                             </tr>`;
                             for(i=1;i<=round;i++){
                                 html+=`<tr>
