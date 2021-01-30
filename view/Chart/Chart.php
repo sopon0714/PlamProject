@@ -194,7 +194,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <div class="row">
                                 <div class="col-12">
                                     <span style="margin-left: 20px; color: <?= $color ?>;"
-                                        id="chose_label_span1">เลือกหัวข้อ</span>
+                                        id="chose_label_span1">เลือกหัวข้อหลัก</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -375,7 +375,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <select class="form-control selectpicker" data-live-search="true"
-                                            title="กรุณาเลือกหัวข้อ" id="chose_cal" required>
+                                            title="กรุณาเลือกหัวข้อ" id="chose_cal">
+                                            <option value="all" code="-1" hide>ทั้งหมด</option>
                                             <option value="" code="0">กรุณาเลือกการคำนวณ</option>
                                             <option name="maximum" id="maximum" value="MAX" show="มากที่สุด" code="1">
                                                 มากที่สุด (maximum)
@@ -945,22 +946,28 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
     <div class="row">
         <div class="col-xl-12 col-12 mb-6">
             <div id="show_chart">
-                <div class="card">
-                    <div class="card-header card-bg headshow " name="headshow" style="color: <?= $color ?>; text-align: center;">
-
+                <div class="card shadow mb-4">
+                    <div class="card-header card-header-table py-3">
+                        <h6 class="m-0 font-weight-bold headshow" style="color:#006633;" name="headshow"></h6>
                     </div>
-
-                </div>
-                <div class="card">
-                    <div class="row">
-                        <div class="col-8">
-                            <canvas id="chartjs"><canvas>
-                        </div>
-                        <div class="col-4">
-                            <table class="table table-bordered" name="dataTable" id="dataTable"
-                                style="margin-top:10px; width:90%;">
+                    <div class="card-body" id="yes_table">
+                         <div class="table-responsive">
+                            <table class="table table-bordered table-data" id="dataTable_table" width="100%" cellspacing="0"> 
                             </table>
                         </div>
+                    </div>
+                    <div class="card-body" id="no_table">
+                        <div class="row">
+                            <div class="col-8">
+                                <canvas id="chartjs"><canvas>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-data" id="dataTable" width="90%" cellspacing="0"> 
+                                </table>
+                            </div>
+                        </div>
+
+                         
                     </div>
                 </div>
             </div>
@@ -970,7 +977,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
             <div class="card-header card-bg " id="show_nodata" style="color: #d9534f; text-align: center;">
                 <div class="card">
                     <div class="card-header card-bg headshow " name="headshow" style="color: <?= $color ?>; text-align: center;">
-
+                        
                     </div>
                 </div>
                 <div class="card">
@@ -986,5 +993,5 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 </div>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<!-- <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
 <script src="Chart.js"></script>
