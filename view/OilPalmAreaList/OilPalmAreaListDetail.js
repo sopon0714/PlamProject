@@ -141,7 +141,7 @@ $(document).ready(function() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
+                // console.log(this.responseText);
                 // console.log(result);
                 document.getElementById(result).innerHTML = xhttp.responseText;
 
@@ -188,7 +188,7 @@ $(document).ready(function() {
     function checkSameName(name, id) { // check same name
 
         for (i in dataFarm) {
-            console.log(dataFarm[i].Name);
+            // console.log(dataFarm[i].Name);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Name && dataFarm[i].FMID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
                 return false;
@@ -203,7 +203,7 @@ $(document).ready(function() {
     function checkSameAlias(name, id) { // check same Alias
 
         for (i in dataFarm) {
-            console.log(dataFarm[i].Alias);
+            // console.log(dataFarm[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Alias && dataFarm[i].FMID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;
@@ -218,7 +218,7 @@ $(document).ready(function() {
     function checkSameNameSF(name, id) { // check same name
 
         for (i in dataSubFarm) {
-            console.log(dataSubFarm[i].Name);
+            // console.log(dataSubFarm[i].Name);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataSubFarm[i].Name && dataSubFarm[i].FSID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
                 return false;
@@ -233,7 +233,7 @@ $(document).ready(function() {
     function checkSameAliasSF(name, id) { // check same Alias
 
         for (i in dataSubFarm) {
-            console.log(dataSubFarm[i].Alias);
+            // console.log(dataSubFarm[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataSubFarm[i].Alias && dataSubFarm[i].FSID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;

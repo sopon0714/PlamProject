@@ -41,7 +41,7 @@ $(document).ready(function() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
+                // console.log(this.responseText);
                 // console.log(result);
                 document.getElementById(result).innerHTML = xhttp.responseText;
 
@@ -112,7 +112,7 @@ $(document).ready(function() {
     function checkSameName(name, id) { // check same name
 
         for (i in dataFarm) {
-            console.log(dataFarm[i].Name);
+            // console.log(dataFarm[i].Name);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Name && dataFarm[i].FMID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
                 return false;
@@ -127,7 +127,7 @@ $(document).ready(function() {
     function checkSameAlias(name, id) { // check same Alias
 
         for (i in dataFarm) {
-            console.log(dataFarm[i].Alias);
+            // console.log(dataFarm[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataFarm[i].Alias && dataFarm[i].FMID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว')
                 return false;
@@ -171,9 +171,9 @@ function initMap() {
         center[0] = center[0] / (size - 1);
         center[1] = center[1] / (size - 1);
 
-        console.log(center);
+        // console.log(center);
 
-        console.log(locations);
+        // console.log(locations);
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 7,

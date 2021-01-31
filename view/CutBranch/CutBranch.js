@@ -25,63 +25,62 @@ $(document).ready(function() {
       onFinish: function(data) {
           score_From = data.from;
           score_To = data.to;
-          console.log(score_From + " " + score_To);
+          // console.log(score_From + " " + score_To);
           $('#s_min').val(score_From);
           $('#s_max').val(score_To);
       }
     });
     $("#palmvolsilder").ionRangeSlider({
-      type: "double",
-      grid: true,
-      from: 1,
-      to: 3,
-      values: [0, 20, 40, 60, 80, 100]
-  });
+        type: "double",
+        grid: true,
+        from: 1,
+        to: 3,
+        values: [0, 20, 40, 60, 80, 100]
+    });
     $('#add').click(function() {
-        console.log('add');
+        // console.log('add');
         $("#addModal").modal();
 
     });
     $(document).on("click", ".btn-delete", function() {
-      farmID = $(this).attr('farmID');
-      date= $(this).attr('date');
-      farm = $(this).attr('farm');
+        farmID = $(this).attr('farmID');
+        date= $(this).attr('date');
+        farm = $(this).attr('farm');
 
-      delfunction(farmID,farm,date);
+        delfunction(farmID,farm,date);
 
     });
 
     $('#date').change(function(){
-      date = $('#date').val();
-      console.log(date);
-      idSetHtml = "#farm";
-      selectFarm(idSetHtml,date);
-      $('#pesttype').val('');
-      $('#pest').val('');
-
+        date = $('#date').val();
+        // console.log(date);
+        idSetHtml = "#farm";
+        selectFarm(idSetHtml,date);
+        $('#pesttype').val('');
+        $('#pest').val('');
     });
 
     $('#farm').change(function(){
-      dim_farm = $(this).val();
-      date = $('#date').val();
-      idSetHtml = "#subfarm";
-      selectSubfarm(idSetHtml,dim_farm,date);
-      // function selectSubfarm(idSetHtml,id,modify_num){
+        dim_farm = $(this).val();
+        date = $('#date').val();
+        idSetHtml = "#subfarm";
+        selectSubfarm(idSetHtml,dim_farm,date);
+        // function selectSubfarm(idSetHtml,id,modify_num){
 
     });
 
     $(document).on("click", ".btn-note", function() {
         $('#data').modal();
         note = $(this).attr('note');
-        console.log('note = ' + note);
+        // console.log('note = ' + note);
         $('#n_note').html(note);
     });
 
     $(document).on("click", ".btn-photo", function() {
-      $('#picture').modal();
-      lid = $(this).attr("lid");
-      path = "../../picture/activities/others/";
-      loadPhoto_LogPestAlarm(path, lid);
+        $('#picture').modal();
+        lid = $(this).attr("lid");
+        path = "../../picture/activities/others/";
+        loadPhoto_LogPestAlarm(path, lid);
     });
 
     $('#save').click(function() {
@@ -129,17 +128,17 @@ $(document).ready(function() {
     });
 
     $(document).on("click", ".morelink", function() {
-      console.log('morelink');
-      if ($(this).hasClass("less")) {
-          $(this).removeClass("less");
-          $(this).html(moretext);
-      } else {
-          $(this).addClass("less");
-          $(this).html(lesstext);
-      }
-      $(this).parent().prev().toggle();
-      $(this).prev().toggle();
-      return false;
+        // console.log('morelink');
+        if ($(this).hasClass("less")) {
+            $(this).removeClass("less");
+            $(this).html(moretext);
+        } else {
+            $(this).addClass("less");
+            $(this).html(lesstext);
+        }
+        $(this).parent().prev().toggle();
+        $(this).prev().toggle();
+        return false;
   
     });
 
@@ -155,7 +154,7 @@ function check_dup_pic(pic, old_pic) {
 function setImgEdit(id,path) {
   // console.log('setIMG')
   $.post("manage.php", {request: 'scanDir',path: path ,pid: id}, function(result){
-      //  console.log(result);
+      // console.log(result);
       arr = JSON.parse(result);
 
       // console.log(arr);

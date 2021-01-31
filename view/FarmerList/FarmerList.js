@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log("y");
+    // console.log("y");
     $('.tt').tooltip();
 
 });
@@ -9,7 +9,7 @@ function initMap() {
     var center = [0, 0];
     click_map = $('.click-map').html();
     size = $('#size').attr('size');
-    console.log(size);
+    // console.log(size);
     for (i = 0; i < size; i++) {
         la = $('#'+i).attr('la');
         long = $('#'+i).attr('long');
@@ -33,9 +33,9 @@ function initMap() {
       center[1] = 100.523186;
     }
 
-    console.log(center);
+    // console.log(center);
 
-    console.log(locations);
+    // console.log(locations);
 
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 6,
@@ -54,7 +54,7 @@ function initMap() {
             icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
 
         });
-        console.log('i == ' + i)
+        // console.log('i == ' + i)
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
                 content = "";
@@ -63,9 +63,9 @@ function initMap() {
                 infowindow.setContent(content);
                 infowindow.open(map, marker);
 
-                console.log('i = ' + i)
-                console.log(locations)
-                console.log(locations[i][1])
+                // console.log('i = ' + i)
+                // console.log(locations)
+                // console.log(locations[i][1])
 
                 for (j = 0; j < size; j++) {
 

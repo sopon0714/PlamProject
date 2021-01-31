@@ -1,6 +1,6 @@
 
 $( document ).ready(function() {
-    console.log("y");
+    // console.log("y");
     $('.tt').tooltip();
 
 });
@@ -8,9 +8,9 @@ function initMap() {
     var locations = [];
     var center = [0,0];
     click_map = $('.click-map').html();
-    console.log(click_map);
+    // console.log(click_map);
     size = $('#size').attr('size');
-    console.log('size='+size);
+    // console.log('size='+size);
     for(i = 1 ; i < size ; i++){
 
       la = $('#'+i).attr('la');
@@ -30,14 +30,14 @@ function initMap() {
     center[1] = center[1]/(size-1);
 
     // console.log(center);
-    console.log(locations);
+    // console.log(locations);
 
     if(size-1 == 0){
       center[0] = $('#info').attr('la');
       center[1] = $('#info').attr('long');
     }
 
-    console.log(center);
+    // console.log(center);
 
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 9,
@@ -62,7 +62,7 @@ function initMap() {
           map: map,
           icon: icon,
         });
-        console.log('i == '+i)
+        // console.log('i == '+i)
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
             if(i != -1){
@@ -78,8 +78,8 @@ function initMap() {
             infowindow.setContent(content);
             infowindow.open(map, marker);
 
-            console.log('i = '+i)
-            console.log(locations)
+            // console.log('i = '+i)
+            // console.log(locations)
             if(i != -1){
               
               for (j = 0; j < size-1; j++) {
