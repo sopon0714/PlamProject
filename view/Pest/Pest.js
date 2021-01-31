@@ -9,7 +9,7 @@ $(document).ready(function() {
     lesstext = "Show less";
 
     $('#add').click(function() {
-        console.log('add');
+        // console.log('add');
         $("#addModal").modal();
 
     });
@@ -89,7 +89,7 @@ $(document).ready(function() {
     $(document).on("click", ".btn-note", function() {
         $('#data').modal();
         note = $(this).attr('note');
-        console.log('note = ' + note);
+        // console.log('note = ' + note);
         $('#n_note').html(note);
     });
 

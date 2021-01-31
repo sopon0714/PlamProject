@@ -23,7 +23,7 @@ $(document).ready(function() {
                 lat.push(mapedit.markers[i].position.lat())
                 lng.push(mapedit.markers[i].position.lng())
             }
-            console.log(JSON.stringify(lat));
+            // console.log(JSON.stringify(lat));
             $.ajax({
                 type: "POST",
                 url: "./manage.php",

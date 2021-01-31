@@ -386,7 +386,7 @@ $(document).ready(function() {
     });
 
     function check_checkboxEdit() {
-        console.log("check box edit");
+        // console.log("check box edit");
         if (document.formEdit.e_admin.checked == false && document.formEdit.e_admin2.checked == false && document.formEdit.e_research.checked == false &&
             document.formEdit.e_operator.checked == false && document.formEdit.e_farmer.checked == false) {
             // console.log("well box");

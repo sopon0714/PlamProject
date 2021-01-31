@@ -70,7 +70,7 @@ $("#search").click(function() {
         water: water,
         cutbranch: cutbranch
     }, function(result) {
-        //console.log(result);
+        // console.log(result);
         DATA_DB = JSON.parse(result);
         // console.log(DATA_DB);
         initMap();

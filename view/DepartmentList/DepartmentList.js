@@ -80,7 +80,7 @@ $( document ).ready(function() {
     function check_alias(name){
 
         for(i in dataD){
-            console.log(dataD[i].Alias);
+            // console.log(dataD[i].Alias);
             if(name.val().trim().replace(/\s\s+/g,' ') == dataD[i].Alias){
                 name[0].setCustomValidity('ชื่อย่อหน่วยงานซ้ำ');
                 return false;
@@ -94,7 +94,7 @@ $( document ).ready(function() {
     }
 
     $('#edit').click(function(){
-        console.log("edit");
+        // console.log("edit");
         let department = $("input[name = 'e_department']");
         let alias = $("input[name = 'e_alias']");
         let note = $("input[name = 'e_note']");
@@ -118,11 +118,11 @@ $( document ).ready(function() {
         return true;
     }
     function check_editDepartment(name,did){
-        console.log("check_de");
+        // console.log("check_de");
         for(i in dataD){
-            console.log(dataD[i].Department);
+            // console.log(dataD[i].Department);
             if(name.val().trim().replace(/\s\s+/g,' ') == dataD[i].Department && dataD[i].DID != did.val()){
-                console.log("du");
+                // console.log("du");
                 name[0].setCustomValidity('ชื่อหน่วยงานซ้ำ');
                 return false;
             }
@@ -134,9 +134,9 @@ $( document ).ready(function() {
         return true;
     }
     function check_editAlias(name,did){
-        console.log("check_ali");
+        // console.log("check_ali");
         for(i in dataD){
-            console.log(dataD[i].Alias);
+            // console.log(dataD[i].Alias);
             if(name.val().trim().replace(/\s\s+/g,' ') == dataD[i].Alias && dataD[i].DID != did.val()){
                 name[0].setCustomValidity('ชื่อย่อหน่วยงานซ้ำ');
                 return false;
