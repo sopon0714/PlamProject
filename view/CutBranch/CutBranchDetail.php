@@ -9,7 +9,7 @@ include_once("./../../query/query.php");
 if (isset($_GET['farmID'])) {
     $farmID = $_GET['farmID'];
     $DATA = getActivityDetail($farmID, 1);
-    var_dump($DATA);
+    // var_dump($DATA);
     $name = explode(" ", $DATA[0]['OwnerName']);
     if ($DATA[0]['IconFarm'] == 'default.png') {
         $pathFarm = "../../icon/farm/0/defultFarm.png";
