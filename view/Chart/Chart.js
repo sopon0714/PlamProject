@@ -29,6 +29,13 @@ $(document).ready(function() {
 
     $('#chose_cal').hide();
 
+    $('#export').click(function(){
+        $("#dataTable_table").excelexportjs({
+            containerid: "dataTable_table"
+            ,datatype: 'table'
+        });
+    });
+
     $('#chose_type').change(function() {
         chose_type = $("#chose_type").val();
 
@@ -388,7 +395,7 @@ $(document).ready(function() {
         // alert(id_subdist);
         $.post("dataForChart.php", {request: "farm" ,id: id_subdist}, function(result){
             result = JSON.parse(result);
-            console.log(result);
+            // console.log(result);
             html="<option selected value=0>เลือกสวน</option> ";
             html2="";
             for (i = 1; i <= result[0]['numrow']; i++) {
@@ -406,7 +413,7 @@ $(document).ready(function() {
         // alert(id_farm);
         $.post("dataForChart.php", {request: "subfarm" ,id: id_farm}, function(result){
             result = JSON.parse(result);
-            console.log(result);
+            // console.log(result);
             html="<option selected value=0>เลือกแปลง</option> ";
             html2="";
             for (i = 1; i <= result[0]['numrow']; i++) {
@@ -426,7 +433,7 @@ $(document).ready(function() {
         $.post("dataForChart.php", {request: "selectyear"}, function(result){
             select_year = $('#selectyear1').val();
             result = JSON.parse(result);
-            console.log(result);
+            // console.log(result);
             html = "";
             // html="<option selected value=0>เลือกปี</option> ";
             for (i = 1; i <= result[0]['numrow']; i++) {
@@ -464,10 +471,10 @@ $(document).ready(function() {
     $('#setsubmit').click(function(){
         
         present = $('input[name="present"]:checked').val(); 
-            console.log("present=|"+present+"|");
+            // console.log("present=|"+present+"|");
             // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
             // console.log("chose_type=|"+$('#chose_type').val()+"|");
-            console.log("chose_cal=|"+$('#chose_cal').val()+"|");
+            // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
             check_chose_cal = $('#chose_cal').val();
         if(present == "table"){
             check_chose_cal = "-1";
@@ -651,12 +658,12 @@ $(document).ready(function() {
                         }
                     }
                 }
-                console.log(SET1);
-                console.log(SET2);
-                console.log(SET3);
+                // console.log(SET1);
+                // console.log(SET2);
+                // console.log(SET3);
 
-
-                $('.headshow').html(html);
+                header_table = html;
+                $('.headshow').html(header_table);
                 //for show in table
                 label1 = $("#chose_label1 option:selected").html();
                 label2 = $("#chose_label2 option:selected").html();
@@ -670,14 +677,14 @@ $(document).ready(function() {
                 chose_cal = $("#chose_cal option:selected").val();
                 chose_cond = $("#chose_cond option:selected").val();
 
-                console.log(label1);
+                // console.log(label1);
                 $.post("dataForChart.php", {request: "chart" ,present: present,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
                     // console.log(result);
 
                     try{
                         result = JSON.parse(result);
-                        console.log(result);
+                        // console.log(result);
                         if(result[0]['numrow']  <= 0){
                         $('#show_chart').hide();
                         $('#show_error').hide();
@@ -700,10 +707,17 @@ $(document).ready(function() {
                         round = result[0]['numrow'];
                     }
                     unit1 = result[0]['unit'];
-
+                    
                     if(present == "table"){
-                        
-                        html = `<tr>
+                        if(chose_type != "water1" && chose_type != "water2")
+                        {
+                            calspan = 8;                      
+                        }else{
+                            calspan = 7;      
+                        }
+                        html = `
+                        "<tr style="text-align:center;" id="head_table"><th colspan='${calspan}'>${header_table}</th></tr>"
+                        <tr>
                                 <th style="width:60px;">ลำดับ</th>
                                 <th>${label1}</th>
                                 <th>${label2}</th>
@@ -758,13 +772,13 @@ $(document).ready(function() {
                                 colorBorder1[i] = randomColor+",0.8)"; 
                             }
                         }
-                        console.log(color1);
-                        console.log("present = "+present);
+                        // console.log(color1);
+                        // console.log("present = "+present);
 
                         //data for chart
                         fillChart = false; 
                         if(present == "area" || present == "multi_area" || present == "chart_radar"){
-                            console.log("fill");
+                            // console.log("fill");
                             fillChart = true;
                         }
                         var ctx = $('#chartjs');
@@ -790,7 +804,7 @@ $(document).ready(function() {
                             }else{
                                 t = present.split("_");
                                 typeChart = t[1];
-                                console.log("typeChart = "+typeChart);
+                                // console.log("typeChart = "+typeChart);
                             }
                             
                             if(present == "complex_bar"){
@@ -820,10 +834,10 @@ $(document).ready(function() {
                             labelChart1 = unique(labelChart1);
                             labelChart2 = unique(labelChart2);
 
-                            console.log("labelChart1");
-                            console.log(labelChart1);
-                            console.log("labelChart2");
-                            console.log(labelChart2);
+                            // console.log("labelChart1");
+                            // console.log(labelChart1);
+                            // console.log("labelChart2");
+                            // console.log(labelChart2);
 
                             for(i=0;i<labelChart1.length;i++){
                                 arrInData[labelChart1[i]] = Array();
@@ -846,10 +860,10 @@ $(document).ready(function() {
                                 }
                                 dataInChart.push(arrToData);
                             }
-                            console.log("arrInData");
-                            console.log(arrInData);
-                            console.log("dataInChart");
-                            console.log(dataInChart);
+                            // console.log("arrInData");
+                            // console.log(arrInData);
+                            // console.log("dataInChart");
+                            // console.log(dataInChart);
 
 
                             // labelChart1 = ['แปลง1', 'แปลง2', 'แปลง3','แปลง4','แปลง5', 'อื่นๆ'];
@@ -878,7 +892,7 @@ $(document).ready(function() {
                                     colorBorder2[i] = randomColor+",0.8)"; 
                                 }
                             }                
-                            console.log(color2);
+                            // console.log(color2);
                             dataChart2 = [];
                             for(i=0;i<labelChart1.length;i++){
                                 dataChart2[i] = {
@@ -890,7 +904,7 @@ $(document).ready(function() {
                                 };
                             }
                             // data for chart
-                            console.log("optionChart = "+optionChart);
+                            // console.log("optionChart = "+optionChart);
                             myChart = new Chart(ctx, {
                                 type: typeChart,
                                 data: {
@@ -1045,4 +1059,67 @@ function updateData() {
             }
         });
     
+}
+function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
+function fnExcelReport()
+{
+    var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+    var textRange; var j=0;
+    tab = document.getElementById('dataTable_table'); // id of table
+
+    for(j = 0 ; j < tab.rows.length ; j++) 
+    {     
+        tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+        //tab_text=tab_text+"</tr>";
+    }
+
+    tab_text=tab_text+"</table>";
+    tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+    tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE "); 
+
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+    {
+        txtArea1.document.open("txt/html","replace");
+        txtArea1.document.write(tab_text);
+        txtArea1.document.close();
+        txtArea1.focus(); 
+        sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+    }  
+    else                 //other browser not tested on IE 11
+        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
+
+    return (sa);
 }
