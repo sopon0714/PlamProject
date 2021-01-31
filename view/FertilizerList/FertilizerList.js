@@ -76,7 +76,7 @@ $(document).ready(function() {
     function checkSameAlias(name, id) { // check same Alias
 
         for (i in data) {
-            console.log(data[i].Alias);
+            // console.log(data[i].Alias);
             if (name.val().trim().replace(/\s\s+/g, ' ') == data[i].Alias && data[i].FMID != id) {
                 name[0].setCustomValidity('ชื่อนี้เคยถูกใช้งานแล้ว')
                 return false;

@@ -56,8 +56,8 @@ $(document).ready(function() {
             },
             async: false,
             success: function(data) {
-                console.log(data);
-                console.log("pass");
+                // console.log(data);
+                // console.log("pass");
                 swal({
                     title: "",
                     text: "การส่งข้อความเรียบร้อย",

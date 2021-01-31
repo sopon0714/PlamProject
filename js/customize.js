@@ -7,12 +7,12 @@
 // });
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-    console.log("data-toggle=tab\n")
+    // console.log("data-toggle=tab\n")
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
 $(".eye-setting").click(function() {
-    console.log("eye-setting\n")
+    // console.log("eye-setting\n")
     if ($(this).hasClass('fa-eye')) {
         $(this).removeClass('fa-eye');
         $(this).addClass('fa-eye-slash');

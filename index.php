@@ -247,7 +247,7 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
                 async: false,
                 success: function(result) {
                     var responseinfo = JSON.parse(result);
-                    console.log(responseinfo);
+                    // console.log(responseinfo);
                     $(".changepass").empty();
                     $(".changepass").append(responseinfo.text);
                     $.ajax({

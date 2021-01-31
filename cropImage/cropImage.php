@@ -34,17 +34,17 @@
     })
 
     $(document).on('click', '.btn-crop', function(ev) {
-        console.log('submit crop');
-        console.log(idImg);
-        console.log('RESULT:', $('#' + idImg).attr('src'))
+        // console.log('submit crop');
+        // console.log(idImg);
+        // console.log('RESULT:', $('#' + idImg).attr('src'))
 
         submitCrop(idImg)
     });
 
     $(document).on('click', '.btn-crop-edit', function(ev) {
-        console.log('submit crop');
+        // console.log('submit crop');
 
-        console.log(idImg);
+        // console.log(idImg);
         submitCropEdit(idImg)
 
         // toDataURL($('#' + idImg).attr('src'), function(dataUrl) {

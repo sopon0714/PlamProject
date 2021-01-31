@@ -17,7 +17,7 @@ $(document).ready(function() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
+                // console.log(this.responseText);
                 // console.log(result);
                 document.getElementById(result).innerHTML = xhttp.responseText;
 
@@ -212,7 +212,7 @@ function initMap() {
     var locations = [];
     var center = [0, 0];
     size = $('#size').attr('size');
-    console.log("size:" + size)
+    // console.log("size:" + size)
     if (size == 0) {
         center[0] = 13.736717;
         center[1] = 100.523186;

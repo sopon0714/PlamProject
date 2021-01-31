@@ -93,7 +93,7 @@ $(document).ready(function() {
             $(`#exampleRadios7`).prop('checked', true);
         $("input[name='a']").val(aF);
         $("input[name='b']").val(bF);
-        console.log('succes')
+        // console.log('succes')
     })
 
     function setZero(number) {
@@ -177,7 +177,7 @@ $(document).ready(function() {
             async: false,
             success: function(result) {
                 dataF = result;
-                console.log(dataF);
+                // console.log(dataF);
 
 
                 // alert(data)
@@ -271,7 +271,7 @@ $(document).ready(function() {
                     }
                     // console.log("a " +dataF[i].EQ1+"b" +dataF[i].EQ2)
                     $('.bodyF').append(text);
-                    console.log(dataF);
+                    // console.log(dataF);
                     for (i in dataF) {
                         let unitY = ''
                         let unitX = ''
@@ -279,15 +279,15 @@ $(document).ready(function() {
                         switch (dataF[i].Usage) {
                             case '1':
                                 unitX = "อายุ (ปี)"
-                                console.log(1);
+                                    // console.log(1);
                                 break;
                             case '2':
                                 unitX = "ผลผลิต (ตัน)"
-                                console.log(2);
+                                    // console.log(2);
                                 break;
                             case '3':
                                 unitX = "อายุ(ปี)"
-                                console.log(3);
+                                    // console.log(3);
                                 break;
                         }
                         switch (dataF[i].Unit) {
@@ -396,7 +396,7 @@ $(document).ready(function() {
         bF = dataF[i].EQ2;
         iconF = dataF[i].Icon;
         TypeF = dataF[i].Type;
-        console.log(dataF[i]);
+        // console.log(dataF[i]);
         loadCondition(idF)
 
 
@@ -667,7 +667,7 @@ $(document).ready(function() {
     function checkSameName(name, id) { // check same name
 
         for (i in dataF) {
-            console.log(dataF[i].Name);
+            // console.log(dataF[i].Name);
             if (name.val().trim().replace(/\s\s+/g, ' ') == dataF[i].Name && dataF[i].NID != id) {
                 name[0].setCustomValidity('ชื่อนี้ถูกใช้งานแล้ว');
                 return false;
@@ -700,7 +700,7 @@ $(document).ready(function() {
 
         for (i in selecter) {
             if (selecter[i].val() == '') {
-                console.log('key')
+                // console.log('key')
                 selecter[i][0].setCustomValidity('กรุณากรอกข้อมูล');
                 return false;
             } else selecter[i][0].setCustomValidity('');
@@ -753,7 +753,7 @@ $(document).ready(function() {
         $uploadCrop.croppie('bind', {
             url: rawImg
         }).then(function() {
-            console.log('jQuery bind complete');
+            // console.log('jQuery bind complete');
         });
         $(imgOutput).val('');
 
@@ -813,7 +813,7 @@ $(document).ready(function() {
         UC.croppie('bind', {
             url: IMG
         }).then(function() {
-            console.log('jQuery bind complete');
+            // console.log('jQuery bind complete');
         });
         $('#iconF').val('');
     }

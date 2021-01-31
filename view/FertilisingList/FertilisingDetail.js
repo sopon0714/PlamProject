@@ -19,7 +19,7 @@ $(document).ready(function() {
     });
 
     function SetDeffVol() {
-        console.log(DATACAL);
+        // console.log(DATACAL);
     }
 
     function setVolNutrOffer(elem) {
@@ -28,8 +28,8 @@ $(document).ready(function() {
         let unit = $('#UnitF' + FerID).val();
         let nutrid;
         let Volcal;
-        console.log(Vol);
-        console.log(unit);
+        // console.log(Vol);
+        // console.log(unit);
         $(".CalFerID" + FerID).each(function(index) {
             Volcal = Vol;
             nutrid = $(this).attr('nutrid');
@@ -126,7 +126,7 @@ $(document).ready(function() {
         let Sum = 0;
         $(".CalNutrID" + NID).each(function(index) {
             Sum = Number(Sum) + Number($(this).html());
-            console.log(Sum);
+            // console.log(Sum);
         });
         return Sum;
 
@@ -135,7 +135,7 @@ $(document).ready(function() {
     function loadDATACal(FSID, maxyear) {
         $.post("data.php", { result: "loadDATACal", year: maxyear, FSID: FSID }, function(result) {
             DATACAL = JSON.parse(result);
-            console.log(DATACAL);
+            // console.log(DATACAL);
             // console.log(DATACAL['Fer'][2][1]['Percent']);
         });
     }
