@@ -41,6 +41,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
     background-color: #eee;
     cursor: pointer;
 }
+
 </style>
 
 <div class="container">
@@ -55,8 +56,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
     </div>
 
     <div class="row">
-        <div class="col-12 mb-2">
-            <form onsubmit="return false;">
+        <div class="col-12 mb-2"></div>
+            <form onsubmit="return false;" novalidate>
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-4">
@@ -375,8 +376,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <select class="form-control selectpicker" data-live-search="true"
-                                            title="กรุณาเลือกหัวข้อ" id="chose_cal">
-                                            <option value="all" code="-1" hide>ทั้งหมด</option>
+                                            title="กรุณาเลือกหัวข้อ" id="chose_cal" required>
                                             <option value="" code="0">กรุณาเลือกการคำนวณ</option>
                                             <option name="maximum" id="maximum" value="MAX" show="มากที่สุด" code="1">
                                                 มากที่สุด (maximum)
@@ -942,32 +942,34 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         </div>
     </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-xl-12 col-12 mb-6">
             <div id="show_chart">
                 <div class="card shadow mb-4">
                     <div class="card-header card-header-table py-3">
-                        <h6 class="m-0 font-weight-bold headshow" style="color:#006633;" name="headshow"></h6>
+                        <h6 class="m-0 headshow" style="color:#006633; text-align:center;" name="headshow"></h6>
                     </div>
                     <div class="card-body" id="yes_table">
-                         <div class="table-responsive">
-                            <table class="table table-bordered table-data" id="dataTable_table" width="100%" cellspacing="0"> 
+                        <button class="btn btn-success" id="export">Export Excel</button>
+                         <div class="table-responsive" style="margin-top:10px">
+                            <table class="table table-bordered table-data" id="dataTable_table" style="table-layout: fixed;" width="100%" cellspacing="0"> 
                             </table>
                         </div>
                     </div>
                     <div class="card-body" id="no_table">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-7">
                                 <canvas id="chartjs"><canvas>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-data" id="dataTable" width="90%" cellspacing="0"> 
-                                </table>
-                            </div>
-                        </div>
-
-                         
+                            <div class="col-5">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-data" id="dataTable" width="100%" cellspacing="0"> 
+                                    </table>
+                                </div>
+                            </div>                            
+                        </div>                         
                     </div>
                 </div>
             </div>
@@ -993,5 +995,6 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 </div>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<!-- <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src='./../../js/excelexportjs.js'></script>
 <script src="Chart.js"></script>
