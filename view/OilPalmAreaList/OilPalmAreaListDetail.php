@@ -151,14 +151,7 @@ $COUNTCOORFRAM = getCountCoor($fmid);
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-xl-3 col-12">
-                            <button type="button" id="btn_comfirm" class="btn btn-outline-success btn-sm"><i class="fas fa-file-excel"></i> Excel</button>
-                            <button type="button" id="btn_comfirm" class="btn btn-outline-danger btn-sm"><i class="fas fa-file-pdf"></i> PDF</button>
 
-                        </div>
-
-                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-data  tableSearch" width="100%">
                             <thead>
