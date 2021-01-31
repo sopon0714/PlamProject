@@ -59,7 +59,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         <div class="col-12 mb-2">
             <form onsubmit="return false;" novalidate>
                 <div class="card">
-                    <div class="row"></div>
+                    <div class="row">
                         <div class="col-sm-4">
                             <br>
                             <span style="margin-left: 20px; color: <?= $color ?>;">รูปแบบการนำเสนอ</span>
