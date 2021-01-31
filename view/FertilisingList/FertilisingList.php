@@ -40,7 +40,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color: <?= $color ?>;">การให้ปุ๋ย</span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">การให้ปุ๋ย</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="../UserProfile/UserProfile.php">หน้าแรก</a>
