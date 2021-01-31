@@ -141,7 +141,7 @@ function initMap() {
             return function() {
                 content = "";
                 if (locations[i][4] == "green") {
-                    content += "<a href='http://127.0.0.1/PalmProject/view/OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=" +
+                    content += "<a href='./../OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=" +
                         locations[i][6] + "&FMID=" + locations[i][7] + "'>" + locations[i][5] + "</a>";
                 } else {
                     content += locations[i][5];
