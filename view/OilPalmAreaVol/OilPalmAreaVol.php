@@ -172,8 +172,8 @@ $AREA = getAreaLogFarm();
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
-            <span class="m-0 font-weight-bold" style="color:#006633;">ผลผลิตสวนปาล์มน้ำมันในระบบ</span>
-            <span class="m-0 font-weight-bold" style="float:right; color:#006633;">ปี <?php echo $currentYear; ?></span>
+            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">ผลผลิตสวนปาล์มน้ำมันในระบบ</span>
+            <span class="link-active font-weight-bold " style="color:<?= $color ?>;float:right;">ปี <?php echo $currentYear; ?></span>
         </div>
         <div class="card-body">
 

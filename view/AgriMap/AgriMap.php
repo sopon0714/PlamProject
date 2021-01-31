@@ -230,7 +230,7 @@ $NUTR = getNutr();
 <div class="container">
     <div class="card">
         <div class="card-header card-bg">
-            ตำแหน่งแปลงของสวนปาล์ม
+            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">ตำแหน่งแปลงของสวนปาล์ม</span>
         </div>
         <div class="card-body">
             <div class="col-12 mb-2">

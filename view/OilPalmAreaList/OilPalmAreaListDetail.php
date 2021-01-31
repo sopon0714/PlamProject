@@ -24,7 +24,7 @@ $COUNTCOORFRAM = getCountCoor($fmid);
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color:<?= $color ?>;">รายละเอียดสวนปาล์มน้ำมัน</span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายละเอียดสวนปาล์มน้ำมัน</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
@@ -146,7 +146,7 @@ $COUNTCOORFRAM = getCountCoor($fmid);
             <div class="card">
                 <div class="card-header card-bg">
                     <div>
-                        <span>รายการแปลงปลูกปาล์มน้ำมัน</span>
+                        <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายการแปลงปลูกปาล์มน้ำมัน</span>
                         <button type="button" id="btn_add_subfarm" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มแปลง</button>
                     </div>
                 </div>

@@ -201,7 +201,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
             <div class="card">
                 <div class="card-header card-bg">
                     <div>
-                        <span>การให้ปุ๋ยสวนปาล์มน้ำมันในระบบ (ทั้งแปลง)</span>
+                        <span class="link-active font-weight-bold" style="color:<?= $color ?>;">การให้ปุ๋ยสวนปาล์มน้ำมันในระบบ (ทั้งแปลง)</span>
                         <span style="float:right;">ปี <?php echo  $year ?></span>
                     </div>
                 </div>

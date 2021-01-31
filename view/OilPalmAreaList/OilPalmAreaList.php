@@ -184,7 +184,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
-            <h6 class="m-0 font-weight-bold" style="color:#006633;">สวนปาล์มน้ำมันในระบบ</h6>
+            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">สวนปาล์มน้ำมันในระบบ</span>
         </div>
         <div class="card-body">
 

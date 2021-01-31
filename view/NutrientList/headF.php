@@ -4,7 +4,7 @@
             <div class="card-header card-bg">
                 <div class="row">
                     <div class="col-12">
-                        <span class="link-active head-link">รายการธาตุอาหาร</span>
+                        <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายการธาตุอาหาร</span>
                         <span style="float:right;">
                             <i class="fas fa-bookmark"></i>
                             <a class="link-path" href="#">หน้าแรก</a>

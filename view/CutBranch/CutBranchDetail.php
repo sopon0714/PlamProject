@@ -82,7 +82,7 @@ $head = "ล้างคอขวด";
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color: #006664;">รายละเอียดการ<?php echo $head; ?></span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายละเอียดการ<?php echo $head; ?></span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
@@ -131,7 +131,7 @@ $head = "ล้างคอขวด";
             <div class="card">
                 <div class="card-header card-bg">
                     <div>
-                        <span>การ<?php echo $head; ?>ปาล์มน้ำมันในระบบ</span>
+                        <span class="link-active font-weight-bold" style="color:<?= $color ?>;">การ<?php echo $head; ?>ปาล์มน้ำมันในระบบ</span>
                         <!-- <span style="float:right;" class="getSelectYear">ปี <?php echo $currentYear; ?></span> -->
                         <button type="button" id="add" style="float:right;" class="btn btn-success" data-toggle="modal" data-target="#modal-4"><i class="fas fa-plus"></i>
                             เพิ่มการ<?php echo $head; ?></button>
