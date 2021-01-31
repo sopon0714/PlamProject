@@ -29,7 +29,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color: <?= $color ?>;">รายละเอียดการให้น้ำ</span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายละเอียดการให้น้ำ</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="../UserProfile/UserProfile.php">หน้าแรก</a>
@@ -119,7 +119,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
             <div class="card">
                 <!------------ Head ------------>
                 <div class="card-header card-bg">
-                    <span>ข้อมูลรายละเอียดการให้น้ำ</span>
+                    <span class="link-active font-weight-bold" style="color:<?= $color ?>;">ข้อมูลรายละเอียดการให้น้ำ</span>
                 </div>
                 <div class="card-body">
 

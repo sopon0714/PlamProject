@@ -75,7 +75,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color: <?= $color ?>;">รายละเอียดการให้ปุ๋ย</span>
+                            <span class="link-active font-weight-bold" style="color: <?= $color ?>;">รายละเอียดการให้ปุ๋ย</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="../UserProfile/UserProfile.php">หน้าแรก</a>
@@ -165,7 +165,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
             <div class="card">
                 <!------------ Head ------------>
                 <div class="card-header card-bg">
-                    <span>ข้อมูลรายละเอียดการให้ปุ๋ย</span>
+                    <span class="link-active font-weight-bold" style="color: <?= $color ?>;">ข้อมูลรายละเอียดการให้ปุ๋ย</span>
                 </div>
                 <div class="card-body">
 
@@ -251,7 +251,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-10">
-                            <span>ปริมาณธาตุอาหารที่ใส่ต่อแปลง( <?php echo $INFOSUBFARM[1]['NumTree'] ?> ต้น) </span>
+                            <span class="link-active font-weight-bold" style="color: <?= $color ?>;">ปริมาณธาตุอาหารที่ใส่ต่อแปลง( <?php echo $INFOSUBFARM[1]['NumTree'] ?> ต้น) </span>
                         </div>
                         <div class="col-2">
                             <select id="year" name="year" class="form-control">
@@ -313,7 +313,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-10">
-                            <span>คำนวณการใส่ปุ๋ยปี <?php echo  $YEAR[1]['Year2']; ?> ( <?php echo $INFOSUBFARM[1]['NumTree'] ?> ต้น)</span>
+                            <span class="link-active font-weight-bold" style="color: <?= $color ?>;">คำนวณการใส่ปุ๋ยปี <?php echo  $YEAR[1]['Year2']; ?> ( <?php echo $INFOSUBFARM[1]['NumTree'] ?> ต้น)</span>
                         </div>
                     </div>
                 </div>

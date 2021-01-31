@@ -58,7 +58,7 @@ $sumdeadPers = 0;
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color:<?= $color ?>;"> รายละเอียดแปลงปลูก</span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;"> รายละเอียดแปลงปลูก</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
@@ -189,15 +189,16 @@ $sumdeadPers = 0;
 
                 <div class="card-header card-bg">
                     <button type="button" id="plantingmodal" style="float:right;" class="btn btn-success btn-sm">เพิ่มข้อมูลการปลูก</button>
+                    <span class="link-active font-weight-bold" style="color:<?= $color ?>;">
+                        <?php
+                        if ($OLDPALMSUBFARM[0]['numrow'] == 0) {
 
-                    <?php
-                    if ($OLDPALMSUBFARM[0]['numrow'] == 0) {
-                        echo "<h4>0 ต้น อายุ - ปี - เดือน - วัน</h4>";
-                    } else {
-                        echo "<h4>{$OLDPALMSUBFARM[1]['NumTree']} ต้น อายุ  {$OLDPALMSUBFARM[1]['year']} ปี {$OLDPALMSUBFARM[1]['month']} เดือน {$OLDPALMSUBFARM[1]['day']} วัน</h4>";
-                    }
-                    ?>
-
+                            echo "<h4>0 ต้น อายุ - ปี - เดือน - วัน</h4>";
+                        } else {
+                            echo "<h4>{$OLDPALMSUBFARM[1]['NumTree']} ต้น อายุ  {$OLDPALMSUBFARM[1]['year']} ปี {$OLDPALMSUBFARM[1]['month']} เดือน {$OLDPALMSUBFARM[1]['day']} วัน</h4>";
+                        }
+                        ?>
+                    </span>
 
                 </div>
 
@@ -313,7 +314,9 @@ $sumdeadPers = 0;
                     <div class="row">
                         <div class="col-6">
                             <a href="../OilPalmAreaVol/OilPalmAreaVolDetail.php?FMID=<?php echo $fmid ?>">
-                                <h4>ผลผลิต</h4>
+                                <span class="link-active font-weight-bold" style="color:<?= $color ?>;">
+                                    <h4>ผลผลิต</h4>
+                                </span>
                             </a>
                         </div>
                         <div class="col-6">
@@ -350,7 +353,10 @@ $sumdeadPers = 0;
             <div class="card">
                 <div class="card-header card-bg">
                     <a href="../Pest/Pest.php">
-                        <span>การตรวจพบศัตรูพืช</span>
+                        <span class="link-active font-weight-bold" style="color:<?= $color ?>;">
+                            <h4>การตรวจพบศัตรูพืช</h4>
+                        </span>
+
                     </a>
                 </div>
                 <div class="card-body">
@@ -370,7 +376,10 @@ $sumdeadPers = 0;
             <div class="card">
                 <div class="card-header card-bg">
                     <a href="../CutBranch/CutBranchDetail.php?farmID=<?php echo $fmid ?>">
-                        <span>การทำกิจกรรมอื่นๆ</span>
+                        <span class="link-active font-weight-bold" style="color:<?= $color ?>;">
+                            <h4>การทำกิจกรรมอื่นๆ</h4>
+                        </span>
+
                     </a>
                 </div>
                 <div class="card-body">

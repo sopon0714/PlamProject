@@ -56,7 +56,7 @@ $Check = CheckHaveFarm($fmid)
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-12">
-                            <span class="link-active" style="color:<?= $color ?>">รายละเอียดผลผลิตสวนปาล์มน้ำมัน</span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายละเอียดผลผลิตสวนปาล์มน้ำมัน</span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
@@ -75,7 +75,7 @@ $Check = CheckHaveFarm($fmid)
 
     <div class="row mb-3">
         <div class="col-xl-6 col-12">
-            <div class="card">
+            <div class="card" style="height: 350px">
                 <div class="card-body" id="for_card">
                     <div class="row">
                         <?php
@@ -140,7 +140,7 @@ $Check = CheckHaveFarm($fmid)
         <div class="col-xl-12 col-12">
             <div class="card">
                 <div class="card-header card-bg">
-                    <span>ผลผลิตต่อปี</span>
+                    <span class="link-active font-weight-bold" style="color:<?= $color ?>;">ผลผลิตต่อปี</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -160,7 +160,7 @@ $Check = CheckHaveFarm($fmid)
                 <div class="card-header card-bg">
                     <div class="row">
                         <div class="col-10">
-                            <span>รายละเอียดผลผลิตปี : </span>
+                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายละเอียดผลผลิตปี : </span>
                         </div>
                         <div class="col-2">
                             <select id="year" name="year" class="form-control">
@@ -218,7 +218,7 @@ $Check = CheckHaveFarm($fmid)
                                     <div class="card">
                                         <div class="card-header card-bg">
                                             <div>
-                                                <span>รายการเก็บผลผลิตต่อแปลง</span>
+                                                <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายการเก็บผลผลิตต่อแปลง</span>
                                                 <button type="button" id="btn_add_product" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มผลผลิต</button>
                                             </div>
                                         </div>

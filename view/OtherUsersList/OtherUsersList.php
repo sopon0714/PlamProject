@@ -163,7 +163,7 @@ $DEPARTMENT = getDepartment();
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
-            <h6 class="m-0 font-weight-bold" style="color:#006633;">รายชื่อผู้ใช้ในระบบ</h6>
+            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">รายชื่อผู้ใช้ในระบบ</span>
         </div>
         <div class="card-body">
 
