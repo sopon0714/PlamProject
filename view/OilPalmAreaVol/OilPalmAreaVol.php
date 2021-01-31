@@ -221,7 +221,7 @@ $AREA = getAreaLogFarm();
                                             <button type="submit" id="btn_info" class="btn btn-info btn-sm" data-toggle="tooltip" title="รายละเอียด"><i class="fas fa-bars"></i></button></a>
                                         </form>
                                     </td>
-                                    <label class="click-map" id="<?php echo $i ?>" distrinct="<?php echo $SUBDATA["Distrinct"]; ?>" province="<?php echo $SUBDATA["Province"]; ?>" nameFarm="<?php echo $SUBDATA["NameFarm"]; ?>" la="<?php echo $SUBDATA["Latitude"]; ?>" long="<?php echo $SUBDATA["Longitude"]; ?>">ss</label>
+                                    <label class="click-map" id="<?php echo $i ?>" distrinct="<?php echo $SUBDATA["Distrinct"]; ?>" province="<?php echo $SUBDATA["Province"]; ?>" nameFarm="<?php echo $SUBDATA["NameFarm"]; ?>" la="<?php echo $SUBDATA["Latitude"]; ?>" long="<?php echo $SUBDATA["Longitude"]; ?>"></label>
                                 </tr>
                         <?php
                                 $i++;
