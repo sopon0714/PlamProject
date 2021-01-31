@@ -929,7 +929,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 name="selectday" min="1" max="31" value="1">
                         </div>
                     </div>
-                    <br>
+                    </br>
+                    <label style="color: #d9534f; text-align: center;">การประมวลผลอาจใช้เวลานาน</label>
                     <div class="col-12">
                         <div class="card-footer" align="center">
                             <button type="submit" id="setsubmit" name="setsubmit" class="btn"
