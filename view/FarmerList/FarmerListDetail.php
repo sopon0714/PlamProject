@@ -176,7 +176,7 @@ $FARM = getOwnerFarmer($farmerID);
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-12 col-12 mb-2">
-                                <div id="map" style="width:auto; height:742px"></div>
+                                <div id="map" style="width:auto; height:642px"></div>
 
                             </div>
                         </div>
