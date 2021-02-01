@@ -30,8 +30,8 @@ $(document).ready(function() {
     $('#chose_cal').hide();
 
     $('#export').click(function(){
-        $("#dataTable_table").excelexportjs({
-            containerid: "dataTable_table"
+        $("#dataTable").excelexportjs({
+            containerid: "dataTable"
             ,datatype: 'table'
         });
     });
@@ -711,14 +711,21 @@ $(document).ready(function() {
                     if(present == "table"){
                         if(chose_type != "water1" && chose_type != "water2")
                         {
-                            calspan = 8;                      
+                            $('#header_table1').attr("colspan",8);
                         }else{
-                            calspan = 7;      
+                            $('#sum_header_table2').attr("style","display:none;");
+                            $('#header_table1').attr("colspan",7);
                         }
-                        html = `
-                        "<tr style="text-align:center;" id="head_table"><th colspan='${calspan}'>${header_table}</th></tr>"
-                        <tr>
-                                <th style="width:60px;">ลำดับ</th>
+                        $('#header_table1').html(header_table);
+                        $('#label1_header_table2').html(label1);
+                        $('#label2_header_table2').html(label2);
+                        $('#max_header_table2').html(`${data1}มากที่สุด <br/> (${unit1})`);
+                        $('#min_header_table2').html(`${data1}น้อยที่สุด <br/> (${unit1})`);
+                        $('#avg_header_table2').html(`${data1}เฉลี่ย <br/> (${unit1})`);
+                        $('#sum_header_table2').html(`${data1}ผลรวม <br/> (${unit1})`);
+                        $('#sd_header_table2').html(`${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})`);
+
+                        html = `<th style="width:60px;">ลำดับ</th>
                                 <th>${label1}</th>
                                 <th>${label2}</th>
                                 <th>${data1}มากที่สุด <br/> (${unit1}) </th>
@@ -726,11 +733,11 @@ $(document).ready(function() {
                                 <th>${data1}เฉลี่ย <br/> (${unit1}) </th>`;
                             if(chose_type != "water1" && chose_type != "water2")
                                 html += `<th>${data1}ผลรวม <br/> (${unit1}) </th>`;
-                            html += `<th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1}) </th>
-                            </tr>`;
+                            html += `<th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1}) </th>`;
+                        // $('#header_table2').html(html);
+                        html = "";
                             for(i=1;i<=round;i++){
-                                html+=`<tr>
-                                <td align="right">${i}</td>
+                                html +=`<tr><td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
                                 <td align="right">${result[i]['max']}</td>
@@ -738,13 +745,28 @@ $(document).ready(function() {
                                 <td align="right">${result[i]['avg']}</td>`;
                             if(chose_type != "water1" && chose_type != "water2")
                                 html += `<td align="right">${result[i]['sum']}</td>`;
-                            html += `<td align="right">${result[i]['sd']}</td>
-                                </tr>`;
+                            html += `<td align="right">${result[i]['sd']}</td></tr>`;
                             }
+                        $('#body_table').html(html);
+                            html = `<tr>
+                                    <th style="width:60px;">ลำดับ</th>
+                                    <th>${label1}</th>
+                                    <th>${label2}</th>
+                                    <th>${data1}มากที่สุด <br/> (${unit1}) </th>
+                                    <th>${data1}น้อยที่สุด <br/> (${unit1}) </th>
+                                    <th>${data1}เฉลี่ย <br/> (${unit1}) </th>`;
+                                if(chose_type != "water1" && chose_type != "water2")
+                                    html += `<th>${data1}ผลรวม <br/> (${unit1}) </th>`;
+                                html += `<th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1}) </th>
+                                </tr>`;
+                        // $('#footer_table').html(html);
+                            
                         $('#yes_table').show();
                         $('#no_table').hide();
 
-                        $('#dataTable_table').html(html);
+                        $('#dataTable').DataTable();
+
+                        // $('#dataTable').html(html);
 
                     }else{
                         labelChart1 = Array();
@@ -947,7 +969,7 @@ $(document).ready(function() {
                         $('#yes_table').hide();
                         $('#no_table').show();
 
-                        $('#dataTable').html(html);
+                        $('#dataTable2').html(html);
 
                     }
                     
@@ -1094,7 +1116,7 @@ function fnExcelReport()
 {
     var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
     var textRange; var j=0;
-    tab = document.getElementById('dataTable_table'); // id of table
+    tab = document.getElementById('dataTable'); // id of table
 
     for(j = 0 ; j < tab.rows.length ; j++) 
     {     

@@ -11,6 +11,8 @@ $YEAR = getYearAgriMap();
 $MONTH = array("มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
 
 ?>
+<!-- <link href='https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css' rel='stylesheet' /> -->
+
 <style>
 .graph {
     width: 100px;
@@ -270,7 +272,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                     </div>
 
                     <div class="row" >
-                        <div class="col-8" id="normal_chart">
+                        <div class="col-8" id="normal_chart" style="display:none;">
                             <div class="row">
                                 <div class="col-12">
                                     <span style="margin-left: 20px; color: <?= $color ?>;">เงื่อนไขหัวข้อ</span>
@@ -955,7 +957,57 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                     <div class="card-body" id="yes_table">
                         <button class="btn btn-success" id="export">Export Excel</button>
                          <div class="table-responsive" style="margin-top:10px">
-                            <table class="table table-bordered table-data" id="dataTable_table" style="table-layout: fixed;" width="100%" cellspacing="0"> 
+                            <table class="table table-bordered table-data" id="dataTable" style="table-layout: fixed;" width="100%" cellspacing="0"> 
+                                    
+                                <thead>
+                                    <!-- <tr>
+                                        <th colspan="8" id="header_table1">หัวข้อ</th>
+                                    </tr> -->
+                                    <tr id="header_table2">
+                                        <th style="width:60px;">ลำดับ</th>
+                                        <th id="label1_header_table2">label1</th>
+                                        <th id="label2_header_table2">label2</th>
+                                        <th id="max_header_table2">มากที่สุด</th>
+                                        <th id="min_header_table2">น้อยที่สุด</th>
+                                        <th id="avg_header_table2">เฉลี่ย</th>
+                                        <th id="sum_header_table2">ผลรวม</th>
+                                        <th id="sd_table2">ค่าส่วนเบี่ยงเบนมาตรฐาน</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="body_table">
+                                    <tr>
+                                        <td>Tiger Nixon</td>
+                                        <td>System Architect</td>
+                                        <td>Edinburgh</td>
+                                        <td>61</td>
+                                        <td>2011/04/25</td>
+                                        <td>$320,800</td>
+                                        <td>$320,800</td>
+                                        <td>$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sakura Yamamoto</td>
+                                        <td>Support Engineer</td>
+                                        <td>Tokyo</td>
+                                        <td>37</td>
+                                        <td>2009/08/19</td>
+                                        <td>$139,575</td>
+                                        <td>$320,800</td>
+                                        <td>$320,800</td>
+                                    </tr>
+                                </tbody>
+                                <!-- <tfoot id="footer_table">
+                                    <tr>
+                                        <th>ลำดับ</th>
+                                        <th>label1</th>
+                                        <th>label2</th>
+                                        <th>มากที่สุด</th>
+                                        <th>น้อยที่สุด</th>
+                                        <th>เฉลี่ย</th>
+                                        <th>ผลรวม</th>
+                                        <th>ค่าส่วนเบี่ยงเบนมาตรฐาน</th>
+                                    </tr>
+                                </tfoot> -->
                             </table>
                         </div>
                     </div>
@@ -966,7 +1018,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             </div>
                             <div class="col-5">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-data" id="dataTable" width="100%" cellspacing="0"> 
+                                    <table class="table table-bordered table-data" id="dataTable2" width="100%" cellspacing="0"> 
                                     </table>
                                 </div>
                             </div>                            
@@ -997,5 +1049,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script> -->
+
 <script src='./../../js/excelexportjs.js'></script>
 <script src="Chart.js"></script>
