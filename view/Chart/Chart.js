@@ -708,27 +708,24 @@ $(document).ready(function() {
                     unit1 = result[0]['unit'];
                     
                     if(present == "table"){
+                        $('#header_table1').html(header_table);
+
                         if(chose_type != "water1" && chose_type != "water2")
                         {
-                            $('#sum_header_table2').removeAttr("style");
                             $('#header_table1').attr("colspan",8);
-                        }else{
-                            $('#sum_header_table2').attr("style","display:none;");
-                            $('#header_table1').attr("colspan",7);
-                        }
-                        $('#header_table1').html(header_table);
-                        $('#label1_header_table2').html(label1);
-                        $('#label2_header_table2').html(label2);
-                        $('#max_header_table2').html(`${data1}มากที่สุด <br/> (${unit1})`);
-                        $('#min_header_table2').html(`${data1}น้อยที่สุด <br/> (${unit1})`);
-                        $('#avg_header_table2').html(`${data1}เฉลี่ย <br/> (${unit1})`);
-                        $('#sum_header_table2').html(`${data1}ผลรวม <br/> (${unit1})`);
-                        $('#sd_header_table2').html(`${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})`);
-                        
-                        if(chose_type != "water1" && chose_type != "water2"){
-                            html="";
+                            header_table2 = "";
+                            header_table2 = `<th style="width:60px;">ลำดับ</th>
+                            <th>${label1}</th>
+                            <th>${label2}</th>
+                            <th>${data1}มากที่สุด <br/> (${unit1})</th>
+                            <th>${data1}น้อยที่สุด <br/> (${unit1})</th>
+                            <th>${data1}เฉลี่ย <br/> (${unit1})</th>
+                            <th>${data1}ผลรวม <br/> (${unit1})</th>
+                            <th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})</th>`;
+
+                            body_table ="";
                             for(i=1;i<=round;i++){
-                            html +=`<tr>
+                                body_table +=`<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
@@ -740,9 +737,19 @@ $(document).ready(function() {
                             </tr>`;
                             }
                         }else{
-                            html="";
+                            $('#header_table1').attr("colspan",7);
+                            header_table2 = "";
+                            header_table2 = `<th style="width:60px;">ลำดับ</th>
+                            <th>${label1}</th>
+                            <th>${label2}</th>
+                            <th>${data1}มากที่สุด <br/> (${unit1})</th>
+                            <th>${data1}น้อยที่สุด <br/> (${unit1})</th>
+                            <th>${data1}เฉลี่ย <br/> (${unit1})</th>
+                            <th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})</th>`;
+
+                            body_table="";
                             for(i=1;i<=round;i++){
-                            html +=`<tr>
+                                body_table +=`<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
@@ -753,8 +760,8 @@ $(document).ready(function() {
                             </tr>`;
                             }
                         }
-                        
-                        $('#body_table').html(html);
+                        $('#header_table2').html(header_table2);
+                        $('#body_table').html(body_table);
                             
                         $('#yes_table').show();
                         $('#no_table').hide();

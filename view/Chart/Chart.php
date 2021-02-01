@@ -964,13 +964,13 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                     </tr>
                                     <tr id="header_table2">
                                         <th style="width:60px;">ลำดับ</th>
-                                        <th id="label1_header_table2">label1</th>
-                                        <th id="label2_header_table2">label2</th>
-                                        <th id="max_header_table2">มากที่สุด</th>
-                                        <th id="min_header_table2">น้อยที่สุด</th>
-                                        <th id="avg_header_table2">เฉลี่ย</th>
-                                        <th id="sum_header_table2">ผลรวม</th>
-                                        <th id="sd_table2">ค่าส่วนเบี่ยงเบนมาตรฐาน</th>
+                                        <th>label1</th>
+                                        <th>label2</th>
+                                        <th>มากที่สุด</th>
+                                        <th>น้อยที่สุด</th>
+                                        <th>เฉลี่ย</th>
+                                        <th>ผลรวม</th>
+                                        <th>ค่าส่วนเบี่ยงเบนมาตรฐาน</th>
                                     </tr>
                                 </thead>
                                 <tbody id="body_table">
