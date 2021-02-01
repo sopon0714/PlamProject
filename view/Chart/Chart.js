@@ -11,12 +11,12 @@ $(document).ready(function() {
     $(".manymonth").hide();
     $(".manyday").hide();
 
-    hide1();    
+    hide1();
     $(".onefarmer").hide();
     hide1_time();
 
-    $(".set_pro").attr("disabled","disabled");
-    $(".set_year").attr("disabled","disabled");
+    $(".set_pro").attr("disabled", "disabled");
+    $(".set_year").attr("disabled", "disabled");
 
     $('#show_chart').hide();
     $('#show_error').hide();
@@ -29,36 +29,36 @@ $(document).ready(function() {
 
     $('#chose_cal').hide();
 
-    $('#export').click(function(){
+    $('#export').click(function() {
         $("#dataTable").excelexportjs({
-            containerid: "dataTable"
-            ,datatype: 'table'
+            containerid: "dataTable",
+            datatype: 'table'
         });
     });
 
     $('#chose_type').change(function() {
         chose_type = $("#chose_type").val();
 
-        if(chose_type == "water1" || chose_type == "water2"){
+        if (chose_type == "water1" || chose_type == "water2") {
             $('#summary').hide();
-        }else{
+        } else {
             $('#summary').show();
         }
     });
 
     $("#chose_cond").change(function() {
         chose_cond = $("#chose_cond").val();
-        if(chose_cond == ""){
+        if (chose_cond == "") {
             $(".maxmin").hide();
-        }else{
+        } else {
             $(".maxmin").show();
         }
     });
     $("#chose_cond2").change(function() {
         chose_cond2 = $("#chose_cond2").val();
-        if(chose_cond2 == ""){
+        if (chose_cond2 == "") {
             $(".maxmin2").hide();
-        }else{
+        } else {
             $(".maxmin2").show();
         }
     });
@@ -69,20 +69,19 @@ $(document).ready(function() {
     });
     $('[name="present"]').change(function() {
         pre = $('input[name="present"]:checked').val();
-        $('#show_chart').hide(); 
-        if(pre == "table"){
+        $('#show_chart').hide();
+        if (pre == "table") {
             $('#chose_cal').hide();
             $('#chose_cal').removeAttr('required');
-        }
-        else{
+        } else {
             $('#chose_cal').show();
-            $('#chose_cal').prop('required',true);
+            $('#chose_cal').prop('required', true);
         }
-        if(pre == "table" || pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
-            if(pre == "table" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix" ){
+        if (pre == "table" || pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix") {
+            if (pre == "table" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix") {
                 $("#chose_label_span1").html("เลือกหัวข้อหลัก");
                 $("#multi_chart").show();
-            }else if(pre == "pie" || pre == "bar"){
+            } else if (pre == "pie" || pre == "bar") {
                 $("#chose_label_span1").html("เลือกหัวข้อ");
                 $("#multi_chart").hide();
             }
@@ -97,11 +96,11 @@ $(document).ready(function() {
             <option name="month" id="month" value="Month">เดือน</option>
             <option name="day" id="day" value="dd">วัน</option>`;
 
-        }else if(pre == "line" || pre == "area" || pre == "multi_line" || pre == "multi_area"){
-            if(pre == "multi_line" || pre == "multi_area"){
+        } else if (pre == "line" || pre == "area" || pre == "multi_line" || pre == "multi_area") {
+            if (pre == "multi_line" || pre == "multi_area") {
                 $("#chose_label_span1").html("เลือกหัวข้อหลัก");
                 $("#multi_chart").show();
-            }else{
+            } else {
                 $("#chose_label_span1").html("เลือกหัวข้อ");
                 $("#multi_chart").hide();
             }
@@ -114,258 +113,258 @@ $(document).ready(function() {
 
     });
     $('[name="s_pro"]').change(function() {
-        array_set1 = ["#dist1","#dist2","#dist3","#subdist1","#subdist2","#subdist3","#farm1","#farm2","#farm3","#subfarm1","#subfarm2","#subfarm3"];
-        array_set2 = ["#dist1","#dist2","#dist3"];
-        array_many1 = [".manyprovince",".manydist",".manysubdist",".manyfarm",".manysubfarm"];
-        array_many2 = [".manydist",".manysubdist",".manyfarm",".manysubfarm"];
+        array_set1 = ["#dist1", "#dist2", "#dist3", "#subdist1", "#subdist2", "#subdist3", "#farm1", "#farm2", "#farm3", "#subfarm1", "#subfarm2", "#subfarm3"];
+        array_set2 = ["#dist1", "#dist2", "#dist3"];
+        array_many1 = [".manyprovince", ".manydist", ".manysubdist", ".manyfarm", ".manysubfarm"];
+        array_many2 = [".manydist", ".manysubdist", ".manyfarm", ".manysubfarm"];
 
-        if(document.getElementById("pro1").checked){
+        if (document.getElementById("pro1").checked) {
             hide1();
             $(".set_pro").prop('checked', false);
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
-        }else if(document.getElementById("pro2").checked){
+        } else if (document.getElementById("pro2").checked) {
             hide1();
             $(".set_pro").prop('checked', false);
             $(".manyprovince").show();
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many2.length;i++){
+            for (i = 0; i < array_many2.length; i++) {
                 $(array_many2[i]).hide();
             }
-        }else if(document.getElementById("pro3").checked){
+        } else if (document.getElementById("pro3").checked) {
             $(".oneprovince").show();
-            for(i=0;i<array_set2.length;i++){
+            for (i = 0; i < array_set2.length; i++) {
                 $(array_set2[i]).removeAttr("disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
         }
     });
     $('[name="s_dist"]').change(function() {
-        array_set1 = ["#subdist1","#subdist2","#subdist3","#farm1","#farm2","#farm3","#subfarm1","#subfarm2","#subfarm3"];
-        array_set2 = ["#subdist1","#subdist2","#subdist3"];
-        array_many1 = [".manydist",".manysubdist",".manyfarm",".manysubfarm"];
-        array_many2 = [".manysubdist",".manyfarm",".manysubfarm"];
+        array_set1 = ["#subdist1", "#subdist2", "#subdist3", "#farm1", "#farm2", "#farm3", "#subfarm1", "#subfarm2", "#subfarm3"];
+        array_set2 = ["#subdist1", "#subdist2", "#subdist3"];
+        array_many1 = [".manydist", ".manysubdist", ".manyfarm", ".manysubfarm"];
+        array_many2 = [".manysubdist", ".manyfarm", ".manysubfarm"];
 
-        if(document.getElementById("dist1").checked){
+        if (document.getElementById("dist1").checked) {
             hide2();
             $(".set_dist").prop('checked', false);
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
-        }else if(document.getElementById("dist2").checked){
+        } else if (document.getElementById("dist2").checked) {
             hide2();
             $(".set_dist").prop('checked', false);
             $(".manydist").show();
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many2.length;i++){
+            for (i = 0; i < array_many2.length; i++) {
                 $(array_many2[i]).hide();
             }
-        }else if(document.getElementById("dist3").checked){
+        } else if (document.getElementById("dist3").checked) {
             $(".onedist").show();
-            for(i=0;i<array_set2.length;i++){
+            for (i = 0; i < array_set2.length; i++) {
                 $(array_set2[i]).removeAttr("disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
         }
     });
-    
+
     $('[name="s_subdist"]').change(function() {
-        array_set1 = ["#farm1","#farm2","#farm3","#subfarm1","#subfarm2","#subfarm3"];
-        array_set2 = ["#farm1","#farm2","#farm3"];
-        array_many1 = [".manysubdist",".manyfarm",".manysubfarm"];
-        array_many2 = [".manyfarm",".manysubfarm"];
-        
-        if(document.getElementById("subdist1").checked){
+        array_set1 = ["#farm1", "#farm2", "#farm3", "#subfarm1", "#subfarm2", "#subfarm3"];
+        array_set2 = ["#farm1", "#farm2", "#farm3"];
+        array_many1 = [".manysubdist", ".manyfarm", ".manysubfarm"];
+        array_many2 = [".manyfarm", ".manysubfarm"];
+
+        if (document.getElementById("subdist1").checked) {
             hide3();
             $(".set_subdist").prop('checked', false);
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
-        }else if(document.getElementById("subdist2").checked){
+        } else if (document.getElementById("subdist2").checked) {
             hide3();
             $(".set_subdist").prop('checked', false);
             $(".manysubdist").show();
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many2.length;i++){
+            for (i = 0; i < array_many2.length; i++) {
                 $(array_many2[i]).hide();
             }
-        }else if(document.getElementById("subdist3").checked){
+        } else if (document.getElementById("subdist3").checked) {
             $(".onesubdist").show();
-            for(i=0;i<array_set2.length;i++){
+            for (i = 0; i < array_set2.length; i++) {
                 $(array_set2[i]).removeAttr("disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
         }
     });
     $('[name="s_farm"]').change(function() {
-        array_set1 = ["#subfarm1","#subfarm2","#subfarm3"];
-        array_many1 = [".manyfarm",".manysubfarm"];
+        array_set1 = ["#subfarm1", "#subfarm2", "#subfarm3"];
+        array_many1 = [".manyfarm", ".manysubfarm"];
         array_many2 = [".manysubfarm"];
 
-        if(document.getElementById("farm1").checked){
+        if (document.getElementById("farm1").checked) {
             hide4();
             $(".set_farm").prop('checked', false);
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
-        }else if(document.getElementById("farm2").checked){
+        } else if (document.getElementById("farm2").checked) {
             hide4();
             $(".set_farm").prop('checked', false);
             $(".manyfarm").show();
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many2.length;i++){
+            for (i = 0; i < array_many2.length; i++) {
                 $(array_many2[i]).hide();
             }
-        }else if(document.getElementById("farm3").checked){
+        } else if (document.getElementById("farm3").checked) {
             $(".onefarm").show();
-            for(i=0;i<array_set1.length;i++){
+            for (i = 0; i < array_set1.length; i++) {
                 $(array_set1[i]).removeAttr("disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
         }
     });
     $('[name="s_subfarm"]').change(function() {
-        if(document.getElementById("subfarm1").checked){
+        if (document.getElementById("subfarm1").checked) {
             $(".onesubfarm").hide();
-        }else if(document.getElementById("subfarm2").checked){
+        } else if (document.getElementById("subfarm2").checked) {
             $(".onesubfarm").hide();
             $(".manysubfarm").show();
-        }else if(document.getElementById("subfarm3").checked){
+        } else if (document.getElementById("subfarm3").checked) {
             $(".onesubfarm").show();
         }
     });
     $('[name="s_farmer"]').change(function() {
-        if(document.getElementById("farmer1").checked){
+        if (document.getElementById("farmer1").checked) {
             $(".manyfarmer").hide();
             $(".onefarmer").hide();
-        }else if(document.getElementById("farmer2").checked){
+        } else if (document.getElementById("farmer2").checked) {
             $(".onefarmer").hide();
             $(".manyfarmer").show();
-        }else if(document.getElementById("farmer3").checked){
+        } else if (document.getElementById("farmer3").checked) {
             $(".manyfarmer").hide();
             $(".onefarmer").show();
         }
     });
     $('[name="s_year"]').change(function() {
-        array_set1 = ["#month1","#month2","#month3","#day1","#day2","#day3"];
-        array_set2 = ["#month1","#month2","#month3"];
-        array_many1 = [".manyyear",".manymonth","manyday"];
-        array_many2 = [".manymonth","manyday"];
-        if(document.getElementById("year1").checked){
+        array_set1 = ["#month1", "#month2", "#month3", "#day1", "#day2", "#day3"];
+        array_set2 = ["#month1", "#month2", "#month3"];
+        array_many1 = [".manyyear", ".manymonth", "manyday"];
+        array_many2 = [".manymonth", "manyday"];
+        if (document.getElementById("year1").checked) {
             hide1_time();
             $(".set_year").prop('checked', false);
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
-        }else if(document.getElementById("year2").checked){
+        } else if (document.getElementById("year2").checked) {
             hide1_time();
             $(".set_year").prop('checked', false);
             $(".manyyear").show();
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many2.length;i++){
+            for (i = 0; i < array_many2.length; i++) {
                 $(array_many2[i]).hide();
             }
-        }else if(document.getElementById("year3").checked){
+        } else if (document.getElementById("year3").checked) {
             $(".oneyear").show();
-            for(i=0;i<array_set2.length;i++){
+            for (i = 0; i < array_set2.length; i++) {
                 $(array_set2[i]).removeAttr("disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
         }
     });
     $('[name="s_month"]').change(function() {
-        array_set1 = ["#day1","#day2","#day3"];
-        array_many1 = [".manymonth","manyday"];
+        array_set1 = ["#day1", "#day2", "#day3"];
+        array_many1 = [".manymonth", "manyday"];
         array_many2 = ["manyday"];
-        if(document.getElementById("month1").checked){
+        if (document.getElementById("month1").checked) {
             hide2_time();
             $(".set_month").prop('checked', false);
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
-        }else if(document.getElementById("month2").checked){
+        } else if (document.getElementById("month2").checked) {
             hide2_time();
             $(".set_month").prop('checked', false);
             $(".manymonth").show();
-            for(i=0;i<array_set1.length;i++){
-                $(array_set1[i]).attr("disabled","disabled");
+            for (i = 0; i < array_set1.length; i++) {
+                $(array_set1[i]).attr("disabled", "disabled");
             }
-            for(i=0;i<array_many2.length;i++){
+            for (i = 0; i < array_many2.length; i++) {
                 $(array_many2[i]).hide();
             }
-        }else if(document.getElementById("month3").checked){
+        } else if (document.getElementById("month3").checked) {
             $(".onemonth").show();
-            for(i=0;i<array_set1.length;i++){
+            for (i = 0; i < array_set1.length; i++) {
                 $(array_set1[i]).removeAttr("disabled");
             }
-            for(i=0;i<array_many1.length;i++){
+            for (i = 0; i < array_many1.length; i++) {
                 $(array_many1[i]).hide();
             }
         }
     });
     $('[name="s_day"]').change(function() {
-        if(document.getElementById("day1").checked){
+        if (document.getElementById("day1").checked) {
             $(".manyday").hide();
             $(".oneday").hide();
-        }else if(document.getElementById("day2").checked){
+        } else if (document.getElementById("day2").checked) {
             $(".oneday").hide();
             $(".manyday").show();
-        }else if(document.getElementById("day3").checked){
+        } else if (document.getElementById("day3").checked) {
             $(".manyday").hide();
             $(".oneday").show();
         }
     });
 
-    $('#selectprovince').change(function(){
+    $('#selectprovince').change(function() {
         id_province = $('#selectprovince').val();
         // alert(province);
-        $.post("dataForChart.php", {request: "dist" ,id: id_province}, function(result){
+        $.post("dataForChart.php", { request: "dist", id: id_province }, function(result) {
             result = JSON.parse(result);
             // console.log(result);
-            html="<option selected value=0>เลือกอำเภอ</option> ";
-            html2="";
+            html = "<option selected value=0>เลือกอำเภอ</option> ";
+            html2 = "";
             for (i = 1; i <= result[0]['numrow']; i++) {
-            html += `<option value="${result[i]["AD2ID"]}">${result[i]["Distrinct"]}</option>`;
-            html2 += `<li Name='${result[i]['Distrinct']}' id_attr='${result[i]['AD2ID']}'>${result[i]['Distrinct']} </li>`;
+                html += `<option value="${result[i]["AD2ID"]}">${result[i]["Distrinct"]}</option>`;
+                html2 += `<li Name='${result[i]['Distrinct']}' id_attr='${result[i]['AD2ID']}'>${result[i]['Distrinct']} </li>`;
             }
             $("#selectdist").html(html);
             $("#dist_list1").html(html2);
@@ -373,52 +372,52 @@ $(document).ready(function() {
 
         });
     });
-    $('#selectdist').change(function(){
+    $('#selectdist').change(function() {
         id_dist = $('#selectdist').val();
         // alert(province);
-        $.post("dataForChart.php", {request: "subdist" ,id: id_dist}, function(result){
+        $.post("dataForChart.php", { request: "subdist", id: id_dist }, function(result) {
             result = JSON.parse(result);
             // console.log(result);
-            html="<option selected value=0>เลือกตำบล</option> ";
-            html2="";
+            html = "<option selected value=0>เลือกตำบล</option> ";
+            html2 = "";
             for (i = 1; i <= result[0]['numrow']; i++) {
-            html += `<option value="${result[i]["AD3ID"]}">${result[i]["subDistrinct"]}</option>`;
-            html2 += `<li Name='${result[i]['subDistrinct']}' id_attr='${result[i]['AD3ID']}'>${result[i]['subDistrinct']} </li>`;    
+                html += `<option value="${result[i]["AD3ID"]}">${result[i]["subDistrinct"]}</option>`;
+                html2 += `<li Name='${result[i]['subDistrinct']}' id_attr='${result[i]['AD3ID']}'>${result[i]['subDistrinct']} </li>`;
             }
             $("#selectsubdist").html(html);
             $("#subdist_list1").html(html2);
             $("#subdist_list2").html("");
         });
     });
-    $('#selectsubdist').change(function(){
+    $('#selectsubdist').change(function() {
         id_subdist = $('#selectsubdist').val();
         // alert(id_subdist);
-        $.post("dataForChart.php", {request: "farm" ,id: id_subdist}, function(result){
+        $.post("dataForChart.php", { request: "farm", id: id_subdist }, function(result) {
             result = JSON.parse(result);
             // console.log(result);
-            html="<option selected value=0>เลือกสวน</option> ";
-            html2="";
+            html = "<option selected value=0>เลือกสวน</option> ";
+            html2 = "";
             for (i = 1; i <= result[0]['numrow']; i++) {
-            html += `<option value="${result[i]["dbID"]}">${result[i]["Name"]}</option>`;
-            html2 += `<li Name='${result[i]['Name']}' id_attr='${result[i]['dbID']}'>${result[i]['Name']} </li>`;    
+                html += `<option value="${result[i]["dbID"]}">${result[i]["Name"]}</option>`;
+                html2 += `<li Name='${result[i]['Name']}' id_attr='${result[i]['dbID']}'>${result[i]['Name']} </li>`;
             }
             $("#selectfarm").html(html);
             $("#farm_list1").html(html2);
             $("#farm_list2").html("");
         });
     });
-    $('#selectfarm').change(function(){
+    $('#selectfarm').change(function() {
         // console.log('selectsubfarm');
         id_farm = $('#selectfarm').val();
         // alert(id_farm);
-        $.post("dataForChart.php", {request: "subfarm" ,id: id_farm}, function(result){
+        $.post("dataForChart.php", { request: "subfarm", id: id_farm }, function(result) {
             result = JSON.parse(result);
             // console.log(result);
-            html="<option selected value=0>เลือกแปลง</option> ";
-            html2="";
+            html = "<option selected value=0>เลือกแปลง</option> ";
+            html2 = "";
             for (i = 1; i <= result[0]['numrow']; i++) {
-            html += `<option value="${result[i]["dbID"]}">${result[i]["Name"]}</option>`;
-            html2 += `<li Name='${result[i]['Name']}' id_attr='${result[i]['dbID']}'>${result[i]['Name']} </li>`;    
+                html += `<option value="${result[i]["dbID"]}">${result[i]["Name"]}</option>`;
+                html2 += `<li Name='${result[i]['Name']}' id_attr='${result[i]['dbID']}'>${result[i]['Name']} </li>`;
             }
             $("#selectsubfarm").html(html);
             $("#subfarm_list1").html(html2);
@@ -429,60 +428,60 @@ $(document).ready(function() {
     //     html = "";
     //     $('#present').html();
     // });
-    $('#selectyear1').change(function(){
-        $.post("dataForChart.php", {request: "selectyear"}, function(result){
+    $('#selectyear1').change(function() {
+        $.post("dataForChart.php", { request: "selectyear" }, function(result) {
             select_year = $('#selectyear1').val();
             result = JSON.parse(result);
             // console.log(result);
             html = "";
             // html="<option selected value=0>เลือกปี</option> ";
             for (i = 1; i <= result[0]['numrow']; i++) {
-                if(result[i]["Year2"] > select_year)
+                if (result[i]["Year2"] > select_year)
                     html += `<option value="${result[i]["Year2"]}">${result[i]["Year2"]}</option>`;
             }
             $("#selectyear2").html(html);
         });
     });
-    $('#selectmonth1').change(function(){
-        month = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+    $('#selectmonth1').change(function() {
+        month = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
         select_month = $('#selectmonth1').val();
         html = "";
         // html="<option selected value=0>เลือกเดือน</option> ";
-        for (i = 0; i < month.length ; i++) {
-            if((i+1) > select_month)
+        for (i = 0; i < month.length; i++) {
+            if ((i + 1) > select_month)
                 html += `<option value="${(i+1)}">${month[i]}</option>`;
         }
         $("#selectmonth2").html(html);
     });
-    $('#selectmonth').change(function(){
+    $('#selectmonth').change(function() {
         $("#selectday1").val("1");
         $("#selectday2").val("2");
-        dayin = getDaysInMonth($('#selectmonth').val(),$('#selectyear').val());
-        $("#selectday").attr("max",dayin);
-        $("#selectday1").attr("max",dayin);
-        $("#selectday2").attr("max",dayin);
+        dayin = getDaysInMonth($('#selectmonth').val(), $('#selectyear').val());
+        $("#selectday").attr("max", dayin);
+        $("#selectday1").attr("max", dayin);
+        $("#selectday2").attr("max", dayin);
     });
-    $('#selectday1').change(function(){
+    $('#selectday1').change(function() {
         select_day = $('#selectday1').val();
         select_day++;
-        $("#selectday2").attr("min",(select_day));
+        $("#selectday2").attr("min", (select_day));
         $("#selectday2").val(select_day);
     });
-    $('#setsubmit').click(function(){
-        
-        present = $('input[name="present"]:checked').val(); 
-            // console.log("present=|"+present+"|");
-            // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
-            // console.log("chose_type=|"+$('#chose_type').val()+"|");
-            // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
-            check_chose_cal = $('#chose_cal').val();
-        if(present == "table"){
+    $('#setsubmit').click(function() {
+
+        present = $('input[name="present"]:checked').val();
+        // console.log("present=|"+present+"|");
+        // console.log("chose_label1=|"+$('#chose_label1').val()+"|");
+        // console.log("chose_type=|"+$('#chose_type').val()+"|");
+        // console.log("chose_cal=|"+$('#chose_cal').val()+"|");
+        check_chose_cal = $('#chose_cal').val();
+        if (present == "table") {
             check_chose_cal = "-1";
         }
-        if(present == "table" || present == "pie" || present == "line" || present == "multi_line" || present == "bar" || present == "chart_radar" || 
-        present == "multi_bar" || present == "complex_bar" || present == "area" || present == "multi_area" || present == "mix"
-        ){
-            if($('#chose_label1').val() != "" && $('#chose_type').val() != "" && check_chose_cal != ""){
+        if (present == "table" || present == "pie" || present == "line" || present == "multi_line" || present == "bar" || present == "chart_radar" ||
+            present == "multi_bar" || present == "complex_bar" || present == "area" || present == "multi_area" || present == "mix"
+        ) {
+            if ($('#chose_label1').val() != "" && $('#chose_type').val() != "" && check_chose_cal != "") {
                 $('#show_chart').hide();
                 $('#show_error').hide();
                 $('#show_nodata').hide();
@@ -492,19 +491,19 @@ $(document).ready(function() {
                 chose_type = $("#chose_type option:selected").html();
                 chose_cal = $("#chose_cal option:selected").html();
                 chose_cond = $("#chose_cond option:selected").html();
-                
-        
-                html = chose_type+" "+chose_cal;
-                if(chose_cond == "ทั้งหมด")
+
+
+                html = chose_type + " " + chose_cal;
+                if (chose_cond == "ทั้งหมด")
                     html += " ตาม ";
                 else
-                    html += " ที่"+chose_cond+" "+$('#order').val()+" ลำดับ ";
+                    html += " ที่" + chose_cond + " " + $('#order').val() + " ลำดับ ";
                 html += chose_label1;
-                if($('#chose_label2').val() != ""){
+                if ($('#chose_label2').val() != "") {
                     chose_label2 = $("#chose_label2 option:selected").html();
-                    html += " และ "+chose_label2;
+                    html += " และ " + chose_label2;
                 }
-        
+
                 //pro/dist/subdist/farm/subfarm
                 SET1 = Array();
 
@@ -514,147 +513,147 @@ $(document).ready(function() {
                 SET3 = Array();
                 TOPIC3 = "";
 
-                if($("#pro1").prop('checked')){
+                if ($("#pro1").prop('checked')) {
                     SET1 = null;
                     html += " ของทุกจังหวัด";
-                }else if($("#pro2").prop('checked')){
+                } else if ($("#pro2").prop('checked')) {
                     ArrayData = getArrayMany("#province_list2");
                     // console.log(ArrayData);
                     SET1 = ArrayData;
                     SET1[0] = "Province";
                     html += " ของจังหวัด";
-                    for(i=1;i<ArrayData.length;i++){
+                    for (i = 1; i < ArrayData.length; i++) {
                         html += ArrayData[i];
-                        if(i != ArrayData.length-1) html += ", ";
+                        if (i != ArrayData.length - 1) html += ", ";
                     }
-                }else if($("#pro3").prop('checked')){
+                } else if ($("#pro3").prop('checked')) {
                     SET1[1] = $("#selectprovince option:selected").html();
                     SET1[0] = "Province";
-                    html += " ของจังหวัด"+$("#selectprovince option:selected").html();
-                    if($("#dist1").prop('checked')){
+                    html += " ของจังหวัด" + $("#selectprovince option:selected").html();
+                    if ($("#dist1").prop('checked')) {
                         html += " ของทุกอำเภอ";
-                    }else if($("#dist2").prop('checked')){
+                    } else if ($("#dist2").prop('checked')) {
                         ArrayData = getArrayMany("#dist_list2");
                         SET1 = ArrayData;
                         SET1[0] = "Distrinct";
                         html += " ของอำเภอ";
-                        for(i=1;i<ArrayData.length;i++){
+                        for (i = 1; i < ArrayData.length; i++) {
                             html += ArrayData[i];
-                            if(i != ArrayData.length-1) html += ", ";
+                            if (i != ArrayData.length - 1) html += ", ";
                         }
-                    }else if($("#dist3").prop('checked')){
+                    } else if ($("#dist3").prop('checked')) {
                         SET1[1] = $("#selectdist option:selected").html();
                         SET1[0] = "Distrinct";
-                        html += " ของอำเภอ"+$("#selectdist option:selected").html();
-                        if($("#subdist1").prop('checked')){
+                        html += " ของอำเภอ" + $("#selectdist option:selected").html();
+                        if ($("#subdist1").prop('checked')) {
                             html += " ของทุกตำบล";
-                        }else if($("#subdist2").prop('checked')){
+                        } else if ($("#subdist2").prop('checked')) {
                             ArrayData = getArrayMany("#subdist_list2");
                             SET1 = ArrayData;
                             SET1[0] = "SubDistrinct";
                             html += " ของตำบล";
-                            for(i=1;i<ArrayData.length;i++){
+                            for (i = 1; i < ArrayData.length; i++) {
                                 html += ArrayData[i];
-                                if(i != ArrayData.length-1) html += ", ";
+                                if (i != ArrayData.length - 1) html += ", ";
                             }
-                        }else if($("#subdist3").prop('checked')){
+                        } else if ($("#subdist3").prop('checked')) {
                             SET1[1] = $("#selectsubdist option:selected").html();
                             SET1[0] = "SubDistrinct";
-                            html += " ของตำบล"+$("#selectsubdist option:selected").html();
-                            if($("#farm1").prop('checked')){
+                            html += " ของตำบล" + $("#selectsubdist option:selected").html();
+                            if ($("#farm1").prop('checked')) {
                                 html += " ของทุกสวน";
-                            }else if($("#farm2").prop('checked')){
+                            } else if ($("#farm2").prop('checked')) {
                                 ArrayData = getArrayMany("#farm_list2");
                                 SET1 = ArrayData;
                                 SET1[0] = "F_name";
                                 html += " ของสวน";
-                                for(i=1;i<ArrayData.length;i++){
+                                for (i = 1; i < ArrayData.length; i++) {
                                     html += ArrayData[i];
-                                    if(i != ArrayData.length-1) html += ", ";
+                                    if (i != ArrayData.length - 1) html += ", ";
                                 }
-                            }else if($("#farm3").prop('checked')){
+                            } else if ($("#farm3").prop('checked')) {
                                 SET1[1] = $("#selectfarm option:selected").html();
                                 SET1[0] = "F_name";
-                                html += " ของสวน"+$("#selectfarm option:selected").html();
-                                if($("#subfarm1").prop('checked')){
+                                html += " ของสวน" + $("#selectfarm option:selected").html();
+                                if ($("#subfarm1").prop('checked')) {
                                     html += " ของทุกแปลง";
-                                }else if($("#subfarm2").prop('checked')){
+                                } else if ($("#subfarm2").prop('checked')) {
                                     ArrayData = getArrayMany("#subfarm_list2");
                                     SET1 = ArrayData;
                                     SET1[0] = "SF_name";
                                     html += " ของแปลง";
-                                    for(i=1;i<ArrayData.length;i++){
+                                    for (i = 1; i < ArrayData.length; i++) {
                                         html += ArrayData[i];
-                                        if(i != ArrayData.length-1) html += ", ";
+                                        if (i != ArrayData.length - 1) html += ", ";
                                     }
-                                }else if($("#subfarm3").prop('checked')){
+                                } else if ($("#subfarm3").prop('checked')) {
                                     SET1[1] = $("#selectsubfarm option:selected").html();
                                     SET1[0] = "SF_name";
-                                    html += " ของแปลง"+$("#selectsubfarm option:selected").html();
+                                    html += " ของแปลง" + $("#selectsubfarm option:selected").html();
                                 }
                             }
-                        }                
+                        }
                     }
                 }
                 //farmer
-                if($("#farmer1").prop('checked')){
+                if ($("#farmer1").prop('checked')) {
                     SET2 = null;
                     html += " ของทุกเกษตรกร";
-                }else if($("#farmer2").prop('checked')){
+                } else if ($("#farmer2").prop('checked')) {
                     ArrayData2 = getArrayMany("#farmer_list2");
                     SET2 = ArrayData2;
                     SET2[0] = "FM_name";
                     html += " ของเกษตรกร";
-                    for(i=1;i<ArrayData2.length;i++){
+                    for (i = 1; i < ArrayData2.length; i++) {
                         html += ArrayData2[i];
-                        if(i != ArrayData2.length-1) html += ", ";
+                        if (i != ArrayData2.length - 1) html += ", ";
                     }
-                }else if($("#farmer3").prop('checked')){
+                } else if ($("#farmer3").prop('checked')) {
                     SET2[1] = $("#selectfarmer option:selected").html();
                     SET2[0] = "FM_name";
-                    html += " ของเกษตรกร"+$("#selectfarmer option:selected").html();
+                    html += " ของเกษตรกร" + $("#selectfarmer option:selected").html();
                 }
                 //year/month/day
                 SET3[3] = "";
                 SET3[6] = "";
 
-                if($("#year1").prop('checked')){
+                if ($("#year1").prop('checked')) {
                     SET3 = null;
-                    html += " ของทุกปี ("+$('#minyear').html()+" - "+$('#maxyear').html()+")";
-                }else if($("#year2").prop('checked')){
+                    html += " ของทุกปี (" + $('#minyear').html() + " - " + $('#maxyear').html() + ")";
+                } else if ($("#year2").prop('checked')) {
                     SET3[1] = $('#selectyear1').val();
                     SET3[2] = $('#selectyear2').val();
                     SET3[0] = "Year2";
-                    html += " ของปี "+$('#selectyear1').val()+" - "+$('#selectyear2').val();
-                }else if($("#year3").prop('checked')){
+                    html += " ของปี " + $('#selectyear1').val() + " - " + $('#selectyear2').val();
+                } else if ($("#year3").prop('checked')) {
                     SET3[1] = $("#selectyear option:selected").html();
                     SET3[2] = $("#selectyear option:selected").html();
                     SET3[0] = "Year2";
-                    html += " ของปี "+$("#selectyear option:selected").html();
-                    if($("#month1").prop('checked')){
+                    html += " ของปี " + $("#selectyear option:selected").html();
+                    if ($("#month1").prop('checked')) {
                         html += " ของทุกเดือน";
-                    }else if($("#month2").prop('checked')){
+                    } else if ($("#month2").prop('checked')) {
                         SET3[4] = monthToNumber($("#selectmonth1 option:selected").html());
                         SET3[5] = monthToNumber($("#selectmonth2 option:selected").html());
                         SET3[3] = "Month";
-                        html += " ของเดือน "+$("#selectmonth1 option:selected").html()+" - "+$("#selectmonth2 option:selected").html();
-                    }else if($("#month3").prop('checked')){
+                        html += " ของเดือน " + $("#selectmonth1 option:selected").html() + " - " + $("#selectmonth2 option:selected").html();
+                    } else if ($("#month3").prop('checked')) {
                         SET3[4] = monthToNumber($("#selectmonth option:selected").html());
                         SET3[5] = monthToNumber($("#selectmonth option:selected").html());
                         SET3[3] = "Month";
-                        html += " ของเดือน "+$("#selectmonth option:selected").html();
-                        if($("#day1").prop('checked')){
+                        html += " ของเดือน " + $("#selectmonth option:selected").html();
+                        if ($("#day1").prop('checked')) {
                             html += " ของทุกวัน";
-                        }else if($("#day2").prop('checked')){
+                        } else if ($("#day2").prop('checked')) {
                             SET3[7] = $('#selectday1').val()
                             SET3[8] = $('#selectday2').val();
                             SET3[6] = "dd";
-                            html += " ของวันที่ "+$('#selectday1').val()+" - "+$('#selectday2').val();
-                        }else if($("#day3").prop('checked')){
+                            html += " ของวันที่ " + $('#selectday1').val() + " - " + $('#selectday2').val();
+                        } else if ($("#day3").prop('checked')) {
                             SET3[8] = $("#selectday").val();
                             SET3[7] = $("#selectday").val();
                             SET3[6] = "dd";
-                            html += " ของวันที่ "+$("#selectday").val();
+                            html += " ของวันที่ " + $("#selectday").val();
                         }
                     }
                 }
@@ -678,41 +677,51 @@ $(document).ready(function() {
                 chose_cond = $("#chose_cond option:selected").val();
 
                 // console.log(label1);
-                $.post("dataForChart.php", {request: "chart" ,present: present,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
-                chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
+                $.post("dataForChart.php", {
+                    request: "chart",
+                    present: present,
+                    chose_label1: chose_label1,
+                    chose_label2: chose_label2,
+                    chose_type: chose_type,
+                    chose_cal: chose_cal,
+                    chose_cond: chose_cond,
+                    SET1: SET1,
+                    SET2: SET2,
+                    SET3: SET3
+                }, function(result) {
                     // console.log(result);
-                    try{
+                    try {
                         result = JSON.parse(result);
                         // console.log(result);
-                        if(result[0]['numrow']  <= 0){
-                        $('#show_chart').hide();
-                        $('#show_error').hide();
-                        $('#show_nodata').show();
-                        $('#show_loading').hide();
-                        }else{
+                        if (result[0]['numrow'] <= 0) {
+                            $('#show_chart').hide();
+                            $('#show_error').hide();
+                            $('#show_nodata').show();
+                            $('#show_loading').hide();
+                        } else {
                             $('#show_chart').show();
                             $('#show_error').hide();
                             $('#show_nodata').hide();
                             $('#show_loading').hide();
                         }
-                    }catch{
+                    } catch {
                         $('#show_chart').hide();
                         $('#show_error').show();
                         $('#show_nodata').hide();
                         $('#show_loading').hide();
                     }
                     round = $("#order").val();
-                    if(round > result[0]['numrow'] || chose_cond == ""){
+                    if (round > result[0]['numrow'] || chose_cond == "") {
                         round = result[0]['numrow'];
                     }
                     unit1 = result[0]['unit'];
-                    
-                    if(present == "table"){
+
+                    if (present == "table") {
+                        $('#dataTable').DataTable().destroy();
                         $('#header_table1').html(header_table);
 
-                        if(chose_type != "water1" && chose_type != "water2")
-                        {
-                            $('#header_table1').attr("colspan",8);
+                        if (chose_type != "water1" && chose_type != "water2") {
+                            $('#header_table1').attr("colspan", 8);
                             header_table2 = "";
                             header_table2 = `<th style="width:60px;">ลำดับ</th>
                             <th>${label1}</th>
@@ -723,9 +732,9 @@ $(document).ready(function() {
                             <th>${data1}ผลรวม <br/> (${unit1})</th>
                             <th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})</th>`;
 
-                            body_table ="";
-                            for(i=1;i<=round;i++){
-                                body_table +=`<tr>
+                            body_table = "";
+                            for (i = 1; i <= round; i++) {
+                                body_table += `<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
@@ -736,8 +745,8 @@ $(document).ready(function() {
                                 <td align="right">${result[i]['sd']}</td>
                             </tr>`;
                             }
-                        }else{
-                            $('#header_table1').attr("colspan",7);
+                        } else {
+                            $('#header_table1').attr("colspan", 7);
                             header_table2 = "";
                             header_table2 = `<th style="width:60px;">ลำดับ</th>
                             <th>${label1}</th>
@@ -747,9 +756,9 @@ $(document).ready(function() {
                             <th>${data1}เฉลี่ย <br/> (${unit1})</th>
                             <th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})</th>`;
 
-                            body_table="";
-                            for(i=1;i<=round;i++){
-                                body_table +=`<tr>
+                            body_table = "";
+                            for (i = 1; i <= round; i++) {
+                                body_table += `<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
@@ -762,19 +771,19 @@ $(document).ready(function() {
                         }
                         $('#header_table2').html(header_table2);
                         $('#body_table').html(body_table);
-                            
+
                         $('#yes_table').show();
                         $('#no_table').hide();
 
                         $('#dataTable').DataTable();
 
-                    }else{
+                    } else {
                         labelChart1 = Array();
                         dataChart1 = Array();
-                        
-                        for(i=1;i<=round;i++){
-                            labelChart1[i-1] = result[i]['label1'];
-                            dataChart1[i-1] = result[i]['data'];
+
+                        for (i = 1; i <= round; i++) {
+                            labelChart1[i - 1] = result[i]['label1'];
+                            dataChart1[i - 1] = result[i]['data'];
                         }
 
                         //data for chart
@@ -783,29 +792,29 @@ $(document).ready(function() {
                         // dataChart1 = [20, 12, 10, 8, 5, 30];
                         color1 = Array();
                         colorBorder1 = Array();
-                        for(i=0;i<dataChart1.length;i++){
+                        for (i = 0; i < dataChart1.length; i++) {
                             // var randomColor = Math.floor(Math.random()*16777215).toString(16);
                             var r = Math.floor(Math.random() * 256);
                             var g = Math.floor(Math.random() * 256);
                             var b = Math.floor(Math.random() * 256);
-                            var randomColor = "rgba("+r + ", " + g + ", " + b;
-                            if(checkDup(color1,randomColor)){
-                                color1[i] = randomColor+",0.6)";
-                                colorBorder1[i] = randomColor+",0.8)"; 
+                            var randomColor = "rgba(" + r + ", " + g + ", " + b;
+                            if (checkDup(color1, randomColor)) {
+                                color1[i] = randomColor + ",0.6)";
+                                colorBorder1[i] = randomColor + ",0.8)";
                             }
                         }
                         // console.log(color1);
                         // console.log("present = "+present);
 
                         //data for chart
-                        fillChart = false; 
-                        if(present == "area" || present == "multi_area" || present == "chart_radar"){
+                        fillChart = false;
+                        if (present == "area" || present == "multi_area" || present == "chart_radar") {
                             // console.log("fill");
                             fillChart = true;
                         }
                         var ctx = $('#chartjs');
-                        if(present == "pie" || present == "bar" || present == "line" || present == "area"){
-                            if(present == "area") typeChart = "line";
+                        if (present == "pie" || present == "bar" || present == "line" || present == "area") {
+                            if (present == "area") typeChart = "line";
                             else typeChart = present;
                             myChart = new Chart(ctx, {
                                 type: typeChart,
@@ -816,20 +825,20 @@ $(document).ready(function() {
                                         data: dataChart1,
                                         fill: fillChart,
                                         backgroundColor: color1,
-                                        borderColor : colorBorder1
+                                        borderColor: colorBorder1
                                     }]
                                 }
                             });
-                        }else{            
-                            if(present == "multi_area"){
+                        } else {
+                            if (present == "multi_area") {
                                 typeChart = "line";
-                            }else{
+                            } else {
                                 t = present.split("_");
                                 typeChart = t[1];
                                 // console.log("typeChart = "+typeChart);
                             }
-                            
-                            if(present == "complex_bar"){
+
+                            if (present == "complex_bar") {
                                 optionChart = {
                                     scales: {
                                         xAxes: [{
@@ -840,18 +849,18 @@ $(document).ready(function() {
                                         }]
                                     }
                                 };
-                            }else{
+                            } else {
                                 optionChart = "";
                             }
                             //data for chart
-                            labelChart1 = Array();//
+                            labelChart1 = Array(); //
                             labelChart2 = Array();
                             dataInChart = Array();
                             arrInData = Array();
 
-                            for(i=1;i<=round;i++){
-                                labelChart2[i-1] = result[i]['label1']; //year/month/day
-                                labelChart1[i-1] = result[i]['label2']; 
+                            for (i = 1; i <= round; i++) {
+                                labelChart2[i - 1] = result[i]['label1']; //year/month/day
+                                labelChart1[i - 1] = result[i]['label2'];
                             }
                             labelChart1 = unique(labelChart1);
                             labelChart2 = unique(labelChart2);
@@ -861,23 +870,23 @@ $(document).ready(function() {
                             // console.log("labelChart2");
                             // console.log(labelChart2);
 
-                            for(i=0;i<labelChart1.length;i++){
+                            for (i = 0; i < labelChart1.length; i++) {
                                 arrInData[labelChart1[i]] = Array();
                             }
 
-                            for(i=0;i<labelChart1.length;i++){
-                                for(j=0;j<labelChart2.length;j++){
+                            for (i = 0; i < labelChart1.length; i++) {
+                                for (j = 0; j < labelChart2.length; j++) {
                                     arrInData[labelChart1[i]][labelChart2[j]] = "0";
                                 }
                             }
                             // console.log("arrInData");
                             // console.log(arrInData);
-                            for(i=1;i<=round;i++){
+                            for (i = 1; i <= round; i++) {
                                 arrInData[result[i]['label2']][result[i]['label1']] = result[i]['data'];
                             }
-                            for(i=0;i<labelChart1.length;i++){
+                            for (i = 0; i < labelChart1.length; i++) {
                                 arrToData = Array();
-                                for(j=0;j<labelChart2.length;j++){
+                                for (j = 0; j < labelChart2.length; j++) {
                                     arrToData.push(arrInData[labelChart1[i]][labelChart2[j]]);
                                 }
                                 dataInChart.push(arrToData);
@@ -899,30 +908,30 @@ $(document).ready(function() {
                             color2 = Array();
                             colorBorder2 = Array();
 
-                            for(i=0;i<labelChart2.length;i++){
+                            for (i = 0; i < labelChart2.length; i++) {
                                 // var randomColor = Math.floor(Math.random()*16777215).toString(16);
                                 var r = Math.floor(Math.random() * 256);
                                 var g = Math.floor(Math.random() * 256);
                                 var b = Math.floor(Math.random() * 256);
-                                var randomColor = "rgba("+r + ", " + g + ", " + b;
-                                if(checkDup(color2,randomColor)){
-                                    if(present == "rader"){
-                                        color2[i] = randomColor+",0.1)";
-                                    }else{
-                                        color2[i] = randomColor+",0.6)";
+                                var randomColor = "rgba(" + r + ", " + g + ", " + b;
+                                if (checkDup(color2, randomColor)) {
+                                    if (present == "rader") {
+                                        color2[i] = randomColor + ",0.1)";
+                                    } else {
+                                        color2[i] = randomColor + ",0.6)";
                                     }
-                                    colorBorder2[i] = randomColor+",0.8)"; 
+                                    colorBorder2[i] = randomColor + ",0.8)";
                                 }
-                            }                
+                            }
                             // console.log(color2);
                             dataChart2 = [];
-                            for(i=0;i<labelChart1.length;i++){
+                            for (i = 0; i < labelChart1.length; i++) {
                                 dataChart2[i] = {
                                     label: labelChart1[i],
                                     data: dataInChart[i],
                                     fill: fillChart,
                                     backgroundColor: color2[i],
-                                    borderColor : colorBorder2[i]
+                                    borderColor: colorBorder2[i]
                                 };
                             }
                             // data for chart
@@ -937,28 +946,28 @@ $(document).ready(function() {
                             });
                         }
 
-                        if(present == "pie" ||  present == "line" || present == "bar"){
+                        if (present == "pie" || present == "line" || present == "bar") {
                             html = `<tr>
                             <th  style="width:60px;">ลำดับ</th>
                             <th>${label1}</th>
                             <th>${data1}${cal1} <br/> (${unit1}) </th>
                             </tr>`;
-                            for(i=1;i<=round;i++){
-                                html+=`<tr>
+                            for (i = 1; i <= round; i++) {
+                                html += `<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td align="right">${result[i]['data']}</td>
                                 </tr>`;
                             }
-                        }else{
+                        } else {
                             html = `<tr>
                             <th  style="width:60px;">ลำดับ</th>
                             <th>${label1}</th>
                             <th>${label2}</th>
                             <th>${data1}${cal1} <br/> (${unit1}) </th>
                             </tr>`;
-                            for(i=1;i<=round;i++){
-                                html+=`<tr>
+                            for (i = 1; i <= round; i++) {
+                                html += `<tr>
                                 <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
@@ -972,89 +981,101 @@ $(document).ready(function() {
                         $('#dataTable2').html(html);
 
                     }
-                    
+
 
                 });
-            }else{
+            } else {
                 $('#show_chart').hide();
             }
-        }else{
+        } else {
             $('#show_chart').hide();
-        } 
-        
+        }
+
 
 
     });
-    
+
 });
+
 function unique(list) {
     var result = [];
     $.each(list, function(i, e) {
-      if ($.inArray(e, result) == -1) result.push(e);
+        if ($.inArray(e, result) == -1) result.push(e);
     });
     return result;
-  }
-function monthToNumber(month){
-    monthArr = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-    for(i=0;i<monthArr.length;i++){
-        if(monthArr[i] == month){
-            return i+1;
+}
+
+function monthToNumber(month) {
+    monthArr = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+    for (i = 0; i < monthArr.length; i++) {
+        if (monthArr[i] == month) {
+            return i + 1;
         }
-    }  
+    }
     return 0;
 }
-function checkDup(arr,dt){
-    for(i=0;i<arr.length;i++){
-        if(arr[i] == dt){
+
+function checkDup(arr, dt) {
+    for (i = 0; i < arr.length; i++) {
+        if (arr[i] == dt) {
             return false;
         }
     }
     return true;
 }
-function getArrayMany(id_list){
+
+function getArrayMany(id_list) {
     var children = $(id_list).children();
     var Array_Data = [];
     var currentChild;
     for (var i = 0; i < children.length; i++) {
         currentChild = children.eq(i);
-        Array_Data[i+1] = currentChild.attr('Name');
+        Array_Data[i + 1] = currentChild.attr('Name');
     }
     return Array_Data;
 }
-function getDaysInMonth (month,year) {
-   return new Date(year, month, 0).getDate();
+
+function getDaysInMonth(month, year) {
+    return new Date(year, month, 0).getDate();
 }
-function hide1(){
+
+function hide1() {
     $(".oneprovince").hide();
     $(".onedist").hide();
     $(".onesubdist").hide();
     $(".onefarm").hide();
     $(".onesubfarm").hide();
 }
-function hide2(){
+
+function hide2() {
     $(".onedist").hide();
     $(".onesubdist").hide();
     $(".onefarm").hide();
     $(".onesubfarm").hide();
 }
-function hide3(){
+
+function hide3() {
     $(".onesubdist").hide();
     $(".onefarm").hide();
     $(".onesubfarm").hide();
 }
-function hide4(){
+
+function hide4() {
     $(".onefarm").hide();
     $(".onesubfarm").hide();
 }
-function hide1_time(){
+
+function hide1_time() {
     $(".oneyear").hide();
     $(".onemonth").hide();
     $(".oneday").hide();
 }
-function hide2_time(){
+
+function hide2_time() {
     $(".onemonth").hide();
     $(".oneday").hide();
 }
+
 function updateData() {
 
     swal({
@@ -1070,78 +1091,78 @@ function updateData() {
                 // system();
                 $("#loading").show();
                 $("#update").hide();
-                    $('[data-toggle=tooltip]').tooltip({
-                        boundary: 'window',
-                        trigger: 'hover'
-                    });
-                    return true;
-                
+                $('[data-toggle=tooltip]').tooltip({
+                    boundary: 'window',
+                    trigger: 'hover'
+                });
+                return true;
+
             } else {
-    
+
             }
         });
-    
+
 }
-function exportTableToExcel(tableID, filename = ''){
+
+function exportTableToExcel(tableID, filename = '') {
     var downloadLink;
     var dataType = 'application/vnd.ms-excel';
     var tableSelect = document.getElementById(tableID);
     var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-    
+
     // Specify file name
-    filename = filename?filename+'.xls':'excel_data.xls';
-    
+    filename = filename ? filename + '.xls' : 'excel_data.xls';
+
     // Create download link element
     downloadLink = document.createElement("a");
-    
+
     document.body.appendChild(downloadLink);
-    
-    if(navigator.msSaveOrOpenBlob){
+
+    if (navigator.msSaveOrOpenBlob) {
         var blob = new Blob(['\ufeff', tableHTML], {
             type: dataType
         });
-        navigator.msSaveOrOpenBlob( blob, filename);
-    }else{
+        navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
         // Create a link to the file
         downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    
+
         // Setting the file name
         downloadLink.download = filename;
-        
+
         //triggering the function
         downloadLink.click();
     }
 }
-function fnExcelReport()
-{
-    var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
-    var textRange; var j=0;
+
+function fnExcelReport() {
+    var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+    var textRange;
+    var j = 0;
     tab = document.getElementById('dataTable'); // id of table
 
-    for(j = 0 ; j < tab.rows.length ; j++) 
-    {     
-        tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+    for (j = 0; j < tab.rows.length; j++) {
+        tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
         //tab_text=tab_text+"</tr>";
     }
 
-    tab_text=tab_text+"</table>";
-    tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-    tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-    tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+    tab_text = tab_text + "</table>";
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
 
     var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE "); 
+    var msie = ua.indexOf("MSIE ");
 
-    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) // If Internet Explorer
     {
-        txtArea1.document.open("txt/html","replace");
+        txtArea1.document.open("txt/html", "replace");
         txtArea1.document.write(tab_text);
         txtArea1.document.close();
-        txtArea1.focus(); 
-        sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
-    }  
-    else                 //other browser not tested on IE 11
-        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
+        txtArea1.focus();
+        sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+    } else //other browser not tested on IE 11
+        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
 
     return (sa);
 }
