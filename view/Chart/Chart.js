@@ -681,7 +681,6 @@ $(document).ready(function() {
                 $.post("dataForChart.php", {request: "chart" ,present: present,chose_label1: chose_label1,chose_label2: chose_label2,chose_type: chose_type,
                 chose_cal: chose_cal,chose_cond: chose_cond,SET1:SET1,SET2:SET2,SET3:SET3}, function(result){
                     // console.log(result);
-
                     try{
                         result = JSON.parse(result);
                         // console.log(result);
@@ -711,6 +710,7 @@ $(document).ready(function() {
                     if(present == "table"){
                         if(chose_type != "water1" && chose_type != "water2")
                         {
+                            $('#sum_header_table2').removeAttr("style");
                             $('#header_table1').attr("colspan",8);
                         }else{
                             $('#sum_header_table2').attr("style","display:none;");
@@ -724,49 +724,42 @@ $(document).ready(function() {
                         $('#avg_header_table2').html(`${data1}เฉลี่ย <br/> (${unit1})`);
                         $('#sum_header_table2').html(`${data1}ผลรวม <br/> (${unit1})`);
                         $('#sd_header_table2').html(`${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1})`);
-
-                        html = `<th style="width:60px;">ลำดับ</th>
-                                <th>${label1}</th>
-                                <th>${label2}</th>
-                                <th>${data1}มากที่สุด <br/> (${unit1}) </th>
-                                <th>${data1}น้อยที่สุด <br/> (${unit1}) </th>
-                                <th>${data1}เฉลี่ย <br/> (${unit1}) </th>`;
-                            if(chose_type != "water1" && chose_type != "water2")
-                                html += `<th>${data1}ผลรวม <br/> (${unit1}) </th>`;
-                            html += `<th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1}) </th>`;
-                        // $('#header_table2').html(html);
-                        html = "";
+                        
+                        if(chose_type != "water1" && chose_type != "water2"){
+                            html="";
                             for(i=1;i<=round;i++){
-                                html +=`<tr><td align="right">${i}</td>
+                            html +=`<tr>
+                                <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
                                 <td align="right">${result[i]['max']}</td>
                                 <td align="right">${result[i]['min']}</td>
-                                <td align="right">${result[i]['avg']}</td>`;
-                            if(chose_type != "water1" && chose_type != "water2")
-                                html += `<td align="right">${result[i]['sum']}</td>`;
-                            html += `<td align="right">${result[i]['sd']}</td></tr>`;
+                                <td align="right">${result[i]['avg']}</td>
+                                <td align="right">${result[i]['sum']}</td>
+                                <td align="right">${result[i]['sd']}</td>
+                            </tr>`;
                             }
+                        }else{
+                            html="";
+                            for(i=1;i<=round;i++){
+                            html +=`<tr>
+                                <td align="right">${i}</td>
+                                <td>${result[i]['label1']}</td>
+                                <td>${result[i]['label2']}</td>
+                                <td align="right">${result[i]['max']}</td>
+                                <td align="right">${result[i]['min']}</td>
+                                <td align="right">${result[i]['avg']}</td>
+                                <td align="right">${result[i]['sd']}</td>
+                            </tr>`;
+                            }
+                        }
+                        
                         $('#body_table').html(html);
-                            html = `<tr>
-                                    <th style="width:60px;">ลำดับ</th>
-                                    <th>${label1}</th>
-                                    <th>${label2}</th>
-                                    <th>${data1}มากที่สุด <br/> (${unit1}) </th>
-                                    <th>${data1}น้อยที่สุด <br/> (${unit1}) </th>
-                                    <th>${data1}เฉลี่ย <br/> (${unit1}) </th>`;
-                                if(chose_type != "water1" && chose_type != "water2")
-                                    html += `<th>${data1}ผลรวม <br/> (${unit1}) </th>`;
-                                html += `<th>${data1}ค่าส่วนเบี่ยงเบนมาตรฐาน <br/> (${unit1}) </th>
-                                </tr>`;
-                        // $('#footer_table').html(html);
                             
                         $('#yes_table').show();
                         $('#no_table').hide();
 
                         $('#dataTable').DataTable();
-
-                        // $('#dataTable').html(html);
 
                     }else{
                         labelChart1 = Array();

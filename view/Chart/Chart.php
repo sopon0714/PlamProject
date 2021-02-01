@@ -11,7 +11,6 @@ $YEAR = getYearAgriMap();
 $MONTH = array("มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
 
 ?>
-<!-- <link href='https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css' rel='stylesheet' /> -->
 
 <style>
 .graph {
@@ -960,9 +959,9 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <table class="table table-bordered table-data" id="dataTable" style="table-layout: fixed;" width="100%" cellspacing="0"> 
                                     
                                 <thead>
-                                    <!-- <tr>
+                                    <tr>
                                         <th colspan="8" id="header_table1">หัวข้อ</th>
-                                    </tr> -->
+                                    </tr>
                                     <tr id="header_table2">
                                         <th style="width:60px;">ลำดับ</th>
                                         <th id="label1_header_table2">label1</th>
@@ -1049,8 +1048,6 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script> -->
 
 <script src='./../../js/excelexportjs.js'></script>
 <script src="Chart.js"></script>

@@ -249,7 +249,7 @@ if(isset($_POST['request'])){
 
                 if($present == "table"){
                     $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(MAX(t10.days),2) AS max, ROUND(MIN(t10.days),2) AS min, 
-                    ROUND(AVG(t10.days),2) AS avg, ROUND(STDDEV(t10.days),2) AS sd FROM (";
+                    ROUND(AVG(t10.days),2) AS avg,ROUND(SUM(t10.days),2) AS sum, ROUND(STDDEV(t10.days),2) AS sd FROM (";
                 }else{
                     $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (";
                 }
@@ -306,7 +306,7 @@ if(isset($_POST['request'])){
 
                 if($present == "table"){
                     $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(MAX(t10.days),2) AS max, ROUND(MIN(t10.days),2) AS min, 
-                    ROUND(AVG(t10.days),2) AS avg, ROUND(STDDEV(t10.days),2) AS sd FROM (";
+                    ROUND(AVG(t10.days),2) AS avg,ROUND(SUM(t10.days),2) AS sum, ROUND(STDDEV(t10.days),2) AS sd FROM (";
                 }else{
                     $sql = "SELECT t10.".$chose_label1." AS label1 ".$label2.", ROUND(".$chose_cal."(t10.days),2) AS data FROM (";
                 }
