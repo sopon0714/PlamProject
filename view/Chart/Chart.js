@@ -73,9 +73,11 @@ $(document).ready(function() {
         if (pre == "table") {
             $('#chose_cal').hide();
             $('#chose_cal').removeAttr('required');
+            $('#normal_chart').prop("style","display:none;");
         } else {
             $('#chose_cal').show();
             $('#chose_cal').prop('required', true);
+            $('#normal_chart').removeAttr("style");
         }
         if (pre == "table" || pre == "pie" || pre == "bar" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix") {
             if (pre == "table" || pre == "multi_bar" || pre == "complex_bar" || pre == "chart_radar" || pre == "mix") {
@@ -690,6 +692,8 @@ $(document).ready(function() {
                     SET3: SET3
                 }, function(result) {
                     // console.log(result);
+                    html = `<canvas id="chartjs"><canvas>`;
+                    $('#chart_chart').html(html);
                     try {
                         result = JSON.parse(result);
                         // console.log(result);

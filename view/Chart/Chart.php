@@ -1012,8 +1012,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                     </div>
                     <div class="card-body" id="no_table">
                         <div class="row">
-                            <div class="col-7">
-                                <canvas id="chartjs"><canvas>
+                            <div class="col-7" id="chart_chart">
+                                <!-- <canvas id="chartjs"><canvas> -->
                             </div>
                             <div class="col-5">
                                 <div class="table-responsive">
