@@ -70,6 +70,11 @@ $(document).ready(function() {
     $('[name="present"]').change(function() {
         pre = $('input[name="present"]:checked').val();
         $('#show_chart').hide();
+        $('#chose_label1').val("");
+        $('#chose_label2').val("");
+        $('#chose_cond').val("");
+        $('#chose_type').val("");
+        $('#chose_cal').val("");
         if (pre == "table") {
             $('#chose_cal').hide();
             $('#chose_cal').removeAttr('required');
@@ -696,7 +701,7 @@ $(document).ready(function() {
                     $('#chart_chart').html(html);
                     try {
                         result = JSON.parse(result);
-                        // console.log(result);
+                        console.log(result);
                         if (result[0]['numrow'] <= 0) {
                             $('#show_chart').hide();
                             $('#show_error').hide();
