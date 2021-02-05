@@ -1016,10 +1016,13 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                                 <!-- <canvas id="chartjs"><canvas> -->
                             </div>
                             <div class="col-5">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="margin-top:10px">
                                     <table class="table table-bordered table-data" id="dataTable2" width="100%" cellspacing="0"> 
                                     </table>
-                                </div>
+                                </div>    
+                                <!-- <table class="table table-bordered" name="dataTable2" id="dataTable2"
+                                style="margin-top:10px; width:90%;"> -->
+                            </table>
                             </div>                            
                         </div>                         
                     </div>
