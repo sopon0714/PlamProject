@@ -3,6 +3,7 @@
 
 <!-- Setting Session Variable -->
 <?php
+set_time_limit(600);
 include_once("../../dbConnect.php");
 //Set log-login
 include_once("../../set-log-login.php");
