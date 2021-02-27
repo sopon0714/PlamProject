@@ -75,7 +75,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     cursor: pointer;
   }
 </style>
-<div class="container">
+<div class="container bg">
   <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-12 col-xl-3 row justify-content-center">
       <div class="card">

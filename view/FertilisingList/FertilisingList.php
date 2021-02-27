@@ -31,7 +31,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     }
 </style>
 
-<div class="container">
+<div class="container bg">
 
     <!----------- Start Head ------------>
     <div class="row">

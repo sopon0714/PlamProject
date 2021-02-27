@@ -62,7 +62,7 @@ $PESTTYPE = getPestType();
     }
 </style>
 
-<div class="container">
+<div class="container bg">
 
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">

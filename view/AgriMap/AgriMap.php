@@ -23,11 +23,7 @@ $NUTR = getNutr();
         max-width: 500px;
     }
 </style>
-<div class="loader hidden">
-    <img src="./../../icon/loading/loading.gif" alt="Loading...">Loading...
-</div>
-<div id="body_data" hidden>
-    <div class="container">
+    <div class="container bg">
         <div class="row">
             <div class="col-xl-12 col-12 mb-6">
                 <div class="card">
@@ -230,7 +226,7 @@ $NUTR = getNutr();
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container bg">
         <div class="card">
             <div class="card-header card-bg">
                 <span class="link-active font-weight-bold" style="color:<?= $color ?>;">ตำแหน่งแปลงของสวนปาล์ม</span>
@@ -244,7 +240,6 @@ $NUTR = getNutr();
             </div>
         </div>
     </div>
-</div>
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <script src="AgriMap.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>

@@ -23,11 +23,7 @@ $ALLDEPARTMENT = getAllDepartment();
         border-top: none;
     }
 </style>
-<div class="loader hidden">
-    <img src="./../../icon/loading/loading.gif" alt="Loading...">Loading...
-</div>
-<div id="body_data" hidden>
-    <div class="container">
+    <div class="container bg">
 
         <div class="row">
             <div class="col-xl-12 col-12 mb-4">
@@ -142,7 +138,6 @@ $ALLDEPARTMENT = getAllDepartment();
         </div>
 
     </div>
-</div>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("DepartmentListModal.php"); ?>

@@ -203,28 +203,8 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
     #accordionSidebar {
       background-color: <?= $color ?>;
     }
-    .loader{
-    position: relative;
-    z-index: 99;
-    width: 100%;
-    height: 670px;
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
-    .loader > img{
-        width: 100px;
-    }
-    .loader.hidden{
-        animation: fadeOut 1s;
-        animation-fill-mode: forwards;
-    }
-    @keyframes fadeOut{
-        100%{
-            opacity: 0;
-            visibility: hidden;
-        }
+    .bg{
+      background-color: #ebf5fb;
     }
   </style>
 
@@ -269,7 +249,7 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
-      <div id="content" style="background-color: #EBF5FB;">
+      <div id="content" style="background-color: #EBF5FB; background-image: url('./../../icon/loading/loading.gif'); background-position: center; background-repeat: no-repeat;" >
 
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">

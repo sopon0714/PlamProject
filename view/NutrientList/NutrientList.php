@@ -46,12 +46,14 @@ include_once("./../../query/query.php");
         color: <?= $color ?>;
     }
 </style>
+<div class="container bg">
 
-<?php require("headF.php"); ?>
-<?php require("bodyF.php"); ?>
-<?php require("modalInsert.php"); ?>
-<?php require("modalUpdate.php"); ?>
+    <?php require("headF.php"); ?>
+    <?php require("bodyF.php"); ?>
+    <?php require("modalInsert.php"); ?>
+    <?php require("modalUpdate.php"); ?>
 
+</div>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 

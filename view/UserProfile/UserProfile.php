@@ -28,164 +28,164 @@ if ($icon == "default.jpg") {
 ?>
 <link href="style.css" rel="stylesheet" />
 
-<div class="container">
+    <div class="container bg">
 
-    <div class="row">
-        <div class="col-xl-12 col-12 mb-4">
-            <div class="card">
-                <div class="card-header card-bg">
-                    <div class="row">
-                        <div class="col-12">
-                            <span class="link-active font-weight-bold" style="color:<?= $color ?>;">บัญชีผู้ใช้</span>
-                            <span style="float:right;">
-                                <i class="fas fa-bookmark"></i>
-                                <a class="link-path" href="#">หน้าแรก</a>
-                                <span> > </span>
-                                <a class="link-path link-active" href="#" style="color:<?= $color ?>;">บัญชีผู้ใช้</a>
-                            </span>
+        <div class="row">
+            <div class="col-xl-12 col-12 mb-4">
+                <div class="card">
+                    <div class="card-header card-bg">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="link-active font-weight-bold" style="color:<?= $color ?>;">บัญชีผู้ใช้</span>
+                                <span style="float:right;">
+                                    <i class="fas fa-bookmark"></i>
+                                    <a class="link-path" href="#">หน้าแรก</a>
+                                    <span> > </span>
+                                    <a class="link-path link-active" href="#" style="color:<?= $color ?>;">บัญชีผู้ใช้</a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-xl-4 col-12 mb-4">
-            <div class="row">
-                <div class="col-xl-12 col-12">
-                    <div class="card">
-                        <div class="card-header card-bg font-weight-bold" style="color:<?= $color ?>;">
-                            รูปโปรไฟล์
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <img class="img-radius img-profile" <?php
-                                                                    if ($icon == "default.jpg") {
-                                                                        if ($USER[1]['Title'] == 1)
-                                                                            echo 'src="../../icon/user/0/defaultM.jpg" />';
-                                                                        else
-                                                                            echo 'src="../../icon/user/0/defaultW.jpg" />';
-                                                                    } else {
-                                                                        echo 'src="../../icon/user/' . $userId . '/' . $icon . '" />';
-                                                                    }
-                                                                    ?> </div> <div class="row mt-3">
-                                <div class="col-xl-12 col-12">
-                                    <center>
-                                        <button type="button" id="edit_photo" class="btn btn-primary btn-sm tt" title='เปลี่ยนรูปโปรไฟล์' uid="<?php echo $USER[1]['UID']; ?>">
-                                            <i class="fas fa-image"></i>
-                                        </button>
-                                        <button type="button" id="btn_info" class="btn btn-warning btn-sm tt" title='เปลี่ยนข้อมูลบัญชี' uid="<?php echo $USER[1]['UID']; ?>" titles="<?php echo $USER[1]['Title']; ?>" username="<?php echo $USER[1]['UserName']; ?>" fname="<?php echo $USER[1]['FirstName']; ?>" lname="<?php echo $USER[1]['LastName']; ?>" mail="<?php echo $USER[1]['EMAIL']; ?>" type_email="<?php echo $USER[1]['ETID']; ?>" department="<?php echo $USER[1]['DID']; ?>" admin="<?php echo $USER[1]['IsAdmin']; ?>" research="<?php echo $USER[1]['IsResearch']; ?>" operator="<?php echo $USER[1]['IsOperator']; ?>" farmer="<?php echo $USER[1]['IsFarmer']; ?>">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" id="btn_pass" class="btn btn-success btn-sm pass_edit tt" title='เปลี่ยนรหัสผ่าน' uid="<?php echo $USER[1]['UID']; ?>" username="<?php echo $USER[1]['UserName']; ?>" pass="<?php echo $pass; ?>" titles="<?php echo $USER[1]['Title']; ?>" fname="<?php echo $USER[1]['FirstName']; ?>" lname="<?php echo $USER[1]['LastName']; ?>">
-                                            <i class="fa fa-cog"></i>
-                                        </button>
-                                    </center>
+        <div class="row">
+            <div class="col-xl-4 col-12 mb-4">
+                <div class="row">
+                    <div class="col-xl-12 col-12">
+                        <div class="card">
+                            <div class="card-header card-bg font-weight-bold" style="color:<?= $color ?>;">
+                                รูปโปรไฟล์
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <img class="img-radius img-profile" <?php
+                                                                        if ($icon == "default.jpg") {
+                                                                            if ($USER[1]['Title'] == 1)
+                                                                                echo 'src="../../icon/user/0/defaultM.jpg" />';
+                                                                            else
+                                                                                echo 'src="../../icon/user/0/defaultW.jpg" />';
+                                                                        } else {
+                                                                            echo 'src="../../icon/user/' . $userId . '/' . $icon . '" />';
+                                                                        }
+                                                                        ?> </div> <div class="row mt-3">
+                                    <div class="col-xl-12 col-12">
+                                        <center>
+                                            <button type="button" id="edit_photo" class="btn btn-primary btn-sm tt" title='เปลี่ยนรูปโปรไฟล์' uid="<?php echo $USER[1]['UID']; ?>">
+                                                <i class="fas fa-image"></i>
+                                            </button>
+                                            <button type="button" id="btn_info" class="btn btn-warning btn-sm tt" title='เปลี่ยนข้อมูลบัญชี' uid="<?php echo $USER[1]['UID']; ?>" titles="<?php echo $USER[1]['Title']; ?>" username="<?php echo $USER[1]['UserName']; ?>" fname="<?php echo $USER[1]['FirstName']; ?>" lname="<?php echo $USER[1]['LastName']; ?>" mail="<?php echo $USER[1]['EMAIL']; ?>" type_email="<?php echo $USER[1]['ETID']; ?>" department="<?php echo $USER[1]['DID']; ?>" admin="<?php echo $USER[1]['IsAdmin']; ?>" research="<?php echo $USER[1]['IsResearch']; ?>" operator="<?php echo $USER[1]['IsOperator']; ?>" farmer="<?php echo $USER[1]['IsFarmer']; ?>">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" id="btn_pass" class="btn btn-success btn-sm pass_edit tt" title='เปลี่ยนรหัสผ่าน' uid="<?php echo $USER[1]['UID']; ?>" username="<?php echo $USER[1]['UserName']; ?>" pass="<?php echo $pass; ?>" titles="<?php echo $USER[1]['Title']; ?>" fname="<?php echo $USER[1]['FirstName']; ?>" lname="<?php echo $USER[1]['LastName']; ?>">
+                                                <i class="fa fa-cog"></i>
+                                            </button>
+                                        </center>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-8 col-12 mb-4">
-            <div class="card">
-                <div class="card-header card-bg font-weight-bold" style="color:<?= $color ?>;">
-                    รายละเอียดบัญชี
-                </div>
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>คำนำหน้า</span>
-                        </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" id="title" value=<?php
-                                                                                        if ($USER[1]['Title'] == 1) {
-                                                                                            echo "นาย";
-                                                                                        } else if ($USER[1]['Title'] == 2) {
-                                                                                            echo "นาง";
-                                                                                        } else {
-                                                                                            echo "นางสาว";
-                                                                                        }
-                                                                                        ?> disabled>
-                        </div>
+            <div class="col-xl-8 col-12 mb-4">
+                <div class="card">
+                    <div class="card-header card-bg font-weight-bold" style="color:<?= $color ?>;">
+                        รายละเอียดบัญชี
                     </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>ชื่อ</span>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>คำนำหน้า</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" id="title" value=<?php
+                                                                                            if ($USER[1]['Title'] == 1) {
+                                                                                                echo "นาย";
+                                                                                            } else if ($USER[1]['Title'] == 2) {
+                                                                                                echo "นาง";
+                                                                                            } else {
+                                                                                                echo "นางสาว";
+                                                                                            }
+                                                                                            ?> disabled>
+                            </div>
                         </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" id="firstname" value="<?php echo $USER[1]['FirstName']; ?>" disabled>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>ชื่อ</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" id="firstname" value="<?php echo $USER[1]['FirstName']; ?>" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>นามสกุล</span>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>นามสกุล</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" id="lastname" value="<?php echo $USER[1]['LastName'] ?>" disabled>
+                            </div>
                         </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" id="lastname" value="<?php echo $USER[1]['LastName'] ?>" disabled>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>อีเมล์</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" id="mail" value="<?php echo $USER[1]['EMAIL'] ?>@<?php echo $EMIALTYPEUSER[1]['Type'] ?>" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>อีเมล์</span>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>ชื่อบัญชี</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" id="username" value="<?php echo $USER[1]['UserName'] ?>" disabled>
+                            </div>
                         </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" id="mail" value="<?php echo $USER[1]['EMAIL'] ?>@<?php echo $EMIALTYPEUSER[1]['Type'] ?>" disabled>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 col-12 text-right">
+                                <span>หน่วยงาน</span>
+                            </div>
+                            <div class="col-xl-9 col-12">
+                                <input type="text" class="form-control" id="department" value="<?php echo $DEPARTMENTUSER[1]['Department']; ?>" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>ชื่อบัญชี</span>
-                        </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" id="username" value="<?php echo $USER[1]['UserName'] ?>" disabled>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-xl-3 col-12 text-right">
-                            <span>หน่วยงาน</span>
-                        </div>
-                        <div class="col-xl-9 col-12">
-                            <input type="text" class="form-control" id="department" value="<?php echo $DEPARTMENTUSER[1]['Department']; ?>" disabled>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right">
-                            <span>สิทธิการเข้าใช้งาน</span>
-                        </div>
-                        <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                        <div class="row mb-4">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right">
+                                <span>สิทธิการเข้าใช้งาน</span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
 
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="admin" name="admin" value="option1" disabled <?php if ($USER[1]['IsAdmin'] == 1) echo "checked"; ?>>
-                                <label class="form-check-label" for="inlineCheckbox1">ผู้ดูแลระบบ</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="admin" name="admin" value="option1" disabled <?php if ($USER[1]['IsAdmin2'] == 1) echo "checked"; ?>>
-                                <label class="form-check-label" for="inlineCheckbox1">ผู้ช่วยผู้ดูแลระบบ</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="research" name="research" value="option2" disabled <?php if ($USER[1]['IsResearch'] == 1) echo "checked"; ?>>
-                                <label class="form-check-label" for="inlineCheckbox2">นักวิจัย</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="operator" name="operator" value="option3" disabled <?php if ($USER[1]['IsOperator'] == 1) echo "checked"; ?>>
-                                <label class="form-check-label" for="inlineCheckbox3">พนักงานทั่วไป</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="farmer" name="farmer" value="option4" disabled <?php if ($USER[1]['IsFarmer'] == 1) echo "checked"; ?>>
-                                <label class="form-check-label" for="inlineCheckbox4">เกษตรกร</label>
-                            </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="admin" name="admin" value="option1" disabled <?php if ($USER[1]['IsAdmin'] == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="inlineCheckbox1">ผู้ดูแลระบบ</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="admin" name="admin" value="option1" disabled <?php if ($USER[1]['IsAdmin2'] == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="inlineCheckbox1">ผู้ช่วยผู้ดูแลระบบ</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="research" name="research" value="option2" disabled <?php if ($USER[1]['IsResearch'] == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="inlineCheckbox2">นักวิจัย</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="operator" name="operator" value="option3" disabled <?php if ($USER[1]['IsOperator'] == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="inlineCheckbox3">พนักงานทั่วไป</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="farmer" name="farmer" value="option4" disabled <?php if ($USER[1]['IsFarmer'] == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="inlineCheckbox4">เกษตรกร</label>
+                                </div>
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <?php include_once("UserProfileModal.php"); ?>

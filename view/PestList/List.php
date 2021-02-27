@@ -28,8 +28,9 @@
     </style>
 </head>
 
-<body>
-    <div class="container">
+<body> 
+
+    <div class="container bg">
 
         <div class="row">
             <div class="col-xl-12 col-12 mb-4">

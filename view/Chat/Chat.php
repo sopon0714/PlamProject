@@ -56,7 +56,7 @@ $CurrentMenu = "Chat";
 
 
 <body onload="hiddenn('0')">
-	<div class="container">
+	<div class="container bg">
 		<div>
 
 			<div class="row">

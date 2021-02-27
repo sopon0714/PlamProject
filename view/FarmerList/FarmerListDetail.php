@@ -20,70 +20,72 @@ $FARM = getOwnerFarmer($farmerID);
 
 ?>
 
-<body>
-    <div class="loader hidden">
-        <img src="./../../icon/loading/loading.gif" alt="Loading...">Loading...
-    </div>
-    <div id="body_data" hidden>
-        <div class="container">
+<body?>
 
-            <div class="row">
-                <div class="col-xl-12 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-header card-bg">
-                            <div class="row">
-                                <div class="col-12">
-                                    <span class="link-active font-weight-bold"  style="color:<?=$color?>;" >รายละเอียดเกษตรกร</span>
-                                    <span style="float:right;">
-                                        <i class="fas fa-bookmark"></i>
-                                        <a class="link-path" href="#">หน้าแรก</a>
-                                        <span> > </span>
-                                        <a class="link-path" href="FarmerList.php">รายชื่อเกษตรกร</a>
-                                        <span> > </span>
-                                        <a class="link-path link-active" href="#" style="color:<?=$color?>;" >รายละเอียดเกษตรกร</a>
-                                    </span>
-                                </div>
+    <div class="container bg">
+
+        <div class="row">
+            <div class="col-xl-12 col-12 mb-4">
+                <div class="card">
+                    <div class="card-header card-bg">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="link-active font-weight-bold"
+                                    style="color:<?=$color?>;">รายละเอียดเกษตรกร</span>
+                                <span style="float:right;">
+                                    <i class="fas fa-bookmark"></i>
+                                    <a class="link-path" href="#">หน้าแรก</a>
+                                    <span> > </span>
+                                    <a class="link-path" href="FarmerList.php">รายชื่อเกษตรกร</a>
+                                    <span> > </span>
+                                    <a class="link-path link-active" href="#"
+                                        style="color:<?=$color?>;">รายละเอียดเกษตรกร</a>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            
-            <div class="row">
 
-                <?php
+        <div class="row">
+
+            <?php
                 creatCard("card-color-one",   "จำนวนสวน", $countOwnerFarm . " สวน", "waves");
                 creatCard("card-color-two",   "จำนวนแปลง", $countOwnerSubFarm . " แปลง", "group");
                 creatCard("card-color-three",   "พื้นที่ทั้งหมด", $countOwnerAreaRai . " ไร่ ".$countOwnerAreaNgan." งาน", "dashboard");
                 creatCard("card-color-four",   "จำนวนต้นไม้", $countOwnerTree . " ต้น", "format_size");
                 ?>
 
-            </div>
+        </div>
 
-            <div class="row">
-                <div class="col-xl-6 col-12 mb-4">
-                    <div class="row">
-                        <div class="col-xl-12 col-12">
-                            <div class="card">
-                                <div class="card-header card-bg" style="height: 55px;">
-                                    <div>
-                                    <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">โปรไฟล์</h6>
+        <div class="row">
+            <div class="col-xl-6 col-12 mb-4">
+                <div class="row">
+                    <div class="col-xl-12 col-12">
+                        <div class="card">
+                            <div class="card-header card-bg" style="height: 55px;">
+                                <div>
+                                    <h6 class="m-0 font-weight-bold"
+                                        style="color:<?= $color ?>; top: 19px; position: absolute;">โปรไฟล์</h6>
 
                                     <a href='./../Chat/Chat.php?ufid=<?php echo $farmerID; ?>'>
-                                    <button style="float:right;" type='button' id='btn_warning' class="btn btn-warning btn-sm btn_edit tt" data-toggle="tooltip" title="แจ้งเตือน">
-                                        <i class='fas fa-bell'></i>
-                                    </button></a>                     
-                                    </div> 
-                                    <div>
-                                            
-                                    </div> 
-                                    
+                                        <button style="float:right;" type='button' id='btn_warning'
+                                            class="btn btn-warning btn-sm btn_edit tt" data-toggle="tooltip"
+                                            title="แจ้งเตือน">
+                                            <i class='fas fa-bell'></i>
+                                        </button></a>
                                 </div>
-                                <div class="card-body" >
-                                            
-                                            <div align="center">
-                                                <?php
+                                <div>
+
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+
+                                <div align="center">
+                                    <?php
                                                 if ($PROFILE[1]['Icon'] == "default.jpg") {
                                                     if ($PROFILE[1]['Title'] == "นาย") {
                                                         echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/0/man.jpg\" >";
@@ -94,101 +96,110 @@ $FARM = getOwnerFarmer($farmerID);
                                                     echo "<img class=\"img-radius img-profile\" src=\"../../icon/farmer/{$PROFILE[1]['UFID']}/{$PROFILE[1]['Icon']}\" >";
                                                 }
                                                 ?>
-                                            </div>
-
-                                            <div class="row mb-4 mt-3">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>คำนำหน้า</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-                                                    <input type="text" class="form-control" id="rank" value="<?php echo $PROFILE[1]['Title'] ?>" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-4">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>ชื่อ</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-
-                                                    <input type="text" class="form-control" id="firstname" value="<?php echo $PROFILE[1]["FirstName"] ?>" disabled>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-4">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>นามสกุล</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-                                                    <input type="text" class="form-control" id="lastname" value="<?php echo $PROFILE[1]["LastName"] ?>" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-4">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>ที่อยู่</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-                                                    <input type="text" class="form-control" id="address" value="<?php echo $PROFILE[1]["Address"] ?>" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-4">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>ตำบล</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-                                                    <input type="text" class="form-control" id="subdistrict" value="<?php echo $PROFILE[1]["subDistrinct"] ?>" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-4">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>อำเภอ</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-                                                    <input type="text" class="form-control" id="district" value="<?php echo $PROFILE[1]["Distrinct"] ?>" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-4">
-                                                <div class="col-xl-3 col-12 text-right">
-                                                    <span>จังหวัด</span>
-                                                </div>
-                                                <div class="col-xl-9 col-12">
-                                                    <input type="text" class="form-control" id="province" value="<?php echo $PROFILE[1]["Province"] ?>" disabled>
-                                                </div>
-                                            </div>
-                                        
-                                            <label hidden id="info" la="<?php echo $PROFILE[1]["Latitude"]; ?>" long="<?php echo $PROFILE[1]["Longitude"]; ?>" 
-                                            pro = "<?php echo $PROFILE[1]["Province"] ?>" dist = "<?php echo $PROFILE[1]["Distrinct"] ?>" 
-                                            owner ="<?php echo $PROFILE[1]["Title"]." ".$PROFILE[1]["FirstName"]." ".$PROFILE[1]["LastName"] ?>"></label>
-                                        </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-xl-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-header card-bg" style="height: 55px;">
-                            <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">
-                            ตำแหน่งที่อยู่และสวนของเกษตรกร</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-12 col-12 mb-2">
-                                    <div id="map" style="width:auto; height:642px"></div>
-
                                 </div>
+
+                                <div class="row mb-4 mt-3">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>คำนำหน้า</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+                                        <input type="text" class="form-control" id="rank"
+                                            value="<?php echo $PROFILE[1]['Title'] ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>ชื่อ</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+
+                                        <input type="text" class="form-control" id="firstname"
+                                            value="<?php echo $PROFILE[1]["FirstName"] ?>" disabled>
+
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>นามสกุล</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+                                        <input type="text" class="form-control" id="lastname"
+                                            value="<?php echo $PROFILE[1]["LastName"] ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>ที่อยู่</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+                                        <input type="text" class="form-control" id="address"
+                                            value="<?php echo $PROFILE[1]["Address"] ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>ตำบล</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+                                        <input type="text" class="form-control" id="subdistrict"
+                                            value="<?php echo $PROFILE[1]["subDistrinct"] ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>อำเภอ</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+                                        <input type="text" class="form-control" id="district"
+                                            value="<?php echo $PROFILE[1]["Distrinct"] ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-xl-3 col-12 text-right">
+                                        <span>จังหวัด</span>
+                                    </div>
+                                    <div class="col-xl-9 col-12">
+                                        <input type="text" class="form-control" id="province"
+                                            value="<?php echo $PROFILE[1]["Province"] ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <label hidden id="info" la="<?php echo $PROFILE[1]["Latitude"]; ?>"
+                                    long="<?php echo $PROFILE[1]["Longitude"]; ?>"
+                                    pro="<?php echo $PROFILE[1]["Province"] ?>"
+                                    dist="<?php echo $PROFILE[1]["Distrinct"] ?>"
+                                    owner="<?php echo $PROFILE[1]["Title"]." ".$PROFILE[1]["FirstName"]." ".$PROFILE[1]["LastName"] ?>"></label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="col-xl-6 col-12 mb-4">
+                <div class="card">
+                    <div class="card-header card-bg" style="height: 55px;">
+                        <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 19px; position: absolute;">
+                            ตำแหน่งที่อยู่และสวนของเกษตรกร</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-12 mb-2">
+                                <div id="map" style="width:auto; height:642px"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-xl-12 col-12">
                 <div class="card">
                     <div class="card-header card-bg" style="color:<?=$color?>;">
@@ -196,7 +207,8 @@ $FARM = getOwnerFarmer($farmerID);
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%"
+                                cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ชื่อสวน</th>
@@ -218,25 +230,31 @@ $FARM = getOwnerFarmer($farmerID);
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                <label id="size" hidden size ="<?php echo sizeof($FARM); ?>"></label>
+                                    <label id="size" hidden size="<?php echo sizeof($FARM); ?>"></label>
 
-                                <?php
+                                    <?php
                                 if ($FARM != 0) {
                                     for ($i = 1; $i < sizeof($FARM); $i++) {
                                         $lati = str_replace('.','-',$FARM[$i]["Latitude"]);
                                         $longi = str_replace('.','-',$FARM[$i]["Longitude"]);
                                 ?>
-                                        <tr class="<?php echo 'la'.$lati.'long'.$longi; ?>">
-                                            <td><a href="./../OilPalmAreaList/OilPalmAreaListDetail.php?fmid=<?php echo $FARM[$i]["FMID"]; ?>"><?php echo $FARM[$i]['Name']; ?></a></td>
-                                            <td><?php echo $FARM[$i]['Province']; ?></td>
-                                            <td><?php echo $FARM[$i]['Distrinct']; ?></td>
-                                            <td class = "text-right"><?php echo $FARM[$i]['NumSubFarm']; ?> แปลง</td>
-                                            <td class = "text-right"><?php echo $FARM[$i]['AreaRai']; ?> ไร่ <?php echo $FARM[$i]['AreaNgan']; ?> งาน</td>
-                                            <td class = "text-right"><?php echo $FARM[$i]['NumTree']; ?> ต้น</td>
-                                            <label class="click-map" hidden id="<?php echo $i; ?>" pro="<?php echo $FARM[$i]["Province"]; ?>" 
-                                            dist="<?php echo $FARM[$i]["Distrinct"]; ?>" farm = "<?php echo $FARM[$i]['Name']; ?>"
-                                            la="<?php echo $FARM[$i]["Latitude"]; ?>" long="<?php echo $FARM[$i]["Longitude"]; ?>" ></label>
-                                        </tr>
+                                    <tr class="<?php echo 'la'.$lati.'long'.$longi; ?>">
+                                        <td><a
+                                                href="./../OilPalmAreaList/OilPalmAreaListDetail.php?fmid=<?php echo $FARM[$i]["FMID"]; ?>"><?php echo $FARM[$i]['Name']; ?></a>
+                                        </td>
+                                        <td><?php echo $FARM[$i]['Province']; ?></td>
+                                        <td><?php echo $FARM[$i]['Distrinct']; ?></td>
+                                        <td class="text-right"><?php echo $FARM[$i]['NumSubFarm']; ?> แปลง</td>
+                                        <td class="text-right"><?php echo $FARM[$i]['AreaRai']; ?> ไร่
+                                            <?php echo $FARM[$i]['AreaNgan']; ?> งาน</td>
+                                        <td class="text-right"><?php echo $FARM[$i]['NumTree']; ?> ต้น</td>
+                                        <label class="click-map" hidden id="<?php echo $i; ?>"
+                                            pro="<?php echo $FARM[$i]["Province"]; ?>"
+                                            dist="<?php echo $FARM[$i]["Distrinct"]; ?>"
+                                            farm="<?php echo $FARM[$i]['Name']; ?>"
+                                            la="<?php echo $FARM[$i]["Latitude"]; ?>"
+                                            long="<?php echo $FARM[$i]["Longitude"]; ?>"></label>
+                                    </tr>
                                     <?php
                                         }
                                     }
@@ -250,9 +268,11 @@ $FARM = getOwnerFarmer($farmerID);
         </div>
     </div>
 
+    </body>
+
     <?php include_once("../layout/LayoutFooter.php"); ?>
     <script src="FarmerListDetail.js"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th" async defer></script>
-    
-
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"
+        async defer></script>

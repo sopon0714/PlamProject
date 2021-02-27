@@ -66,7 +66,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
 
 <div hidden id="FSID" fsid="<?= $fsid ?>"></div>
 <div hidden id="NumTree" NumTree="<?= $INFOSUBFARM[1]['NumTree'] ?>"></div>
-<div class="container">
+<div class="container bg">
 
     <!------------ Start Head ------------>
     <div class="row">

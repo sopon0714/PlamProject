@@ -20,7 +20,7 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
 <link href='../../Calendar/packages/list/main.css' rel='stylesheet' />
 
 <div hidden id="FSID" fsid="<?= $fsid ?>"></div>
-<div class="container">
+<div class="container bg">
 
     <!------------ Start Head ------------>
     <div class="row">

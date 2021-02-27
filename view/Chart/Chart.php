@@ -45,11 +45,8 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
 
 
 </style>
-<div class="loader hidden">
-    <img src="./../../icon/loading/loading.gif" alt="Loading...">Loading...
-</div>
-<div id="body_data" hidden>
-    <div class="container">
+
+    <div class="container bg">
         <div class="row">
             <div class="col-xl-12 col-12 mb-6">
                 <div class="card">
@@ -949,7 +946,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
         </div>
     </div>
 
-    <div class="container">
+    <div class="container bg">
         <div class="row">
             <div class="col-xl-12 col-12 mb-6">
                 <div id="show_chart">
@@ -1052,8 +1049,6 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
             </div>
         </div>
     </div>
-</div>
-
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
