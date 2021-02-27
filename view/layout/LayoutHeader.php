@@ -203,6 +203,30 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
     #accordionSidebar {
       background-color: <?= $color ?>;
     }
+    .loader{
+    position: relative;
+    z-index: 99;
+    width: 100%;
+    height: 670px;
+    background: #ebf5fb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    .loader > img{
+        width: 100px;
+    }
+    /* .loader.hidden{
+        animation: fadeOut 1s;
+        animation-fill-mode: forwards;
+    } */
+
+    @keyframes fadeOut{
+        100%{
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
     .bg{
       background-color: #ebf5fb;
     }
