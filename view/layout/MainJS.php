@@ -48,4 +48,4 @@
   <script src="../../js/npm chart 2.8.0/chart.js"></script>
 
   <!-- loading page -->
-<script src='./../../js/loading.js'></script>
+<!-- <script src='./../../js/loading.js'></script> -->
