@@ -227,9 +227,9 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
             visibility: hidden;
         }
     }
-    .bg{
+    /* .bg{
       background-color: #ebf5fb;
-    }
+    } */
   </style>
 
 </head>
@@ -273,7 +273,7 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
-      <div id="content" style="background-color: #EBF5FB; background-image: url('./../../icon/loading/loading.gif'); background-position: center; background-repeat: no-repeat;" >
+      <div id="content" style="background-color: #EBF5FB;" >
 
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
