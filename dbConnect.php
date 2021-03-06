@@ -6,7 +6,7 @@ function connectDB()
 	$servername = "localhost";
 	$username = "root";
 	$password = ""; //"cabku";
-	$db_name = "palmdata1m";//"palm3";
+	$db_name = "palm3"; //"palm3";
 	// $db_name = "palm3";//"palm3";
 
 	// $servername = "localhost";
@@ -117,40 +117,39 @@ function selectDataOne($str)
 	//$conn = null;
 }
 
-function selectDataArray( $str ){
+function selectDataArray($str)
+{
 
- $myConDB = connectDB();
+	$myConDB = connectDB();
 
- try {
-      $stmt = $myConDB->prepare( $str ); 
-  $stmt->execute();
-      
-  $bucket = "";
+	try {
+		$stmt = $myConDB->prepare($str);
+		$stmt->execute();
 
-  while( $result = $stmt->fetch(PDO::FETCH_ASSOC) ){
+		$bucket = "";
 
-   $set = "";
-       foreach($result as $key => $value) {
-    $set .= "\"".$value."\",";
-       }
+		while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-   $set = rtrim($set,',');
-   $bucket .= "".$set.",";
-  }
-  $bucket = rtrim($bucket,',');
-  
-  $resultJson = "[".$bucket."]";
+			$set = "";
+			foreach ($result as $key => $value) {
+				$set .= "\"" . $value . "\",";
+			}
 
-  $conn = null;
-  return $resultJson;
+			$set = rtrim($set, ',');
+			$bucket .= "" . $set . ",";
+		}
+		$bucket = rtrim($bucket, ',');
 
- }
- catch(PDOException $e) {
-  $conn = null;
-      return "Error: " . $e->getMessage();
- }
- 
- //$conn = null;
+		$resultJson = "[" . $bucket . "]";
+
+		$conn = null;
+		return $resultJson;
+	} catch (PDOException $e) {
+		$conn = null;
+		return "Error: " . $e->getMessage();
+	}
+
+	//$conn = null;
 }
 
 

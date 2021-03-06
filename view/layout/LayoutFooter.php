@@ -19,6 +19,7 @@
         });
         $(".preloadding").click(function() {
             $(".loader-container").fadeIn(0);
+            $(".loader").fadeIn(0);
         });
     });
 </script>
