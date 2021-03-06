@@ -17,8 +17,17 @@
         $('.tableSearch').DataTable({
             "ordering": false
         });
+        $(".preloadding").click(function() {
+            $(".loader-container").fadeIn(0);
+        });
     });
 </script>
+<script>
+    $(window).on("load", function() {
+        $(".loader-container").fadeOut(500);
+    });
+</script>
+
 }
 
 </body>

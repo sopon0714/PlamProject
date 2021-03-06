@@ -68,10 +68,10 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
     // main menu
     if ($DATA[$i]['mm-mainmenu'] == $selectedMenu1) {
       // active main menu
-      $classType = " class='nav-item active' ";
-      $classShow = " class='collapse show' ";
+      $classType = " class='nav-item active preloadding' ";
+      $classShow = " class='collapse show ' ";
     } else {
-      $classType = " class='nav-item' ";
+      $classType = " class='nav-item preloadding' ";
       $classShow = " class='collapse' ";
     }
 
@@ -122,9 +122,9 @@ for ($i = 1; $i <= $DATA[0]['numrow']; $i++) {
     //sub menau
     if ($DATA[$i]['mm-submenu'] == $selectedMenu2 && $DATA[$i]['mm-mainmenu'] == $selectedMenu1) {
       // active sub menu
-      $classType = "class='collapse-item active'";
+      $classType = "class='collapse-item active preloadding' ";
     } else {
-      $classType = "class='collapse-item'";
+      $classType = "class='collapse-item preloadding'";
     }
 
     $strMenu .= "<a " . $classType . " href='../" . $DATA[$i]['wm-alias'] . "/" . $DATA[$i]['wm-page'] . " ' style='color:white;'>" . $DATA[$i]['wm-name'] . "</a>";
@@ -203,39 +203,65 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
     #accordionSidebar {
       background-color: <?= $color ?>;
     }
-    .loader{
-    position: relative;
-    z-index: 99;
-    width: 100%;
-    height: 670px;
-    background: #ebf5fb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
-    .loader > img{
-        width: 100px;
-    }
-    /* .loader.hidden{
-        animation: fadeOut 1s;
-        animation-fill-mode: forwards;
-    } */
 
-    @keyframes fadeOut{
-        100%{
-            opacity: 0;
-            visibility: hidden;
-        }
+    @keyframes fadeOut {
+      100% {
+        opacity: 0;
+        visibility: hidden;
+      }
     }
+
     /* .bg{
       background-color: #ebf5fb;
     } */
+    .loader-container {
+      width: 100%;
+      height: 100vh;
+      background-color: #111;
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0.8;
+      filter: alpha(opacity=70);
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid;
+      color: #3498db;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: loader 1.2s linear infinite;
+    }
+
+    @keyframes loader {
+      25% {
+        color: #2ecc71;
+      }
+
+      50% {
+        color: #f1c40f;
+      }
+
+      75% {
+        color: #e74c3c;
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 
 </head>
 
 <body id="page-top">
-
+  <div class="loader-container">
+    <div class="loader"></div>
+  </div>
   <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -273,7 +299,7 @@ if ($DATAUSER[1]['IsOperator'] == 1 && $idUT != 3) {
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
-      <div id="content" style="background-color: #EBF5FB;" >
+      <div id="content" style="background-color: #EBF5FB;">
 
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
