@@ -15,7 +15,8 @@
 <script>
     $(document).ready(function() {
         $('.tableSearch').DataTable({
-            "ordering": false
+            "ordering": false,
+            "lengthMenu": [10, 50, 100, 500, 1000]
         });
         $(".preloadding").click(function() {
             $(".loader-container").fadeIn(0);

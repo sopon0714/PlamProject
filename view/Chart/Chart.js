@@ -730,9 +730,9 @@ $(document).ready(function() {
                         $('#header_table1').html(header_table);
 
                         if (chose_type != "water1" && chose_type != "water2") {
-                            $('#header_table1').attr("colspan", 8);
+                            $('#header_table1').attr("colspan", 7);
                             header_table2 = "";
-                            header_table2 = `<th style="width:60px;">ลำดับ</th>
+                            header_table2 = `
                             <th>${label1}</th>
                             <th>${label2}</th>
                             <th>${data1}มากที่สุด <br/> (${unit1})</th>
@@ -744,7 +744,6 @@ $(document).ready(function() {
                             body_table = "";
                             for (i = 1; i <= round; i++) {
                                 body_table += `<tr>
-                                <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
                                 <td align="right">${result[i]['max']}</td>
@@ -755,9 +754,9 @@ $(document).ready(function() {
                             </tr>`;
                             }
                         } else {
-                            $('#header_table1').attr("colspan", 7);
+                            $('#header_table1').attr("colspan", 6);
                             header_table2 = "";
-                            header_table2 = `<th style="width:60px;">ลำดับ</th>
+                            header_table2 = `
                             <th>${label1}</th>
                             <th>${label2}</th>
                             <th>${data1}มากที่สุด <br/> (${unit1})</th>
@@ -768,7 +767,6 @@ $(document).ready(function() {
                             body_table = "";
                             for (i = 1; i <= round; i++) {
                                 body_table += `<tr>
-                                <td align="right">${i}</td>
                                 <td>${result[i]['label1']}</td>
                                 <td>${result[i]['label2']}</td>
                                 <td align="right">${result[i]['max']}</td>
@@ -784,7 +782,9 @@ $(document).ready(function() {
                         $('#yes_table').show();
                         $('#no_table').hide();
 
-                        $('#dataTable').DataTable();
+                        $('#dataTable').DataTable({
+                            "lengthMenu": [10, 50, 100, 500, 1000]
+                        });
 
                     } else {
                         labelChart1 = Array();
