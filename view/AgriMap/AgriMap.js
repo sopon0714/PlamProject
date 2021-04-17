@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 $("#search").click(function() {
     // console.log('search');
-    $("#search").attr("disabled","disabled");
+    // $("#search").attr("disabled","disabled");
     $("#loading").show();
     year = $('#year').val();
     province = $('#province').val();
@@ -74,7 +74,7 @@ $("#search").click(function() {
     }, function(result) {
         // console.log(result);
         DATA_DB = JSON.parse(result);
-        $("#search").removeAttr("disabled");
+        // $("#search").removeAttr("disabled");
         $("#loading").hide();
         // console.log(DATA_DB);
         initMap();
