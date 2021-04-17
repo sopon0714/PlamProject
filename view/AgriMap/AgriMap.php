@@ -215,13 +215,14 @@ $NUTR = getNutr();
                             </div>
                         </div>
                     </div>
-
+                    <label style="color: #d9534f; text-align: center;">การประมวลผลอาจใช้เวลานาน</label>
                     <div class="col-12">
                         <div class="card-footer" align="center">
                             <button type="button" id="search" name="search" class="btn" style="background-color: <?= $color ?>; color:white; height:50px; width:100px;">ค้นหา
                                 <i class="fas fa-search"></i> </button>
                         </div>
                     </div>
+                    <label style="text-align: center;" id="loading">กำลังประมวลผลข้อมูล...</label>
                 </div>
             </div>
         </div>

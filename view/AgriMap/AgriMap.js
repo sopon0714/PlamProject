@@ -8,14 +8,16 @@ mincutbranch = 1;
 maxcutbranch = 5;
 
 DATA_DB = Array();
+$("#loading").hide();
 $(document).ready(function() {
 
     $("#search").trigger("click");
-
 });
 
 $("#search").click(function() {
     // console.log('search');
+    $("#search").attr("disabled","disabled");
+    $("#loading").show();
     year = $('#year').val();
     province = $('#province').val();
     distrinct = $('#distrinct').val();
@@ -70,8 +72,10 @@ $("#search").click(function() {
         water: water,
         cutbranch: cutbranch
     }, function(result) {
-        console.log(result);
+        // console.log(result);
         DATA_DB = JSON.parse(result);
+        $("#search").removeAttr("disabled");
+        $("#loading").hide();
         // console.log(DATA_DB);
         initMap();
     });
