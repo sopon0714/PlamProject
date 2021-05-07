@@ -314,7 +314,7 @@ $PESTTYPE = getPestType();
                                     <?php if ($DATA[$i]["EndT_sub"] != NULL) { ?>
                                         <td><?php echo $DATA[$i]["Namesubfarm"] ?></td>
                                     <?php } else { ?>
-                                        <td><a href="./../view/OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=<?php echo $DATA[$i]["FSID"] ?>&FMID=<?php echo $DATA[$i]["FMID"] ?>">
+                                        <td><a href="./../OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=<?php echo $DATA[$i]["FSID"] ?>&FMID=<?php echo $DATA[$i]["FMID"] ?>">
                                                 <?php echo $DATA[$i]["Namesubfarm"] ?></a></td>
                                     <?php } ?>
                                     <td class="text-right"><?php echo $DATA[$i]['AreaRai']; ?> ไร่

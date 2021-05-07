@@ -4,6 +4,8 @@ $myConDB = connectDB();
 date_default_timezone_set("Asia/Bangkok");
 $currentYear = date("Y") + 543;
 $backYear = $currentYear - 1;
+set_time_limit(0);
+ini_set('memory_limit', '-1');
 
 function creatCard($styleC, $headC, $textC, $iconC, $size = 3)
 {
@@ -1960,8 +1962,13 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
     $LOG = selectData($sql);
     // print_r($sql);
     // print_r($LOG);
-
+    // print_r("row = ".$LOG[0]['numrow']."/");
     for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
+        // print_r($i."<br/>");
+        // $write  = $i;
+        // $fp = fopen('results1.json', 'w');
+        // fwrite($fp, json_encode($write));
+        // fclose($fp);
         $LOG[$i]['check_show'] = 1;
         $dim_user = $LOG[$i]['DIMownerID'];
         $dim_farm = $LOG[$i]['DIMfarmID'];
@@ -1992,6 +1999,10 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
 
         $DATA = selectData($sql);
+        // $write  = $DATA;
+        // $fp = fopen('results2.json', 'w');
+        // fwrite($fp, json_encode($write));
+        // fclose($fp);
         if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
         } else {
@@ -2013,6 +2024,11 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID";
 
         $DATA = selectData($sql);
+
+        // $write  = $DATA;
+        // $fp = fopen('results3.json', 'w');
+        // fwrite($fp, json_encode($write));
+        // fclose($fp);
         if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
         } else {
@@ -2036,6 +2052,10 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID";
 
         $DATA = selectData($sql);
+        // $write  = $DATA;
+        // $fp = fopen('results4.json', 'w');
+        // fwrite($fp, json_encode($write));
+        // fclose($fp);
         if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
         } else {
@@ -2059,6 +2079,10 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         if ($ftype   != 0)  $sql = $sql . " WHERE `dim-pest`.`dbpestTID` = '" . $ftype . "' ";
 
         $DATA = selectData($sql);
+        // $write  = $DATA;
+        // $fp = fopen('results5.json', 'w');
+        // fwrite($fp, json_encode($write));
+        // fclose($fp);
         if ($DATA[0]['numrow'] == 0) {
             $LOG[$i]['check_show'] = 0;
         } else {
@@ -2068,8 +2092,12 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
             $LOG[$i]['PestAlias'] = $DATA[1]['Alias'];
             $LOG[$i]['TypeTH'] = $DATA[1]['TypeTH'];
         }
+        // $write  = $LOG;
+        // $fp = fopen('resultsLOG.json', 'w');
+        // fwrite($fp, json_encode($write));
+        // fclose($fp);
     }
-
+    // print_r("show log ----- ");
     // print_r($LOG);
     return $LOG;
 }
