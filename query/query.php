@@ -3268,14 +3268,14 @@ function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist)
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
-        $INFO = getInfoFertilising($INFOSUBFARM[$i]['FSID'], $year);
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['countFertilising'] =  $INFO['countFertilising'];
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] =  $INFO['N']['sumVol'] . "/" . $INFO['N']['UnitUse'];
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] .= ($INFO['N']['Unit'] == 1) ? "Kg" : "g";
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] =  $INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] .= ($INFO['P']['Unit'] == 1) ? "Kg" : "g";
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] =  $INFO['K']['sumVol'] . "/" . $INFO['K']['UnitUse'];
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] .= ($INFO['K']['Unit'] == 1) ? "Kg" : "g";
+        // $INFO = getInfoFertilising($INFOSUBFARM[$i]['FSID'], $year);
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['countFertilising'] =  0;//$INFO['countFertilising'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] =  0;//$INFO['N']['sumVol'] . "/" . $INFO['N']['UnitUse'];
+        // $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] .= ($INFO['N']['Unit'] == 1) ? "Kg" : "g";
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] =  0;//$INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
+        // $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] .= 0;($INFO['P']['Unit'] == 1) ? "Kg" : "g";
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] =  0;//$INFO['K']['sumVol'] . "/" . $INFO['K']['UnitUse'];
+        // $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] .= 0;//($INFO['K']['Unit'] == 1) ? "Kg" : "g";
     }
     return $INFOSUBFARMFertilising;
 }
