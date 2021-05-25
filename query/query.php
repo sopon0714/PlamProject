@@ -1933,170 +1933,100 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype)
         $fullname = rtrim($_POST['s_name']);
         $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     }
-    $sql = "SELECT MAX(`log-farm`.`ID`),`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
-    `log-pestalarm`.`DIMownerID`,`log-pestalarm`.`DIMfarmID`,`log-pestalarm`.`DIMsubFID`,
-    `log-pestalarm`.`DIMpestID`,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
-    `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
-    `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
-    `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
-    `dim-address`.`Distrinct`,`dim-address`.`Province`
-    FROM `log-pestalarm` 
-    JOIN `log-farm` ON  `log-pestalarm`.`DIMsubFID` =  `log-farm`.`DIMSubfID`
-    JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
-    JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
-    WHERE `log-pestalarm`.`isDelete` = 0 ";
 
-    if ($fpro    != 0)  $sql = $sql . " AND `dim-address`.dbprovID = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-    if ($fyear   != 0)  $sql = $sql . " AND `dim-time`.Year2 = '" . $fyear . "' ";
+    $sql_fpro = "";
+    $sql_fdist = "";
+    $sql_fyear = "";
+    if ($fpro    != 0)  $sql_fpro = " AND `dim-address`.dbprovID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql_fdist = " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    if ($fyear   != 0)  $sql_fyear = " AND `dim-time`.Year2 = '" . $fyear . "' ";
+    $sql_fpro_fdist_fyear = $sql_fpro . $sql_fdist . $sql_fyear;
+    $sql_idformal = "";
+    $sql_fullname = "";
+    if ($idformal != '')  $sql_idformal = " AND `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql_fullname = " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
+    $sql_idformal_fullname = $sql_idformal . $sql_fullname;
 
-    $sql = $sql . "
-    GROUP BY `dim-address`.`ID`,`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
-    `log-pestalarm`.`DIMownerID`,`log-pestalarm`.`DIMfarmID`,`log-pestalarm`.`DIMsubFID`,
-    `log-pestalarm`.`DIMpestID`,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
-    `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
-    `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
-    `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
-    `dim-address`.`Distrinct`,`dim-address`.`Province`  
-    ORDER BY `dim-time`.`Date` DESC";
+    $sql_ftype = "";
+        if ($ftype   != 0)  $sql_ftype = " WHERE `dim-pest`.`dbpestTID` = '" . $ftype . "' ";
+
+    $sql = "SELECT * FROM (
+        SELECT * FROM (
+        SELECT * FROM (
+        SELECT * FROM (
+        
+        SELECT IF(`log-pestalarm`.`ID`>=0,1,0) AS check_show,df1.`Name` AS NameFarm_old,df2.`Name` AS NamesubFarm_old,`dim-pest`.`Alias` AS NamePest_old,MAX(`log-farm`.`ID`),`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
+            `log-pestalarm`.`DIMownerID`,`dim-user`.`dbID` AS dbID_owner,`log-pestalarm`.`DIMfarmID`,df1.`dbID` AS dbID_farm,`log-pestalarm`.`DIMsubFID`,df2.`dbID` AS dbID_subfarm,`log-pestalarm`.`DIMpestID`,`dim-pest`.`dbpestLID`AS dbID_pest,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
+            `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
+            `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
+            `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
+            `dim-address`.`Distrinct`,`dim-address`.`Province`
+            FROM `log-pestalarm` 
+            JOIN `log-farm` ON  `log-pestalarm`.`DIMsubFID` =  `log-farm`.`DIMSubfID`
+            JOIN `dim-address` ON `dim-address`.`ID` = `log-farm`.`DIMaddrID`
+            JOIN `dim-time` ON `dim-time`.`ID` = `log-pestalarm`.`DIMdateID`
+            JOIN `dim-user` ON `dim-user`.`ID` =  `log-pestalarm`.`DIMownerID`
+            
+        JOIN `dim-farm` AS df1 ON df1.`ID` = `log-pestalarm`.`DIMfarmID`
+        
+        JOIN `dim-farm` AS df2 ON df2.`ID` = `log-pestalarm`.`DIMsubFID`
+        
+        JOIN `dim-pest` ON `dim-pest`.`ID` = `log-pestalarm`.`DIMpestID`
+        
+            WHERE `log-pestalarm`.`isDelete` = 0 ".$sql_fpro_fdist_fyear."
+            GROUP BY `dim-address`.`ID`,`log-pestalarm`.`ID`,`log-pestalarm`.`Modify`,`log-pestalarm`.`DIMdateID`,
+            `log-pestalarm`.`DIMownerID`,`log-pestalarm`.`DIMfarmID`,`log-pestalarm`.`DIMsubFID`,
+            `log-pestalarm`.`DIMpestID`,`log-pestalarm`.`Note`,`log-pestalarm`.`PICs`,  `log-farm`.`Latitude`,
+            `log-farm`.`Longitude`,`log-farm`.`NumSubFarm`,`log-farm`.`NumTree`,`log-farm`.`AreaRai`,
+            `log-farm`.`AreaNgan`,`log-farm`.`AreaWa`,`log-farm`.`AreaTotal`,`dim-address`.`dbsubDID`,
+            `dim-address`.`dbDistID`,`dim-address`.`dbprovID`,`dim-time`.`Year2`,`dim-time`.`Date`,
+            `dim-address`.`Distrinct`,`dim-address`.`Province`  
+            ORDER BY `dim-time`.`Date` DESC) AS tb_data
+        LEFT JOIN (SELECT `dim-user`.`ID` AS dim_owner, `dim-user`.`dbID` AS dbID_owner_,`dim-user`.`FullName`AS OwnerName,`dim-user`.`FormalID` FROM(
+                    SELECT `log-farmer`.`DIMuserID` FROM (
+                    SELECT MAX(`log-farmer`.`ID`)AS ID FROM (
+                    SELECT DISTINCT `dim-user`.`ID`,`dim-user`.`dbID`,`dim-user`.`FullName` FROM  (
+                    SELECT `dim-user`.`dbID` FROM `dim-user`)AS t1
+                    JOIN `dim-user` ON `dim-user`.`dbID` = t1.dbID
+                    WHERE `dim-user`.`Type` = 'F' )AS t2
+                    JOIN `log-farmer` ON `log-farmer`.`DIMuserID` = t2.ID
+                    GROUP BY  t2.dbID) AS t3
+                    JOIN `log-farmer` ON `log-farmer`.`ID` = t3.ID) AS t4
+                    JOIN  `dim-user` ON  `dim-user`.`ID` = t4.DIMuserID WHERE 1 ".$sql_idformal_fullname.") AS tb_dim_user ON tb_data.dbID_owner = tb_dim_user.dbID_owner_) AS tb_data_dimuser
+        LEFT JOIN (SELECT `dim-farm`.`ID` AS dim_farm, `dim-farm`.`dbID` AS FMID,`dim-farm`.`Name` AS Namefarm,t4.EndT AS EndT_farm FROM(
+                    SELECT `log-farm`.`DIMfarmID`,`log-farm`.`EndT` FROM (
+                    SELECT MAX(`log-farm`.`ID`)AS ID FROM (
+                    SELECT DISTINCT `dim-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM  (
+                    SELECT `dim-farm`.`dbID` FROM `dim-farm`)AS t1
+                    JOIN `dim-farm` ON `dim-farm`.`dbID` = t1.dbID
+                    WHERE `dim-farm`.`IsFarm` = 1)AS t2
+                    JOIN `log-farm` ON `log-farm`.`DIMfarmID` = t2.ID
+                    GROUP BY t2.dbID) AS t3
+                    JOIN `log-farm` ON `log-farm`.`ID` = t3.ID) AS t4
+                    JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID) AS tb_dim_farm ON tb_data_dimuser.dbID_farm = tb_dim_farm.FMID) AS tb_data_dimuser_dimf
+        LEFT JOIN (SELECT `dim-farm`.`ID` AS dim_subfarm, `dim-farm`.`dbID` AS FSID,`dim-farm`.`Name` AS Namesubfarm,t4.EndT AS EndT_sub FROM(
+                    SELECT `log-farm`.`DIMSubfID`,`log-farm`.`EndT` FROM (
+                    SELECT MAX(`log-farm`.`ID`)AS ID FROM (
+                    SELECT DISTINCT `dim-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM  (
+                    SELECT `dim-farm`.`dbID` FROM `dim-farm`)AS t1
+                    JOIN `dim-farm` ON `dim-farm`.`dbID` = t1.dbID
+                    WHERE `dim-farm`.`IsFarm` = 0)AS t2
+                    JOIN `log-farm` ON `log-farm`.`DIMSubfID` = t2.ID
+                    GROUP BY  t2.dbID) AS t3
+                    JOIN `log-farm` ON `log-farm`.`ID` = t3.ID) AS t4
+                    JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID)AS tb_dim_subfarm ON tb_data_dimuser_dimf.dbID_subfarm = tb_dim_subfarm.FSID) AS tb_data_dimuser_dimf_dimsf
+        LEFT JOIN (SELECT `dim-pest`.`ID` AS dim_pest,`dim-pest`.`dbpestLID`,`dim-pest`.`dbpestTID`,`dim-pest`.`Alias` AS PestAlias,`dim-pest`.`TypeTH` FROM(
+                    SELECT `log-pest`.`DIMpestID` FROM (
+                    SELECT MAX(`log-pest`.`ID`)AS ID FROM (
+                    SELECT DISTINCT `dim-pest`.`ID`,`dim-pest`.`dbpestLID`,`dim-pest`.`Name` FROM  (
+                    SELECT `dim-pest`.`dbpestLID` FROM `dim-pest`)AS t1
+                    JOIN `dim-pest` ON `dim-pest`.`dbpestLID` = t1.dbpestLID)AS t2
+                    JOIN `log-pest` ON `log-pest`.`DIMpestID` = t2.ID
+                    GROUP BY  t2.dbpestLID) AS t3
+                    JOIN `log-pest` ON `log-pest`.`ID` = t3.ID) AS t4
+                    JOIN  `dim-pest` ON  `dim-pest`.`ID` = t4.DIMpestID ".$sql_ftype .")AS tb_dim_pest ON tb_data_dimuser_dimf_dimsf.dbID_pest = tb_dim_pest.dbpestLID";
     $LOG = selectData($sql);
-    // print_r($sql);
-    // print_r($LOG);
-    // print_r("row = ".$LOG[0]['numrow']."/");
-    for ($i = 1; $i <= $LOG[0]['numrow']; $i++) {
-        // print_r($i."<br/>");
-        // $write  = $i;
-        // $fp = fopen('results1.json', 'w');
-        // fwrite($fp, json_encode($write));
-        // fclose($fp);
-        $LOG[$i]['check_show'] = 1;
-        $dim_user = $LOG[$i]['DIMownerID'];
-        $dim_farm = $LOG[$i]['DIMfarmID'];
-        $dim_subfarm = $LOG[$i]['DIMsubFID'];
-        $dim_pest = $LOG[$i]['DIMpestID'];
-
-        $sql = "SELECT `dim-farm`.`Name` FROM `dim-farm` WHERE `dim-farm`.`ID` = '$dim_farm'";
-        $LOG[$i]['NameFarm_old'] = selectData($sql)[1]['Name'];
-
-        $sql = "SELECT `dim-farm`.`Name` FROM `dim-farm` WHERE `dim-farm`.`ID` = '$dim_subfarm'";
-        $LOG[$i]['NamesubFarm_old'] = selectData($sql)[1]['Name'];
-
-        $sql = "SELECT `dim-pest`.`Alias` FROM `dim-pest` WHERE `dim-pest`.`ID` = '$dim_pest'";
-        $LOG[$i]['NamePest_old'] = selectData($sql)[1]['Alias'];
-
-        $sql = "SELECT `dim-user`.`ID`, `dim-user`.`FullName`,`dim-user`.`FormalID` FROM(
-            SELECT `log-farmer`.`DIMuserID` FROM (
-            SELECT MAX(`log-farmer`.`ID`)AS ID FROM (
-            SELECT `dim-user`.`ID`,`dim-user`.`dbID`,`dim-user`.`FullName` FROM  (
-            SELECT `dim-user`.`dbID` FROM `dim-user`
-            WHERE `dim-user`.`ID` = '$dim_user')AS t1
-            JOIN `dim-user` ON `dim-user`.`dbID` = t1.dbID
-            WHERE `dim-user`.`Type` = 'F' )AS t2
-            JOIN `log-farmer` ON `log-farmer`.`DIMuserID` = t2.ID) AS t3
-            JOIN `log-farmer` ON `log-farmer`.`ID` = t3.ID) AS t4
-            JOIN  `dim-user` ON  `dim-user`.`ID` = t4.DIMuserID";
-        if ($idformal != '') $sql = $sql . " WHERE `dim-user`.`FormalID` LIKE '%" . $idformal . "%' ";
-        if ($fullname != '') $sql = $sql . " AND `dim-user`.`FullName` LIKE '%" . $fullname . "%' ";
-
-        $DATA = selectData($sql);
-        // $write  = $DATA;
-        // $fp = fopen('results2.json', 'w');
-        // fwrite($fp, json_encode($write));
-        // fclose($fp);
-        if ($DATA[0]['numrow'] == 0) {
-            $LOG[$i]['check_show'] = 0;
-        } else {
-            $LOG[$i]['dim_owner'] = $DATA[1]['ID'];
-            $LOG[$i]['OwnerName'] = $DATA[1]['FullName'];
-        }
-
-
-        $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`dbID`,`dim-farm`.`Name`,t4.EndT FROM(
-            SELECT `log-farm`.`DIMfarmID`,`log-farm`.`EndT` FROM (
-            SELECT MAX(`log-farm`.`ID`)AS ID FROM (
-            SELECT `dim-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM  (
-            SELECT `dim-farm`.`dbID` FROM `dim-farm`
-            WHERE `dim-farm`.`ID` = '$dim_farm')AS t1
-            JOIN `dim-farm` ON `dim-farm`.`dbID` = t1.dbID
-            WHERE `dim-farm`.`IsFarm` = 1)AS t2
-            JOIN `log-farm` ON `log-farm`.`DIMfarmID` = t2.ID) AS t3
-            JOIN `log-farm` ON `log-farm`.`ID` = t3.ID) AS t4
-            JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMfarmID";
-
-        $DATA = selectData($sql);
-
-        // $write  = $DATA;
-        // $fp = fopen('results3.json', 'w');
-        // fwrite($fp, json_encode($write));
-        // fclose($fp);
-        if ($DATA[0]['numrow'] == 0) {
-            $LOG[$i]['check_show'] = 0;
-        } else {
-            $LOG[$i]['dim_farm'] = $DATA[1]['ID'];
-            $LOG[$i]['FMID'] = $DATA[1]['dbID'];
-            $LOG[$i]['EndT_farm'] = $DATA[1]['EndT'];
-            $LOG[$i]['Namefarm'] = $DATA[1]['Name'];
-        }
-
-
-        $sql = "SELECT `dim-farm`.`ID`, `dim-farm`.`dbID`,`dim-farm`.`Name`,t4.EndT FROM(
-            SELECT `log-farm`.`DIMSubfID`,`log-farm`.`EndT` FROM (
-            SELECT MAX(`log-farm`.`ID`)AS ID FROM (
-            SELECT `dim-farm`.`ID`,`dim-farm`.`dbID`,`dim-farm`.`Name` FROM  (
-            SELECT `dim-farm`.`dbID` FROM `dim-farm`
-            WHERE `dim-farm`.`ID` = '$dim_subfarm')AS t1
-            JOIN `dim-farm` ON `dim-farm`.`dbID` = t1.dbID
-            WHERE `dim-farm`.`IsFarm` = 0)AS t2
-            JOIN `log-farm` ON `log-farm`.`DIMSubfID` = t2.ID) AS t3
-            JOIN `log-farm` ON `log-farm`.`ID` = t3.ID) AS t4
-            JOIN  `dim-farm` ON  `dim-farm`.`ID` = t4.DIMSubfID";
-
-        $DATA = selectData($sql);
-        // $write  = $DATA;
-        // $fp = fopen('results4.json', 'w');
-        // fwrite($fp, json_encode($write));
-        // fclose($fp);
-        if ($DATA[0]['numrow'] == 0) {
-            $LOG[$i]['check_show'] = 0;
-        } else {
-            $LOG[$i]['dim_subfarm'] = $DATA[1]['ID'];
-            $LOG[$i]['FSID'] = $DATA[1]['dbID'];
-            $LOG[$i]['EndT_sub'] = $DATA[1]['EndT'];
-            $LOG[$i]['Namesubfarm'] = $DATA[1]['Name'];
-        }
-
-        $sql = "SELECT * FROM(
-            SELECT `log-pest`.`DIMpestID` FROM (
-            SELECT MAX(`log-pest`.`ID`)AS ID FROM (
-            SELECT `dim-pest`.`ID`,`dim-pest`.`dbpestLID`,`dim-pest`.`Name` FROM  (
-            SELECT `dim-pest`.`dbpestLID` FROM `dim-pest`
-            WHERE `dim-pest`.`ID` = '$dim_pest')AS t1
-            JOIN `dim-pest` ON `dim-pest`.`dbpestLID` = t1.dbpestLID)AS t2
-            JOIN `log-pest` ON `log-pest`.`DIMpestID` = t2.ID) AS t3
-            JOIN `log-pest` ON `log-pest`.`ID` = t3.ID) AS t4
-            JOIN  `dim-pest` ON  `dim-pest`.`ID` = t4.DIMpestID";
-
-        if ($ftype   != 0)  $sql = $sql . " WHERE `dim-pest`.`dbpestTID` = '" . $ftype . "' ";
-
-        $DATA = selectData($sql);
-        // $write  = $DATA;
-        // $fp = fopen('results5.json', 'w');
-        // fwrite($fp, json_encode($write));
-        // fclose($fp);
-        if ($DATA[0]['numrow'] == 0) {
-            $LOG[$i]['check_show'] = 0;
-        } else {
-            $LOG[$i]['dim_pest'] = $DATA[1]['ID'];
-            $LOG[$i]['dbpestLID'] = $DATA[1]['dbpestLID'];
-            $LOG[$i]['dbpestTID'] = $DATA[1]['dbpestTID'];
-            $LOG[$i]['PestAlias'] = $DATA[1]['Alias'];
-            $LOG[$i]['TypeTH'] = $DATA[1]['TypeTH'];
-        }
-        // $write  = $LOG;
-        // $fp = fopen('resultsLOG.json', 'w');
-        // fwrite($fp, json_encode($write));
-        // fclose($fp);
-    }
+    return   $LOG;
     // print_r("show log ----- ");
     // print_r($LOG);
     return $LOG;
