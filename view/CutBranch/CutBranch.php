@@ -14,10 +14,6 @@ $fmax = -1;
 $fpro = 0;
 $fdist = 0;
 
-$page = 1;
-$limit = 10;
-$start = (($page - 1) * $limit)+1;
-$end = $start+$limit;
 $DATA = getActivity($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax,1,0,0,'','');
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
@@ -26,6 +22,10 @@ if($fyear == 0){
 }else{
     $year = $fyear;
 }
+$page = 1;
+$limit = 10;
+$start = (($page - 1) * $limit)+1;
+$end = $start+$limit;
 $times = $DATA[0]["numrow"];
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
