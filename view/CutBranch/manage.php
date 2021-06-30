@@ -18,6 +18,21 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
+        case 'activity': 
+          $idformal = $_POST['idformal'];
+          $fullname = $_POST['fullname'];
+          $fpro = $_POST['fpro'];
+          $fdist = $_POST['fdist'];
+          $fyear = $_POST['fyear'];
+          $fmin = $_POST['fmin'];
+          $fmax = $_POST['fmax'];
+          $start = $_POST['start'];
+          $limit = $_POST['limit'];
+          $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+          $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+          print_r(json_encode(getActivity($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax,1,$start,$limit,$latitude,$longitude)));
+
+        break;
         case 'selectFarm' :
             $date = $_POST['date'];
             $modify = strtotime($date);

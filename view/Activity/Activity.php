@@ -1,36 +1,3 @@
-<?php
-session_start();
-
-$idUT = $_SESSION[md5('typeid')];
-$CurrentMenu = "Pest";
-
-include_once("../layout/LayoutHeader.php");
-include_once("./../../query/query.php");
-$idformal = '';
-$fullname = '';
-$fyear = 0;
-$ftype = 0;
-$fpro = 0;
-$fdist = 0;
-
-// $latitude = '';
-// $longitude = '';
-
-$page = 1;
-$limit = 10;
-$start = (($page - 1) * $limit)+1;
-$end = $start+$limit;
-
-$times = getCountPestAlarm();
-if($times < $limit) $end = $times+1;
-
-// $DATA = getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,0,0,$latitude,$longitude);
-$PROVINCE = getProvince();
-$DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
-$PESTTYPE = getPestType();
-
-$pages = ceil($times/$limit);
-?>
 
 <link rel="stylesheet" href="../../css/insect admin/readmore.css">
 <link rel="stylesheet" href="../../css/insect admin/stylePest.css">
@@ -73,8 +40,8 @@ textarea {
     width: 30px !important;
 }
 </style>
-<div hidden id="data_pest" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
-    fdist="<?= $fdist ?>" fyear="<?= $fyear ?>" ftype="<?= $ftype ?>"></div>
+<div hidden id="data_activity" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
+    fdist="<?= $fdist ?>" fyear="<?= $fyear ?>" fmax="<?= $fmax ?>" fmin="<?= $fmin ?>" head="<?= $head ?>" menu=<?= $CurrentMenu ?>></div>
 <div class="container bg">
 
     <div class="row">
@@ -84,13 +51,13 @@ textarea {
                     <div class="row">
                         <div class="col-12">
                             <span class="link-active font-weight-bold"
-                                style="color:<?= $color ?>;">ตรวจพบศัตรูพืช</span>
+                                style="color:<?= $color ?>;"><?php echo $head; ?></span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
                                 <span> > </span>
                                 <a class="link-path link-active" href="#"
-                                    style="color:<?= $color ?>;">ตรวจพบศัตรูพืช</a>
+                                    style="color:<?= $color ?>;"><?php echo $head; ?></a>
                             </span>
                         </div>
                     </div>
@@ -102,15 +69,15 @@ textarea {
     <div class="row">
 
         <?php
-        creatCard("card-color-one",   "จำนวนครั้งพบศัตรูพืช", $times . " ครั้ง", "waves");
-        creatCard("card-color-two",   "จำนวนสวน",  getAreaLogFarm()[1]["NumFarm"] . " สวน " . getAreaLogFarm()[1]["NumSubFarm"] . " แปลง", "group");
-        creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaLogFarm()[1]["AreaRai"] . " ไร่ " . getAreaLogFarm()[1]["AreaNgan"] . " งาน", "dashboard");
-        creatCard("card-color-four",   "จำนวนต้นไม้", getAreaLogFarm()[1]['NumTree'] . " ต้น", "format_size");
-        ?>
+            creatCard("card-color-one",   "จำนวน".$head."เฉลี่ย ปี $year", getAvgActivity($year,2) . " ครั้ง", "waves");
+            creatCard("card-color-two",   "จำนวนสวน",  getAreaLogFarm()[1]["NumFarm"]. " สวน " . getAreaLogFarm()[1]["NumSubFarm"] . " แปลง", "group");
+            creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaLogFarm()[1]["AreaRai"] . " ไร่ ".getAreaLogFarm()[1]["AreaNgan"] . " งาน", "dashboard");
+            creatCard("card-color-four",   "จำนวนต้นไม้", getAreaLogFarm()[1]['NumTree'] . " ต้น", "format_size");
+            ?>
 
     </div>
 
-    <form action="Pest.php?isSearch=1" method="post">
+    <form action="<?php echo $CurrentMenu; ?>.php?isSearch=1" method="post">
         <div class="row">
             <div class="col-xl-12 col-12 mb-4">
                 <div id="accordion">
@@ -127,21 +94,21 @@ textarea {
                     </div>
                 </div>
                 <div id="collapseOne" class="card collapse 
-                <?php
-                if (isset($_GET['isSearch']) && $_GET['isSearch'] == 1)
-                    echo "show";
-                else
-                    echo "";
-                ?> 
-                " aria-labelledby="headingOne" data-parent="#accordion">
+                    <?php
+                    if (isset($_GET['isSearch']) && $_GET['isSearch'] == 1)
+                        echo "show";
+                    else
+                        echo "";
+                    ?> 
+                    " aria-labelledby="headingOne" data-parent="#accordion">
 
                     <div class="card-header card-bg">
-                        ตำแหน่งแปลงการตรวจพบศัตรูพืช
+                        ตำแหน่งแปลงการ<?php echo $head; ?>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-6 col-12">
-                                <div id="map" style="width:auto;height:60vh;"></div>
+                                <div id="map" style="width:auto;height:68.1vh;"></div>
                             </div>
                             <div class="col-xl-6 col-12">
                                 <div class="row">
@@ -154,35 +121,27 @@ textarea {
                                         <select id="s_year" name="s_year" class="form-control ">
                                             <option selected value=0>เลือกปี</option>
                                             <?php
-                                            $yearCurrent = date('Y') + 543;
-                                            for ($i = 0; $i <= 2; $i++, $yearCurrent--) {
-                                                if ($fyear == $yearCurrent)
-                                                    echo '<option value="' . $yearCurrent . '" selected>' . $yearCurrent . '</option>';
-                                                else
-                                                    echo '<option value="' . $yearCurrent . '">' . $yearCurrent . '</option>';
-                                            }
-                                            ?>
+                                                    $yearCurrent = date('Y') + 543;
+                                                for ($i = 0 ; $i <= 2; $i++, $yearCurrent--){
+                                                    if ($fyear == $yearCurrent)
+                                                        echo '<option value="' . $yearCurrent . '" selected>' . $yearCurrent . '</option>';
+                                                    else
+                                                        echo '<option value="' . $yearCurrent . '">' . $yearCurrent . '</option>';
+                                                }
+                                                ?>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <span>ชนิด</span>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-12">
-                                        <select id="s_type" name="s_type" class="form-control ">
-                                            <option selected value=0>เลือกชนิด</option>
-                                            <?php
-                                            for ($i = 1; $i < sizeof($PESTTYPE); $i++) {
-                                                if ($ftype == $PESTTYPE[$i]["PTID"])
-                                                    echo '<option value="' . $PESTTYPE[$i]["PTID"] . '" selected>' . $PESTTYPE[$i]["TypeTH"] . '</option>';
-                                                else
-                                                    echo '<option value="' . $PESTTYPE[$i]["PTID"] . '">' . $PESTTYPE[$i]["TypeTH"] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
+                                        <div class="irs-demo">
+                                            <span>จำนวนครั้ง<?php echo $head; ?></span>
+                                            <input class="js-range-slider" type="text" id="palmvolsilder" value="" />
+                                            <input hidden type="text" id="s_min" name="s_min" <?php if($fmin == -1) echo "value = '0'";
+                                                else echo "value = '$fmin'"; ?> />
+                                            <input hidden type="text" id="s_max" name="s_max" <?php if($fmax == -1) echo "value = '0'";
+                                                else echo "value = '$fmax'"; ?> />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -195,13 +154,13 @@ textarea {
                                         <select id="s_province" name="s_province" class="form-control ">
                                             <option selected value=0>เลือกจังหวัด</option>
                                             <?php
-                                            for ($i = 1; $i < sizeof($PROVINCE); $i++) {
-                                                if ($fpro == $PROVINCE[$i]["AD1ID"])
-                                                    echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '" selected>' . $PROVINCE[$i]["Province"] . '</option>';
-                                                else
-                                                    echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '">' . $PROVINCE[$i]["Province"] . '</option>';
-                                            }
-                                            ?>
+                                                for ($i = 1; $i < sizeof($PROVINCE); $i++) {
+                                                    if ($fpro == $PROVINCE[$i]["AD1ID"])
+                                                        echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '" selected>' . $PROVINCE[$i]["Province"] . '</option>';
+                                                    else
+                                                        echo '<option value="' . $PROVINCE[$i]["AD1ID"] . '">' . $PROVINCE[$i]["Province"] . '</option>';
+                                                }
+                                                ?>
                                         </select>
                                     </div>
                                 </div>
@@ -215,15 +174,15 @@ textarea {
                                         <select id="s_distrinct" name="s_distrinct" class="form-control">
                                             <option selected value=0>เลือกอำเภอ</option>>
                                             <?php
-                                            if ($fpro != 0) {
-                                                for ($i = 1; $i < sizeof($DISTRINCT_PROVINCE); $i++) {
-                                                    if ($fdist == $DISTRINCT_PROVINCE[$i]["AD2ID"])
-                                                        echo '<option value="' . $DISTRINCT_PROVINCE[$i]["AD2ID"] . '" selected>' . $DISTRINCT_PROVINCE[$i]["Distrinct"] . '</option>';
-                                                    else
-                                                        echo '<option value="' . $DISTRINCT_PROVINCE[$i]["AD2ID"] . '">' . $DISTRINCT_PROVINCE[$i]["Distrinct"] . '</option>';
+                                                if ($fpro != 0) {
+                                                    for ($i = 1; $i < sizeof($DISTRINCT_PROVINCE); $i++) {
+                                                        if ($fdist == $DISTRINCT_PROVINCE[$i]["AD2ID"])
+                                                            echo '<option value="' . $DISTRINCT_PROVINCE[$i]["AD2ID"] . '" selected>' . $DISTRINCT_PROVINCE[$i]["Distrinct"] . '</option>';
+                                                        else
+                                                            echo '<option value="' . $DISTRINCT_PROVINCE[$i]["AD2ID"] . '">' . $DISTRINCT_PROVINCE[$i]["Distrinct"] . '</option>';
+                                                    }
                                                 }
-                                            }
-                                            ?>
+                                                ?>
 
                                         </select>
                                     </div>
@@ -275,9 +234,9 @@ textarea {
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
             <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 25px; position: absolute; float:left;">
-                ศัตรูพืชสวนปาล์มน้ำมันในระบบ</h6>
+                การ<?php echo $head; ?>สวนปาล์มน้ำมัน</h6>
             <button type="button" id="add" style="float:right;" class="btn btn-success" data-toggle="tooltip">
-                <i class="fas fa-plus"></i>เพิ่มการตรวจพบศัตรูพืช</button>
+                <i class="fas fa-plus"></i>เพิ่มการ<?php echo $head; ?></button>
         </div>
         <div id="size" hidden size="<?php echo $times; ?>"></div>
         <div id="CurrentPage" hidden CurrentPage="1"></div>
@@ -301,17 +260,18 @@ textarea {
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%"
+                        cellspacing="0">
                         <thead>
                             <tr>
                                 <th>ชื่อเกษตรกร</th>
                                 <th>ชื่อสวน</th>
-                                <th>ชื่อแปลง</th>
-                                <th width="10%">พื้นที่ปลูก</th>
-                                <th width="10%">จำนวนต้น</th>
-                                <th>ชนิด</th>
-                                <th width="10%">วันที่พบ</th>
-                                <th width="20%">จัดการ</th>
+                                <!-- <th>ชื่อแปลง</th> -->
+                                <th>พื้นที่ปลูก</th>
+                                <th>จำนวนต้น</th>
+                                <th>วันที่ล่าสุด</th>
+                                <th>จำนวนครั้ง</th>
+                                <th>จัดการ</th>
                             </tr>
                         </thead>
 
@@ -319,24 +279,23 @@ textarea {
                             <tr>
                                 <th>ชื่อเกษตรกร</th>
                                 <th>ชื่อสวน</th>
-                                <th>ชื่อแปลง</th>
+                                <!-- <th>ชื่อแปลง</th> -->
                                 <th>พื้นที่ปลูก</th>
                                 <th>จำนวนต้น</th>
-                                <th>ชนิด</th>
-                                <th>วันที่พบ</th>
+                                <th>วันที่ล่าสุด</th>
+                                <th>จำนวนครั้ง</th>
                                 <th>จัดการ</th>
                             </tr>
                         </tfoot>
                         <tbody id="body">
                             <tr id="show_loading">
-                                <td colspan="8">
+                                <td colspan="7">
                                     <center class="form-control" style="height: 110px; border: white;">
                                         <img src="./../Chart/chart/loading.gif" alt="Loading..."
                                             style="width: 70px; height: 70px; "><br>
                                         <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
                                     </center>
                                 </td>
-                                <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
@@ -384,8 +343,8 @@ textarea {
                                             aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
                                             class="page-link">…</a></li>
                                     <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
-                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a
-                                            href="#" id="page<?php echo $i;?>" aria-controls="dataTable"
+                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a href="#"
+                                            id="page<?php echo $i;?>" aria-controls="dataTable"
                                             data-dt-idx="<?php echo $pages;?>" tabindex="0"
                                             class="page-link"><?php echo $pages;?></a></li>
                                     <li class="paginate_button page-item next <?php if($pages == 1) echo "disabled"; ?> "
@@ -406,12 +365,11 @@ textarea {
 
 </div>
 
-
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<?php include_once("PestModal.php"); ?>
-<?php include_once("../../cropImage/cropImage.php"); ?>
+<?php  include_once($CurrentMenu."Modal.php"); ?>
+<?php include_once("../../cropImage/cropImage.php");?>
 
-<script src="Pest.js"></script>
+<script src="Activity.js"></script>
 
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"

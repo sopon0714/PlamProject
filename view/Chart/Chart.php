@@ -1044,7 +1044,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                 </div>
                 <center class="form-control" id="show_loading" style="height: 110px;">
                     <img src="./chart/loading.gif" alt="Loading..." style="width: 70px; height: 70px; "><br>
-                    <label for=""></label> กำลังโหลดข้อมูล...
+                    <label for="">กำลังโหลดข้อมูล...</label>
                 </center>
             </div>
         </div>
