@@ -13,8 +13,10 @@ $ftype = 0;
 $fpro = 0;
 $fdist = 0;
 
-// $latitude = '';
-// $longitude = '';
+// $DATA = getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,0,0,'','');
+$PROVINCE = getProvince();
+$DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
+$PESTTYPE = getPestType();
 
 $page = 1;
 $limit = 10;
@@ -23,12 +25,6 @@ $end = $start+$limit;
 
 $times = getCountPestAlarm();
 if($times < $limit) $end = $times+1;
-
-// $DATA = getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,0,0,$latitude,$longitude);
-$PROVINCE = getProvince();
-$DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
-$PESTTYPE = getPestType();
-
 $pages = ceil($times/$limit);
 ?>
 
