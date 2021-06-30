@@ -24,6 +24,7 @@ $times = getCountFarmer();
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
 ?>
+<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"></div>
 <div class="container bg">
 
     <div class="row">

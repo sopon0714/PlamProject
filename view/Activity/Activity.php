@@ -40,7 +40,7 @@ textarea {
     width: 30px !important;
 }
 </style>
-<div hidden id="data_activity" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
+<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
     fdist="<?= $fdist ?>" fyear="<?= $fyear ?>" fmax="<?= $fmax ?>" fmin="<?= $fmin ?>" head="<?= $head ?>" menu=<?= $CurrentMenu ?>></div>
 <div class="container bg">
 

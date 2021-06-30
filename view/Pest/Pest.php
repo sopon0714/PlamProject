@@ -71,7 +71,7 @@ textarea {
 }
 </style>
 <!-- pagination -->
-<div hidden id="data_pest" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
+<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
     fdist="<?= $fdist ?>" fyear="<?= $fyear ?>" ftype="<?= $ftype ?>"></div>
 <!-- end pagination -->
 

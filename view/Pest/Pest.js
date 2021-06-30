@@ -8,12 +8,12 @@ $(document).ready(function() {
     moretext = "Show more";
     lesstext = "Show less";
     // pagination
-    idformal = $("#data_pest").attr("idformal");
-    fullname = $("#data_pest").attr("fullname");
-    fpro = $("#data_pest").attr("fpro");
-    fdist = $("#data_pest").attr("fdist");
-    fyear = $("#data_pest").attr("fyear");
-    ftype = $("#data_pest").attr("ftype");
+    idformal = $("#data_search").attr("idformal");
+    fullname = $("#data_search").attr("fullname");
+    fpro = $("#data_search").attr("fpro");
+    fdist = $("#data_search").attr("fdist");
+    fyear = $("#data_search").attr("fyear");
+    ftype = $("#data_search").attr("ftype");
 
     getDataSetTable();
     //end pagination
@@ -469,12 +469,12 @@ function initMap() {
     var locations = [];
     var center = [0, 0];
     // pagination
-    idformal = $("#data_pest").attr("idformal");
-    fullname = $("#data_pest").attr("fullname");
-    fpro = $("#data_pest").attr("fpro");
-    fdist = $("#data_pest").attr("fdist");
-    fyear = $("#data_pest").attr("fyear");
-    ftype = $("#data_pest").attr("ftype");
+    idformal = $("#data_search").attr("idformal");
+    fullname = $("#data_search").attr("fullname");
+    fpro = $("#data_search").attr("fpro");
+    fdist = $("#data_search").attr("fdist");
+    fyear = $("#data_search").attr("fyear");
+    ftype = $("#data_search").attr("ftype");
 
     $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0}, function(result){
       DATA = JSON.parse(result);
@@ -564,7 +564,7 @@ function initMap() {
                     //       $('.la' + lati2+'long'+longi2).hide();
                     //   }
                     // }
-                    
+
                     // pagination
 
                     $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
