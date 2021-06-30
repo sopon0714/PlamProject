@@ -15,7 +15,14 @@ $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
-// print_r($FARMER);
+$page = 1;
+$limit = 10;
+$start = (($page - 1) * $limit)+1;
+$end = $start+$limit;
+
+$times = getCountFarmer();
+if($times < $limit) $end = $times+1;
+$pages = ceil($times/$limit);
 ?>
 <div class="container bg">
 
@@ -44,7 +51,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
     <div class="row">
 
         <?php
-            creatCard("card-color-one",   "จำนวนเกษตรกร", getCountFarmer() . " คน", "waves");
+            creatCard("card-color-one",   "จำนวนเกษตรกร", $times . " คน", "waves");
             creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
             creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่ ".getAreaNgan()." งาน", "dashboard");
             creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");

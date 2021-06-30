@@ -17,7 +17,7 @@ $fdist = 0;
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 $PESTTYPE = getPestType();
-
+//pagination
 $page = 1;
 $limit = 10;
 $start = (($page - 1) * $limit)+1;
@@ -26,6 +26,7 @@ $end = $start+$limit;
 $times = getCountPestAlarm();
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
+//end pagination
 ?>
 
 <link rel="stylesheet" href="../../css/insect admin/readmore.css">
@@ -69,10 +70,12 @@ textarea {
     width: 30px !important;
 }
 </style>
+<!-- pagination -->
 <div hidden id="data_pest" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
     fdist="<?= $fdist ?>" fyear="<?= $fyear ?>" ftype="<?= $ftype ?>"></div>
-<div class="container bg">
+<!-- end pagination -->
 
+<div class="container bg">
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">
             <div class="card">
@@ -275,11 +278,16 @@ textarea {
             <button type="button" id="add" style="float:right;" class="btn btn-success" data-toggle="tooltip">
                 <i class="fas fa-plus"></i>เพิ่มการตรวจพบศัตรูพืช</button>
         </div>
+<!-- pagination -->
         <div id="size" hidden size="<?php echo $times; ?>"></div>
         <div id="CurrentPage" hidden CurrentPage="1"></div>
         <div id="pages" hidden pages="<?php echo $pages; ?>"></div>
+<!-- end pagination -->
+
         <div class="card-body">
-            <div>
+<!-- pagination add div -->
+            <div> 
+<!-- pagination -->
                 <div class="col-12 table-responsive">
                     <div class="row" style="list-style: none !important;">
                         <div style="margin-top:5px;">Show</div>
@@ -296,6 +304,7 @@ textarea {
                         <div style="margin-left:3px; margin-top:5px;">entries</div>
                     </div>
                 </div>
+<!-- end pagination -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%" cellspacing="0">
                         <thead>
@@ -324,6 +333,7 @@ textarea {
                             </tr>
                         </tfoot>
                         <tbody id="body">
+<!-- pagination -->
                             <tr id="show_loading">
                                 <td colspan="8">
                                     <center class="form-control" style="height: 110px; border: white;">
@@ -339,10 +349,12 @@ textarea {
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
+<!-- end pagination -->
                             </tr>
                         </tbody>
                     </table>
                 </div>
+<!-- pagination -->
                 <div class="col-12 table-responsive">
                     <div class="row" id="page_change">
                         <div class="col-sm-12 col-md-5" style="padding: inherit;">
@@ -392,6 +404,7 @@ textarea {
                         </div>
                     </div>
                 </div>
+<!-- end pagination -->
             </div>
         </div>
     </div>

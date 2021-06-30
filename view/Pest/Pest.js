@@ -7,7 +7,7 @@ $(document).ready(function() {
     ellipsestext = "...";
     moretext = "Show more";
     lesstext = "Show less";
-
+    // pagination
     idformal = $("#data_pest").attr("idformal");
     fullname = $("#data_pest").attr("fullname");
     fpro = $("#data_pest").attr("fpro");
@@ -16,6 +16,7 @@ $(document).ready(function() {
     ftype = $("#data_pest").attr("ftype");
 
     getDataSetTable();
+    //end pagination
 
     $('#add').click(function() {
         // console.log('add');
@@ -250,7 +251,7 @@ $(document).ready(function() {
     });
 
 });
-
+// pagination
 function getDataSetTable(){
       $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: start,limit: limit}, function(result){
           DATA = JSON.parse(result);
@@ -259,7 +260,7 @@ function getDataSetTable(){
           setTableBody(DATA);
       });
 }
-
+// pagination
 function setTableBody(DATA){
       html = ``;
                         for (i = 1; i <= DATA[0]['numrow']; i++) {
@@ -467,7 +468,7 @@ function selectPest(idSetHtml,type_id,set,date){
 function initMap() {
     var locations = [];
     var center = [0, 0];
-
+    // pagination
     idformal = $("#data_pest").attr("idformal");
     fullname = $("#data_pest").attr("fullname");
     fpro = $("#data_pest").attr("fpro");
@@ -563,6 +564,9 @@ function initMap() {
                     //       $('.la' + lati2+'long'+longi2).hide();
                     //   }
                     // }
+                    
+                    // pagination
+
                     $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
                       DATA = JSON.parse(result);
                       // console.log(result);
