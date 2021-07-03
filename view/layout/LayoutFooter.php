@@ -180,8 +180,12 @@
     }
 </script>
 <script>
+var fade = true;
     $(window).on("load", function() {
-        $(".loader-container").fadeOut(500);
+        console.log("load fade out");
+        if(fade){
+            $(".loader-container").fadeOut(500);
+        }
     });
 </script>
 

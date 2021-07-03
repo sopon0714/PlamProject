@@ -13,7 +13,16 @@ $fmin = -1;
 $fmax = -1;
 $fpro = 0;
 $fdist = 0;
-
+if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
+if (isset($_POST['s_min']))  $fmin = rtrim($_POST['s_min']);
+if (isset($_POST['s_max']))  $fmax = rtrim($_POST['s_max']);
+if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
+if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
+if (isset($_POST['s_name'])) {
+    $fullname = rtrim($_POST['s_name']);
+    $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+}
 $DATA = getActivity($idformal, $fullname, $fpro, $fdist ,$fyear ,$fmin ,$fmax,1,0,0,'','');
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);

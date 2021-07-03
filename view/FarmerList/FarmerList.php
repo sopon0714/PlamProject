@@ -6,15 +6,24 @@ $CurrentMenu = "FarmerList";
 
 include_once("../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
+
 $idformal = '';
 $fullname = '';
 $fpro = 0;
 $fdist = 0;
+if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
+if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
+if (isset($_POST['s_name'])) {
+    $fullname = rtrim($_POST['s_name']);
+    $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+}
 
-$FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
+// $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
+// pagination
 $page = 1;
 $limit = 10;
 $start = (($page - 1) * $limit)+1;
@@ -23,10 +32,12 @@ $end = $start+$limit;
 $times = getCountFarmer();
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
+// end pagination
 ?>
-<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"></div>
+<!-- pagiantion -->
+<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>" fdist="<?= $fdist ?>"></div>
+<!-- end pagiantion -->
 <div class="container bg">
-
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">
             <div class="card">
@@ -186,79 +197,125 @@ $pages = ceil($times/$limit);
             <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>;">รายชื่อเกษตรกร</h6>
 
         </div>
+        <!-- pagination -->
+        <div id="size" hidden size="<?php echo $times; ?>"></div>
+        <div id="CurrentPage" hidden CurrentPage="1"></div>
+        <div id="pages" hidden pages="<?php echo $pages; ?>"></div>
+        <!-- end pagination -->
         <div class="card-body">
+            <div>
+                <div class="col-12 table-responsive">
+                    <div class="row" style="list-style: none !important;">
+                        <div style="margin-top:5px;">Show</div>
+                        <div style="margin-left:3px;">
+                            <select name="dataTable_length" id="dataTable_length" aria-controls="dataTable"
+                                class="custom-select custom-select-sm form-control form-control-sm">
+                                <option value="10">10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="500">500</option>
+                                <option value="1000">1,000</option>
+                            </select>
+                        </div>
+                        <div style="margin-left:3px; margin-top:5px;">entries</div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%"
+                        cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>จังหวัด</th>
+                                <th>อำเภอ</th>
+                                <th>จำนวนสวน</th>
+                                <th>จำนวนแปลง</th>
+                                <th>พื้นที่ปลูก</th>
+                                <th>จำนวนต้น</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-data tableSearch" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>จังหวัด</th>
-                            <th>อำเภอ</th>
-                            <th>จำนวนสวน</th>
-                            <th>จำนวนแปลง</th>
-                            <th>พื้นที่ปลูก</th>
-                            <th>จำนวนต้น</th>
-                            <th>จัดการ</th>
-                        </tr>
-                    </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>จังหวัด</th>
+                                <th>อำเภอ</th>
+                                <th>จำนวนสวน</th>
+                                <th>จำนวนแปลง</th>
+                                <th>พื้นที่ปลูก</th>
+                                <th>จำนวนต้น</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </tfoot>
+                        <tbody id="body">
+                            <tr id="show_loading">
+                                <td colspan="8">
+                                    <center class="form-control" style="height: 110px; border: white;">
+                                        <img src="./../Chart/chart/loading.gif" alt="Loading..."
+                                            style="width: 70px; height: 70px; "><br>
+                                        <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
+                                    </center>
+                                </td>
+                                <td style="display: none"></td>
+                                <td style="display: none"></td>
+                                <td style="display: none"></td>
+                                <td style="display: none"></td>
+                                <td style="display: none"></td>
+                                <td style="display: none"></td>
+                                <td style="display: none"></td>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 table-responsive">
+                    <div class="row" id="page_change">
+                        <div class="col-sm-12 col-md-5" style="padding: inherit;">
+                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+                                <?php echo "Showing ".$start." to ".($end-1)." of ".$times." entries"?>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-7" style="padding: inherit;">
+                            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"
+                                style="float:right;">
+                                <ul class="pagination">
+                                    <li class="paginate_button page-item previous disabled" id="dataTable_previous"><a
+                                            href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                            class="page-link">Previous</a></li>
+                                    <li class="paginate_button pagination_li page-use page-item active" id="page_1"
+                                        page="1"><a href="#" aria-controls="dataTable" id="page1" data-dt-idx="1"
+                                            tabindex="0" class="page-link">1</a></li>
+                                    <li class="paginate_button page-item disabled" hidden id="dataTable_ellipsis1"><a
+                                            href="#" aria-controls="dataTable" data-dt-idx="-1" tabindex="0"
+                                            class="page-link">…</a></li>
+                                    <?php
+                                    for($i=2;$i<$pages;$i++){
+                                        if($i < $pages){?>
+                                    <li class="paginate_button pagination_li page-use page-item"
+                                        <?php if($i > 5) echo "hidden"; ?> id="page_<?php echo $i;?>"
+                                        page="<?php echo $i;?>"><a href="#" aria-controls="dataTable"
+                                            id="page<?php echo $i;?>" data-dt-idx="<?php echo $i;?>" tabindex="0"
+                                            class="page-link"><?php echo $i;?></a></li>
 
-                    <tfoot>
-                        <tr>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>จังหวัด</th>
-                            <th>อำเภอ</th>
-                            <th>จำนวนสวน</th>
-                            <th>จำนวนแปลง</th>
-                            <th>พื้นที่ปลูก</th>
-                            <th>จำนวนต้น</th>
-                            <th>จัดการ</th>
-                        </tr>
-                    </tfoot>
-                    <tbody id="body">
-                        <label id="size" hidden
-                            size="<?php if($FARMER == 0) echo 0; else echo sizeof($FARMER); ?>"></label>
-                        <?php
-                            if ($FARMER != 0) {
-                                for ($i = 0; $i < sizeof($FARMER); $i++) {
-
-                                    $lati = str_replace('.','-',$FARMER[$i]["Latitude"]);
-                                    $longi = str_replace('.','-',$FARMER[$i]["Longitude"]);
-                            ?>
-                        <tr class="<?php echo 'la'.$lati.'long'.$longi; ?> test=" test<?php echo $i; ?>">
-                            <td><?php echo $FARMER[$i]['FullName']; ?></td>
-                            <td><?php echo $FARMER[$i]["Province"] ?></td>
-                            <td><?php echo $FARMER[$i]["Distrinct"] ?></td>
-
-                            <td class="text-right"><?php echo $FARMER[$i]['numFarm']; ?> สวน</td>
-                            <td class="text-right"><?php echo $FARMER[$i]['numSubFarm'];; ?> แปลง</td>
-                            <td class="text-right"><?php echo $FARMER[$i]['numArea1']; ?> ไร่
-                                <?php echo $FARMER[$i]['numArea2']; ?> งาน</td>
-                            <td class="text-right"><?php echo $FARMER[$i]['numTree']; ?> ต้น</td>
-
-                            <td style="text-align:center;">
-                                <a href='FarmerListDetail.php?farmerID=<?php echo $FARMER[$i]['dbID']; ?>'>
-                                    <button type='button' id='btn_info' class="btn btn-info btn-sm btn_edit tt"
-                                        data-toggle="tooltip" title="รายละเอียดข้อมูลเกษตรกร">
-                                        <i class='fas fa-bars'></i>
-                                    </button>
-                                </a>
-                            </td>
-                            <label class="click-map" hidden id="<?php echo $i; ?>"
-                                pro="<?php echo $FARMER[$i]["Province"]; ?>"
-                                dist="<?php echo $FARMER[$i]["Distrinct"]; ?>"
-                                owner="<?php echo $FARMER[$i]["FullName"]; ?>"
-                                check="<?php echo $DATA[$i]["check_show"]; ?>"
-                                la="<?php echo $FARMER[$i]["Latitude"]; ?>"
-                                long="<?php echo $FARMER[$i]["Longitude"]; ?>"></label>
-                        </tr>
-                        <?php
-                                }
-                            }
-                            ?>
-
-                    </tbody>
-                </table>
+                                    <?php
+                                        }
+                                    } ?>
+                                    <li class="paginate_button page-item disabled"
+                                        <?php if($pages < 7) echo "hidden"; ?> id="dataTable_ellipsis2"><a href="#"
+                                            aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
+                                            class="page-link">…</a></li>
+                                    <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
+                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a href="#"
+                                            id="page<?php echo $i;?>" aria-controls="dataTable"
+                                            data-dt-idx="<?php echo $pages;?>" tabindex="0"
+                                            class="page-link"><?php echo $pages;?></a></li>
+                                    <li class="paginate_button page-item next <?php if($pages == 1) echo "disabled"; ?> "
+                                        id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
+                                            tabindex="0" class="page-link">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

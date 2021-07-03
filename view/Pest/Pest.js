@@ -14,8 +14,6 @@ $(document).ready(function() {
     fdist = $("#data_search").attr("fdist");
     fyear = $("#data_search").attr("fyear");
     ftype = $("#data_search").attr("ftype");
-
-    getDataSetTable();
     //end pagination
 
     $('#add').click(function() {
@@ -253,7 +251,7 @@ $(document).ready(function() {
 });
 // pagination
 function getDataSetTable(){
-      $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: start,limit: limit}, function(result){
+      $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: start,limit: limit}, function(result){
           DATA = JSON.parse(result);
           // console.log(result);
           // console.log(DATA[0]["numrow"]);
@@ -475,9 +473,11 @@ function initMap() {
     fdist = $("#data_search").attr("fdist");
     fyear = $("#data_search").attr("fyear");
     ftype = $("#data_search").attr("ftype");
-
-    $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0}, function(result){
+    fade = false;
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0}, function(result){
       DATA = JSON.parse(result);
+      getDataSetTable();
+      $(".loader-container").fadeOut(500);
       // console.log(DATA);
       // console.log("init map numrow data = "+DATA[0]["numrow"]);
       size = DATA[0]['numrow'];
@@ -567,7 +567,7 @@ function initMap() {
 
                     // pagination
 
-                    $.post("manage.php", {request: "pest",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
                       DATA = JSON.parse(result);
                       // console.log(result);
                       // console.log(DATA[0]["numrow"]);

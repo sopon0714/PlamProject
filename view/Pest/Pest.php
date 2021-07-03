@@ -12,12 +12,20 @@ $fyear = 0;
 $ftype = 0;
 $fpro = 0;
 $fdist = 0;
-
+if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
+if (isset($_POST['s_type']))  $ftype = rtrim($_POST['s_type']);
+if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
+if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
+if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
+if (isset($_POST['s_name'])) {
+    $fullname = rtrim($_POST['s_name']);
+    $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+}
 // $DATA = getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,0,0,'','');
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 $PESTTYPE = getPestType();
-//pagination
+// pagination
 $page = 1;
 $limit = 10;
 $start = (($page - 1) * $limit)+1;
@@ -26,7 +34,7 @@ $end = $start+$limit;
 $times = getCountPestAlarm();
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
-//end pagination
+// end pagination
 ?>
 
 <link rel="stylesheet" href="../../css/insect admin/readmore.css">
@@ -286,7 +294,7 @@ textarea {
 
         <div class="card-body">
 <!-- pagination add div -->
-            <div> 
+            <div>
 <!-- pagination -->
                 <div class="col-12 table-responsive">
                     <div class="row" style="list-style: none !important;">

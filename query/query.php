@@ -216,20 +216,10 @@ function getCountArea()
 }
 
 //ตารางเกษตรกร (table)
-function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
+function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
     $myConDB = connectDB();
-
-    $idformal = '';
-    $fpro = '';
-    $fdist = '';
-    $fullname = '';
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+    if($fullname != ''){
         $namef = explode(" ", $fullname);
         if (isset($namef[1])) {
             $fnamef = $namef[0];
@@ -256,7 +246,12 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
     if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
 
+    if ($latitude != '') $sql = $sql . " AND `Latitude` LIKE '%" . $latitude . "%' ";
+    if ($longitude != '') $sql = $sql . " AND `Longitude` LIKE '%" . $longitude . "%' ";
+
     $sql = $sql . " ORDER BY `db-farmer`.`FirstName`";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
+
     // echo $sql;
     $myConDB = connectDB();
     $result = $myConDB->prepare($sql);
@@ -265,7 +260,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist)
     $numFermer = 0;
     $FARMER = NULL;
     foreach ($result as $tmp => $tmpDATA) {
-        //print_r($tmpDATA);
+        // print_r($numFermer);
         if ($tmpDATA['UFID'] > 0) {
             $FARMER[$numFermer]['dbID']        = $tmpDATA['UFID'];
             $FARMER[$numFermer]['FullName']    = $tmpDATA['Title'] . " " . $tmpDATA['FirstName'] . " " . $tmpDATA['LastName'];
@@ -1923,17 +1918,6 @@ function getPestLogByPID($dpid)
 
 function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype,$start,$limit,$latitude,$longitude)
 {
-
-    if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
-    if (isset($_POST['s_type']))  $ftype = rtrim($_POST['s_type']);
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-    }
-
     $sql = "SELECT * FROM (
         SELECT * FROM (
         SELECT * FROM (
@@ -2189,16 +2173,6 @@ function getChartPest($year, $fsid)
 
 function getActivity(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$fmin, &$fmax, $DBactID,$start,$limit,$latitude,$longitude)
 {
-    if (isset($_POST['s_year']))  $fyear = rtrim($_POST['s_year']);
-    if (isset($_POST['s_min']))  $fmin = rtrim($_POST['s_min']);
-    if (isset($_POST['s_max']))  $fmax = rtrim($_POST['s_max']);
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-    }
     if ($fmin == 0 && $fmax == 0) {
         $fmin = -1;
         $fmax = -1;

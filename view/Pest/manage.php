@@ -15,7 +15,7 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
-        case 'pest' :
+        case 'pagination' :
             $idformal = $_POST['idformal'];
             $fullname = $_POST['fullname'];
             $fpro = $_POST['fpro'];

@@ -21,8 +21,6 @@ $(document).ready(function() {
     fmax = $("#data_search").attr("fmax");
     fmin = $("#data_search").attr("fmin");
 
-    getDataSetTable();
-
     $("#palmvolsilder").ionRangeSlider({
       type: "double",
       from: s_min,
@@ -157,7 +155,7 @@ $(document).ready(function() {
 
 });
 function getDataSetTable(){
-    $.post("manage.php", {request: "activity",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: start,limit: limit}, function(result){
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: start,limit: limit}, function(result){
         // console.log(result);
         DATA = JSON.parse(result);
         // console.log(result);
@@ -306,9 +304,11 @@ function initMap() {
     fyear = $("#data_search").attr("fyear");
     fmax = $("#data_search").attr("fmax");
     fmin = $("#data_search").attr("fmin");
-
-    $.post("manage.php", {request: "activity",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0}, function(result){
+    fade = false;
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0}, function(result){
         DATA = JSON.parse(result);
+        getDataSetTable();
+        $(".loader-container").fadeOut(500);
         // console.log(DATA);
         // console.log("init map numrow data = "+DATA[0]["numrow"]);
         size = DATA[0]['numrow'];
@@ -394,7 +394,7 @@ function initMap() {
                     //         $('.la' + lati2+'long'+longi2).hide();
                     //     }
                     // }
-                        $.post("manage.php", {request: "activity",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                        $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
                             // console.log(result);
                             DATA = JSON.parse(result);
                             // console.log(result);
