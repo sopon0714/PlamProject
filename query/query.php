@@ -3198,14 +3198,14 @@ function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist)
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
-        // $INFO = getInfoFertilising($INFOSUBFARM[$i]['FSID'], $year);
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['countFertilising'] =  0;//$INFO['countFertilising'];
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] =  0;//$INFO['N']['sumVol'] . "/" . $INFO['N']['UnitUse'];
-        // $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] .= ($INFO['N']['Unit'] == 1) ? "Kg" : "g";
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] =  0;//$INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
-        // $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] .= 0;($INFO['P']['Unit'] == 1) ? "Kg" : "g";
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] =  0;//$INFO['K']['sumVol'] . "/" . $INFO['K']['UnitUse'];
-        // $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] .= 0;//($INFO['K']['Unit'] == 1) ? "Kg" : "g";
+        $INFO = getInfoFertilising($INFOSUBFARM[$i]['FSID'], $year);
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['countFertilising'] =  $INFO['countFertilising'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] =  $INFO['N']['sumVol'] . "/" . $INFO['N']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] .= ($INFO['N']['Unit'] == 1) ? "Kg" : "g";
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] = $INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] .= ($INFO['P']['Unit'] == 1) ? "Kg" : "g";
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] =  $INFO['K']['sumVol'] . "/" . $INFO['K']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] .= ($INFO['K']['Unit'] == 1) ? "Kg" : "g";
     }
     return $INFOSUBFARMFertilising;
 }
@@ -3218,36 +3218,38 @@ function getInfoFertilising($FSID, $year)
     WHERE `dim-farm`.`dbID`=$FSID AND `dim-time`.`Year2` = $year AND `log-fertilising`.`isDelete`=0";
     $DATA = selectData($sql);
     $INFO['countFertilising'] = $DATA[1]['countFertilising'];
-
-    $DATA = getSumVolFertilising($FSID, $year, 1);
-
+    
+    $tagetYear = $year+1-543;
+    $sql = "SELECT `fact-fertilising`.* FROM `fact-fertilising` INNER JOIN `dim-farm`
+     WHERE `fact-fertilising`.`DIMsubFID`=`dim-farm`.`ID` AND `dim-farm`.`dbID`= $FSID AND 
+     `fact-fertilising`.`TagetYear`= $tagetYear";
+    $DATA = selectData($sql);
     if ($DATA[0]['numrow'] != 0) {
-        $INFO['N']['sumVol'] = $DATA[1]['sumVol'];
-        $INFO['N']['Unit'] = $DATA[1]['Unit'];
+        $INFO['N']['sumVol'] = $DATA[1]['UseN'];
+        $INFO['N']['UnitUse'] =  $DATA[1]['WantN'];
+        $INFO['N']['Unit'] = $DATA[1]['UnitN'];
+       
+        $INFO['P']['sumVol'] = $DATA[1]['UseP'];
+        $INFO['P']['UnitUse'] =  $DATA[1]['WantP'];
+        $INFO['P']['Unit'] = $DATA[1]['UnitP'];
+       
+        $INFO['K']['sumVol'] = $DATA[1]['UseK'];
+        $INFO['K']['UnitUse'] =  $DATA[1]['WantK'];
+        $INFO['K']['Unit'] = $DATA[1]['UnitK'];
+       
     } else {
         $INFO['N']['sumVol'] = 0;
+        $INFO['N']['UnitUse'] =  0;
         $INFO['N']['Unit'] = 1;
-    }
-    $INFO['N']['UnitUse'] =  getVolUseFertilising($FSID, 1, $year);
-    $DATA = getSumVolFertilising($FSID, $year, 2);
-    $vol = 0;
-    if ($DATA[0]['numrow'] != 0) {
-        $INFO['P']['sumVol'] = $DATA[1]['sumVol'];
-        $INFO['P']['Unit'] = $DATA[1]['Unit'];
-    } else {
+
         $INFO['P']['sumVol'] = 0;
+        $INFO['P']['UnitUse'] =  0;
         $INFO['P']['Unit'] = 1;
-    }
-    $INFO['P']['UnitUse'] =  getVolUseFertilising($FSID, 2, $year);
-    $DATA = getSumVolFertilising($FSID, $year, 3);
-    if ($DATA[0]['numrow'] != 0) {
-        $INFO['K']['sumVol'] = $DATA[1]['sumVol'];
-        $INFO['K']['Unit'] = $DATA[1]['Unit'];
-    } else {
+
         $INFO['K']['sumVol'] = 0;
+        $INFO['K']['UnitUse'] =  0;
         $INFO['K']['Unit'] = 1;
     }
-    $INFO['K']['UnitUse'] =  getVolUseFertilising($FSID, 3, $year);
     return $INFO;
 }
 function getVolUseFertilising($FSID, $NID, $year)
@@ -3402,3 +3404,4 @@ function getFarmerAll_Chart()
     $data = selectData($sql);
     return $data;
 }
+ 

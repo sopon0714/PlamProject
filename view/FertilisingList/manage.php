@@ -44,6 +44,11 @@ switch ($action) {
         }
         $sql = "SELECT * FROM `log-fertilizercomposition`WHERE `FerID` = $ferID";
         $DETAILFER = selectData($sql);
+        $sql = "SELECT `fact-fertilising` .* FROM `fact-fertilising` 
+                INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-fertilising`.`DIMsubFID`
+                WHERE `fact-fertilising`.`TagetYear`=". ($DIMTIME[1]['Year1']+1) ."
+                AND `dim-farm`.`dbID` = $fsid";
+        $DATA = selectData($sql);
         for ($i = 1; $i <= $DETAILFER[0]['numrow']; $i++) {
             $sql = "SELECT `log-nutrient`.* FROM `log-nutrient`
             INNER JOIN `dim-nutrient` ON `dim-nutrient`.`ID` = `log-nutrient`.`DIMnutrID`
@@ -61,6 +66,62 @@ switch ($action) {
             $ChangVol = $ChangVol * $DETAILFER[$i]['Percent'];
             $sql = "INSERT INTO `log-fertilisingdetail` (`ID`, `fertilisingID`, `logNID`, `Vol`, `Unit`) VALUES (NULL, '$logid', '{$DATANUTR[1]['ID']}', '$ChangVol', '{$DATANUTR[1]['Unit']}')";
             addinsertData($sql);
+
+            //add fact-fertilising
+
+            $sql = "SELECT `fact-fertilising` .* FROM `fact-fertilising` 
+                INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-fertilising`.`DIMsubFID`
+                WHERE `fact-fertilising`.`TagetYear`=". ($DIMTIME[1]['Year1']+1) ."
+                AND `dim-farm`.`dbID` = $fsid";
+            $DATA = selectData($sql);
+            if($DETAILFER[$i]['NID']==1||$DETAILFER[$i]['NID']==2||$DETAILFER[$i]['NID']==3){
+                
+                if($DATA[0]['numrow']!=0){
+                   
+                    switch($DETAILFER[$i]['NID']){
+                        case 1:
+                            $vol = $DATA[1]['UseN']+$ChangVol;
+                            $sql ="UPDATE `fact-fertilising` SET `UseN` = '$vol' WHERE `fact-fertilising`.`ID` = {$DATA[1]['ID']}";
+                            break;
+                        case 2:
+                            $vol = $DATA[1]['UseP']+$ChangVol;
+                            $sql ="UPDATE `fact-fertilising` SET  `UseP` = '$vol' WHERE `fact-fertilising`.`ID` = {$DATA[1]['ID']}";
+                            break;
+                        case 3:
+                            $vol = $DATA[1]['UseK']+$ChangVol;
+                            $sql ="UPDATE `fact-fertilising` SET `UseK` = '$vol' WHERE `fact-fertilising`.`ID` = {$DATA[1]['ID']}";
+                            break;
+                    }
+                    updateData($sql);
+                }else{
+                    $tagetYear = $DIMTIME[1]['Year1'] + 1;
+                    switch($DETAILFER[$i]['NID']){
+                        case 1:
+                            $N= $ChangVol;
+                            $P= 0;
+                            $K= 0;
+                            break;
+                        case 2:
+                            $N= 0;
+                            $P= $ChangVol;
+                            $K= 0;
+                            break;
+                        case 3:
+                            $N= 0;
+                            $P= 0;
+                            $K= $ChangVol;
+                            break;
+                    }
+                    $wantN=  getVolUseFertilising($fsid, 1, $DIMTIME[1]['Year2']);
+                    $wantP=  getVolUseFertilising($fsid, 2, $DIMTIME[1]['Year2']);
+                    $wantK=  getVolUseFertilising($fsid, 3, $DIMTIME[1]['Year2']);
+                
+                    $sql ="INSERT INTO `fact-fertilising` (`ID`, `isDelete`, `TagetYear`, `LOGloginID`, `DIMdateID`, `DIMownerID`, `DIMfarmID`, `DIMsubFID`,  `UseN`, `WantN`, `UnitN`, `UseP`, `WantP`, `UnitP`, `UseK`, `WantK`, `UnitK`) 
+                    VALUES (NULL, '0', '$tagetYear', '{$LOG_LOGIN[1]['ID']}', '{$DIMTIME[1]['ID']}', '{$LOGFARM[1]['DIMownerID']}', '{$LOGFARM[1]['DIMfarmID']}', '{$LOGFARM[1]['DIMSubfID']}', '$N', '$wantN', '1', '$P', '$wantP', '1', '$K', '$wantK', '1')";
+                    addinsertData($sql);
+                }
+            }
+            
         }
         header("location:./FertilisingDetail.php?FSID=$fsid&Active=3");
         break;
@@ -82,6 +143,41 @@ switch ($action) {
         $id = $_POST['logid'];
         $sql = "UPDATE `log-fertilising` SET `isDelete` = '1' WHERE `log-fertilising`.`ID` = $id";
         $o_did = updateData($sql);
+
+        //add fact-fertilising
+        $sql ="SELECT `log-fertilisingdetail`.*,`log-nutrient`.`DIMnutrID` AS NID , `dim-time`.`Year1` ,`dim-farm`.`dbID` AS FSID FROM `log-fertilisingdetail`  
+        INNER JOIN `log-fertilising` ON `log-fertilising`.`ID` = `log-fertilisingdetail`.fertilisingID
+        INNER JOIN `log-nutrient` ON `log-nutrient`.`ID` = `log-fertilisingdetail`.`logNID`
+        INNER JOIN `dim-time` ON `dim-time`.`ID` =   `log-fertilising`.`DIMdateID`
+        INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `log-fertilising`.`DIMsubFID`
+        WHERE `log-nutrient`.`EndT` IS NULL  AND `log-fertilisingdetail`.`fertilisingID`=$id AND `log-nutrient`.`DIMnutrID` IN (1,2,3)";
+        $DATA =selectData($sql);
+        if($DATA[0]['numrow']>0){
+            $sql = "SELECT `fact-fertilising` .* FROM `fact-fertilising` 
+            INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-fertilising`.`DIMsubFID`
+            WHERE `fact-fertilising`.`TagetYear`=". ($DATA[1]['Year1']+1) ."
+            AND `dim-farm`.`dbID` = {$DATA[1]['FSID']}";
+            $DATA2= selectData($sql);
+            $id =  $DATA2[1]['ID'];
+            for($i=1;$i<=$DATA[0]['numrow'];$i++){
+                switch($DATA[$i]['NID']){
+                    case 1:
+                        $vol = $DATA2[1]['UseN']-$DATA[$i]['Vol'];
+                        $sql ="UPDATE `fact-fertilising` SET `UseN` = '$vol' WHERE `fact-fertilising`.`ID` = $id";
+                        break;
+                    case 2:
+                        $vol = $DATA2[1]['UseP']-$DATA[$i]['Vol'];
+                        $sql ="UPDATE `fact-fertilising` SET  `UseP` = '$vol' WHERE `fact-fertilising`.`ID` = $id";
+                        break;
+                    case 3:
+                        $vol = $DATA2[1]['UseK']-$DATA[$i]['Vol'];
+                        $sql ="UPDATE `fact-fertilising` SET `UseK` = '$vol' WHERE `fact-fertilising`.`ID` = $id";
+                        break;
+                }
+                updateData($sql);
+            }
+        }
+        
         break;
     case 'loadData':
         $fsid = $_POST['fsid'];

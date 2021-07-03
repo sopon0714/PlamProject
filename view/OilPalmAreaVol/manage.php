@@ -66,6 +66,22 @@ switch ($action) {
 
           //////////// fact-farming ////////////////////
 
+
+
+          //////////// fact-fertilising ////////////////////
+          $sql ="SELECT `fact-fertilising`.* FROM `fact-fertilising` 
+          INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-fertilising`.`DIMsubFID`
+          WHERE `dim-farm`.`dbID`={$DIMSUBFARM[1]['dbID']}  AND `fact-fertilising`.`TagetYear`=".($DIMTIME[1]['Year1']+2);
+          $FACTFERTILISING = selectData($sql);
+          if($FACTFERTILISING[0]['numrow']==1){
+               $wantN=  getVolUseFertilising($DIMSUBFARM[1]['dbID'], 1, $DIMTIME[1]['Year2']+1);
+               $wantP=  getVolUseFertilising($DIMSUBFARM[1]['dbID'], 2, $DIMTIME[1]['Year2']+1);
+               $wantK=  getVolUseFertilising($DIMSUBFARM[1]['dbID'], 3, $DIMTIME[1]['Year2']+1);
+               $sql ="UPDATE `fact-fertilising` SET `WantN` = '$wantN', `WantP` = '$wantP', `WantK` = '$wantK' WHERE `fact-fertilising`.`ID` = {$FACTFERTILISING[1]['ID']}";
+               updateData($sql);
+          }
+          //////////// fact-fertilising ////////////////////
+
           header("location:./OilPalmAreaVolDetail.php?FMID=$fmid");
           break;
      case 'scanDir';
@@ -105,6 +121,20 @@ switch ($action) {
           updateData($sql);
 
           //////////// fact-farming ////////////////////
+
+          //////////// fact-fertilising ////////////////////
+          $sql ="SELECT `fact-fertilising`.* FROM `fact-fertilising` 
+          INNER JOIN `dim-farm` ON `dim-farm`.`ID` = `fact-fertilising`.`DIMsubFID`
+          WHERE `dim-farm`.`dbID`={$DIMSUBFARM[1]['dbID']}  AND `fact-fertilising`.`TagetYear`=".($DIMTIME[1]['Year1']+2);
+          $FACTFERTILISING = selectData($sql);
+          if($FACTFERTILISING[0]['numrow']==1){
+               $wantN=  getVolUseFertilising($DIMSUBFARM[1]['dbID'], 1, $DIMTIME[1]['Year2']+1);
+               $wantP=  getVolUseFertilising($DIMSUBFARM[1]['dbID'], 2, $DIMTIME[1]['Year2']+1);
+               $wantK=  getVolUseFertilising($DIMSUBFARM[1]['dbID'], 3, $DIMTIME[1]['Year2']+1);
+               $sql ="UPDATE `fact-fertilising` SET `WantN` = '$wantN', `WantP` = '$wantP', `WantK` = '$wantK' WHERE `fact-fertilising`.`ID` = {$FACTFERTILISING[1]['ID']}";
+               updateData($sql);
+          }
+          //////////// fact-fertilising ////////////////////
           break;
      case 'setSelectSubfarm';
           $FIMD = $_POST['FIMD'];
