@@ -1,4 +1,10 @@
 var dataFarm;
+   // pagination
+   idformal = $("#data_search").attr("idformal");
+   fullname = $("#data_search").attr("fullname");
+   fpro = $("#data_search").attr("fpro");
+   fdist = $("#data_search").attr("fdist");
+   //end pagination
 $(document).ready(function() {
     updateInfoFarm();
     $('.tt').tooltip();
@@ -140,7 +146,81 @@ $(document).ready(function() {
     }
 
 });
+// pagination
+function getDataSetTable(){
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: start,limit: limit}, function(result){
+        DATA = JSON.parse(result);
+        // console.log(result);
+        // console.log(DATA[0]["numrow"]);
+        setTableBody(DATA);
+    });
+}
+// pagination
+function setTableBody(DATA){
+    html = ``;
+                      for (i = 1; i <= DATA[0]['numrow']; i++) {
+                          if (DATA[i]['check_show'] == 1) {
+                            html += `<tr class="la${DATA[i]["Latitude"]} long${DATA[i]["Longitude"]} table-set"
+                          test="test${i}}">
+                          <td>${DATA[i]["OwnerName"]}</td>
+                          <td>${DATA[i]['Namefarm']}</td>`;
+                          if (DATA[i]["EndT_sub"] != null) {
+                            html += `<td>${DATA[i]["Namesubfarm"]}</td>`;
+                          } else {
+                            html += `<td><a
+                                  href="./../OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=${DATA[i]["FSID"]}&FMID=${DATA[i]["FMID"]}">
+                                  ${DATA[i]["Namesubfarm"]}</a></td>`;
+                          }
+                          html += `<td class="text-right">${DATA[i]['AreaRai']} ไร่
+                              ${DATA[i]['AreaNgan']} งาน</td>
+                          <td class="text-right">${DATA[i]['NumTree']} ต้น</td>
+                          <td class="text-center">${DATA[i]['TypeTH']}</td>
+                          <td class="text-center">${DATA[i]['Date']}</td>
 
+                          <td style="text-align:center;">
+                              <button type="button" id='edit${i}'
+                                  class="btn btn-warning btn-sm btn-edit tt set-button" data-toggle="tooltip"
+                                  title="รายละเอียด" farm="${DATA[i]['Namefarm']}"
+                                  subfarm="${DATA[i]['Namesubfarm']}" date="${DATA[i]['Date']}"
+                                  o_farm="${DATA[i]['NameFarm_old']}"
+                                  modify="${DATA[i]['Modify']}"
+                                  o_subfarm="${DATA[i]['NamesubFarm_old']}"
+                                  pesttype_name="${DATA[i]['TypeTH']}"
+                                  pesttype="${DATA[i]['dbpestTID']}"
+                                  pestalias="${DATA[i]['PestAlias']}"
+                                  pest="${DATA[i]['DIMpestID']}" note="${DATA[i]['Note']}"
+                                  lid="${DATA[i]['ID']}">
+                                  <i class="far fa-file"></i></button>
+                              <button type="button" class="btn btn-success btn-sm btn-pest tt set-button"
+                                  dimpest="${DATA[i]['dim_pest']}"
+                                  pest="${DATA[i]['dbpestLID']}"
+                                  pesttype="${DATA[i]['dbpestTID']}" data-toggle="tooltip"
+                                  title="ลักษณะศัตรูพืช"><i class="fas fa-bars"></i></button>
+                              <button type="button" class="btn btn-info btn-sm btn-photo tt set-button"
+                                  lid="${DATA[i]['ID']}" data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i
+                                      class="far fa-images"></i></button>
+                              <button type="button" class="btn btn-primary btn-sm btn-note tt set-button"
+                                  note="${DATA[i]['Note']}" data-toggle="tooltip"
+                                  title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
+                              <button type="button" class="btn btn-danger btn-sm btn-delete tt set-button"
+                                  lid="${DATA[i]['ID']}"
+                                  subfarm="${DATA[i]['Namesubfarm']}"
+                                  pestalias='${DATA[i]['PestAlias']}' data-toggle="tooltip"
+                                  title="ลบ"><i class="far fa-trash-alt"></i></button>
+                          </td>
+                          <label class="click-map" hidden id="${i}"
+                              namesubfarm="${DATA[i]["Namesubfarm"]}"
+                              dim_subfarm=" ${DATA[i]["dim_subfarm"]}"
+                              la="${DATA[i]["Latitude"]}" long="${DATA[i]["Longitude"]}"
+                              check="${DATA[i]["check_show"]}"
+                              dist="${DATA[i]["Distrinct"]}" pro="${DATA[i]["Province"]}"
+                              owner="${DATA[i]["OwnerName"]}"></label>
+                      </tr>`;
+                          }
+                      }
+
+        $("#body").html(html);
+}
 function initMap() {
     var locations = [];
     var center = [0, 0];

@@ -458,24 +458,13 @@ function getCountTree()
 // ตารางสวนปาล์มน้ำมันในระบบ
 function getOilPalmAreaList(&$idformal, &$fullname, &$fpro, &$fdist)
 {
-    $idformal = '';
-    $fpro = 0;
-    $fdist = 0;
-    $fullname = '';
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-        $namef = explode(" ", $fullname);
-        if (isset($namef[1])) {
-            $fnamef = $namef[0];
-            $lnamef = $namef[1];
-        } else {
-            $fnamef = $fullname;
-            $lnamef = $fullname;
-        }
+    $namef = explode(" ", $fullname);
+    if (isset($namef[1])) {
+        $fnamef = $namef[0];
+        $lnamef = $namef[1];
+    } else {
+        $fnamef = $fullname;
+        $lnamef = $fullname;
     }
     $sql = "SELECT `log-farm`.`ID`,`dim-farm`.`dbID` AS FMID ,
     `dim-address`.`Province`,`dim-address`.`Distrinct`,`dim-address`.`dbsubDID`,`log-farm`.`Latitude`,`log-farm`.`Longitude`,

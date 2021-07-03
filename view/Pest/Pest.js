@@ -1,3 +1,11 @@
+// pagination
+idformal = $("#data_search").attr("idformal");
+fullname = $("#data_search").attr("fullname");
+fpro = $("#data_search").attr("fpro");
+fdist = $("#data_search").attr("fdist");
+fyear = $("#data_search").attr("fyear");
+ftype = $("#data_search").attr("ftype");
+//end pagination
 $(document).ready(function() {
     // console.log("y");
     $('.tt').tooltip();
@@ -7,14 +15,6 @@ $(document).ready(function() {
     ellipsestext = "...";
     moretext = "Show more";
     lesstext = "Show less";
-    // pagination
-    idformal = $("#data_search").attr("idformal");
-    fullname = $("#data_search").attr("fullname");
-    fpro = $("#data_search").attr("fpro");
-    fdist = $("#data_search").attr("fdist");
-    fyear = $("#data_search").attr("fyear");
-    ftype = $("#data_search").attr("ftype");
-    //end pagination
 
     $('#add').click(function() {
         // console.log('add');
@@ -467,12 +467,6 @@ function initMap() {
     var locations = [];
     var center = [0, 0];
     // pagination
-    idformal = $("#data_search").attr("idformal");
-    fullname = $("#data_search").attr("fullname");
-    fpro = $("#data_search").attr("fpro");
-    fdist = $("#data_search").attr("fdist");
-    fyear = $("#data_search").attr("fyear");
-    ftype = $("#data_search").attr("ftype");
     fade = false;
     $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0}, function(result){
       DATA = JSON.parse(result);
