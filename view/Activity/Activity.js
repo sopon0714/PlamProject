@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    menu = $("#data_activity").attr("menu");
+    menu = $("#data_search").attr("menu");
     win_location = menu+".php";
     // console.log("y");
     $('.tt').tooltip();
@@ -13,15 +13,13 @@ $(document).ready(function() {
     s_min = $('#s_min').val();
     s_max = $('#s_max').val();
 
-    idformal = $("#data_activity").attr("idformal");
-    fullname = $("#data_activity").attr("fullname");
-    fpro = $("#data_activity").attr("fpro");
-    fdist = $("#data_activity").attr("fdist");
-    fyear = $("#data_activity").attr("fyear");
-    fmax = $("#data_activity").attr("fmax");
-    fmin = $("#data_activity").attr("fmin");
-
-    getDataSetTable();
+    idformal = $("#data_search").attr("idformal");
+    fullname = $("#data_search").attr("fullname");
+    fpro = $("#data_search").attr("fpro");
+    fdist = $("#data_search").attr("fdist");
+    fyear = $("#data_search").attr("fyear");
+    fmax = $("#data_search").attr("fmax");
+    fmin = $("#data_search").attr("fmin");
 
     $("#palmvolsilder").ionRangeSlider({
       type: "double",
@@ -57,7 +55,7 @@ $(document).ready(function() {
       farmID = $(this).attr('farmID');
       date= $(this).attr('date');
       farm = $(this).attr('farm');
-      head = $("#data_activity").attr('head');
+      head = $("#data_search").attr('head');
 
       delfunction(farmID,farm,date,head);
 
@@ -157,7 +155,7 @@ $(document).ready(function() {
 
 });
 function getDataSetTable(){
-    $.post("manage.php", {request: "activity",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: start,limit: limit}, function(result){
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: start,limit: limit}, function(result){
         // console.log(result);
         DATA = JSON.parse(result);
         // console.log(result);
@@ -166,7 +164,7 @@ function getDataSetTable(){
     });
 }
 function setTableBody(DATA){
-    menu = $("#data_activity").attr("menu");
+    menu = $("#data_search").attr("menu");
 
     html = ``;
     for (i = 1; i <= DATA[0]['numrow']; i++) {
@@ -299,16 +297,18 @@ function initMap() {
     var locations = [];
     var center = [0, 0];
 
-    idformal = $("#data_activity").attr("idformal");
-    fullname = $("#data_activity").attr("fullname");
-    fpro = $("#data_activity").attr("fpro");
-    fdist = $("#data_activity").attr("fdist");
-    fyear = $("#data_activity").attr("fyear");
-    fmax = $("#data_activity").attr("fmax");
-    fmin = $("#data_activity").attr("fmin");
-
-    $.post("manage.php", {request: "activity",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0}, function(result){
+    idformal = $("#data_search").attr("idformal");
+    fullname = $("#data_search").attr("fullname");
+    fpro = $("#data_search").attr("fpro");
+    fdist = $("#data_search").attr("fdist");
+    fyear = $("#data_search").attr("fyear");
+    fmax = $("#data_search").attr("fmax");
+    fmin = $("#data_search").attr("fmin");
+    fade = false;
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0}, function(result){
         DATA = JSON.parse(result);
+        getDataSetTable();
+        $(".loader-container").fadeOut(500);
         // console.log(DATA);
         // console.log("init map numrow data = "+DATA[0]["numrow"]);
         size = DATA[0]['numrow'];
@@ -394,7 +394,7 @@ function initMap() {
                     //         $('.la' + lati2+'long'+longi2).hide();
                     //     }
                     // }
-                        $.post("manage.php", {request: "activity",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                        $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
                             // console.log(result);
                             DATA = JSON.parse(result);
                             // console.log(result);

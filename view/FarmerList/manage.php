@@ -20,6 +20,18 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
+        case 'pagination':
+            $idformal = $_POST['idformal'];
+            $fullname = $_POST['fullname'];
+            $fpro = $_POST['fpro'];
+            $fdist = $_POST['fdist'];
+            $start = $_POST['start'];
+            $limit = $_POST['limit'];
+	        $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+	        $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+
+            print_r(json_encode(getFarmer($idformal, $fullname, $fpro, $fdist,$start,$limit,$latitude,$longitude)));
+            break;
         case 'select' :
             $sql = "SELECT * FROM `db-farmer`";
 

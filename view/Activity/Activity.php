@@ -1,43 +1,49 @@
-<?php
-session_start();
 
-$idUT = $_SESSION[md5('typeid')];
-$CurrentMenu = "FarmerList";
+<link rel="stylesheet" href="../../css/insect admin/readmore.css">
+<link rel="stylesheet" href="../../css/insect admin/stylePest.css">
 
-include_once("../layout/LayoutHeader.php");
-include_once("./../../query/query.php");
-
-$idformal = '';
-$fullname = '';
-$fpro = 0;
-$fdist = 0;
-if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
-if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
-if (isset($_POST['s_name'])) {
-    $fullname = rtrim($_POST['s_name']);
-    $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+<style>
+textarea {
+    overflow-y: scroll;
+    height: 100px;
+    resize: vertical;
 }
 
-// $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
-$PROVINCE = getProvince();
-$DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
+.img-reletive input[type=file] {
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
 
-// pagination
-$page = 1;
-$limit = 10;
-$start = (($page - 1) * $limit)+1;
-$end = $start+$limit;
+.croppie-container .cr-boundary {
+    width: 350px;
+    height: 220px;
+}
 
-$times = getCountFarmer();
-if($times < $limit) $end = $times+1;
-$pages = ceil($times/$limit);
-// end pagination
-?>
-<!-- pagiantion -->
-<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>" fdist="<?= $fdist ?>"></div>
-<!-- end pagiantion -->
+.upload-demo2 {
+    width: 350px;
+    height: 250px;
+}
+
+.img-gal {
+    width: 150px;
+    height: 100px;
+    z-index: 5;
+}
+
+.set-button {
+    width: 30px !important;
+}
+</style>
+<div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
+    fdist="<?= $fdist ?>" fyear="<?= $fyear ?>" fmax="<?= $fmax ?>" fmin="<?= $fmin ?>" head="<?= $head ?>" menu=<?= $CurrentMenu ?>></div>
 <div class="container bg">
+
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">
             <div class="card">
@@ -45,13 +51,13 @@ $pages = ceil($times/$limit);
                     <div class="row">
                         <div class="col-12">
                             <span class="link-active font-weight-bold"
-                                style="color:<?= $color ?>;">รายชื่อเกษตรกร</span>
+                                style="color:<?= $color ?>;"><?php echo $head; ?></span>
                             <span style="float:right;">
                                 <i class="fas fa-bookmark"></i>
                                 <a class="link-path" href="#">หน้าแรก</a>
                                 <span> > </span>
                                 <a class="link-path link-active" href="#"
-                                    style="color:<?= $color ?>;">รายชื่อเกษตรกร</a>
+                                    style="color:<?= $color ?>;"><?php echo $head; ?></a>
                             </span>
                         </div>
                     </div>
@@ -63,15 +69,15 @@ $pages = ceil($times/$limit);
     <div class="row">
 
         <?php
-            creatCard("card-color-one",   "จำนวนเกษตรกร", $times . " คน", "waves");
-            creatCard("card-color-two",   "จำนวนสวน",  getCountFarm() . " สวน " . getCountSubfarm() . " แปลง", "group");
-            creatCard("card-color-three",   "พื้นที่ทั้งหมด", getCountArea() . " ไร่ ".getAreaNgan()." งาน", "dashboard");
-            creatCard("card-color-four",   "จำนวนต้นไม้", getCountTree() . " ต้น", "format_size");
+            creatCard("card-color-one",   "จำนวน".$head."เฉลี่ย ปี $year", getAvgActivity($year,2) . " ครั้ง", "waves");
+            creatCard("card-color-two",   "จำนวนสวน",  getAreaLogFarm()[1]["NumFarm"]. " สวน " . getAreaLogFarm()[1]["NumSubFarm"] . " แปลง", "group");
+            creatCard("card-color-three",   "พื้นที่ทั้งหมด", getAreaLogFarm()[1]["AreaRai"] . " ไร่ ".getAreaLogFarm()[1]["AreaNgan"] . " งาน", "dashboard");
+            creatCard("card-color-four",   "จำนวนต้นไม้", getAreaLogFarm()[1]['NumTree'] . " ต้น", "format_size");
             ?>
 
     </div>
 
-    <form action="FarmerList.php?isSearch=1" method="post">
+    <form action="<?php echo $CurrentMenu; ?>.php?isSearch=1" method="post">
         <div class="row">
             <div class="col-xl-12 col-12 mb-4">
                 <div id="accordion">
@@ -97,14 +103,47 @@ $pages = ceil($times/$limit);
                     " aria-labelledby="headingOne" data-parent="#accordion">
 
                     <div class="card-header card-bg">
-                        ตำแหน่งที่อยู่ของเกษตรกร
+                        ตำแหน่งแปลงการ<?php echo $head; ?>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-6 col-12">
-                                <div id="map" style="width:auto;height:60vh;"></div>
+                                <div id="map" style="width:auto;height:68.1vh;"></div>
                             </div>
                             <div class="col-xl-6 col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>ปี</span>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <select id="s_year" name="s_year" class="form-control ">
+                                            <option selected value=0>เลือกปี</option>
+                                            <?php
+                                                    $yearCurrent = date('Y') + 543;
+                                                for ($i = 0 ; $i <= 2; $i++, $yearCurrent--){
+                                                    if ($fyear == $yearCurrent)
+                                                        echo '<option value="' . $yearCurrent . '" selected>' . $yearCurrent . '</option>';
+                                                    else
+                                                        echo '<option value="' . $yearCurrent . '">' . $yearCurrent . '</option>';
+                                                }
+                                                ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <div class="irs-demo">
+                                            <span>จำนวนครั้ง<?php echo $head; ?></span>
+                                            <input class="js-range-slider" type="text" id="palmvolsilder" value="" />
+                                            <input hidden type="text" id="s_min" name="s_min" <?php if($fmin == -1) echo "value = '0'";
+                                                else echo "value = '$fmin'"; ?> />
+                                            <input hidden type="text" id="s_max" name="s_max" <?php if($fmax == -1) echo "value = '0'";
+                                                else echo "value = '$fmax'"; ?> />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <span>จังหวัด</span>
@@ -177,9 +216,9 @@ $pages = ceil($times/$limit);
                                         <i class="fa fa-eye-slash eye-setting" id="hide1"></i>
                                     </div>
                                 </div>
-                                <div class="row mb-2 padding">
+                                <div class="row mb-2">
                                     <div class="col-12">
-                                        <button type="summit" id="btn_search"
+                                        <button type="submit" id="btn_pass"
                                             class="btn btn-success btn-sm form-control">ค้นหา</button>
                                     </div>
                                 </div>
@@ -194,14 +233,14 @@ $pages = ceil($times/$limit);
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header card-header-table py-3">
-            <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>;">รายชื่อเกษตรกร</h6>
-
+            <h6 class="m-0 font-weight-bold" style="color:<?= $color ?>; top: 25px; position: absolute; float:left;">
+                การ<?php echo $head; ?>สวนปาล์มน้ำมัน</h6>
+            <button type="button" id="add" style="float:right;" class="btn btn-success" data-toggle="tooltip">
+                <i class="fas fa-plus"></i>เพิ่มการ<?php echo $head; ?></button>
         </div>
-        <!-- pagination -->
         <div id="size" hidden size="<?php echo $times; ?>"></div>
         <div id="CurrentPage" hidden CurrentPage="1"></div>
         <div id="pages" hidden pages="<?php echo $pages; ?>"></div>
-        <!-- end pagination -->
         <div class="card-body">
             <div>
                 <div class="col-12 table-responsive">
@@ -225,32 +264,32 @@ $pages = ceil($times/$limit);
                         cellspacing="0">
                         <thead>
                             <tr>
-                                <th>ชื่อ-นามสกุล</th>
-                                <th>จังหวัด</th>
-                                <th>อำเภอ</th>
-                                <th>จำนวนสวน</th>
-                                <th>จำนวนแปลง</th>
+                                <th>ชื่อเกษตรกร</th>
+                                <th>ชื่อสวน</th>
+                                <!-- <th>ชื่อแปลง</th> -->
                                 <th>พื้นที่ปลูก</th>
                                 <th>จำนวนต้น</th>
+                                <th>วันที่ล่าสุด</th>
+                                <th>จำนวนครั้ง</th>
                                 <th>จัดการ</th>
                             </tr>
                         </thead>
 
                         <tfoot>
                             <tr>
-                                <th>ชื่อ-นามสกุล</th>
-                                <th>จังหวัด</th>
-                                <th>อำเภอ</th>
-                                <th>จำนวนสวน</th>
-                                <th>จำนวนแปลง</th>
+                                <th>ชื่อเกษตรกร</th>
+                                <th>ชื่อสวน</th>
+                                <!-- <th>ชื่อแปลง</th> -->
                                 <th>พื้นที่ปลูก</th>
                                 <th>จำนวนต้น</th>
+                                <th>วันที่ล่าสุด</th>
+                                <th>จำนวนครั้ง</th>
                                 <th>จัดการ</th>
                             </tr>
                         </tfoot>
                         <tbody id="body">
                             <tr id="show_loading">
-                                <td colspan="8">
+                                <td colspan="7">
                                     <center class="form-control" style="height: 110px; border: white;">
                                         <img src="./../Chart/chart/loading.gif" alt="Loading..."
                                             style="width: 70px; height: 70px; "><br>
@@ -263,7 +302,7 @@ $pages = ceil($times/$limit);
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
-                                <td style="display: none"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -327,7 +366,10 @@ $pages = ceil($times/$limit);
 </div>
 
 <?php include_once("../layout/LayoutFooter.php"); ?>
-<script src="FarmerList.js"></script>
+<?php  include_once($CurrentMenu."Modal.php"); ?>
+<?php include_once("../../cropImage/cropImage.php");?>
+
+<script src="Activity.js"></script>
 
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"

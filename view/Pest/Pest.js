@@ -7,6 +7,14 @@ $(document).ready(function() {
     ellipsestext = "...";
     moretext = "Show more";
     lesstext = "Show less";
+    // pagination
+    idformal = $("#data_search").attr("idformal");
+    fullname = $("#data_search").attr("fullname");
+    fpro = $("#data_search").attr("fpro");
+    fdist = $("#data_search").attr("fdist");
+    fyear = $("#data_search").attr("fyear");
+    ftype = $("#data_search").attr("ftype");
+    //end pagination
 
     $('#add').click(function() {
         // console.log('add');
@@ -241,7 +249,81 @@ $(document).ready(function() {
     });
 
 });
+// pagination
+function getDataSetTable(){
+      $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: start,limit: limit}, function(result){
+          DATA = JSON.parse(result);
+          // console.log(result);
+          // console.log(DATA[0]["numrow"]);
+          setTableBody(DATA);
+      });
+}
+// pagination
+function setTableBody(DATA){
+      html = ``;
+                        for (i = 1; i <= DATA[0]['numrow']; i++) {
+                            if (DATA[i]['check_show'] == 1) {
+                              html += `<tr class="la${DATA[i]["Latitude"]} long${DATA[i]["Longitude"]} table-set"
+                            test="test${i}}">
+                            <td>${DATA[i]["OwnerName"]}</td>
+                            <td>${DATA[i]['Namefarm']}</td>`;
+                            if (DATA[i]["EndT_sub"] != null) {
+                              html += `<td>${DATA[i]["Namesubfarm"]}</td>`;
+                            } else {
+                              html += `<td><a
+                                    href="./../OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=${DATA[i]["FSID"]}&FMID=${DATA[i]["FMID"]}">
+                                    ${DATA[i]["Namesubfarm"]}</a></td>`;
+                            }
+                            html += `<td class="text-right">${DATA[i]['AreaRai']} ไร่
+                                ${DATA[i]['AreaNgan']} งาน</td>
+                            <td class="text-right">${DATA[i]['NumTree']} ต้น</td>
+                            <td class="text-center">${DATA[i]['TypeTH']}</td>
+                            <td class="text-center">${DATA[i]['Date']}</td>
 
+                            <td style="text-align:center;">
+                                <button type="button" id='edit${i}'
+                                    class="btn btn-warning btn-sm btn-edit tt set-button" data-toggle="tooltip"
+                                    title="รายละเอียด" farm="${DATA[i]['Namefarm']}"
+                                    subfarm="${DATA[i]['Namesubfarm']}" date="${DATA[i]['Date']}"
+                                    o_farm="${DATA[i]['NameFarm_old']}"
+                                    modify="${DATA[i]['Modify']}"
+                                    o_subfarm="${DATA[i]['NamesubFarm_old']}"
+                                    pesttype_name="${DATA[i]['TypeTH']}"
+                                    pesttype="${DATA[i]['dbpestTID']}"
+                                    pestalias="${DATA[i]['PestAlias']}"
+                                    pest="${DATA[i]['DIMpestID']}" note="${DATA[i]['Note']}"
+                                    lid="${DATA[i]['ID']}">
+                                    <i class="far fa-file"></i></button>
+                                <button type="button" class="btn btn-success btn-sm btn-pest tt set-button"
+                                    dimpest="${DATA[i]['dim_pest']}"
+                                    pest="${DATA[i]['dbpestLID']}"
+                                    pesttype="${DATA[i]['dbpestTID']}" data-toggle="tooltip"
+                                    title="ลักษณะศัตรูพืช"><i class="fas fa-bars"></i></button>
+                                <button type="button" class="btn btn-info btn-sm btn-photo tt set-button"
+                                    lid="${DATA[i]['ID']}" data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i
+                                        class="far fa-images"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm btn-note tt set-button"
+                                    note="${DATA[i]['Note']}" data-toggle="tooltip"
+                                    title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm btn-delete tt set-button"
+                                    lid="${DATA[i]['ID']}"
+                                    subfarm="${DATA[i]['Namesubfarm']}"
+                                    pestalias='${DATA[i]['PestAlias']}' data-toggle="tooltip"
+                                    title="ลบ"><i class="far fa-trash-alt"></i></button>
+                            </td>
+                            <label class="click-map" hidden id="${i}"
+                                namesubfarm="${DATA[i]["Namesubfarm"]}"
+                                dim_subfarm=" ${DATA[i]["dim_subfarm"]}"
+                                la="${DATA[i]["Latitude"]}" long="${DATA[i]["Longitude"]}"
+                                check="${DATA[i]["check_show"]}"
+                                dist="${DATA[i]["Distrinct"]}" pro="${DATA[i]["Province"]}"
+                                owner="${DATA[i]["OwnerName"]}"></label>
+                        </tr>`;
+                            }
+                        }
+
+          $("#body").html(html);
+}
 function check_dup_pic(pic, old_pic) {
     if (pic == old_pic) {
         return false;
@@ -356,11 +438,11 @@ function selectSubfarm(idSetHtml,id,date){
     DATA_DB = JSON.parse(result);
     // console.log(DATA_DB);
     html = "<option selected value=''>เลือกแปลง</option>";
-    
+
     for(i = 1 ; i <= DATA_DB[0]['numrow'] ; i++){
       html +='<option value='+DATA_DB[i]['DIMSubfID']+'>'+DATA_DB[i]['Name']+'</option>';
     }
-    
+
     $(idSetHtml).html(html);
   });
 }
@@ -376,136 +458,154 @@ function selectPest(idSetHtml,type_id,set,date){
         html = DATA_DB[i]['DIMpestID'];
       }
     }
-    
+
     $(idSetHtml).html(html);
-    
+
   });
 }
 function initMap() {
     var locations = [];
     var center = [0, 0];
+    // pagination
+    idformal = $("#data_search").attr("idformal");
+    fullname = $("#data_search").attr("fullname");
+    fpro = $("#data_search").attr("fpro");
+    fdist = $("#data_search").attr("fdist");
+    fyear = $("#data_search").attr("fyear");
+    ftype = $("#data_search").attr("ftype");
+    fade = false;
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0}, function(result){
+      DATA = JSON.parse(result);
+      getDataSetTable();
+      $(".loader-container").fadeOut(500);
+      // console.log(DATA);
+      // console.log("init map numrow data = "+DATA[0]["numrow"]);
+      size = DATA[0]['numrow'];
 
-    click_map = $('.click-map').html();
-    // console.log(click_map);
-    size = $('#size').attr('size');
-    // console.log('size = '+size);
-    size_check = size;
-
-    for(i = 1 ; i < size ; i++){
-      check = parseFloat($('#'+i).attr('check'));
-      if(check == 1){
-        namesubfarm = $('#'+i).attr('namesubfarm');
-        // console.log('map i = '+i);
-        la = $('#'+i).attr('la');
-        long = $('#'+i).attr('long');
-        laFloat = parseFloat($('#'+i).attr('la'));
-        longFloat = parseFloat($('#'+i).attr('long'));
-        dist = $('#'+i).attr('dist');
-        pro = $('#'+i).attr('pro');
-        owner = $('#'+i).attr('owner');
-        center[0] += laFloat;
-        center[1] += longFloat;
-        data = [namesubfarm,la,long,dist,pro,owner];
-        locations.push(data);
-      }else{
-        size_check--; 
+      for(i = 1 ; i <= size ; i++){
+        check = parseFloat(DATA[i]['check_show']);
+          namesubfarm = DATA[i]['Namesubfarm'];
+          // console.log('map i = '+i);
+          la = DATA[i]["Latitude"];
+          long = DATA[i]["Longitude"];
+          laFloat = parseFloat(DATA[i]["Latitude"]);
+          longFloat = parseFloat(DATA[i]["Longitude"]);
+          dist = DATA[i]["Distrinct"];
+          pro = DATA[i]["Province"];
+          owner = DATA[i]["OwnerName"];
+          center[0] += laFloat;
+          center[1] += longFloat;
+          data = [namesubfarm,la,long,dist,pro,owner];
+          locations.push(data);
+          // console.log("la = "+la);
+          // console.log("laFloat = "+laFloat);
+          // console.log("longFloat = "+longFloat);
       }
-    }
-    center[0] = center[0] / (size_check - 1);
-    center[1] = center[1] / (size_check - 1);
-    // console.log('size_check = '+size_check);
+      center[0] = center[0] / size;
+      center[1] = center[1] / size;
 
-    if (size - 1 == 0 || size_check -1 == 0) {
-        center[0] = 13.736717;
-        center[1] = 100.523186;
-    }
+      if (size == 0) {
+          center[0] = 13.736717;
+          center[1] = 100.523186;
+      }
 
-    // console.log(center);
-    // console.log("locations = ");
+      // console.log(center);
+      // console.log("locations = ");
 
-    // console.log(locations);
+      // console.log(locations);
 
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 6,
-        center: new google.maps.LatLng(center[0], center[1]),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
+      var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: new google.maps.LatLng(center[0], center[1]),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
 
-    var infowindow = new google.maps.InfoWindow();
+      var infowindow = new google.maps.InfoWindow();
 
-    var marker;
+      var marker;
 
-    for (i = 0; i < locations.length; i++) {
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map,
-            icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+      for (i = 0; i < locations.length; i++) {
+          marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+              map: map,
+              icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
 
-        });
-        // console.log('i == ' + i)
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                content = "";
-                content += locations[i][5];
-                content += "<br>" +locations[i][0];
-                content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
-                infowindow.setContent(content);
-                infowindow.open(map, marker);
+          });
+          // console.log('i == ' + i)
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                  content = "";
+                  content += locations[i][5];
+                  content += "<br>" +locations[i][0];
+                  content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
+                  infowindow.setContent(content);
+                  infowindow.open(map, marker);
 
-                // console.log('i = ' + i)
-                // console.log('la' + locations[i][1]+'long'+locations[i][2]);
+                  // console.log('i = ' + i)
+                  // console.log('la' + locations[i][1]+'long'+locations[i][2]);
 
-                // console.log('locations[0][0] = '+locations[0][0]);
-                // console.log($('.la' + locations[i][1]+'long'+locations[i][2]).attr("test"));
-                $('.la'+locations[i][1]+'long'+locations[i][2]).each(function(){
-                  // console.log("this");
-                  // console.log($(this).attr("test"));
-                });
+                  // console.log('locations[0][0] = '+locations[0][0]);
+                  // console.log($('.la' + locations[i][1]+'long'+locations[i][2]).attr("test"));
+                  // $('.la'+locations[i][1]+'long'+locations[i][2]).each(function(){
+                    // console.log("this");
+                    // console.log($(this).attr("test"));
+                  // });
 
-                if (i != -1) {
-                  for (j = 0; j < size-1; j++) {
+                  if (i != -1) {
+                    // for (j = 0; j < size-1; j++) {
 
-                    lati1 = locations[i][1].replace('.','-');
-                    longi1 = locations[i][2].replace('.','-');
-                    lati2 = locations[j][1].replace('.','-');
-                    longi2 = locations[j][2].replace('.','-');
-                    if (lati1 == lati2 && longi1 == longi2) {
-                        $('.la' + lati1+'long'+longi1).show();
-                    } else {
-                        $('.la' + lati2+'long'+longi2).hide();
-                    }
+                    //   lati1 = locations[i][1].replace('.','-');
+                    //   longi1 = locations[i][2].replace('.','-');
+                    //   lati2 = locations[j][1].replace('.','-');
+                    //   longi2 = locations[j][2].replace('.','-');
+                    //   if (lati1 == lati2 && longi1 == longi2) {
+                    //       $('.la' + lati1+'long'+longi1).show();
+                    //   } else {
+                    //       $('.la' + lati2+'long'+longi2).hide();
+                    //   }
+                    // }
+
+                    // pagination
+
+                    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                      DATA = JSON.parse(result);
+                      // console.log(result);
+                      // console.log(DATA[0]["numrow"]);
+                      setTableBody(DATA);
+                    });
                   }
-                }
 
-            }
-        })(marker, i));
+              }
+          })(marker, i));
 
-    }
+      }
 
-    $('#s_province').click(function() {
+      $('#s_province').click(function() {
 
-        var e = document.getElementById("s_province");
-        var select_id = e.options[e.selectedIndex].value;
-        // console.log(select_id);
-        data_show(select_id, "s_distrinct", '');
+          var e = document.getElementById("s_province");
+          var select_id = e.options[e.selectedIndex].value;
+          // console.log(select_id);
+          data_show(select_id, "s_distrinct", '');
 
 
-    });
-    // -------------------------------------------------------------
-    function data_show(select_id, result, point_id) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                // console.log(this.responseText);
-                // console.log(result);
-                document.getElementById(result).innerHTML = xhttp.responseText;
+      });
+      // -------------------------------------------------------------
+      function data_show(select_id, result, point_id) {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  // console.log(this.responseText);
+                  // console.log(result);
+                  document.getElementById(result).innerHTML = xhttp.responseText;
 
-            };
-        }
-        xhttp.open("POST", "data.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
-    }
+              };
+          }
+          xhttp.open("POST", "data.php", true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send(`select_id=${select_id}&result=${result}&point_id=${point_id}`);
+      }
+  });
+
 
 }
 

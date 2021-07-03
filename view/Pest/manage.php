@@ -15,10 +15,26 @@ if(isset($_POST['request'])){
     $sql ='';
 
     switch($request){
+        case 'pagination' :
+            $idformal = $_POST['idformal'];
+            $fullname = $_POST['fullname'];
+            $fpro = $_POST['fpro'];
+            $fdist = $_POST['fdist'];
+            $fyear = $_POST['fyear'];
+            $ftype = $_POST['ftype'];
+            $start = $_POST['start'];
+            $limit = $_POST['limit'];
+	          $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+	          $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+
+            print_r(json_encode(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude)));
+            // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
+        break;
         case 'selectFarm' :
             $date = $_POST['date'];
             $modify = strtotime($date);
-          print_r(json_encode(getFarmByModify($modify)));
+            print_r(json_encode(getFarmByModify($modify)));
         break;
         case 'selectSubfarm' :
               $date = $_POST['date'];
