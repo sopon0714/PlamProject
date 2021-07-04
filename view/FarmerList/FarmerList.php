@@ -19,7 +19,7 @@ if (isset($_POST['s_name'])) {
     $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
 }
 
-// $FARMER = getFarmer($idformal, $fullname, $fpro, $fdist);
+$DATA = getFarmer($idformal, $fullname, $fpro, $fdist,0,0,'','');
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
@@ -29,9 +29,13 @@ $limit = 10;
 $start = (($page - 1) * $limit)+1;
 $end = $start+$limit;
 
-$times = getCountFarmer();
+$times = sizeof($DATA);
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
+if($times == 0){
+    $start = 0;
+    $pages = 1;
+}
 // end pagination
 ?>
 <!-- pagiantion -->
@@ -304,11 +308,11 @@ $pages = ceil($times/$limit);
                                             aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
                                             class="page-link">…</a></li>
                                     <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
-                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a href="#"
+                                        <?php if($pages == 1 || $pages == 0) echo "hidden"; ?> id="lastpage"><a href="#"
                                             id="page<?php echo $i;?>" aria-controls="dataTable"
                                             data-dt-idx="<?php echo $pages;?>" tabindex="0"
                                             class="page-link"><?php echo $pages;?></a></li>
-                                    <li class="paginate_button page-item next <?php if($pages == 1) echo "disabled"; ?> "
+                                    <li class="paginate_button page-item next <?php if($pages == 1 || $pages == 0) echo "disabled"; ?> "
                                         id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
                                             tabindex="0" class="page-link">Next</a></li>
                                 </ul>

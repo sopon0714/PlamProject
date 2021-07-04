@@ -149,8 +149,9 @@ $(document).ready(function() {
 // pagination
 function getDataSetTable(){
     $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: start,limit: limit}, function(result){
-        DATA = JSON.parse(result);
         // console.log(result);
+        DATA = JSON.parse(result);
+        // console.log(DATA);
         // console.log(DATA[0]["numrow"]);
         setTableBody(DATA);
     });
@@ -159,64 +160,36 @@ function getDataSetTable(){
 function setTableBody(DATA){
     html = ``;
                       for (i = 1; i <= DATA[0]['numrow']; i++) {
-                          if (DATA[i]['check_show'] == 1) {
-                            html += `<tr class="la${DATA[i]["Latitude"]} long${DATA[i]["Longitude"]} table-set"
-                          test="test${i}}">
-                          <td>${DATA[i]["OwnerName"]}</td>
-                          <td>${DATA[i]['Namefarm']}</td>`;
-                          if (DATA[i]["EndT_sub"] != null) {
-                            html += `<td>${DATA[i]["Namesubfarm"]}</td>`;
-                          } else {
-                            html += `<td><a
-                                  href="./../OilPalmAreaList/OilPalmAreaListSubDetail.php?FSID=${DATA[i]["FSID"]}&FMID=${DATA[i]["FMID"]}">
-                                  ${DATA[i]["Namesubfarm"]}</a></td>`;
-                          }
-                          html += `<td class="text-right">${DATA[i]['AreaRai']} ไร่
+                          html += `<tr class="${(i - 1)}">
+                          <td class="text-left">${DATA[i]['Province']}</td>
+                          <td class="text-left">${DATA[i]['Distrinct']}</td>
+                          <td class="text-left">${DATA[i]['FullName']}</td>
+                          <td class="text-left">${DATA[i]['Name']}</td>
+                          <td class="text-right">${DATA[i]['NumSubFarm']} แปลง</td>
+                          <td class="text-right">${DATA[i]['AreaRai']} ไร่
                               ${DATA[i]['AreaNgan']} งาน</td>
                           <td class="text-right">${DATA[i]['NumTree']} ต้น</td>
-                          <td class="text-center">${DATA[i]['TypeTH']}</td>
-                          <td class="text-center">${DATA[i]['Date']}</td>
-
-                          <td style="text-align:center;">
-                              <button type="button" id='edit${i}'
-                                  class="btn btn-warning btn-sm btn-edit tt set-button" data-toggle="tooltip"
-                                  title="รายละเอียด" farm="${DATA[i]['Namefarm']}"
-                                  subfarm="${DATA[i]['Namesubfarm']}" date="${DATA[i]['Date']}"
-                                  o_farm="${DATA[i]['NameFarm_old']}"
-                                  modify="${DATA[i]['Modify']}"
-                                  o_subfarm="${DATA[i]['NamesubFarm_old']}"
-                                  pesttype_name="${DATA[i]['TypeTH']}"
-                                  pesttype="${DATA[i]['dbpestTID']}"
-                                  pestalias="${DATA[i]['PestAlias']}"
-                                  pest="${DATA[i]['DIMpestID']}" note="${DATA[i]['Note']}"
-                                  lid="${DATA[i]['ID']}">
-                                  <i class="far fa-file"></i></button>
-                              <button type="button" class="btn btn-success btn-sm btn-pest tt set-button"
-                                  dimpest="${DATA[i]['dim_pest']}"
-                                  pest="${DATA[i]['dbpestLID']}"
-                                  pesttype="${DATA[i]['dbpestTID']}" data-toggle="tooltip"
-                                  title="ลักษณะศัตรูพืช"><i class="fas fa-bars"></i></button>
-                              <button type="button" class="btn btn-info btn-sm btn-photo tt set-button"
-                                  lid="${DATA[i]['ID']}" data-toggle="tooltip" title="รูปภาพศัตรูพืช"><i
-                                      class="far fa-images"></i></button>
-                              <button type="button" class="btn btn-primary btn-sm btn-note tt set-button"
-                                  note="${DATA[i]['Note']}" data-toggle="tooltip"
-                                  title="ข้อมูลสำคัญของศัตรูพืช"><i class="far fa-sticky-note"></i></button>
-                              <button type="button" class="btn btn-danger btn-sm btn-delete tt set-button"
-                                  lid="${DATA[i]['ID']}"
-                                  subfarm="${DATA[i]['Namesubfarm']}"
-                                  pestalias='${DATA[i]['PestAlias']}' data-toggle="tooltip"
-                                  title="ลบ"><i class="far fa-trash-alt"></i></button>
+                          <td style='text-align:center;'>
+                              <a href='./OilPalmAreaListDetail.php?fmid=${DATA[i]['FMID']}'
+                                  style=" text-decoration: none;">
+                                  <button type='button' id='btn_info' class="btn btn-info btn-sm btn_edit tt"
+                                      data-toggle="tooltip" title="รายละเอียดข้อมูลสวน">
+                                      <i class='fas fa-bars'></i>
+                                  </button>
+                              </a>
+                              <button type='button' id='btn_delete' class="btn btn-danger btn-sm btn_edit tt"
+                                  data-toggle="tooltip" title="ลบสวน" style="margin-right:10px;"
+                                  onclick="delfunction('${DATA[i]['Name']}' , '${DATA[i]['FMID']}')">
+                                  <i class='far fa-trash-alt'></i>
+                              </button>
                           </td>
                           <label class="click-map" hidden id="${i}"
-                              namesubfarm="${DATA[i]["Namesubfarm"]}"
-                              dim_subfarm=" ${DATA[i]["dim_subfarm"]}"
-                              la="${DATA[i]["Latitude"]}" long="${DATA[i]["Longitude"]}"
-                              check="${DATA[i]["check_show"]}"
-                              dist="${DATA[i]["Distrinct"]}" pro="${DATA[i]["Province"]}"
-                              owner="${DATA[i]["OwnerName"]}"></label>
+                              distrinct="${DATA[i]["Distrinct"]}"
+                              province="${DATA[i]["Province"]}"
+                              nameFarm="${DATA[i]["Name"]}"
+                              la="${DATA[i]["Latitude"]}"
+                              long="${DATA[i]["Longitude"]}"></label>
                       </tr>`;
-                          }
                       }
 
         $("#body").html(html);
@@ -224,23 +197,27 @@ function setTableBody(DATA){
 function initMap() {
     var locations = [];
     var center = [0, 0];
-    size = $('#size').attr('size');
-    if (size == 1) {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 7,
-            center: new google.maps.LatLng(10.667028, 99.201250),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-    } else {
-        click_map = $('.click-map').html();
-        for (i = 1; i < size; i++) {
-            nameFarm = $('#' + i).attr('nameFarm');
-
-            la = parseFloat($('#' + i).attr('la'));
-            long = parseFloat($('#' + i).attr('long'));
-            distrinct = $('#' + i).attr('distrinct');
-            province = $('#' + i).attr('province');
-
+    fade = false;
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0}, function(result){
+        DATA = JSON.parse(result);
+        getDataSetTable();
+        $(".loader-container").fadeOut(500);
+        // console.log(DATA);
+        // console.log("init map numrow data = "+DATA[0]["numrow"]);
+        size = DATA[0]['numrow'];
+        if (size == 0) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: new google.maps.LatLng(10.667028, 99.201250),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+        } else {
+        for (i = 1; i <= size; i++) {
+            nameFarm = DATA[i]["Name"];
+            la = parseFloat(DATA[i]["Latitude"]);
+            long = parseFloat(DATA[i]["Longitude"]);
+            distrinct = DATA[i]["Distrinct"];
+            province = DATA[i]["Province"];
 
             center[0] += la;
             center[1] += long;
@@ -248,8 +225,8 @@ function initMap() {
             locations.push(data);
 
         }
-        center[0] = center[0] / (size - 1);
-        center[1] = center[1] / (size - 1);
+        center[0] = center[0] / size;
+        center[1] = center[1] / size;
 
         // console.log(center);
 
@@ -281,14 +258,21 @@ function initMap() {
                     content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
                     infowindow.setContent(content);
                     infowindow.open(map, marker);
-                    for (j = 0; j < size; j++) {
+                    // for (j = 0; j < size; j++) {
 
-                        if (i == j) {
-                            $('.' + j).show();
-                        } else {
-                            $('.' + j).hide();
-                        }
-                    }
+                    //     if (i == j) {
+                    //         $('.' + j).show();
+                    //     } else {
+                    //         $('.' + j).hide();
+                    //     }
+                    // }
+                    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                        DATA = JSON.parse(result);
+                        // console.log(result);
+                        // console.log(DATA);
+                        // console.log(DATA[0]["numrow"]);
+                        setTableBody(DATA);
+                    });
 
                 }
             })(marker, i));
@@ -297,7 +281,7 @@ function initMap() {
         }
 
     }
-
+    });
 }
 
 function delfunction(_username, _uid) {

@@ -343,11 +343,11 @@ textarea {
                                             aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
                                             class="page-link">…</a></li>
                                     <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
-                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a href="#"
+                                        <?php if($pages == 1 || $pages == 0) echo "hidden"; ?> id="lastpage"><a href="#"
                                             id="page<?php echo $i;?>" aria-controls="dataTable"
                                             data-dt-idx="<?php echo $pages;?>" tabindex="0"
                                             class="page-link"><?php echo $pages;?></a></li>
-                                    <li class="paginate_button page-item next <?php if($pages == 1) echo "disabled"; ?> "
+                                    <li class="paginate_button page-item next <?php if($pages == 1 || $pages == 0) echo "disabled"; ?> "
                                         id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
                                             tabindex="0" class="page-link">Next</a></li>
                                 </ul>

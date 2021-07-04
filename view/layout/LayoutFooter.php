@@ -77,7 +77,11 @@
     });
     function setPage(size,limit){
         // console.log("set page");
-        pages = Math.ceil(size/limit);
+        if(size == 0){
+            pages = 1;
+        }else{
+            pages = Math.ceil(size/limit);
+        }
         lastPage = parseInt($("#pages").attr("pages"));
         OwnPage = parseInt($("#CurrentPage").attr("CurrentPage"));
         $("#CurrentPage").attr("CurrentPage","1");
@@ -120,6 +124,10 @@
             end = size;
         }else{
             end = start+limit;
+        }
+        if(size == 0){
+            start = -1;
+            limit = 0;
         }
         // console.log("size = "+size);
         // console.log("page = "+page);
@@ -182,7 +190,6 @@
 <script>
 var fade = true;
     $(window).on("load", function() {
-        console.log("load fade out");
         if(fade){
             $(".loader-container").fadeOut(500);
         }

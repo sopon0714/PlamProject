@@ -21,7 +21,7 @@ if (isset($_POST['s_name'])) {
     $fullname = rtrim($_POST['s_name']);
     $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
 }
-// $DATA = getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,0,0,'','');
+$DATA = getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,0,0,'','');
 $PROVINCE = getProvince();
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 $PESTTYPE = getPestType();
@@ -31,9 +31,14 @@ $limit = 10;
 $start = (($page - 1) * $limit)+1;
 $end = $start+$limit;
 
-$times = getCountPestAlarm();
+$times = $DATA[0]["numrow"];
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
+if($times == 0){
+    $start = 0;
+    $pages = 1;
+}
+
 // end pagination
 ?>
 
@@ -286,16 +291,16 @@ textarea {
             <button type="button" id="add" style="float:right;" class="btn btn-success" data-toggle="tooltip">
                 <i class="fas fa-plus"></i>เพิ่มการตรวจพบศัตรูพืช</button>
         </div>
-<!-- pagination -->
+        <!-- pagination -->
         <div id="size" hidden size="<?php echo $times; ?>"></div>
         <div id="CurrentPage" hidden CurrentPage="1"></div>
         <div id="pages" hidden pages="<?php echo $pages; ?>"></div>
-<!-- end pagination -->
+        <!-- end pagination -->
 
         <div class="card-body">
-<!-- pagination add div -->
+            <!-- pagination add div -->
             <div>
-<!-- pagination -->
+                <!-- pagination -->
                 <div class="col-12 table-responsive">
                     <div class="row" style="list-style: none !important;">
                         <div style="margin-top:5px;">Show</div>
@@ -312,9 +317,10 @@ textarea {
                         <div style="margin-left:3px; margin-top:5px;">entries</div>
                     </div>
                 </div>
-<!-- end pagination -->
+                <!-- end pagination -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%"
+                        cellspacing="0">
                         <thead>
                             <tr>
                                 <th>ชื่อเกษตรกร</th>
@@ -341,7 +347,7 @@ textarea {
                             </tr>
                         </tfoot>
                         <tbody id="body">
-<!-- pagination -->
+                            <!-- pagination -->
                             <tr id="show_loading">
                                 <td colspan="8">
                                     <center class="form-control" style="height: 110px; border: white;">
@@ -357,12 +363,12 @@ textarea {
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
-<!-- end pagination -->
+                                <!-- end pagination -->
                             </tr>
                         </tbody>
                     </table>
                 </div>
-<!-- pagination -->
+                <!-- pagination -->
                 <div class="col-12 table-responsive">
                     <div class="row" id="page_change">
                         <div class="col-sm-12 col-md-5" style="padding: inherit;">
@@ -400,11 +406,11 @@ textarea {
                                             aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
                                             class="page-link">…</a></li>
                                     <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
-                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a
-                                            href="#" id="page<?php echo $i;?>" aria-controls="dataTable"
+                                        <?php if($pages == 1 || $pages == 0) echo "hidden"; ?> id="lastpage"><a href="#"
+                                            id="page<?php echo $i;?>" aria-controls="dataTable"
                                             data-dt-idx="<?php echo $pages;?>" tabindex="0"
                                             class="page-link"><?php echo $pages;?></a></li>
-                                    <li class="paginate_button page-item next <?php if($pages == 1) echo "disabled"; ?> "
+                                    <li class="paginate_button page-item next <?php if($pages == 1 || $pages == 0) echo "disabled"; ?> "
                                         id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
                                             tabindex="0" class="page-link">Next</a></li>
                                 </ul>
@@ -412,7 +418,7 @@ textarea {
                         </div>
                     </div>
                 </div>
-<!-- end pagination -->
+                <!-- end pagination -->
             </div>
         </div>
     </div>

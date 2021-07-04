@@ -38,7 +38,10 @@ $end = $start+$limit;
 $times = $DATA[0]["numrow"];
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
-
+if($times == 0){
+    $start = 0;
+    $pages = 1;
+}
 $head = "กำจัดวัชพืช";
 
 ?>

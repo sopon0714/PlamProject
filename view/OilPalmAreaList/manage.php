@@ -3,6 +3,18 @@ require_once("../../dbConnect.php");
 require_once("../../set-log-login.php");
 require_once("../../query/query.php");
 session_start();
+if (isset($_POST['request'])) {
+    $idformal = $_POST['idformal'];
+    $fullname = $_POST['fullname'];
+    $fpro = $_POST['fpro'];
+    $fdist = $_POST['fdist'];
+    $start = $_POST['start'];
+    $limit = $_POST['limit'];
+	$latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+	$longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+
+    print_r(json_encode(getOilPalmAreaList($idformal, $fullname, $fpro, $fdist,$start,$limit,$latitude,$longitude)));
+}
 if (isset($_POST['add'])) {
     $namefarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['namefarm']));
     $aliasfarm = preg_replace('/[[:space:]]+/', ' ', trim($_POST['aliasfarm']));

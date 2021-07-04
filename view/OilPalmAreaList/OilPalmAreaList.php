@@ -19,7 +19,7 @@ if (isset($_POST['s_name'])) {
     $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
 }
 $PROVINCE = getProvince();
-$OILPALMAREALIST = getOilPalmAreaList($idformal, $fullname, $fpro, $fdist);
+$DATA = getOilPalmAreaList($idformal, $fullname, $fpro, $fdist,0,0,'','');
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 // pagination
 $page = 1;
@@ -27,9 +27,13 @@ $limit = 10;
 $start = (($page - 1) * $limit)+1;
 $end = $start+$limit;
 
-$times = getCountFarmer();
+$times = $DATA[0]["numrow"];
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
+if($times == 0){
+    $start = 0;
+    $pages = 1;
+}
 // end pagination
 ?>
 <!-- pagiantion -->
@@ -237,7 +241,7 @@ $pages = ceil($times/$limit);
                 </div>
                 <!-- end pagination -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-data  tableSearch" id="dataTable" width="100%"
+                    <table class="table table-bordered table-data  tableSearch1" id="dataTable" width="100%"
                         cellspacing="0">
                         <thead>
                             <tr>
@@ -263,7 +267,7 @@ $pages = ceil($times/$limit);
                                 <th>รายละเอียด</th>
                             </tr>
                         </tfoot>
-                        <tbody>
+                        <tbody id="body">
                             <!-- pagination -->
                             <tr id="show_loading">
                                 <td colspan="8">
@@ -281,44 +285,6 @@ $pages = ceil($times/$limit);
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <!-- end pagination -->
-                                <label id="size" hidden size="<?php echo sizeof($OILPALMAREALIST); ?>"></label>
-                                <?php
-                            for ($i = 1; $i < sizeof($OILPALMAREALIST); $i++) {
-                            ?>
-                            <tr class="<?php echo ($i - 1); ?>">
-                                <td class="text-left"><?php echo $OILPALMAREALIST[$i]['Province']; ?></td>
-                                <td class="text-left"><?php echo $OILPALMAREALIST[$i]['Distrinct']; ?></td>
-                                <td class="text-left"><?php echo $OILPALMAREALIST[$i]['FullName']; ?></td>
-                                <td class="text-left"><?php echo $OILPALMAREALIST[$i]['Name']; ?></td>
-                                <td class="text-right"><?php echo $OILPALMAREALIST[$i]['NumSubFarm']; ?> แปลง</td>
-                                <td class="text-right"><?php echo $OILPALMAREALIST[$i]['AreaRai']; ?> ไร่
-                                    <?php echo $OILPALMAREALIST[$i]['AreaNgan']; ?> งาน</td>
-                                <td class="text-right"><?php echo $OILPALMAREALIST[$i]['NumTree']; ?> ต้น</td>
-                                <td style='text-align:center;'>
-                                    <a href='./OilPalmAreaListDetail.php?fmid=<?php echo $OILPALMAREALIST[$i]['FMID']; ?>'
-                                        style=" text-decoration: none;">
-                                        <button type='button' id='btn_info' class="btn btn-info btn-sm btn_edit tt"
-                                            data-toggle="tooltip" title="รายละเอียดข้อมูลสวน">
-                                            <i class='fas fa-bars'></i>
-                                        </button>
-                                    </a>
-                                    <button type='button' id='btn_delete' class="btn btn-danger btn-sm btn_edit tt"
-                                        data-toggle="tooltip" title="ลบสวน" style="margin-right:10px;"
-                                        onclick="delfunction('<?php echo $OILPALMAREALIST[$i]['Name']; ?>' , '<?php echo $OILPALMAREALIST[$i]['FMID']; ?>')">
-                                        <i class='far fa-trash-alt'></i>
-                                    </button>
-                                </td>
-                                <label class="click-map" hidden id="<?php echo $i; ?>"
-                                    distrinct="<?php echo $OILPALMAREALIST[$i]["Distrinct"]; ?>"
-                                    province="<?php echo $OILPALMAREALIST[$i]["Province"]; ?>"
-                                    nameFarm="<?php echo $OILPALMAREALIST[$i]["Name"]; ?>"
-                                    la="<?php echo $OILPALMAREALIST[$i]["Latitude"]; ?>"
-                                    long="<?php echo $OILPALMAREALIST[$i]["Longitude"]; ?>"></label>
-                            </tr>
-                            <?php
-                            }
-                            ?>
-
                         </tbody>
                     </table>
                 </div>
@@ -360,11 +326,11 @@ $pages = ceil($times/$limit);
                                             aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
                                             class="page-link">…</a></li>
                                     <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
-                                        <?php if($pages == 1) echo "hidden"; ?> id="lastpage"><a href="#"
+                                        <?php if($pages == 1 || $pages == 0) echo "hidden"; ?> id="lastpage"><a href="#"
                                             id="page<?php echo $i;?>" aria-controls="dataTable"
                                             data-dt-idx="<?php echo $pages;?>" tabindex="0"
                                             class="page-link"><?php echo $pages;?></a></li>
-                                    <li class="paginate_button page-item next <?php if($pages == 1) echo "disabled"; ?> "
+                                    <li class="paginate_button page-item next <?php if($pages == 1 || $pages == 0) echo "disabled"; ?> "
                                         id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
                                             tabindex="0" class="page-link">Next</a></li>
                                 </ul>
