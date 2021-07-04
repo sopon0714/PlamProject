@@ -369,8 +369,6 @@ textarea {
 <?php  include_once($CurrentMenu."Modal.php"); ?>
 <?php include_once("../../cropImage/cropImage.php");?>
 
-<script src="Activity.js"></script>
-
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMLhtSzox02ZCq2p9IIuihhMv5WS2isyo&callback=initMap&language=th"
     async defer></script>
