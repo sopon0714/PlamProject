@@ -409,9 +409,7 @@ $(document).ready(function() {
 // pagination
 function getDataSetTable(){
     $.post("manage.php", {action: "pagination2",fmid: fmid,start: start,limit: limit}, function(result){
-        
         DATA = JSON.parse(result); 
-        console.log(DATA);
         setTableBody(DATA);
     });
 }
@@ -424,9 +422,9 @@ function setTableBody(DATA){
         html += `<tr>
                     <td>${DATA[i]["Name"]}</td>
                     <td class=\"text-right\">${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}</td>
-                    <td class=\"text-right\">${DATA[i]["Weight"]}</td>
-                    <td class=\"text-right\">${DATA[i]["UnitPrice"]}</td>
-                    <td class=\"text-right\">${DATA[i]["TotalPrice"]}</td>
+                    <td class=\"text-right\">${parseFloat(DATA[i]["Weight"]).toFixed(2)}</td>
+                    <td class=\"text-right\">${parseFloat(DATA[i]["UnitPrice"]).toFixed(2)}</td>
+                    <td class=\"text-right\">${parseFloat(DATA[i]["TotalPrice"]).toFixed(2)}</td>
                     <td style=\"text-align:center;\">
                         <button type=\"button\" class=\"btn btn-info btn-sm btn-photo tt \"  lid=\"${DATA[i]["ID"]}\" title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
                         <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   onclick=\"delfunction('${DATA[i]["ID"]}','${DATA[i]["Name"]}','${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}')\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
