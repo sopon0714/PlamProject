@@ -218,66 +218,69 @@ function getCountArea()
 //ตารางเกษตรกร (table)
 function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
+    $myConDB = connectDB();
+    if($fullname != ''){
+        $namef = explode(" ", $fullname);
+        if (isset($namef[1])) {
+            $fnamef = $namef[0];
+            $lnamef = $namef[1];
+        } else {
+            $fnamef = $fullname;
+            $lnamef = $fullname;
+        }
+    }
+
     //INFO
-    $sql = "SELECT * FROM(
-        SELECT dataFarmer.UFID AS dbID,dataFarmer.FormalID,dataFarmer.FirstName,CONCAT(dataFarmer.Title,' ',dataFarmer.FirstName,' ',dataFarmer.LastName)AS FullName,dataFarmer.Province,dataFarmer.Distrinct,dataFarmer.AD3ID, dataFarmer.AD2ID,dataFarmer.AD1ID,dataFarmer.subDistrinct,dataFarmer.Latitude,dataFarmer.Longitude,IF(dataFarmer.numFarm IS NULL,0,dataFarmer.numFarm)AS numFarm,IF(dataFarmer.numSubFarm IS NULL,0,dataFarmer.numSubFarm)AS numSubFarm,IF(dataFarmer.numTree IS NULL,0,dataFarmer.numTree)AS numTree,IF(dataFarmer.numArea1 IS NULL,0,dataFarmer.numArea1)AS numArea1,IF(dataFarmer.numArea2 IS NULL,0,dataFarmer.numArea2)AS numArea2 FROM(
-        SELECT * FROM(
-        SELECT * FROM(
-        SELECT * FROM(
-        SELECT * FROM(
-        SELECT * FROM(
-        SELECT `db-farmer`.`UFID`,
-            CASE WHEN  `db-farmer`.`Title` IN ('1') THEN 'นาย'
-            WHEN  `db-farmer`.`Title` IN ('2') THEN 'นาง' 
-            WHEN  `db-farmer`.`Title` IN ('3') THEN 'นางสาว' END AS Title,
-            `db-farmer`.`FirstName`, `db-farmer`.`LastName`, `db-farmer`.`FormalID`,
-             `Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`,`db-distrinct`.`AD2ID`,`db-distrinct`.`AD1ID`
-             FROM `db-farmer` 
-             JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farmer`.`AD3ID` 
-             JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
-             JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`)AS data1
-             LEFT JOIN (
-             SELECT COUNT(*) AS numFarm ,farm.`dbID` AS UFID1
-            FROM (SELECT `dim-user`.`dbID`, `DIMownerID`, `DIMfarmID`, `NumSubFarm`,`NumTree`,`AreaRai`, `AreaNgan`FROM `log-farm`
-            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` AND `dim-user`.`Type` = 'F'
-            WHERE `DIMSubfID` IS NULL AND `EndT` IS NULL) AS farm
-            GROUP BY farm.`dbID`)AS countFarm ON countFarm.UFID1 = data1.UFID)AS data2
-            LEFT JOIN (
-                SELECT SUM(`NumSubFarm`) AS numSubFarm, subfarm.`dbID` AS UFID2
-            FROM (SELECT `dim-user`.`dbID`, `DIMownerID`, `DIMfarmID`, `NumSubFarm`,`NumTree`,`AreaRai`, `AreaNgan`FROM `log-farm`
-            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` AND `dim-user`.`Type` = 'F'
-            WHERE `DIMSubfID` IS NULL AND `EndT` IS NULL) AS subfarm
-            GROUP BY subfarm.`dbID`)AS coutSubFarm ON coutSubFarm.UFID2 = data2.UFID)AS data3
-            LEFT JOIN (SELECT SUM(`NumTree`) AS numTree,tree.`dbID` AS UFID3
-            FROM (SELECT `dim-user`.`dbID`, `DIMownerID`, `DIMfarmID`, `NumSubFarm`,`NumTree`,`AreaRai`, `AreaNgan`FROM `log-farm`
-            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` AND `dim-user`.`Type` = 'F'
-            WHERE `DIMSubfID` IS NULL AND `EndT` IS NULL) AS tree
-             GROUP BY tree.`dbID`)AS countTree ON countTree.UFID3 = data3.UFID)AS data4
-             LEFT JOIN (
-             SELECT SUM(`AreaRai`) AS numArea1,area1.`dbID` AS UFID4
-            FROM (SELECT `dim-user`.`dbID`, `DIMownerID`, `DIMfarmID`, `NumSubFarm`,`NumTree`,`AreaRai`, `AreaNgan`FROM `log-farm`
-            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` AND `dim-user`.`Type` = 'F'
-            WHERE `DIMSubfID` IS NULL AND `EndT` IS NULL) AS area1
-            GROUP BY area1.`dbID`)AS countArea1 ON countArea1.UFID4 = data4.UFID)AS data5
-            LEFT JOIN (
-                     SELECT SUM(`AreaNgan`) AS numArea2,area2.`dbID` AS UFID5
-            FROM (SELECT `dim-user`.`dbID`, `DIMownerID`, `DIMfarmID`, `NumSubFarm`,`NumTree`,`AreaRai`, `AreaNgan`FROM `log-farm`
-            INNER JOIN `dim-user` ON `dim-user`.`ID` = `log-farm`.`DIMownerID` AND `dim-user`.`Type` = 'F'
-            WHERE `DIMSubfID` IS NULL AND `EndT` IS NULL) AS area2
-            GROUP BY area2.`dbID`)AS countArea2 ON countArea2.UFID5 = data5.UFID)AS dataFarmer)AS dataFarmerAll
-            WHERE 1 ";
-    if ($idformal != '') $sql = $sql . " AND dataFarmerAll.`FormalID` LIKE '%" . $idformal . "%' ";
-    if ($fullname != '') $sql = $sql . " AND dataFarmerAll.`FullName` LIKE '%" . $fullname . "%' ";
-    if ($fpro    != 0)  $sql = $sql . " AND dataFarmerAll.`AD1ID` = '" . $fpro . "' ";
-    if ($fdist   != 0)  $sql = $sql . " AND dataFarmerAll.`AD2ID`= '" . $fdist . "' ";
+    $sql = "SELECT `db-farmer`.`UFID`,
+    CASE WHEN  `db-farmer`.`Title` IN ('1') THEN 'นาย'
+    WHEN  `db-farmer`.`Title` IN ('2') THEN 'นาง' 
+    WHEN  `db-farmer`.`Title` IN ('3') THEN 'นางสาว' END AS Title,
+    `db-farmer`.`FirstName`, `db-farmer`.`LastName`, `db-farmer`.`FormalID`,
+     `Distrinct`,`Province`, `subDistrinct`,`db-farmer`.`AD3ID`,`Latitude`,`Longitude`
+     FROM `db-farmer` 
+     JOIN `db-subdistrinct` ON `db-subdistrinct`.`AD3ID` = `db-farmer`.`AD3ID` 
+     JOIN `db-distrinct` ON `db-distrinct`.`AD2ID` = `db-subdistrinct`.`AD2ID`
+     JOIN `db-province` ON `db-province`.`AD1ID` = `db-distrinct`.`AD1ID`";
+    if ($idformal != '') $sql = $sql . " AND `db-farmer`.`FormalID` LIKE '%" . $idformal . "%' ";
+    if ($fullname != '') $sql = $sql . " AND (FirstName LIKE '%" . $fnamef . "%' OR LastName LIKE '%" . $lnamef . "%') ";
+    if ($fpro    != 0)  $sql = $sql . " AND `db-distrinct`.AD1ID = '" . $fpro . "' ";
+    if ($fdist   != 0)  $sql = $sql . " AND `db-distrinct`.AD2ID = '" . $fdist . "' ";
 
-    if ($latitude != '') $sql = $sql . " AND dataFarmerAll.`Latitude` LIKE '%" . $latitude . "%' ";
-    if ($longitude != '') $sql = $sql . " AND dataFarmerAll.`Longitude` LIKE '%" . $longitude . "%' ";
+    if ($latitude != '') $sql = $sql . " AND `Latitude` LIKE '%" . $latitude . "%' ";
+    if ($longitude != '') $sql = $sql . " AND `Longitude` LIKE '%" . $longitude . "%' ";
 
-    $sql = $sql . " ORDER BY dataFarmerAll.`FirstName`";
+    $sql = $sql . " ORDER BY `db-farmer`.`FirstName`";
     if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
-    $DATA = selectData($sql);
-    return $DATA;
+
+    // echo $sql;
+    $myConDB = connectDB();
+    $result = $myConDB->prepare($sql);
+    $result->execute();
+
+    $numFermer = 0;
+    $FARMER = array();
+    foreach ($result as $tmp => $tmpDATA) {
+        // print_r($numFermer);
+        if ($tmpDATA['UFID'] > 0) {
+            $FARMER[$numFermer]['dbID']        = $tmpDATA['UFID'];
+            $FARMER[$numFermer]['FullName']    = $tmpDATA['Title'] . " " . $tmpDATA['FirstName'] . " " . $tmpDATA['LastName'];
+            $FARMER[$numFermer]['Province']    = $tmpDATA['Province'];
+            $FARMER[$numFermer]['Distrinct']   = $tmpDATA['Distrinct'];
+            $FARMER[$numFermer]['AD3ID']        = $tmpDATA['AD3ID'];
+            $FARMER[$numFermer]['subDistrinct']   = $tmpDATA['subDistrinct'];
+            $FARMER[$numFermer]['Latitude']   = $tmpDATA['Latitude'];
+            $FARMER[$numFermer]['Longitude']   = $tmpDATA['Longitude'];
+            $FARMER[$numFermer]['numFarm']     = getCountOwnerFarm($tmpDATA['UFID']);
+            $FARMER[$numFermer]['numSubFarm']  = getCountOwnerSubFarm($tmpDATA['UFID']);
+            $FARMER[$numFermer]['numTree']     = getCountOwnerTree($tmpDATA['UFID']);
+            $FARMER[$numFermer]['numArea1']    = getCountOwnerAreaRai($tmpDATA['UFID']);
+            $FARMER[$numFermer]['numArea2']    = getCountOwnerAreaNgan($tmpDATA['UFID']);
+            $FARMER[$numFermer]['FormalID']    = $tmpDATA['FormalID'];
+            $fermerINDEX[$tmpDATA['UFID']]   = $numFermer;
+            $numFermer++;
+        }
+    }
+    return $FARMER;
 }
 //-----------------------FarmerListDetail--------------------------
 
@@ -1508,7 +1511,7 @@ function getYearFer()
 }
 
 //ตารางผลผลิตสวนปาล์มน้ำมันในระบบ หน้า OilPalmAreaVol.php
-function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist)
+function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
     $idformal = '';
     $fpro = 0;
@@ -1546,8 +1549,11 @@ function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist)
     if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-    $sql .= " ORDER BY `dim-user`.`FullName`";
-    $INFOFARM = selectData($sql);
+    if ($latitude != '') $sql = $sql . " AND `Latitude` = '" . $latitude . "' ";
+    if ($longitude != '') $sql = $sql . " AND `Longitude` = '" . $longitude . "' ";  
+    $sql .= " ORDER BY `dim-user`.`FullName` ";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
+    $INFOFARM = selectData($sql); 
     $FarmHarvest = null;
     for ($i = 1; $i < count($INFOFARM); $i++) {
         $FarmHarvest[$INFOFARM[$i]['FMID']]['FMID'] = $INFOFARM[$i]['FMID'];
@@ -3183,7 +3189,7 @@ function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist)
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['countFertilising'] =  $INFO['countFertilising'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] =  $INFO['N']['sumVol'] . "/" . $INFO['N']['UnitUse'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['N'] .= ($INFO['N']['Unit'] == 1) ? "Kg" : "g";
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] =  $INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] = $INFO['P']['sumVol'] . "/" . $INFO['P']['UnitUse'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['P'] .= ($INFO['P']['Unit'] == 1) ? "Kg" : "g";
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] =  $INFO['K']['sumVol'] . "/" . $INFO['K']['UnitUse'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['K'] .= ($INFO['K']['Unit'] == 1) ? "Kg" : "g";
@@ -3199,36 +3205,38 @@ function getInfoFertilising($FSID, $year)
     WHERE `dim-farm`.`dbID`=$FSID AND `dim-time`.`Year2` = $year AND `log-fertilising`.`isDelete`=0";
     $DATA = selectData($sql);
     $INFO['countFertilising'] = $DATA[1]['countFertilising'];
-
-    $DATA = getSumVolFertilising($FSID, $year, 1);
-
+    
+    $tagetYear = $year+1-543;
+    $sql = "SELECT `fact-fertilising`.* FROM `fact-fertilising` INNER JOIN `dim-farm`
+     WHERE `fact-fertilising`.`DIMsubFID`=`dim-farm`.`ID` AND `dim-farm`.`dbID`= $FSID AND 
+     `fact-fertilising`.`TagetYear`= $tagetYear";
+    $DATA = selectData($sql);
     if ($DATA[0]['numrow'] != 0) {
-        $INFO['N']['sumVol'] = $DATA[1]['sumVol'];
-        $INFO['N']['Unit'] = $DATA[1]['Unit'];
+        $INFO['N']['sumVol'] = $DATA[1]['UseN'];
+        $INFO['N']['UnitUse'] =  $DATA[1]['WantN'];
+        $INFO['N']['Unit'] = $DATA[1]['UnitN'];
+       
+        $INFO['P']['sumVol'] = $DATA[1]['UseP'];
+        $INFO['P']['UnitUse'] =  $DATA[1]['WantP'];
+        $INFO['P']['Unit'] = $DATA[1]['UnitP'];
+       
+        $INFO['K']['sumVol'] = $DATA[1]['UseK'];
+        $INFO['K']['UnitUse'] =  $DATA[1]['WantK'];
+        $INFO['K']['Unit'] = $DATA[1]['UnitK'];
+       
     } else {
         $INFO['N']['sumVol'] = 0;
+        $INFO['N']['UnitUse'] =  0;
         $INFO['N']['Unit'] = 1;
-    }
-    $INFO['N']['UnitUse'] =  getVolUseFertilising($FSID, 1, $year);
-    $DATA = getSumVolFertilising($FSID, $year, 2);
-    $vol = 0;
-    if ($DATA[0]['numrow'] != 0) {
-        $INFO['P']['sumVol'] = $DATA[1]['sumVol'];
-        $INFO['P']['Unit'] = $DATA[1]['Unit'];
-    } else {
+
         $INFO['P']['sumVol'] = 0;
+        $INFO['P']['UnitUse'] =  0;
         $INFO['P']['Unit'] = 1;
-    }
-    $INFO['P']['UnitUse'] =  getVolUseFertilising($FSID, 2, $year);
-    $DATA = getSumVolFertilising($FSID, $year, 3);
-    if ($DATA[0]['numrow'] != 0) {
-        $INFO['K']['sumVol'] = $DATA[1]['sumVol'];
-        $INFO['K']['Unit'] = $DATA[1]['Unit'];
-    } else {
+
         $INFO['K']['sumVol'] = 0;
+        $INFO['K']['UnitUse'] =  0;
         $INFO['K']['Unit'] = 1;
     }
-    $INFO['K']['UnitUse'] =  getVolUseFertilising($FSID, 3, $year);
     return $INFO;
 }
 function getVolUseFertilising($FSID, $NID, $year)
@@ -3383,3 +3391,4 @@ function getFarmerAll_Chart()
     $data = selectData($sql);
     return $data;
 }
+ 
