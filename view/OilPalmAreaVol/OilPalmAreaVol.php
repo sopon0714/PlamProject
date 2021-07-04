@@ -38,7 +38,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 $AREA = getAreaLogFarm();
 
 // pagination
-$page = 1;
+$page = 1; 
 $limit = 10;
 $times = count($OILPALMAREAVOL);
 if($times == 0) $start = 0;
@@ -233,8 +233,8 @@ if($times == 0){
                             </div>
                             <div style="margin-left:3px; margin-top:5px;">entries</div>
                         </div>
-                </div>
-                <!-- end pagination -->    
+                    </div>
+                    <!-- end pagination -->    
                     <div class="table-responsive">
                         <table class="table table-bordered table-data tableSearch1" id="dataTable" width="100%" cellspacing="0">
                             <thead>

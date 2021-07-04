@@ -2038,7 +2038,7 @@ function getPest(&$idformal, &$fullname, &$fpro, &$fdist, &$fyear, &$ftype,$star
     }
     return $LOG;
 }
-function getLogHarvest($fmid)
+function getLogHarvest($fmid,$start,$limit)
 {
     $sql = "SELECT `log-harvest`.*, RS1.`Name`,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2` FROM `log-harvest` 
     INNER JOIN `dim-time`  ON `dim-time`.`ID`=`log-harvest`.`DIMdateID`
@@ -2054,6 +2054,7 @@ function getLogHarvest($fmid)
     GROUP BY t2.`dbID`)) as RS1 ON RS1.`dbID` = dimfarm2.`dbID`
     WHERE `log-harvest`.`isDelete`=0 AND dimfarm1.`dbID`=$fmid  
     ORDER BY `dim-time`.`Date` DESC";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $LogHarvest = selectData($sql);
     return   $LogHarvest;
 }
