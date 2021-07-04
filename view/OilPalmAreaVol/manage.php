@@ -8,6 +8,20 @@ session_start();
 <?php
 $action  = $_POST['action'] ?? "";
 switch ($action) {
+     case 'pagination' :
+          $idformal = $_POST['idformal'];
+          $fullname = $_POST['fullname'];
+          $fpro = $_POST['fpro']; 
+          $fdist = $_POST['fdist'];
+          $start = $_POST['start'];
+          $limit = $_POST['limit'];
+          $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+          $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+
+          print_r(json_encode(getTableAllHarvest($idformal, $fullname, $fpro, $fdist,$start,$limit,$latitude,$longitude)));
+          // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
+      break;
      case "insert":
           $fmid = $_POST['FMID'];
           $dimfsid = $_POST['SubFarmID'];
@@ -15,7 +29,7 @@ switch ($action) {
           $weight = $_POST['weight'];
           $UnitPrice = $_POST['UnitPrice'];
           $total = $UnitPrice * $weight;
-          $dataPic = explode('manu20', $_POST['pic']);
+          $dataPic = explode('manu20', $_POST['pic']); 
           $countfiles = sizeof($dataPic) - 1;
           $extension = ".png";
           $LOG_LOGIN = $_SESSION[md5('LOG_LOGIN')];

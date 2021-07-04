@@ -1509,7 +1509,7 @@ function getYearFer()
 }
 
 //ตารางผลผลิตสวนปาล์มน้ำมันในระบบ หน้า OilPalmAreaVol.php
-function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist)
+function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
     $idformal = '';
     $fpro = 0;
@@ -1547,8 +1547,11 @@ function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist)
     if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-    $sql .= " ORDER BY `dim-user`.`FullName`";
-    $INFOFARM = selectData($sql);
+    if ($latitude != '') $sql = $sql . " AND `Latitude` = '" . $latitude . "' ";
+    if ($longitude != '') $sql = $sql . " AND `Longitude` = '" . $longitude . "' ";  
+    $sql .= " ORDER BY `dim-user`.`FullName` ";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
+    $INFOFARM = selectData($sql); 
     $FarmHarvest = null;
     for ($i = 1; $i < count($INFOFARM); $i++) {
         $FarmHarvest[$INFOFARM[$i]['FMID']]['FMID'] = $INFOFARM[$i]['FMID'];
