@@ -22,9 +22,8 @@ function getDataSetTable(){
 }
 // pagination
 function setTableBody(DATA){
-    size = DATA.length;
     html = ``;
-        for (i = 0; i < size; i++) {
+        for (i = 1; i <= DATA[0]["numrow"]; i++) {
                 html += `<tr class="la${DATA[i]["Latitude"]} long${DATA[i]["Longitude"]} table-set"
                                 test="test${i}}">
                     <td>${DATA[i]['FullName']}</td>
@@ -74,8 +73,8 @@ function initMap() {
         $(".loader-container").fadeOut(500);
         // console.log(DATA);
         // console.log("init map numrow data = "+DATA[0]["numrow"]);
-        size = DATA.length;
-        for (i = 0; i < size; i++) {
+        size = DATA[0]["numrow"];
+        for (i = 1; i <= size; i++) {
             la = DATA[i]["Latitude"];
             long = DATA[i]["Longitude"];
             laFloat = parseFloat(DATA[i]["Latitude"]);

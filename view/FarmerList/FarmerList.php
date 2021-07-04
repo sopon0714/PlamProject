@@ -29,7 +29,7 @@ $limit = 10;
 $start = (($page - 1) * $limit)+1;
 $end = $start+$limit;
 
-$times = sizeof($DATA);
+$times = $DATA[0]["numrow"];
 if($times < $limit) $end = $times+1;
 $pages = ceil($times/$limit);
 if($times == 0){
