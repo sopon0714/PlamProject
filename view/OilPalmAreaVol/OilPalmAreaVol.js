@@ -38,7 +38,7 @@ $(document).ready(function() {
 });
 // pagination
 function getDataSetTable(){
-    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 10}, function(result){
+    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: start,limit: limit}, function(result){
         DATA = JSON.parse(result);
         setTableBody(DATA);
     });
@@ -77,9 +77,7 @@ function initMap() {
     // pagination
     fade = false;
     $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0}, function(result){
-       
        DATA = JSON.parse(result);
-       
       getDataSetTable();
       $(".loader-container").fadeOut(500);
       // console.log(DATA);

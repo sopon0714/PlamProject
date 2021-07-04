@@ -13,6 +13,9 @@
 <?php include_once("MainJS.php"); ?>
 {
 <script>
+    start = 0;
+    limit = 10;
+    show_loading = $("#show_loading").html();
     $(document).ready(function() {
         $('.tableSearch').DataTable({
             "ordering": false,
@@ -28,9 +31,6 @@
             $(".loader-container").fadeIn(0);
             $(".loader").fadeIn(0);
         });
-        show_loading = $("#show_loading").html();
-        start = 0;
-        limit = 10;
         $(".pagination_li").click(function() {
             // console.log("pageItem");
             // console.log($(".pagination_li").html());
