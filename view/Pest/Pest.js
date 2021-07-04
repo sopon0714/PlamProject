@@ -10,7 +10,7 @@ $(document).ready(function() {
     // console.log("y");
     $('.tt').tooltip();
 
-    modify_check = 0; 
+    modify_check = 0;
     showChar = 180; // How many characters are shown by default
     ellipsestext = "...";
     moretext = "Show more";

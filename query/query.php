@@ -258,7 +258,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitu
     $result->execute();
 
     $numFermer = 0;
-    $FARMER = NULL;
+    $FARMER = array();
     foreach ($result as $tmp => $tmpDATA) {
         // print_r($numFermer);
         if ($tmpDATA['UFID'] > 0) {
@@ -280,9 +280,7 @@ function getFarmer(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitu
             $numFermer++;
         }
     }
-    if (!is_null($FARMER))
-        return $FARMER;
-    else return 0;
+    return $FARMER;
 }
 //-----------------------FarmerListDetail--------------------------
 
@@ -456,7 +454,7 @@ function getCountTree()
     return $numTree;
 }
 // ตารางสวนปาล์มน้ำมันในระบบ
-function getOilPalmAreaList(&$idformal, &$fullname, &$fpro, &$fdist)
+function getOilPalmAreaList(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
     $namef = explode(" ", $fullname);
     if (isset($namef[1])) {
@@ -479,7 +477,11 @@ function getOilPalmAreaList(&$idformal, &$fullname, &$fpro, &$fdist)
     if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
+    if ($latitude != '') $sql = $sql . " AND `log-farm`.`Latitude` = '" . $latitude . "' ";
+    if ($longitude != '') $sql = $sql . " AND`log-farm`.`Longitude` = '" . $longitude . "' ";
     $sql .= " ORDER BY `dim-address`.`Province`,`dim-address`.`Distrinct`,`dim-user`.`Alias`";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
+
     $OilPalmAreaList = selectData($sql);
     return $OilPalmAreaList;
 }
