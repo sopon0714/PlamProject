@@ -1,10 +1,10 @@
 var FMID = $('#FMID').attr("FMID");
 var maxyear = $('#maxyear').attr("maxyear");
-
+fmid = $("#data_search").attr("fmid");
 function delfunction(_id, _subfarm, _date) {
     // alert(_did);
     swal({
-            title: "คุณต้องการลบผลผลิต",
+            title: "คุณต้องการลบผลผลิต", 
             text: `แปลง ${_subfarm} วันที่ ${_date} หรือไม่ ?`,
             type: "warning",
             showCancelButton: true,
@@ -55,7 +55,8 @@ $(document).ready(function() {
     $('.tt').tooltip();
     load_year(maxyear, FMID);
     load_month(maxyear, FMID);
-    load_infoHarvest(maxyear, FMID)
+    load_infoHarvest(maxyear, FMID);
+    getDataSetTable();
     $("#year").change(function() {
         var year = $("#year").val();
         if (year != '') {
@@ -405,3 +406,32 @@ $(document).ready(function() {
 
 
 });
+// pagination
+function getDataSetTable(){
+    $.post("manage.php", {action: "pagination2",fmid: fmid,start: start,limit: limit}, function(result){
+        DATA = JSON.parse(result); 
+        setTableBody(DATA);
+    });
+}
+// pagination
+function setTableBody(DATA){
+    html = ``;
+    strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    for (i = 1; i <= DATA[0]['numrow']; i++) {
+        
+        html += `<tr>
+                    <td>${DATA[i]["Name"]}</td>
+                    <td class=\"text-right\">${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}</td>
+                    <td class=\"text-right\">${parseFloat(DATA[i]["Weight"]).toFixed(2)}</td>
+                    <td class=\"text-right\">${parseFloat(DATA[i]["UnitPrice"]).toFixed(2)}</td>
+                    <td class=\"text-right\">${parseFloat(DATA[i]["TotalPrice"]).toFixed(2)}</td>
+                    <td style=\"text-align:center;\">
+                        <button type=\"button\" class=\"btn btn-info btn-sm btn-photo tt \"  lid=\"${DATA[i]["ID"]}\" title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
+                        <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   onclick=\"delfunction('${DATA[i]["ID"]}','${DATA[i]["Name"]}','${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}')\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                    </td>
+                </tr>`;
+        }
+                    
+
+    $("#body").html(html);
+}

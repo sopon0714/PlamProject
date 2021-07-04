@@ -53,7 +53,7 @@ function setTableBody(DATA){
                     <td style="text-align:right;">${value["NumSubFarm"]} แปลง</td>
                     <td style="text-align:right;">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} วา</td>
                     <td style="text-align:right;">${value["NumTree"]} ต้น</td>
-                    <td style="text-align:right;">${value["VolHarvest"]} ก.ก.</td>
+                    <td style="text-align:right;">${parseFloat(value["VolHarvest"]).toFixed(2)} ก.ก.</td>
                     <td style="text-align:center;">
                         <form method="post"  name="formID" action="./OilPalmAreaVolDetail.php?FMID=${value["FMID"]}">
                             <button type="submit"  class="btn btn-info btn-sm" data-toggle="tooltip" title="รายละเอียด"><i class="fas fa-bars"></i></button></a>

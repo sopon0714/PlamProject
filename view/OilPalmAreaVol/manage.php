@@ -22,6 +22,14 @@ switch ($action) {
           // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
 
       break;
+      case 'pagination2' :
+          $fmid = $_POST['fmid'];
+          $start = $_POST['start'];
+          $limit = $_POST['limit'];
+          print_r(json_encode(getLogHarvest($fmid,$start,$limit)));
+          // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
+      break;
      case "insert":
           $fmid = $_POST['FMID'];
           $dimfsid = $_POST['SubFarmID'];

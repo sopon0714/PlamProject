@@ -38,7 +38,7 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 $AREA = getAreaLogFarm();
 
 // pagination
-$page = 1;
+$page = 1; 
 $limit = 10;
 $times = count($OILPALMAREAVOL);
 if($times == 0) $start = 0;
@@ -279,7 +279,6 @@ if($times == 0){
                                         <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
                                     </center>
                                 </td>
-                                <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>
                                 <td style="display: none"></td>

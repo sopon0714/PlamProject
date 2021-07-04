@@ -9,8 +9,22 @@ include_once("./../../query/query.php");
 $fmid = $_GET['FMID'] ?? "";
 $INFOFARM =  getDetailLogFarm($fmid);
 $YEAR = getYear($fmid, true);
-$LOGHarvest = getLogHarvest($fmid);
-$Check = CheckHaveFarm($fmid)
+$LOGHarvest = getLogHarvest($fmid,0,0);
+$Check = CheckHaveFarm($fmid);
+// pagination
+$page = 1;
+$limit = 10;
+$times = $LOGHarvest[0]['numrow'];
+if($times == 0) $start = 0;
+$start = (($page - 1) * $limit)+1;
+$end = $start+$limit;
+if($times < $limit) $end = $times+1;
+$pages = ceil($times/$limit);
+if($times == 0){
+    $start = 0;
+    $pages = 1;
+}
+// end pagination
 ?>
 <link rel="stylesheet" href="../../css/insect admin/readmore.css">
 <link rel="stylesheet" href="../../css/insect admin/stylePest.css">
@@ -48,7 +62,7 @@ $Check = CheckHaveFarm($fmid)
         z-index: 5;
     }
 </style>
-
+<div hidden id="data_search" fmid="<?= $fmid ?>" ></div>
 <div class="container bg">
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">
@@ -173,6 +187,7 @@ $Check = CheckHaveFarm($fmid)
                         </div>
                     </div>
                 </div>
+                
 
                 <div class="card-body" id="card-productPerYear">
                     <div class="row">
@@ -222,50 +237,126 @@ $Check = CheckHaveFarm($fmid)
                                                 <button type="button" id="btn_add_product" style="float:right;" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> เพิ่มผลผลิต</button>
                                             </div>
                                         </div>
+                                         <!-- pagination -->
+                                        <div id="size" hidden size="<?php echo $times; ?>"></div>
+                                        <div id="CurrentPage" hidden CurrentPage="1"></div>
+                                        <div id="pages" hidden pages="<?php echo $pages; ?>"></div>
+                                        <!-- end pagination -->
                                         <div class="card-body">
+                                            <!-- pagination add div -->
+                                            <div>
+                                                <!-- pagination -->
+                                                <div class="col-12 table-responsive">
+                                                    <div class="row" style="list-style: none !important;">
+                                                        <div style="margin-top:5px;">Show</div>
+                                                        <div style="margin-left:3px;">
+                                                            <select name="dataTable_length" id="dataTable_length" aria-controls="dataTable"
+                                                                class="custom-select custom-select-sm form-control form-control-sm">
+                                                                <option value="10">10</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                                <option value="500">500</option>
+                                                                <option value="1000">1,000</option>
+                                                            </select>
+                                                        </div>
+                                                        <div style="margin-left:3px; margin-top:5px;">entries</div>
+                                                    </div>
+                                                </div>
+                                                <!-- end pagination -->    
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-data  tableSearch1 " width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ชื่อแปลง</th>
+                                                                <th>วันที่เก็บผลผลิต</th>
+                                                                <th>ผลผลิต (ก.ก.)</th>
+                                                                <th>ราคาต่อหน่วย(บาท)</th>
+                                                                <th>ราคาสุทธิ์ (บาท)</th>
+                                                                <th>จัดการ</th>
 
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-data  tableSearch " width="100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ชื่อแปลง</th>
-                                                            <th>วันที่เก็บผลผลิต</th>
-                                                            <th>ผลผลิต (ก.ก.)</th>
-                                                            <th>ราคาต่อหน่วย(บาท)</th>
-                                                            <th>ราคาสุทธิ์ (บาท)</th>
-                                                            <th>จัดการ</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>ชื่อแปลง</th>
+                                                                <th>วันที่เก็บผลผลิต</th>
+                                                                <th>ผลผลิต (ก.ก.)</th>
+                                                                <th>ราคาต่อหน่วย (บาท)</th>
+                                                                <th>ราคาสุทธิ์ (บาท)</th>
+                                                                <th>จัดการ</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                        <tbody id="body">
+                                                            <!-- pagination -->
+                                                            <tr id="show_loading">
+                                                                <td colspan="6">
+                                                                    <center class="form-control" style="height: 110px; border: white;">
+                                                                        <img src="./../Chart/chart/loading.gif" alt="Loading..."
+                                                                            style="width: 70px; height: 70px; "><br>
+                                                                        <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
+                                                                    </center>
+                                                                </td>
+                                                                <td style="display: none"></td>
+                                                                <td style="display: none"></td>
+                                                                <td style="display: none"></td>
+                                                                <td style="display: none"></td>
+                                                                <td style="display: none"></td>
+                                                            </tr>
+                                                            <!-- end pagination -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                 <!-- pagination -->
+                                                <div class="col-12 table-responsive">
+                                                    <div class="row" id="page_change">
+                                                        <div class="col-sm-12 col-md-5" style="padding: inherit;">
+                                                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+                                                                <?php echo "Showing ".$start." to ".($end-1)." of ".$times." entries"?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-7" style="padding: inherit;">
+                                                            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"
+                                                                style="float:right;">
+                                                                <ul class="pagination">
+                                                                    <li class="paginate_button page-item previous disabled" id="dataTable_previous"><a
+                                                                            href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                                                            class="page-link">Previous</a></li>
+                                                                    <li class="paginate_button pagination_li page-use page-item active" id="page_1"
+                                                                        page="1"><a href="#" aria-controls="dataTable" id="page1" data-dt-idx="1"
+                                                                            tabindex="0" class="page-link">1</a></li>
+                                                                    <li class="paginate_button page-item disabled" hidden id="dataTable_ellipsis1"><a
+                                                                            href="#" aria-controls="dataTable" data-dt-idx="-1" tabindex="0"
+                                                                            class="page-link">…</a></li>
+                                                                    <?php
+                                                                    for($i=2;$i<$pages;$i++){
+                                                                        if($i < $pages){?>
+                                                                    <li class="paginate_button pagination_li page-use page-item"
+                                                                        <?php if($i > 5) echo "hidden"; ?> id="page_<?php echo $i;?>"
+                                                                        page="<?php echo $i;?>"><a href="#" aria-controls="dataTable"
+                                                                            id="page<?php echo $i;?>" data-dt-idx="<?php echo $i;?>" tabindex="0"
+                                                                            class="page-link"><?php echo $i;?></a></li>
 
-                                                        </tr>
-                                                    </thead>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>ชื่อแปลง</th>
-                                                            <th>วันที่เก็บผลผลิต</th>
-                                                            <th>ผลผลิต (ก.ก.)</th>
-                                                            <th>ราคาต่อหน่วย (บาท)</th>
-                                                            <th>ราคาสุทธิ์ (บาท)</th>
-                                                            <th>จัดการ</th>
-                                                        </tr>
-                                                    </tfoot>
-                                                    <tbody>
-                                                        <?php
-                                                        $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-                                                        for ($i = 1; $i < count($LOGHarvest); $i++) {
-                                                            echo "  <tr>
-                                                                        <td>{$LOGHarvest[$i]['Name']}</td>
-                                                                        <td class=\"text-right\">{$LOGHarvest[$i]['dd']} {$strMonthCut[$LOGHarvest[$i]['Month']]} {$LOGHarvest[$i]['Year2']}</td>
-                                                                        <td class=\"text-right\">" . number_format($LOGHarvest[$i]['Weight'], 2, '.', ',') . "</td>
-                                                                        <td class=\"text-right\">" . number_format($LOGHarvest[$i]['UnitPrice'], 2, '.', ',') . "</td>
-                                                                        <td class=\"text-right\">" . number_format($LOGHarvest[$i]['TotalPrice'], 2, '.', ',') . "</td>
-                                                                        <td style=\"text-align:center;\">
-                                                                            <button type=\"button\" class=\"btn btn-info btn-sm btn-photo tt \"  lid=\"{$LOGHarvest[$i]['ID']}\" title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
-                                                                            <button type=\"button\" class=\"btn btn-danger btn-sm delete tt\"   onclick=\"delfunction(' {$LOGHarvest[$i]['ID']}',' {$LOGHarvest[$i]['Name']}','{$LOGHarvest[$i]['dd']} {$strMonthCut[$LOGHarvest[$i]['Month']]} {$LOGHarvest[$i]['Year2']}')\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
-                                                                        </td>
-                                                                    </tr>";
-                                                        }
-                                                        ?>
-                                                    </tbody>
-                                                </table>
+                                                                    <?php
+                                                                        }
+                                                                    } ?>
+                                                                    <li class="paginate_button page-item disabled"
+                                                                        <?php if($pages < 7) echo "hidden"; ?> id="dataTable_ellipsis2"><a href="#"
+                                                                            aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
+                                                                            class="page-link">…</a></li>
+                                                                    <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
+                                                                        <?php if($pages == 1 || $pages == 0) echo "hidden"; ?> id="lastpage"><a
+                                                                            href="#" id="page<?php echo $i;?>" aria-controls="dataTable"
+                                                                            data-dt-idx="<?php echo $pages;?>" tabindex="0"
+                                                                            class="page-link"><?php echo $pages;?></a></li>
+                                                                    <li class="paginate_button page-item next <?php if($pages == 1 || $pages == 0) echo "disabled"; ?> "
+                                                                        id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
+                                                                            tabindex="0" class="page-link">Next</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end pagination -->
                                             </div>
                                         </div>
                                     </div>
