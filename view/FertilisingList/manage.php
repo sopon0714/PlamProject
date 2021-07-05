@@ -3,7 +3,7 @@ require_once("../../dbConnect.php");
 require_once("../../set-log-login.php");
 require_once("../../query/query.php");
 session_start();
-date_default_timezone_set('Asia/Bangkok');
+date_default_timezone_set('Asia/Bangkok'); 
 ?>
 
 <?php
@@ -21,6 +21,14 @@ switch ($action) {
         $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
 
         print_r(json_encode(getTableAllFertilising($year, $idformal, $fullname, $fpro, $fdist,$start,$limit,$latitude,$longitude)));
+        // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
+    break;
+    case 'pagination2' :
+        $fsid = $_POST['fsid'];
+        $start = $_POST['start'];
+        $limit = $_POST['limit'];
+        print_r(json_encode(getinfoFertilisingDetail($fsid,$start,$limit)));
         // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
 
     break;

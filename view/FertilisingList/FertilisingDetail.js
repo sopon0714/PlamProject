@@ -1,3 +1,4 @@
+fsid = $("#data_search").attr("fsid");
 $(document).ready(function() {
     var FSID = $('#FSID').attr('fsid');
     var NumTree = $('#NumTree').attr('NumTree');
@@ -5,6 +6,7 @@ $(document).ready(function() {
     load_Nutr(maxyear, FSID);
     loadDataNutrDetail(FSID, maxyear);
     var DATACAL = loadDATACal(FSID, maxyear);
+    getDataSetTable();
     setTimeout(function() { setSumVolofNutr(); }, 2000);
     $('.tt').tooltip();
     $(document).on('change', '.CalFerVol', function() {
@@ -123,7 +125,7 @@ $(document).ready(function() {
     }
 
     function getSumAllNutr(NID) {
-        let Sum = 0;
+        let Sum = 0; 
         $(".CalNutrID" + NID).each(function(index) {
             Sum = Number(Sum) + Number($(this).html());
             // console.log(Sum);
@@ -413,3 +415,31 @@ $(document).ready(function() {
     }
 
 });
+// pagination
+function getDataSetTable(){
+    $.post("manage.php", {action: "pagination2",fsid: fsid,start: start,limit: limit}, function(result){
+        DATA = JSON.parse(result); 
+        setTableBody(DATA);
+    });
+}
+// pagination
+function setTableBody(DATA){
+    html = ``;
+    strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    for (i = 1; i <= DATA[0]['numrow']; i++) {
+        
+        html += `<tr>
+                    <td class=\"text-center\">${DATA[i]["day"]}  ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}</td>
+                    <td class=\"text-left\">${DATA[i]["Name"]}</td>
+                    <td class=\"text-right\">${DATA[i]["Vol"]}</td>
+                    <td class=\"text-center\">${DATA[i]["Unit"]}</td>
+                    <td class=\"text-center\">
+                    <button type=\"button\" class=\"btn btn-info btn-sm btn-photo tt \"  lid=\"${DATA[i]["ID"]}\" title=\"รูปภาพ\"><i class=\"fas fa-images\"></i></button>
+                        <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\" fer=\"${DATA[i]["Name"]}\"   logid=\"${DATA[i]["dd"]}{$INFOFERTILISING[$i]['ID']}\"    logdate=\"${DATA[i]["day"]}  ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                    </td>
+                </tr>`;
+        }
+                    
+
+    $("#body").html(html);
+}

@@ -3184,7 +3184,7 @@ function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist,
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['AreaNgan'] = $INFOSUBFARM[$i]['AreaNgan'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Latitude'] = $INFOSUBFARM[$i]['Latitude'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Longitude'] = $INFOSUBFARM[$i]['Longitude'];
-        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree'];
+        $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['NumTree'] = $INFOSUBFARM[$i]['NumTree']; 
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Distrinct'] = $INFOSUBFARM[$i]['Distrinct'];
         $INFOSUBFARMFertilising[$INFOSUBFARM[$i]['FSID']]['Province'] = $INFOSUBFARM[$i]['Province'];
         $INFO = getInfoFertilising($INFOSUBFARM[$i]['FSID'], $year);
@@ -3287,7 +3287,7 @@ function getVolUseFertilising($FSID, $NID, $year)
     }
     return round($Vol, 2);
 }
-function getinfoFertilisingDetail($FSID)
+function getinfoFertilisingDetail($FSID,$start,$limit)
 {
     $sql = "SELECT `log-fertilising`.`ID`,`dim-time`.`dd` AS day,`dim-time`.`Month`,
     `dim-time`.`Year2` ,`dim-time`.`Date`  ,`log-fertilizer`.`Name`,ROUND(`log-fertilising`.`Vol`,2) AS Vol,IF(`log-fertilising`.`Unit`=1,'Kg','g') AS Unit
@@ -3296,7 +3296,8 @@ function getinfoFertilisingDetail($FSID)
     INNER JOIN `dim-time` ON `dim-time`.`ID` = `log-fertilising`.`DIMdateID`
     INNER JOIN `log-fertilizer` ON `log-fertilizer`.`ID` = `log-fertilising`.`ferID`
     WHERE `dim-farm`.`dbID` = $FSID AND `log-fertilising`.`isDelete`=0
-    ORDER BY `dim-time`.`Date` DESC";
+    ORDER BY `dim-time`.`Date` DESC ";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $DATA = selectData($sql);
     return $DATA;
 }
@@ -3324,7 +3325,7 @@ function getFertilizerList()
 }
 function getTextEventFertilising($fsid)
 {
-    $INFOLOGFertilising = getinfoFertilisingDetail($fsid);
+    $INFOLOGFertilising = getinfoFertilisingDetail($fsid,0,0);
     $text = "[";
     for ($i = 1; $i <= $INFOLOGFertilising[0]['numrow']; $i++) {
         $timeStart = $INFOLOGFertilising[$i]['Date'];
