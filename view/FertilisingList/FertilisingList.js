@@ -1,3 +1,10 @@
+// pagination
+idformal = $("#data_search").attr("idformal");
+fullname = $("#data_search").attr("fullname");
+fpro = $("#data_search").attr("fpro");
+fdist = $("#data_search").attr("fdist");
+year = $("#data_search").attr("year");
+//end pagination
 $(document).ready(function() {
     $('.tt').tooltip();
     $(document).on("change", "#s_province", function() {
@@ -10,7 +17,7 @@ $(document).ready(function() {
 
     });
 
-    function data_show(select_id, result, point_id) {
+    function data_show(select_id, result, point_id) { 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -27,63 +34,125 @@ $(document).ready(function() {
 
 
 });
+function getDataSetTable(){
+    $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: start,limit: limit}, function(result){
+        DATA = JSON.parse(result);
+        setTableBody(DATA);
+    });
+}
+function setTableBody(DATA){
+    html = ``;
+    i = 0;
+    for (const [key, value] of Object.entries(DATA)) {
+        html += `<tr  class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
+                    <td>${value["FullName"]}</td>
+                    <td>${value["NameFarm"]}</td>
+                    <td>${value["NameSubfarm"]}</td>
+                    <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
+                    <td class=\"text-right\">${value["NumTree"]} ต้น</td>
+                    <td class=\"text-right\">${value["countFertilising"]}</td>
+                    <td class=\"text-right\">${value["N"]}</td>
+                    <td class=\"text-right\">${value["P"]}</td>
+                    <td class=\"text-right\">${value["K"]}</td>
+                    <td class=\"text-center\">
+                    <a href=\"./FertilisingDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                    </td>
+                    <label class="click-map" hidden id="${i++}"
+                    namesubfarm="${value["NameFarm"]}"
+                    la="${value["Latitude"]}" long="${value["Longitude"]}"
+                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
+                    owner="${value["FullName"]}"></label>
+                </tr>`;
 
+     }
+      
+    $("#body").html(html);
+}
+// pagination
 function initMap() {
     var locations = [];
     var center = [0, 0];
-    size = $('#size').attr('size');
-    // console.log("size:" + size)
-    if (size == 0) {
-        center[0] = 13.736717;
-        center[1] = 100.523186;
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 6,
-            center: new google.maps.LatLng(13.736717, 100.523186),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-    } else {
-        for (i = 1; i <= size; i++) {
-            namesubfarm = $('#' + i).attr('namesubfarm');
-            la = $('#' + i).attr('la');
-            long = $('#' + i).attr('long');
-            laFloat = parseFloat($('#' + i).attr('la'));
-            longFloat = parseFloat($('#' + i).attr('long'));
-            dist = $('#' + i).attr('distrinct');
-            pro = $('#' + i).attr('province');
+    // pagination
+    fade = false;
+    $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0}, function(result){
+       DATA = JSON.parse(result);
+       console.log(DATA);
+       getDataSetTable();
+      $(".loader-container").fadeOut(500);
+      // console.log(DATA);
+      // console.log("init map numrow data = "+DATA[0]["numrow"]);
+      size = Object.keys(DATA).length;
+      for (const [key, value] of Object.entries(DATA)) {
+            namefarm = value['NameFarm'];
+            la = value["Latitude"];
+            long = value["Longitude"];
+            laFloat = parseFloat(value["Latitude"]);
+            longFloat = parseFloat(value["Longitude"]);
+            dist = value["Distrinct"];
+            pro = value["Province"];
+            owner = value["FullName"];
             center[0] += laFloat;
             center[1] += longFloat;
-            data = [namesubfarm, la, long, dist, pro];
+            data = [namefarm,la,long,dist,pro,owner];
             locations.push(data);
         }
-        center[0] = center[0] / size;
-        center[1] = center[1] / size;
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 6,
-            center: new google.maps.LatLng(center[0], center[1]),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-        var infowindow = new google.maps.InfoWindow();
-        var marker;
-        for (i = 0; i < locations.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                map: map,
-                icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-
-            });
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    content = locations[i][0];
-                    content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
-                    infowindow.setContent(content);
-                    infowindow.open(map, marker);
-                    $('.defualtlatlog').hide();
-                    $className = '.la' + locations[i][1].replace('.', '-') + 'long' + locations[i][2].replace('.', '-');
-                    $($className).show();
-                }
-            })(marker, i));
-
+        if (size == 0) {
+            center[0] = 13.736717;
+            center[1] = 100.523186;
+        }else{
+            center[0] = center[0] / size;
+            center[1] = center[1] / size;
         }
-    }
+      
+
+      
+
+      // console.log(center);
+      // console.log("locations = ");
+
+      // console.log(locations);
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: new google.maps.LatLng(center[0], center[1]),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+
+      var infowindow = new google.maps.InfoWindow();
+
+      var marker;
+
+      for (i = 0; i < locations.length; i++) {
+          marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+              map: map,
+              icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+
+          });
+          // console.log('i == ' + i)
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                  content = "";
+                  content += locations[i][5];
+                  content += "<br>" +locations[i][0];
+                  content += "<br> อ." + locations[i][3] + " จ." + locations[i][4];
+                  infowindow.setContent(content);
+                  infowindow.open(map, marker);
+
+                  if (i != -1) {
+                    $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                      DATA = JSON.parse(result);
+                     
+                      setTableBody(DATA);
+                    });
+                  }
+
+              }
+          })(marker, i));
+
+      }
+
+  });
+
 
 }

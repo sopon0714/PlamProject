@@ -9,6 +9,21 @@ date_default_timezone_set('Asia/Bangkok');
 <?php
 $action  = $_POST['action'] ?? "";
 switch ($action) {
+    case 'pagination' :
+        $year = $_POST['year'];
+        $idformal = $_POST['idformal'];
+        $fullname = $_POST['fullname'];
+        $fpro = $_POST['fpro']; 
+        $fdist = $_POST['fdist']; 
+        $start = $_POST['start'];
+        $limit = $_POST['limit'];
+        $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+        $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+
+        print_r(json_encode(getTableAllFertilising($year, $idformal, $fullname, $fpro, $fdist,$start,$limit,$latitude,$longitude)));
+        // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
+    break;
     case 'addFertilising':
         $fsid = $_POST['FSID'];
         $date = $_POST['date'];
@@ -92,7 +107,7 @@ switch ($action) {
                             $sql ="UPDATE `fact-fertilising` SET `UseK` = '$vol' WHERE `fact-fertilising`.`ID` = {$DATA[1]['ID']}";
                             break;
                     }
-                    updateData($sql);
+                    updateData($sql); 
                 }else{
                     $tagetYear = $DIMTIME[1]['Year1'] + 1;
                     switch($DETAILFER[$i]['NID']){

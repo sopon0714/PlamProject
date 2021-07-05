@@ -1610,7 +1610,7 @@ function getInsect()
 
     $INSECT['info'] = $INFO;
     $INSECT['data'] = $DATA;
-    $INSECT['selectedID'] = $selectedID;
+    $INSECT['selectedID'] = $selectedID; 
 
     return $INSECT;
 }
@@ -3129,7 +3129,7 @@ function getTextCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 function INFOCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 {
 }
-function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist)
+function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
     $idformal = '';
     $fpro = 0;
@@ -3165,8 +3165,10 @@ function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist)
     if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-
+    if ($latitude != '') $sql = $sql . " AND `Latitude` = '" . $latitude . "' ";
+    if ($longitude != '') $sql = $sql . " AND `Longitude` = '" . $longitude . "' ";  
     $sql .= " GROUP BY `dim-farm`.`dbID`) ORDER BY `dim-user`.`FullName`,f.`Name`  ,sf.`Name`";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $INFOSUBFARM =  selectData($sql);
     $INFOSUBFARMFertilising = array();
     if ($INFOSUBFARM[0]['numrow'] == 0) {

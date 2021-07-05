@@ -45,9 +45,9 @@ function getDataSetTable(){
 }
 function setTableBody(DATA){
     html = ``;
-    $i = 0;
+    i = 0;
     for (const [key, value] of Object.entries(DATA)) {
-        html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}}">
+        html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
                     <td>${value["FullName"]}</td>
                     <td>${value["NameFarm"]}</td>
                     <td style="text-align:right;">${value["NumSubFarm"]} แปลง</td>
@@ -62,7 +62,7 @@ function setTableBody(DATA){
                     <label class="click-map" hidden id="${i++}"
                     namesubfarm="${value["NameFarm"]}"
                     la="${value["Latitude"]}" long="${value["Longitude"]}"
-                    dist="${value["Distrinct"]}" pro="${value["Province"]}"
+                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
                     owner="${value["FullName"]}"></label>
                 </tr>`;
 
