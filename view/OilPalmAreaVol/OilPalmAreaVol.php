@@ -21,7 +21,7 @@ if (isset($_POST['s_name'])) {
     $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
     $namef = explode(" ", $fullname);
     if (isset($namef[1])) {
-        $fnamef = $namef[0];
+        $fnamef = $namef[0]; 
         $lnamef = $namef[1];
     } else {
         $fnamef = $fullname;
