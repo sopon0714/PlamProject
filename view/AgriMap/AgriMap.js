@@ -50,6 +50,7 @@ $("#search").click(function() {
     } else {
         cutbranch = 1;
     }
+    fade = false;
 
     $.post("manage.php", {
         request: "search",
@@ -77,6 +78,8 @@ $("#search").click(function() {
         // $("#search").removeAttr("disabled");
         $("#loading").hide();
         // console.log(DATA_DB);
+        $(".loader-container").fadeOut(500);
+
         initMap();
     });
 });
@@ -85,7 +88,6 @@ function initMap() {
     //The location of Uluru
     // console.log("init map");
     // console.log(DATA_DB);
-
     var locations = [];
     var center = [0, 0];
     size = DATA_DB.length;
