@@ -24,6 +24,21 @@ switch ($action) {
 
         print_r(json_encode(getTableAllRain($year, $idformal, $fullname, $fpro, $fdist, $score_From, $score_To,$start,$limit,$latitude,$longitude)));
     break;
+    case 'pagination2' :
+        $idformal = $_POST['idformal'];
+        $fullname = $_POST['fullname']; 
+        $fpro = $_POST['fpro']; 
+        $fdist = $_POST['fdist'];
+        $start = $_POST['start'];
+        $limit = $_POST['limit'];
+        $year = $_POST['year'];
+        $score_From = $_POST['score_From'];
+        $score_To = $_POST['score_To'];
+        $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
+        $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
+
+        print_r(json_encode(getTableAllWater($year, $idformal, $fullname, $fpro, $fdist, $score_From, $score_To,$start,$limit,$latitude,$longitude)));
+    break;
     case 'deleteLog';
         $logid = $_POST['logid'];
         $TYPEP = $_POST['typeid'];

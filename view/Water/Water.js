@@ -220,7 +220,7 @@ $(document).ready(function() {
 function getDataSetTable(){
     $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start,limit: limit}, function(result){
         DATA = JSON.parse(result);
-        console.log()
+        
         setTableBody(DATA);
     });
 }
@@ -251,6 +251,39 @@ function setTableBody(DATA){
       
     $("#body").html(html);
 }
+
+function getDataSetTable2(){
+    $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start,limit: limit}, function(result){
+        DATA = JSON.parse(result);
+        setTableBody2(DATA);
+    });
+}
+function setTableBody2(DATA){
+    html = ``;
+    i = 0;
+    for (const [key, value] of Object.entries(DATA)) {
+        html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
+                    <td>${value["FullName"]}</td>
+                    <td>${value["NameFarm"]}</td>
+                    <td>${value["NameSubfarm"]}</td>
+                    <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
+                    <td class=\"text-right\">${value["NumTree"]} ต้น</td>
+                    <td class=\"text-center\">${value["lastDate"]}</td>
+                    <td class=\"text-right\">${value["lastVol"]}</td>
+                    <td class=\"text-right\">${parseFloat(value["totalVol"]).toFixed(2)}</td>
+                    <td class=\"text-center\">
+                    <a href=\"./WaterDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                    </td>
+                    <label class="click-map" hidden 
+                    namesubfarm="${value["NameFarm"]}"
+                    la="${value["Latitude"]}" long="${value["Longitude"]}"
+                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
+                    owner="${value["FullName"]}"></label>
+                </tr>`;
+     }
+      
+    $("#body2").html(html);
+}
 // pagination
 function initMap() {
     var locations = [];
@@ -261,8 +294,8 @@ function initMap() {
     $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: 0,limit: 0}, function(result){
    
     DATA = JSON.parse(result);
-    
     getDataSetTable();
+    getDataSetTable2();
     $(".loader-container").fadeOut(500);
     // console.log(DATA);
     // console.log("init map numrow data = "+DATA[0]["numrow"]);

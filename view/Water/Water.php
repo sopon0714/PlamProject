@@ -25,7 +25,7 @@ if (isset($_POST['s_name'])) {
 }
 $PROVINCE = getProvince();
 $INFOSUBFARM = getTableAllRain($year, $idformal, $fullname, $fpro, $fdist, $score_From, $score_To,0,0,'','');
-$INFOSUBFARM2 = getTableAllWater($year, $idformal, $fullname, $fpro, $fdist, $score_From, $score_To);
+$INFOSUBFARM2 = getTableAllWater($year, $idformal, $fullname, $fpro, $fdist, $score_From, $score_To,0,0,'','');
 $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 
 // pagination
@@ -42,15 +42,33 @@ if($times == 0){
     $pages = 1;
 }
 // end pagination
+
+// pagination2
+$page2 = 1; 
+$limit2 = 10;
+$times2 = count($INFOSUBFARM2);
+if($times2 == 0) $start2 = 0;
+$start2 = (($page2 - 1) * $limit2)+1;
+$end2 = $start2+$limit2;
+if($times2 < $limit2) $end2 = $times2+1;
+$pages2 = ceil($times2/$limit2);
+if($times2 == 0){
+    $start2 = 0;
+    $pages2 = 1;
+}
+// end pagination2
 ?>
 <!-- pagination -->
 <div hidden id="data_search" idformal="<?= $idformal ?>" fullname="<?= $fullname ?>" fpro="<?= $fpro ?>"
     fdist="<?= $fdist ?>" score_From="<?= $score_From ?>" score_To="<?= $score_To ?>" year="<?= $year ?>"></div>
 <!-- end pagination -->
- <!-- pagination -->
+<!-- pagination -->
 <div id="size" hidden size="<?php echo $times; ?>"></div>
 <div id="CurrentPage" hidden CurrentPage="1"></div>
 <div id="pages" hidden pages="<?php echo $pages; ?>"></div>
+<div id="size2" hidden size2="<?php echo $times2; ?>"></div>
+<div id="CurrentPage2" hidden CurrentPage2="1"></div>
+<div id="pages2" hidden pages2="<?php echo $pages2; ?>"></div>
 <!-- end pagination -->
 <style>
     .padding {
@@ -336,7 +354,7 @@ if($times == 0){
                                                     </tbody>
                                                 </table>
                                             </div>
-                                             <!-- pagination -->
+                                            <!-- pagination -->
                                             <div class="col-12 table-responsive">
                                                 <div class="row" id="page_change">
                                                     <div class="col-sm-12 col-md-5" style="padding: inherit;">
@@ -399,74 +417,141 @@ if($times == 0){
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-12">
-                                        <div class="table-responsive">
+                                        <!-- pagination add div -->
+                                        <div>
+                                            <!-- pagination -->
+                                            <div class="col-12 table-responsive">
+                                                <div class="row" style="list-style: none !important;">
+                                                    <div style="margin-top:5px;">Show</div>
+                                                    <div style="margin-left:3px;">
+                                                        <select name="dataTable_length2" id="dataTable_length2" aria-controls="dataTable"
+                                                            class="custom-select custom-select-sm form-control form-control-sm">
+                                                            <option value="10">10</option>
+                                                            <option value="50">50</option>
+                                                            <option value="100">100</option>
+                                                            <option value="500">500</option>
+                                                            <option value="1000">1,000</option>
+                                                        </select>
+                                                    </div>
+                                                    <div style="margin-left:3px; margin-top:5px;">entries</div>
+                                                </div>
+                                            </div>
+                                            <!-- end pagination -->
+                                            <div class="table-responsive">
 
-                                            <table id="example2" class="table table-bordered table-data tableSearch">
-                                                <colgroup>
-                                                    <col width="19%">
-                                                    <col width="15%">
-                                                    <col width="15%">
-                                                    <col width="10%">
-                                                    <col width="7%">
-                                                    <col width="12%">
-                                                    <col width="12%">
-                                                    <col width="5%">
-                                                    <col width="5%">
+                                                <table id="example2" class="table table-bordered table-data tableSearch1">
+                                                    <colgroup>
+                                                        <col width="19%">
+                                                        <col width="15%">
+                                                        <col width="15%">
+                                                        <col width="10%">
+                                                        <col width="7%">
+                                                        <col width="12%">
+                                                        <col width="12%">
+                                                        <col width="5%">
+                                                        <col width="5%">
 
-                                                </colgroup>
-                                                <thead>
-                                                    <tr>
-                                                        <th>ชื่อเกษตรกร</th>
-                                                        <th>ชื่อสวน</th>
-                                                        <th>ชื่อแปลง</th>
-                                                        <th>พื้นที่ปลูก</th>
-                                                        <th>จำนวนต้น</th>
-                                                        <th>วันที่ให้น้ำล่าสุด</th>
-                                                        <th>ปริมาณให้<br>น้ำล่าสุด(ลิตร)</th>
-                                                        <th>ปริมาณน้ำสะสม(ลิตร)</th>
-                                                        <th>จัดการ</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>ชื่อเกษตรกร</th>
-                                                        <th>ชื่อสวน</th>
-                                                        <th>ชื่อแปลง</th>
-                                                        <th>พื้นที่ปลูก</th>
-                                                        <th>จำนวนต้น</th>
-                                                        <th>วันที่ให้น้ำล่าสุด</th>
-                                                        <th>ปริมาณให้<br>น้ำล่าสุด(ลิตร)</th>
-                                                        <th>ปริมาณน้ำสะสม(ลิตร)</th>
-                                                        <th>จัดการ</th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody>
-                                                    <?php
-                                                    if ($INFOSUBFARM2 != null) {
-                                                        $i = 1;
-                                                        foreach ($INFOSUBFARM2 as $SUBDATA) {
-                                                            $lati = str_replace('.', '-', $SUBDATA["Latitude"]);
-                                                            $longi = str_replace('.', '-', $SUBDATA["Longitude"]);
-                                                            echo "  <tr  class=\"defualtlatlog la{$lati}long{$longi}\">
-                                                                        <td>{$SUBDATA['FullName']}</td>
-                                                                        <td>{$SUBDATA['NameFarm']}</td>
-                                                                        <td>{$SUBDATA['NameSubfarm']}</td>
-                                                                        <td class=\"text-right\">{$SUBDATA['AreaRai']} ไร่ {$SUBDATA['AreaNgan']} งาน</td>
-                                                                        <td class=\"text-right\">{$SUBDATA['NumTree']} ต้น</td>
-                                                                        <td class=\"text-center\">{$SUBDATA['lastDate']}</td>
-                                                                        <td class=\"text-right\">{$SUBDATA['lastVol']}</td>
-                                                                        <td class=\"text-right\">" . number_format($SUBDATA['totalVol'], 2, '.', ',') . "</td>
-                                                                        <td class=\"text-center\">
-                                                                        <a href=\"./WaterDetail.php?FSID={$SUBDATA['FSID']}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
-                                                                        </td>
-                                                                    </tr>";
-                                                            echo  "<label  id=\"$i\" hidden distrinct=\"{$SUBDATA['Distrinct']}\" province=\"{$SUBDATA['Province']}\" namesubfarm=\"{$SUBDATA['NameSubfarm']}\" la=\"{$SUBDATA['Latitude']}\" long=\"{$SUBDATA['Longitude']}\"></label>";
-                                                            $i++;
-                                                        }
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ชื่อเกษตรกร</th>
+                                                            <th>ชื่อสวน</th>
+                                                            <th>ชื่อแปลง</th>
+                                                            <th>พื้นที่ปลูก</th>
+                                                            <th>จำนวนต้น</th>
+                                                            <th>วันที่ให้น้ำล่าสุด</th>
+                                                            <th>ปริมาณให้<br>น้ำล่าสุด(ลิตร)</th>
+                                                            <th>ปริมาณน้ำสะสม(ลิตร)</th>
+                                                            <th>จัดการ</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>ชื่อเกษตรกร</th>
+                                                            <th>ชื่อสวน</th>
+                                                            <th>ชื่อแปลง</th>
+                                                            <th>พื้นที่ปลูก</th>
+                                                            <th>จำนวนต้น</th>
+                                                            <th>วันที่ให้น้ำล่าสุด</th>
+                                                            <th>ปริมาณให้<br>น้ำล่าสุด(ลิตร)</th>
+                                                            <th>ปริมาณน้ำสะสม(ลิตร)</th>
+                                                            <th>จัดการ</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <tbody id="body2">
+                                                        <!-- pagination -->
+                                                        <tr id="show_loading2">
+                                                            <td colspan="9">
+                                                                <center class="form-control" style="height: 110px; border: white;">
+                                                                    <img src="./../Chart/chart/loading.gif" alt="Loading..."
+                                                                        style="width: 70px; height: 70px; "><br>
+                                                                    <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
+                                                                </center>
+                                                            </td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                            <td style="display: none"></td>
+                                                        </tr>
+                                                        <!-- end pagination -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- pagination -->
+                                            <div class="col-12 table-responsive">
+                                                <div class="row" id="page_change2">
+                                                    <div class="col-sm-12 col-md-5" style="padding: inherit;">
+                                                        <div class="dataTables_info" id="dataTable_info2" role="status" aria-live="polite">
+                                                            <?php echo "Showing ".$start2." to ".($end2-1)." of ".$times2." entries"?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-7" style="padding: inherit;">
+                                                        <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate2"
+                                                            style="float:right;">
+                                                            <ul class="pagination">
+                                                                <li class="paginate_button page-item previous disabled" id="dataTable_previous2"><a
+                                                                        href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                                                        class="page-link">Previous</a></li>
+                                                                <li class="paginate_button pagination_li page-use page-item active" id="page2_1"
+                                                                    page="1"><a href="#" aria-controls="dataTable" id="page1" data-dt-idx="1"
+                                                                        tabindex="0" class="page-link">1</a></li>
+                                                                <li class="paginate_button page-item disabled" hidden id="dataTable_ellipsis12"><a
+                                                                        href="#" aria-controls="dataTable" data-dt-idx="-1" tabindex="0"
+                                                                        class="page-link">…</a></li>
+                                                                <?php
+                                                                    for($i=2;$i<$pages2;$i++){
+                                                                        if($i < $pages2){?>
+                                                                <li class="paginate_button pagination_li page-use page-item"
+                                                                    <?php if($i > 5) echo "hidden"; ?> id="page2_<?php echo $i;?>"
+                                                                    page="<?php echo $i;?>"><a href="#" aria-controls="dataTable"
+                                                                        id="page<?php echo $i;?>" data-dt-idx="<?php echo $i;?>" tabindex="0"
+                                                                        class="page-link"><?php echo $i;?></a></li>
+
+                                                                <?php
+                                                                        }
+                                                                    } ?>
+                                                                <li class="paginate_button page-item disabled"
+                                                                    <?php if($pages2 < 7) echo "hidden"; ?> id="dataTable_ellipsis22"><a href="#"
+                                                                        aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
+                                                                        class="page-link">…</a></li>
+                                                                <li class="paginate_button page-item pagination_li" page="<?php echo $pages2;?>"
+                                                                    <?php if($pages2 == 1 || $pages2 == 0) echo "hidden"; ?> id="lastpage2"><a href="#"
+                                                                        id="page<?php echo $i;?>" aria-controls="dataTable"
+                                                                        data-dt-idx="<?php echo $pages2;?>" tabindex="0"
+                                                                        class="page-link"><?php echo $pages2;?></a></li>
+                                                                <li class="paginate_button page-item next <?php if($pages2 == 1 || $pages2 == 0) echo "disabled"; ?> "
+                                                                    id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
+                                                                        tabindex="0" class="page-link">Next</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end pagination -->
                                         </div>
                                     </div>
                                 </div>
