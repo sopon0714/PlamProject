@@ -1,8 +1,11 @@
+fsid = $("#data_search").attr("fsid");
 $(document).ready(function() {
     var FSID = $('#FSID').attr('fsid');
     $('.show1').show();
     $('.show2').hide();
     $('.tt').tooltip();
+    getDataSetTable();
+    getDataSetTable2();
     $(document).on("click", ".btn-delete", function() {
         let date = $(this).attr("logdate");
         let logid = $(this).attr("logid");
@@ -104,7 +107,7 @@ $(document).ready(function() {
         } else {
             $('.show2').show();
             $('.show1').hide();
-            $("#rankRain").val("0");
+            $("#rankRain").val("0"); 
         }
 
     })
@@ -161,3 +164,66 @@ $(document).ready(function() {
     }
 
 });
+// pagination
+function getDataSetTable(){
+    console.log("2s"+start+":l"+limit);
+    $.post("manage.php", {action: "pagination3",fsid: fsid,start: start,limit: limit}, function(result){
+        DATA = JSON.parse(result); 
+        setTableBody(DATA);
+    });
+}
+// pagination
+function setTableBody(DATA){
+    html = ``;
+    strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    for (i = 1; i <= DATA[0]['numrow']; i++) {
+        var StartTime = new Date(parseFloat(DATA[i]["StartTime"])*1000);
+        var StopTime = new Date(parseFloat(DATA[i]["StopTime"])*1000);
+        var dateStart = ("0" + StartTime.getHours()).slice(-2)+":"+("0" + StartTime.getMinutes()).slice(-2);
+        var dateStop = ("0" + StopTime.getHours()).slice(-2)+":"+("0" + StopTime.getMinutes()).slice(-2);
+        html += `<tr>
+                    <td class=\"text-center\">${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}</td>
+                    <td class=\"text-center\">${dateStart} - ${dateStop}</td>
+                    <td class=\"text-right\">${DATA[i]["Period"]}</td>
+                    <td class=\"text-right\">${DATA[i]["Vol"]}</td>
+                    <td class=\"text-center\">
+                        <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\"   logid=\"${DATA[i]["LogID"]}\"  info=\"ฝนตก\" typeid=\"3\"  logdate=\"${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                    </td>
+                </tr>`;
+        }
+                    
+
+    $("#body").html(html);
+}
+function getDataSetTable2(){
+    console.log("2s"+start2+":l"+limit2);
+    $.post("manage.php", {action: "pagination4",fsid: fsid,start: start2,limit: limit2}, function(result){
+        
+        DATA = JSON.parse(result); 
+        setTableBody2(DATA);
+    });
+}
+// pagination
+function setTableBody2(DATA){
+    html = ``;
+    strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    for (i = 1; i <= DATA[0]['numrow']; i++) {
+        var StartTime = new Date(parseFloat(DATA[i]["StartTime"])*1000);
+        var StopTime = new Date(parseFloat(DATA[i]["StopTime"])*1000);
+        var dateStart = ("0" + StartTime.getHours()).slice(-2)+":"+("0" + StartTime.getMinutes()).slice(-2);
+        var dateStop = ("0" + StopTime.getHours()).slice(-2)+":"+("0" + StopTime.getMinutes()).slice(-2);
+        html += `<tr>
+                    <td class=\"text-center\">${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}</td>
+                    <td class=\"text-center\">${dateStart} - ${dateStop}</td>
+                    <td class=\"text-right\">${DATA[i]["Period"]}</td>
+                    <td class=\"text-right\">${DATA[i]["Vol"]}</td>
+                    <td class=\"text-center\">
+                        <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\"   logid=\"${DATA[i]["LogID"]}\"  info=\"การรดน้ำ\" typeid=\"4\"  logdate=\"${DATA[i]["dd"]} ${strMonthCut[DATA[i]["Month"]]} ${DATA[i]["Year2"]}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
+                    </td>
+                </tr>`;
+    }
+   
+            
+
+    $("#body2").html(html);
+}

@@ -117,11 +117,11 @@
         });
         $("#dataTable_length2").change(function(){
             $("#body2").html(show_loading2);
-            CurrentPage = 1;
+            CurrentPage2 = 1;
             size2 = parseInt($("#size2").attr("size2"));
             limit2 = parseInt($("#dataTable_length2").val());
             setPage2(size2,limit2);
-            setPageChange2(CurrentPage);
+            setPageChange2(CurrentPage2);
             getDataSetTable2();
         }); 
     });
@@ -281,23 +281,23 @@
         size2 = parseInt($("#size2").attr("size2"));
         pages = parseInt(pages);
         // pages = Math.ceil(size2/limit2);
-        start = (page - 1) * limit2;
+        start2 = (page - 1) * limit2;
         if(page == pages || size2 < limit2){
             end = size2;
         }else{
-            end = start+limit2;
+            end = start2+limit2;
         }
         if(size2 == 0){
-            start = -1;
+            start2 = -1;
             limit2 = 0;
         }
         // console.log("size2 = "+size2);
         // console.log("page = "+page);
         // console.log("limit2 = "+limit2);
-        // console.log("start = "+start);
+        // console.log("start2 = "+start2);
         // console.log("end = "+end);
         // console.log("pages = "+pages);
-        html = `Show ${start+1} to ${end} of ${size2}`;
+        html = `Show ${start2+1} to ${end} of ${size2}`;
         $("#dataTable_info2").html(html);
         //page != 1 can click previous
         if(page != 1){

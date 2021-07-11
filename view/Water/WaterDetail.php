@@ -7,9 +7,40 @@ $active = $_GET['Active'] ?? "1";
 
 include_once("./../layout/LayoutHeader.php");
 include_once("./../../query/query.php");
-$INFOSUBFARM =   getDetailLogSubFarm($fsid);
+$INFOSUBFARM =   getDetailLogSubFarm($fsid); 
 $INFOLOGRAIN = getLogRain($fsid);
 $INFOLOGWATER = getLogWater($fsid);
+
+// pagination
+$page = 1;
+$limit = 10;
+$times = $INFOLOGRAIN[0]['numrow'];
+if($times == 0) $start = 0;
+$start = (($page - 1) * $limit)+1;
+$end = $start+$limit;
+if($times < $limit) $end = $times+1;
+$pages = ceil($times/$limit);
+if($times == 0){
+    $start = 0;
+    $pages = 1;
+}
+// end pagination
+
+
+// pagination2
+$page2 = 1; 
+$limit2 = 10;
+$times2 = $INFOLOGWATER[0]['numrow'];
+if($times2 == 0) $start2 = 0;
+$start2 = (($page2 - 1) * $limit2)+1;
+$end2 = $start2+$limit2;
+if($times2 < $limit2) $end2 = $times2+1;
+$pages2 = ceil($times2/$limit2);
+if($times2 == 0){
+    $start2 = 0;
+    $pages2 = 1;
+}
+// end pagination2
 $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
 // print_r($INFOSUBFARM);
 ?>
@@ -21,7 +52,16 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
 
 <div hidden id="FSID" fsid="<?= $fsid ?>"></div>
 <div class="container bg">
+<!-- pagination -->
+<div id="size" hidden size="<?php echo $times; ?>"></div>
+<div id="CurrentPage" hidden CurrentPage="1"></div>
+<div id="pages" hidden pages="<?php echo $pages; ?>"></div>
+<div id="size2" hidden size2="<?php echo $times2; ?>"></div>
+<div id="CurrentPage2" hidden CurrentPage2="1"></div>
+<div id="pages2" hidden pages2="<?php echo $pages2; ?>"></div>
+<!-- end pagination -->
 
+<div hidden id="data_search" fsid="<?= $fsid ?>" ></div>
     <!------------ Start Head ------------>
     <div class="row">
         <div class="col-xl-12 col-12 mb-4">
@@ -162,43 +202,118 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
                             </div>
                             <div class="row mt-4 ac ac3">
                                 <div class="col-12">
-                                    <div class="table-responsive">
-                                        <!------- Start DataTable ------->
-                                        <table id="example1" class="table table-bordered table-data tableSearch">
-                                            <thead>
-                                                <tr>
-                                                    <th>วันที่ฝนตก</th>
-                                                    <th>ช่วงเวลาที่ฝนตก</th>
-                                                    <th>ระยะเวลาที่ฝนตก (นาที)</th>
-                                                    <th>ปริมาณฝน (มม.)</th>
-                                                    <th>จัดการ</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>วันที่ฝนตก</th>
-                                                    <th>ช่วงเวลาที่ฝนตก</th>
-                                                    <th>ระยะเวลาที่ฝนตก (นาที)</th>
-                                                    <th>ปริมาณฝน (มม.)</th>
-                                                    <th>จัดการ</th>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody>
-                                                <?php
-                                                for ($i = 1; $i < count($INFOLOGRAIN); $i++) {
-                                                    echo "  <tr>
-                                                                <td class=\"text-center\">{$INFOLOGRAIN[$i]['dd']} " . $strMonthCut[$INFOLOGRAIN[$i]['Month']] . " {$INFOLOGRAIN[$i]['Year2']}</td>
-                                                                <td class=\"text-center\">" . date("H:i", $INFOLOGRAIN[$i]['StartTime']) . " - " . date("H:i", $INFOLOGRAIN[$i]['StopTime']) . "</td>
-                                                                <td class=\"text-right\">{$INFOLOGRAIN[$i]['Period']}</td>
-                                                                <td class=\"text-right\">{$INFOLOGRAIN[$i]['Vol']}</td>
-                                                                <td class=\"text-center\">
-                                                                    <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\"   logid=\"{$INFOLOGRAIN[$i]['LogID']}\"  info=\"ฝนตก\" typeid=\"3\"  logdate=\"{$INFOLOGRAIN[$i]['dd']} {$strMonthCut[$INFOLOGRAIN[$i]['Month']]} {$INFOLOGRAIN[$i]['Year2']}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
-                                                                </td>
-                                                            </tr>";
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
+                                    <!-- pagination add div -->
+                                    <div>
+                                        <!-- pagination -->
+                                        <div class="col-12 table-responsive">
+                                            <div class="row" style="list-style: none !important;">
+                                                <div style="margin-top:5px;">Show</div>
+                                                <div style="margin-left:3px;">
+                                                    <select name="dataTable_length" id="dataTable_length" aria-controls="dataTable"
+                                                        class="custom-select custom-select-sm form-control form-control-sm">
+                                                        <option value="10">10</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="500">500</option>
+                                                        <option value="1000">1,000</option>
+                                                    </select>
+                                                </div>
+                                                <div style="margin-left:3px; margin-top:5px;">entries</div>
+                                            </div>
+                                        </div>
+                                        <!-- end pagination -->    
+                                        <div class="table-responsive">
+                                            <!------- Start DataTable ------->
+                                            <table id="example1" class="table table-bordered table-data tableSearch1">
+                                                <thead>
+                                                    <tr>
+                                                        <th>วันที่ฝนตก</th>
+                                                        <th>ช่วงเวลาที่ฝนตก</th>
+                                                        <th>ระยะเวลาที่ฝนตก (นาที)</th>
+                                                        <th>ปริมาณฝน (มม.)</th>
+                                                        <th>จัดการ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>วันที่ฝนตก</th>
+                                                        <th>ช่วงเวลาที่ฝนตก</th>
+                                                        <th>ระยะเวลาที่ฝนตก (นาที)</th>
+                                                        <th>ปริมาณฝน (มม.)</th>
+                                                        <th>จัดการ</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody id="body">
+                                                    <!-- pagination -->
+                                                    <tr id="show_loading">
+                                                        <td colspan="5">
+                                                            <center class="form-control" style="height: 110px; border: white;">
+                                                                <img src="./../Chart/chart/loading.gif" alt="Loading..."
+                                                                    style="width: 70px; height: 70px; "><br>
+                                                                <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
+                                                            </center>
+                                                        </td>
+                                                        <td style="display: none"></td>
+                                                        <td style="display: none"></td>
+                                                        <td style="display: none"></td>
+                                                        <td style="display: none"></td>
+                                                        
+                                                    </tr>
+                                                    <!-- end pagination -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                         <!-- pagination -->
+                                         <div class="col-12 table-responsive">
+                                            <div class="row" id="page_change">
+                                                <div class="col-sm-12 col-md-5" style="padding: inherit;">
+                                                    <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+                                                        <?php echo "Showing ".$start." to ".($end-1)." of ".$times." entries"?>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-7" style="padding: inherit;">
+                                                    <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"
+                                                        style="float:right;">
+                                                        <ul class="pagination">
+                                                            <li class="paginate_button page-item previous disabled" id="dataTable_previous"><a
+                                                                    href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                                                    class="page-link">Previous</a></li>
+                                                            <li class="paginate_button pagination_li page-use page-item active" id="page_1"
+                                                                page="1"><a href="#" aria-controls="dataTable" id="page1" data-dt-idx="1"
+                                                                    tabindex="0" class="page-link">1</a></li>
+                                                            <li class="paginate_button page-item disabled" hidden id="dataTable_ellipsis1"><a
+                                                                    href="#" aria-controls="dataTable" data-dt-idx="-1" tabindex="0"
+                                                                    class="page-link">…</a></li>
+                                                            <?php
+                                                            for($i=2;$i<$pages;$i++){
+                                                                if($i < $pages){?>
+                                                            <li class="paginate_button pagination_li page-use page-item"
+                                                                <?php if($i > 5) echo "hidden"; ?> id="page_<?php echo $i;?>"
+                                                                page="<?php echo $i;?>"><a href="#" aria-controls="dataTable"
+                                                                    id="page<?php echo $i;?>" data-dt-idx="<?php echo $i;?>" tabindex="0"
+                                                                    class="page-link"><?php echo $i;?></a></li>
+
+                                                            <?php
+                                                                }
+                                                            } ?>
+                                                            <li class="paginate_button page-item disabled"
+                                                                <?php if($pages < 7) echo "hidden"; ?> id="dataTable_ellipsis2"><a href="#"
+                                                                    aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
+                                                                    class="page-link">…</a></li>
+                                                            <li class="paginate_button page-item pagination_li" page="<?php echo $pages;?>"
+                                                                <?php if($pages == 1 || $pages == 0) echo "hidden"; ?> id="lastpage"><a
+                                                                    href="#" id="page<?php echo $i;?>" aria-controls="dataTable"
+                                                                    data-dt-idx="<?php echo $pages;?>" tabindex="0"
+                                                                    class="page-link"><?php echo $pages;?></a></li>
+                                                            <li class="paginate_button page-item next <?php if($pages == 1 || $pages == 0) echo "disabled"; ?> "
+                                                                id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
+                                                                    tabindex="0" class="page-link">Next</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end pagination -->
                                     </div>
                                 </div>
                             </div>
@@ -209,44 +324,118 @@ $strMonthCut = ["", "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.�
                             </div>
                             <div class="row mt-4 ac ac4">
                                 <div class="col-12">
-                                    <div class="table-responsive">
-                                        <!------- Start DataTable2 ------->
-                                        <table id="example1" class="table table-bordered table-data tableSearch">
-                                            <thead>
-                                                <tr>
-                                                    <th>วันที่รดน้ำ</th>
-                                                    <th>ช่วงเวลาที่รดน้ำ</th>
-                                                    <th>ระยะเวลาที่รดน้ำ (นาที)</th>
-                                                    <th>ปริมาณที่รดน้ำ (ลิตร)</th>
-                                                    <th>จัดการ</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>วันที่รดน้ำ</th>
-                                                    <th>ช่วงเวลาที่รดน้ำ</th>
-                                                    <th>ระยะเวลาที่รดน้ำ (นาที)</th>
-                                                    <th>ปริมาณที่รดน้ำ (ลิตร)</th>
-                                                    <th>จัดการ</th>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody>
-                                                <?php
-                                                for ($i = 1; $i < count($INFOLOGWATER); $i++) {
-                                                    echo "  <tr>
-                                                                <td class=\"text-center\">{$INFOLOGWATER[$i]['dd']} " . $strMonthCut[$INFOLOGWATER[$i]['Month']] . " {$INFOLOGWATER[$i]['Year2']}</td>
-                                                                <td class=\"text-center\">" . date("H:i", $INFOLOGWATER[$i]['StartTime']) . " - " . date("H:i", $INFOLOGWATER[$i]['StopTime']) . "</td>
-                                                                <td class=\"text-right\">{$INFOLOGWATER[$i]['Period']}</td>
-                                                                <td class=\"text-right\">{$INFOLOGWATER[$i]['Vol']}</td>
-                                                                <td class=\"text-center\">
-                                                                    <button type=\"button\" class=\"btn btn-danger btn-sm btn-delete tt\"   logid=\"{$INFOLOGWATER[$i]['LogID']}\"  info=\"การรดน้ำ\" typeid=\"4\"   logdate=\"{$INFOLOGWATER[$i]['dd']} {$strMonthCut[$INFOLOGWATER[$i]['Month']]} {$INFOLOGWATER[$i]['Year2']}\" title=\"ลบ\"><i class=\"far fa-trash-alt\"></i></button>
-                                                                </td>
-                                                            </tr>";
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <!-- pagination add div -->
+                                    <div>
+                                        <!-- pagination -->
+                                        <div class="col-12 table-responsive">
+                                            <div class="row" style="list-style: none !important;">
+                                                <div style="margin-top:5px;">Show</div>
+                                                <div style="margin-left:3px;">
+                                                    <select name="dataTable_length2" id="dataTable_length2" aria-controls="dataTable"
+                                                        class="custom-select custom-select-sm form-control form-control-sm">
+                                                        <option value="10">10</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="500">500</option>
+                                                        <option value="1000">1,000</option>
+                                                    </select>
+                                                </div>
+                                                <div style="margin-left:3px; margin-top:5px;">entries</div>
+                                            </div>
+                                        </div>
+                                        <!-- end pagination -->
+                                        <div class="table-responsive">
+                                            <!------- Start DataTable2 ------->
+                                            <table id="example1" class="table table-bordered table-data tableSearch1">
+                                                <thead>
+                                                    <tr>
+                                                        <th>วันที่รดน้ำ</th>
+                                                        <th>ช่วงเวลาที่รดน้ำ</th>
+                                                        <th>ระยะเวลาที่รดน้ำ (นาที)</th>
+                                                        <th>ปริมาณที่รดน้ำ (ลิตร)</th>
+                                                        <th>จัดการ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>วันที่รดน้ำ</th>
+                                                        <th>ช่วงเวลาที่รดน้ำ</th>
+                                                        <th>ระยะเวลาที่รดน้ำ (นาที)</th>
+                                                        <th>ปริมาณที่รดน้ำ (ลิตร)</th>
+                                                        <th>จัดการ</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody id="body2">
+                                                    <!-- pagination -->
+                                                    <tr id="show_loading2">
+                                                        <td colspan="5">
+                                                            <center class="form-control" style="height: 110px; border: white;">
+                                                                <img src="./../Chart/chart/loading.gif" alt="Loading..."
+                                                                    style="width: 70px; height: 70px; "><br>
+                                                                <label for="" style="font-size: small;">กำลังโหลดข้อมูล...</label>
+                                                            </center>
+                                                        </td>
+                                                        <td style="display: none"></td>
+                                                        <td style="display: none"></td>
+                                                        <td style="display: none"></td>
+                                                        <td style="display: none"></td>
+                                                        
+                                                    </tr>
+                                                    <!-- end pagination -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- pagination -->
+                                        <div class="col-12 table-responsive">
+                                            <div class="row" id="page_change2">
+                                                <div class="col-sm-12 col-md-5" style="padding: inherit;">
+                                                    <div class="dataTables_info" id="dataTable_info2" role="status" aria-live="polite">
+                                                        <?php echo "Showing ".$start2." to ".($end2-1)." of ".$times2." entries"?>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-7" style="padding: inherit;">
+                                                    <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate2"
+                                                        style="float:right;">
+                                                        <ul class="pagination">
+                                                            <li class="paginate_button page-item previous disabled" id="dataTable_previous2"><a
+                                                                    href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                                                    class="page-link">Previous</a></li>
+                                                            <li class="paginate_button pagination_li2 page-use page-item active" id="page2_1"
+                                                                page="1"><a href="#" aria-controls="dataTable" id="page1" data-dt-idx="1"
+                                                                    tabindex="0" class="page-link">1</a></li>
+                                                            <li class="paginate_button page-item disabled" hidden id="dataTable_ellipsis12"><a
+                                                                    href="#" aria-controls="dataTable" data-dt-idx="-1" tabindex="0"
+                                                                    class="page-link">…</a></li>
+                                                            <?php
+                                                                for($i=2;$i<$pages2;$i++){
+                                                                    if($i < $pages2){?>
+                                                            <li class="paginate_button pagination_li2 page-use page-item"
+                                                                <?php if($i > 5) echo "hidden"; ?> id="page2_<?php echo $i;?>"
+                                                                page="<?php echo $i;?>"><a href="#" aria-controls="dataTable"
+                                                                    id="page<?php echo $i;?>" data-dt-idx="<?php echo $i;?>" tabindex="0"
+                                                                    class="page-link"><?php echo $i;?></a></li>
+
+                                                            <?php
+                                                                    }
+                                                                } ?>
+                                                            <li class="paginate_button page-item disabled"
+                                                                <?php if($pages2 < 7) echo "hidden"; ?> id="dataTable_ellipsis22"><a href="#"
+                                                                    aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
+                                                                    class="page-link">…</a></li>
+                                                            <li class="paginate_button page-item pagination_li2" page="<?php echo $pages2;?>"
+                                                                <?php if($pages2 == 1 || $pages2 == 0) echo "hidden"; ?> id="lastpage2"><a href="#"
+                                                                    id="page<?php echo $i;?>" aria-controls="dataTable"
+                                                                    data-dt-idx="<?php echo $pages2;?>" tabindex="0"
+                                                                    class="page-link"><?php echo $pages2;?></a></li>
+                                                            <li class="paginate_button page-item next <?php if($pages2 == 1 || $pages2 == 0) echo "disabled"; ?> "
+                                                                id="dataTable_next2"><a href="#" aria-controls="dataTable" data-dt-idx="8"
+                                                                    tabindex="0" class="page-link">Next</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end pagination -->
                                 </div>
                             </div>
                         </div>

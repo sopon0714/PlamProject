@@ -15,7 +15,7 @@ switch ($action) {
         $fpro = $_POST['fpro']; 
         $fdist = $_POST['fdist'];
         $start = $_POST['start'];
-        $limit = $_POST['limit'];
+        $limit = $_POST['limit']; 
         $year = $_POST['year'];
         $score_From = $_POST['score_From'];
         $score_To = $_POST['score_To'];
@@ -38,6 +38,24 @@ switch ($action) {
         $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
 
         print_r(json_encode(getTableAllWater($year, $idformal, $fullname, $fpro, $fdist, $score_From, $score_To,$start,$limit,$latitude,$longitude)));
+    break;
+    case 'pagination3' :
+        $fsid = $_POST['fsid'];
+        $start = $_POST['start'];
+        $limit = $_POST['limit'];
+       
+        print_r(json_encode(getLogRain($fsid,0,$start,$limit)));
+        // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
+    break;
+    case 'pagination4' :
+        $fsid = $_POST['fsid'];
+        $start = $_POST['start'];
+        $limit = $_POST['limit'];
+       
+        print_r(json_encode(getLogWater($fsid,0,$start,$limit)));
+        // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
+
     break;
     case 'deleteLog';
         $logid = $_POST['logid'];

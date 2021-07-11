@@ -253,7 +253,7 @@ function setTableBody(DATA){
 }
 
 function getDataSetTable2(){
-    $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start,limit: limit}, function(result){
+    $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start2,limit: limit2}, function(result){
         DATA = JSON.parse(result);
         setTableBody2(DATA);
     });

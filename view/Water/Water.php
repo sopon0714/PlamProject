@@ -516,7 +516,7 @@ if($times2 == 0){
                                                                 <li class="paginate_button page-item previous disabled" id="dataTable_previous2"><a
                                                                         href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
                                                                         class="page-link">Previous</a></li>
-                                                                <li class="paginate_button pagination_li page-use page-item active" id="page2_1"
+                                                                <li class="paginate_button pagination_li2 page-use page-item active" id="page2_1"
                                                                     page="1"><a href="#" aria-controls="dataTable" id="page1" data-dt-idx="1"
                                                                         tabindex="0" class="page-link">1</a></li>
                                                                 <li class="paginate_button page-item disabled" hidden id="dataTable_ellipsis12"><a
@@ -525,7 +525,7 @@ if($times2 == 0){
                                                                 <?php
                                                                     for($i=2;$i<$pages2;$i++){
                                                                         if($i < $pages2){?>
-                                                                <li class="paginate_button pagination_li page-use page-item"
+                                                                <li class="paginate_button pagination_li2 page-use page-item"
                                                                     <?php if($i > 5) echo "hidden"; ?> id="page2_<?php echo $i;?>"
                                                                     page="<?php echo $i;?>"><a href="#" aria-controls="dataTable"
                                                                         id="page<?php echo $i;?>" data-dt-idx="<?php echo $i;?>" tabindex="0"
@@ -538,13 +538,13 @@ if($times2 == 0){
                                                                     <?php if($pages2 < 7) echo "hidden"; ?> id="dataTable_ellipsis22"><a href="#"
                                                                         aria-controls="dataTable" data-dt-idx="-2" tabindex="0"
                                                                         class="page-link">…</a></li>
-                                                                <li class="paginate_button page-item pagination_li" page="<?php echo $pages2;?>"
+                                                                <li class="paginate_button page-item pagination_li2" page="<?php echo $pages2;?>"
                                                                     <?php if($pages2 == 1 || $pages2 == 0) echo "hidden"; ?> id="lastpage2"><a href="#"
                                                                         id="page<?php echo $i;?>" aria-controls="dataTable"
                                                                         data-dt-idx="<?php echo $pages2;?>" tabindex="0"
                                                                         class="page-link"><?php echo $pages2;?></a></li>
                                                                 <li class="paginate_button page-item next <?php if($pages2 == 1 || $pages2 == 0) echo "disabled"; ?> "
-                                                                    id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="8"
+                                                                    id="dataTable_next2"><a href="#" aria-controls="dataTable" data-dt-idx="8"
                                                                         tabindex="0" class="page-link">Next</a></li>
                                                             </ul>
                                                         </div>

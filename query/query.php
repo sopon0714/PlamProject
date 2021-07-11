@@ -2601,7 +2601,7 @@ function getTableAllWater(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$sco
     $sql .= " GROUP BY `dim-farm`.`dbID`) ORDER BY `dim-user`.`FullName`,f.`Name`  ,sf.`Name`";
     if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $INFOSUBFARM =  selectData($sql);
-    $INFOSUBFARMWATER = array();
+    $INFOSUBFARMWATER = array(); 
     if ($INFOSUBFARM[0]['numrow'] == 0) {
         $INFOSUBFARMWATER = null;
     }
@@ -2684,20 +2684,21 @@ function getAvgFertilising($year)
     $DATA = selectData($sql);
     return $DATA[1]['AVGfertilising'];
 }
-function getLogRain($fsid, $year = 0)
+function getLogRain($fsid, $year = 0,$start=0,$limit=0)
 {
     $sql = "SELECT `log-raining`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
-    `log-raining`.`StartTime`,`log-raining`.`StopTime`,`log-raining`.`Period`,`log-raining`.`Vol`
-    FROM `log-raining`
-    INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-raining`.`DIMdateID`
-    INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-raining`.`DIMsubFID`
-    WHERE `log-raining`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid ";
+    `log-raining`.`StartTime`,  `log-raining`.`StopTime`,`log-raining`.`Period`,`log-raining`.`Vol`
+     FROM `log-raining`
+     INNER JOIN `dim-time` ON `dim-time`.`ID` =`log-raining`.`DIMdateID`
+     INNER JOIN `dim-farm` ON `dim-farm`.`ID`=`log-raining`.`DIMsubFID`
+     WHERE `log-raining`.`isDelete`=0 AND `dim-farm`.`dbID`= $fsid ";
     if ($year != 0) $sql .= " AND `dim-time`.`Year2` = '$year'";
     $sql .= " ORDER BY `log-raining`.`StartTime` DESC";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $DATA = selectData($sql);
     return  $DATA;
 }
-function getLogWater($fsid, $year = 0)
+function getLogWater($fsid, $year = 0,$start=0,$limit=0)
 {
     $sql = "SELECT `log-watering`.`ID` AS LogID,`dim-time`.`dd`,`dim-time`.`Month`,`dim-time`.`Year2`,
     `log-watering`.`StartTime`,`log-watering`.`StopTime`,`log-watering`.`Period`,`log-watering`.`Vol`
@@ -2707,6 +2708,7 @@ function getLogWater($fsid, $year = 0)
     WHERE `log-watering`.`isDelete`=0 AND `dim-farm`.`dbID`=$fsid  ";
     if ($year != 0) $sql .= " AND `dim-time`.`Year2` = '$year'";
     $sql .= " ORDER BY `log-watering`.`StartTime` DESC";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $DATA = selectData($sql);
     return  $DATA;
 }
