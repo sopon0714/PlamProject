@@ -87,8 +87,8 @@
             $("#body2").html(show_loading2);
             $(".pagination_li2").removeClass("active");
             CurrentPage = parseInt($(this).attr("page"));
-            setPageChange(CurrentPage);
-            getDataSetTable();
+            setPageChange2(CurrentPage);
+            getDataSetTable2();
         });
         $("#dataTable_next2").click(function(){
             // console.log("next");
@@ -99,8 +99,8 @@
                 $("#body2").html(show_loading2);
                 $("#page2_"+OwnPage).removeClass("active");
                 CurrentPage = parseInt(OwnPage)+1;
-                setPageChange(CurrentPage);
-                getDataSetTable();
+                setPageChange2(CurrentPage);
+                getDataSetTable2();
             }
         });
         $("#dataTable_previous2").click(function(){
@@ -111,8 +111,8 @@
                 $("#body2").html(show_loading2);
                 $("#page2_"+OwnPage).removeClass("active");
                 CurrentPage = parseInt(OwnPage)-1;
-                setPageChange(CurrentPage);
-                getDataSetTable();
+                setPageChange2(CurrentPage);
+                getDataSetTable2();
             }
         });
         $("#dataTable_length2").change(function(){
@@ -120,9 +120,9 @@
             CurrentPage = 1;
             size2 = parseInt($("#size2").attr("size2"));
             limit2 = parseInt($("#dataTable_length2").val());
-            setPage(size2,limit2);
-            setPageChange(CurrentPage);
-            getDataSetTable();
+            setPage2(size2,limit2);
+            setPageChange2(CurrentPage);
+            getDataSetTable2();
         }); 
     });
     function setPage(size,limit){
