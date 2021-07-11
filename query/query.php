@@ -2411,32 +2411,18 @@ function getActivityDetail($farmID, $DBactID)
 
     return $LOG;
 }
-function getTableAllRain(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$score_From, &$score_To)
+function getTableAllRain(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$score_From, &$score_To,$start,$limit,$latitude,$longitude)
 {
-    $score_From = 0;
-    $score_To = 0;
-    $idformal = '';
-    $fpro = 0;
-    $fdist = 0;
-    $fullname = '';
-    if (isset($_POST['score_From']))  $score_From = $_POST['score_From'];
-    if (isset($_POST['score_To']))  $score_To = $_POST['score_To'];
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['year']))  $year = $_POST['year'];
-    if (isset($_POST['s_province']))  $fpro = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-        $namef = explode(" ", $fullname);
-        if (isset($namef[1])) {
-            $fnamef = $namef[0];
-            $lnamef = $namef[1];
-        } else {
-            $fnamef = $fullname;
-            $lnamef = $fullname;
-        }
+
+    $namef = explode(" ", $fullname);
+    if (isset($namef[1])) {
+        $fnamef = $namef[0];
+        $lnamef = $namef[1];
+    } else {
+        $fnamef = $fullname;
+        $lnamef = $fullname;
     }
+
     $sql = "SELECT  sf.`dbID` AS FSID ,f.`dbID` AS FMID ,`dim-user`.`FullName`,f.`Name` as NameFarm ,sf.`Name` as NameSubfarm ,
             `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`Latitude`,
             `log-farm`.`Longitude`,`log-farm`.`NumTree`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM `log-farm`
@@ -2451,8 +2437,10 @@ function getTableAllRain(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$scor
     if ($fullname != '') $sql .= " AND (FullName LIKE '%" . $fnamef . "%' OR FullName LIKE '%" . $lnamef . "%') ";
     if ($fpro    != 0)  $sql .= " AND `dim-address`.dbprovID = '" . $fpro . "' ";
     if ($fdist   != 0)  $sql .= " AND `dim-address`.dbDistID = '" . $fdist . "' ";
-
+    if ($latitude != '') $sql = $sql . " AND `Latitude` = '" . $latitude . "' ";
+    if ($longitude != '') $sql = $sql . " AND `Longitude` = '" . $longitude . "' ";  
     $sql .= " GROUP BY `dim-farm`.`dbID`) ORDER BY `dim-user`.`FullName`,f.`Name`  ,sf.`Name`";
+    if ($limit != 0) $sql = $sql . " LIMIT ".$start." , ".$limit;
     $INFOSUBFARM =  selectData($sql);
     $INFOSUBFARMRAIN = array();
     if ($INFOSUBFARM[0]['numrow'] == 0) {
