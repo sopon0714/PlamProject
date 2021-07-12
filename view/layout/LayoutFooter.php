@@ -11,7 +11,6 @@
 <!-- End of Page Wrapper -->
 
 <?php include_once("MainJS.php"); ?>
-{
 <script>
     start = 0;
     limit = 10;
@@ -61,7 +60,7 @@
             // console.log("previous");
             OwnPage = parseInt($("#CurrentPage").attr("CurrentPage"));
             // console.log("OwnPage=/"+OwnPage+"/");
-            if(OwnPage != 1){
+            if(OwnPage > 1){
                 $("#body").html(show_loading);
                 $("#page_"+OwnPage).removeClass("active");
                 CurrentPage = parseInt(OwnPage)-1;
@@ -75,7 +74,7 @@
             size = parseInt($("#size").attr("size"));
             limit = parseInt($("#dataTable_length").val());
             setPage(size,limit);
-            setPageChange(CurrentPage);
+            // setPageChange(CurrentPage);
             getDataSetTable();
         }); 
         
@@ -107,7 +106,7 @@
             // console.log("previous");
             OwnPage = parseInt($("#CurrentPage2").attr("CurrentPage2"));
             // console.log("OwnPage=/"+OwnPage+"/");
-            if(OwnPage != 1){
+            if(OwnPage > 1){
                 $("#body2").html(show_loading2);
                 $("#page2_"+OwnPage).removeClass("active");
                 CurrentPage = parseInt(OwnPage)-1;
@@ -121,7 +120,7 @@
             size2 = parseInt($("#size2").attr("size2"));
             limit2 = parseInt($("#dataTable_length2").val());
             setPage2(size2,limit2);
-            setPageChange2(CurrentPage2);
+            // setPageChange2(CurrentPage2);
             getDataSetTable2();
         }); 
     });
@@ -143,21 +142,56 @@
         }
         // console.log("last page = "+lastPage);
         // console.log("own page = "+OwnPage);
-        if(pages != 1){
-            for(i=2;i<lastPage;i++){
+        console.log("pages = "+pages);
+
+        $("#dataTable_previous").addClass("disabled");
+        $("#dataTable_ellipsis1").attr("hidden",true);
+
+        $("#page_1").addClass("active");
+
+        for(i=2;i<lastPage;i++){
             $("#page_"+i).attr("hidden",true);
-            }
+        }
+        for(i=2;i<pages;i++){
+            if(i < 6)
+                $("#page_"+i).removeAttr("hidden");
+        }
+
+        if(pages > 1){
+            $("#dataTable_next").removeClass("disabled");
+
             $("#lastpage").removeAttr("hidden");
             $("#lastpage").attr("page",pages);
             $("#lastpage").html(`<a href="#" aria-controls="dataTable" data-dt-idx="${pages}" tabindex="0" class="page-link">${pages}</a>`);
             // $("#page_"+lastPage).attr("id","page_"+pages);
         }else{
+            $("#dataTable_next").addClass("disabled");
+
             $("#lastpage").attr("hidden",true);
         }
+
+        if(pages > 6){
+            $("#dataTable_ellipsis2").removeAttr("hidden");
+        }else{
+            $("#dataTable_ellipsis2").attr("hidden",true);
+        }
+
+        if(size == 0){
+            html = `Show 0 to 0 of 0`;
+        }else{
+            if(limit > size){
+                end = size;
+            }else{
+                end = limit;
+            }
+            html = `Showing 1 to ${end} of ${size} entries`;
+        }
+        $("#dataTable_info").html(html);
+
     }
     function setPageChange(CurrentPage){
         pages = $("#pages").attr("pages");
-        if(CurrentPage == pages && CurrentPage != 1){
+        if(CurrentPage == pages && CurrentPage > 1){
             $("#lastpage").addClass("active");
         }else{
             $("#lastpage").removeClass("active");
@@ -185,16 +219,16 @@
         // console.log("start = "+start);
         // console.log("end = "+end);
         // console.log("pages = "+pages);
-        html = `Show ${start+1} to ${end} of ${size}`;
+        html = `Showing ${start+1} to ${end} of ${size} entries`;
         $("#dataTable_info").html(html);
         //page != 1 can click previous
-        if(page != 1){
+        if(page > 1){
             $("#dataTable_previous").removeClass("disabled");
         }else{
             $("#dataTable_previous").addClass("disabled");
         }
         //pages != 1 and page != pages pages can click next
-        if(pages != 1 && page != pages){
+        if(pages > 1 && page != pages){
             $("#dataTable_next").removeClass("disabled");
         }else{
             $("#dataTable_next").addClass("disabled");
@@ -255,21 +289,56 @@
         }
         // console.log("last page = "+lastPage);
         // console.log("own page = "+OwnPage);
-        if(pages != 1){
-            for(i=2;i<lastPage;i++){
+        console.log("pages = "+pages);
+
+        $("#dataTable_previous2").addClass("disabled");
+        $("#dataTable_ellipsis12").attr("hidden",true);
+
+        $("#page2_1").addClass("active");
+
+        for(i=2;i<lastPage;i++){
             $("#page2_"+i).attr("hidden",true);
-            }
+        }
+        for(i=2;i<pages;i++){
+            if(i < 6)
+                $("#page2_"+i).removeAttr("hidden");
+        }
+
+        if(pages > 1){
+            $("#dataTable_next2").removeClass("disabled");
+
             $("#lastpage2").removeAttr("hidden");
             $("#lastpage2").attr("page",pages);
             $("#lastpage2").html(`<a href="#" aria-controls="dataTable" data-dt-idx="${pages}" tabindex="0" class="page-link">${pages}</a>`);
             // $("#page_"+lastPage).attr("id","page_"+pages);
         }else{
+            $("#dataTable_next2").addClass("disabled");
+
             $("#lastpage2").attr("hidden",true);
         }
+
+        if(pages > 6){
+            $("#dataTable_ellipsis22").removeAttr("hidden");
+        }else{
+            $("#dataTable_ellipsis22").attr("hidden",true);
+        }
+
+        if(size2 == 0){
+            html = `Showing 0 to 0 of 0 entries`;
+        }else{
+            if(limit2 > size2){
+                end = size2;
+            }else{
+                end = limit2;
+            }
+            html = `Showing 1 to ${end} of ${size2} entries`;
+        }
+        $("#dataTable_info2").html(html);
+
     }
     function setPageChange2(CurrentPage){
         pages = $("#pages2").attr("pages2");
-        if(CurrentPage == pages && CurrentPage != 1){
+        if(CurrentPage == pages && CurrentPage > 1){
             $("#lastpage2").addClass("active");
         }else{
             $("#lastpage2").removeClass("active");
@@ -281,14 +350,14 @@
         size2 = parseInt($("#size2").attr("size2"));
         pages = parseInt(pages);
         // pages = Math.ceil(size2/limit2);
-        start2 = (page - 1) * limit2;
+        start = (page - 1) * limit2;
         if(page == pages || size2 < limit2){
             end = size2;
         }else{
-            end = start2+limit2;
+            end = start+limit2;
         }
         if(size2 == 0){
-            start2 = -1;
+            start = -1;
             limit2 = 0;
         }
         // console.log("size2 = "+size2);
@@ -297,16 +366,16 @@
         // console.log("start2 = "+start2);
         // console.log("end = "+end);
         // console.log("pages = "+pages);
-        html = `Show ${start2+1} to ${end} of ${size2}`;
+        html = `Showing ${start+1} to ${end} of ${size2} entries`;
         $("#dataTable_info2").html(html);
         //page != 1 can click previous
-        if(page != 1){
+        if(page > 1){
             $("#dataTable_previous2").removeClass("disabled");
         }else{
             $("#dataTable_previous2").addClass("disabled");
         }
         //pages != 1 and page != pages pages can click next
-        if(pages != 1 && page != pages){
+        if(pages > 1 && page != pages){
             $("#dataTable_next2").removeClass("disabled");
         }else{
             $("#dataTable_next2").addClass("disabled");
@@ -357,8 +426,6 @@ var fade = true;
         }
     });
 </script>
-
-}
 
 </body>
 
