@@ -24,14 +24,14 @@ function initMap() {
       center[1] += longFloat;
       data = [farm, la, long, dist, pro];
       locations.push(data);
-      console.log(laFloat);
-      console.log(longFloat);
+      // console.log(laFloat);
+      // console.log(longFloat);
     }
     center[0] = center[0]/(size-1);
     center[1] = center[1]/(size-1);
 
-    console.log(center);
-    console.log(locations);
+    // console.log(center);
+    // console.log(locations);
 
     if(size-1 == 0){
       center[0] = $('#info').attr('la');
