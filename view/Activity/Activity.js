@@ -155,7 +155,7 @@ $(document).ready(function() {
 
 });
 function getDataSetTable(){
-    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: start,limit: limit}, function(result){
+    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: start,limit: limit,latitude: latitude,longitude: longitude}, function(result){
         // console.log(result);
         DATA = JSON.parse(result);
         // console.log(result);
@@ -394,12 +394,17 @@ function initMap() {
                     //         $('.la' + lati2+'long'+longi2).hide();
                     //     }
                     // }
+                        latitude =  locations[i][1];
+                        longitude = locations[i][2];
+                        start = 0;
                         $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,fmax: fmax,fmin: fmin,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
                             // console.log(result);
                             DATA = JSON.parse(result);
                             // console.log(result);
                             // console.log(DATA);
-                            setTableBody(DATA);
+                            $("#size").attr("size",DATA[0]["numrow"]);
+                            getDataSetTable();
+                            clickMarkOnMap();
                         });
                     }
 

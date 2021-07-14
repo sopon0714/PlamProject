@@ -251,12 +251,12 @@ $(document).ready(function() {
 });
 // pagination
 function getDataSetTable(){
-      $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: start,limit: limit}, function(result){
-          DATA = JSON.parse(result);
-          // console.log(result);
-          // console.log(DATA[0]["numrow"]);
-          setTableBody(DATA);
-      });
+  $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: start,limit: limit,latitude: latitude,longitude: longitude}, function(result){
+    DATA = JSON.parse(result);
+    // console.log(result);
+    setTableBody(DATA);
+    // clickMarkOnMap(DATA[0]["numrow"]);
+  });
 }
 // pagination
 function setTableBody(DATA){
@@ -560,12 +560,16 @@ function initMap() {
                     // }
 
                     // pagination
-
-                    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
+                    latitude =  locations[i][1];
+                    longitude = locations[i][2];
+                    start = 0;
+                    $.post("manage.php", {request: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,fyear: fyear,ftype: ftype,start: 0,limit: 0,latitude: latitude,longitude: longitude}, function(result){
                       DATA = JSON.parse(result);
                       // console.log(result);
                       // console.log(DATA[0]["numrow"]);
-                      setTableBody(DATA);
+                      $("#size").attr("size",DATA[0]["numrow"]);
+                      getDataSetTable();
+                      clickMarkOnMap();
                     });
                   }
 

@@ -18,6 +18,8 @@
     start2 = 0;
     limit2 = 10;
     show_loading2 = $("#show_loading2").html();
+    latitude = '';
+    longitude = '';
 
     $(document).ready(function() {
         $('.tableSearch').DataTable({
@@ -124,6 +126,11 @@
             getDataSetTable2();
         }); 
     });
+    function clickMarkOnMap(){
+        size = parseInt($("#size").attr("size"));
+        limit = parseInt($("#dataTable_length").val());
+        setPage(size,limit);
+    }
     function setPage(size,limit){
         // console.log("set page");
         if(size == 0){

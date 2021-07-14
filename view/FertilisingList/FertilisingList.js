@@ -35,7 +35,7 @@ $(document).ready(function() {
 
 });
 function getDataSetTable(){
-    $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: start,limit: limit}, function(result){
+    $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: start,limit: limit,latitude: latitude,longitude: longitude}, function(result){
         DATA = JSON.parse(result);
         setTableBody(DATA);
     });
@@ -76,7 +76,7 @@ function initMap() {
     fade = false;
     $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0}, function(result){
        DATA = JSON.parse(result);
-       console.log(DATA);
+    //    console.log(DATA);
        getDataSetTable();
       $(".loader-container").fadeOut(500);
       // console.log(DATA);
@@ -140,10 +140,15 @@ function initMap() {
                   infowindow.open(map, marker);
 
                   if (i != -1) {
+                    latitude =  locations[i][1];
+                    longitude = locations[i][2];
+                    start = 0;
                     $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
                       DATA = JSON.parse(result);
-                     
-                      setTableBody(DATA);
+                      size = Object.keys(DATA).length;
+                      $("#size").attr("size",size);
+                      getDataSetTable();
+                      clickMarkOnMap();
                     });
                   }
 
