@@ -71,6 +71,7 @@
             }
         });
         $("#dataTable_length").change(function(){
+            start = 0;
             $("#body").html(show_loading);
             CurrentPage = 1;
             size = parseInt($("#size").attr("size"));
@@ -117,6 +118,7 @@
             }
         });
         $("#dataTable_length2").change(function(){
+            start2 = 0;
             $("#body2").html(show_loading2);
             CurrentPage2 = 1;
             size2 = parseInt($("#size2").attr("size2"));
