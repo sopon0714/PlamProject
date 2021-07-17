@@ -127,13 +127,13 @@
         }); 
     });
     function clickMarkOnMap(){
-        console.log("clickMarkOnMap");
+        // console.log("clickMarkOnMap");
         size = parseInt($("#size").attr("size"));
         limit = parseInt($("#dataTable_length").val());
         setPage(size,limit);
     }
     function clickMarkOnMap2(){
-        console.log("clickMarkOnMap2");
+        // console.log("clickMarkOnMap2");
         size2 = parseInt($("#size2").attr("size2"));
         limit2 = parseInt($("#dataTable_length2").val());
         setPage2(size2,limit2);
@@ -156,7 +156,7 @@
         }
         // console.log("last page = "+lastPage);
         // console.log("own page = "+OwnPage);
-        console.log("pages = "+pages);
+        // console.log("pages = "+pages);
 
         $("#dataTable_previous").addClass("disabled");
         $("#dataTable_ellipsis1").attr("hidden",true);
@@ -200,7 +200,6 @@
             }
             html = `Showing 1 to ${end} of ${size} entries`;
         }
-        console.log(html);
         $("#dataTable_info").html(html);
 
     }
@@ -304,7 +303,7 @@
         }
         // console.log("last page = "+lastPage);
         // console.log("own page = "+OwnPage);
-        console.log("pages = "+pages);
+        // console.log("pages = "+pages);
 
         $("#dataTable_previous2").addClass("disabled");
         $("#dataTable_ellipsis12").attr("hidden",true);
