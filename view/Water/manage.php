@@ -16,9 +16,9 @@ switch ($action) {
         $fdist = $_POST['fdist'];
         $start = $_POST['start'];
         $limit = $_POST['limit']; 
-        $year = $_POST['year'];
-        $score_From = $_POST['score_From'];
-        $score_To = $_POST['score_To'];
+        $year = isset($_POST['year'])?$_POST['year']:date("Y") + 543;;
+        $score_From = isset($_POST['score_From'])?$_POST['score_From']:0;
+        $score_To = isset($_POST['score_To'])?$_POST['score_To']:0;
         $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
         $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
 
@@ -31,9 +31,9 @@ switch ($action) {
         $fdist = $_POST['fdist'];
         $start = $_POST['start'];
         $limit = $_POST['limit'];
-        $year = $_POST['year'];
-        $score_From = $_POST['score_From'];
-        $score_To = $_POST['score_To'];
+        $year = isset($_POST['year'])?$_POST['year']:date("Y") + 543;;
+        $score_From = isset($_POST['score_From'])?$_POST['score_From']:0;
+        $score_To = isset($_POST['score_To'])?$_POST['score_To']:0;
         $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
         $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
 

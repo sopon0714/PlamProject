@@ -37,7 +37,11 @@ $DISTRINCT_PROVINCE = getDistrinctInProvince($fpro);
 // pagination
 $page = 1; 
 $limit = 10;
-$times = count($INFOSUBFARM);
+if($INFOSUBFARM != null){
+    $times = count($INFOSUBFARM);
+}else{
+    $times = 0;
+}
 if($times == 0) $start = 0;
 $start = (($page - 1) * $limit)+1;
 $end = $start+$limit;

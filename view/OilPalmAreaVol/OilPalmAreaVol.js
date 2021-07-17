@@ -8,7 +8,6 @@ fdist = $("#data_search").attr("fdist");
 //end pagination
 $(document).ready(function() {
     //  console.log("y");
-    
     $('.tt').tooltip();
     $(document).on("change", "#s_province", function() {
 
@@ -46,28 +45,30 @@ function getDataSetTable(){
 function setTableBody(DATA){
     html = ``;
     i = 0;
-    for (const [key, value] of Object.entries(DATA)) {
-        html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
-                    <td>${value["FullName"]}</td>
-                    <td>${value["NameFarm"]}</td>
-                    <td style="text-align:right;">${value["NumSubFarm"]} แปลง</td>
-                    <td style="text-align:right;">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} วา</td>
-                    <td style="text-align:right;">${value["NumTree"]} ต้น</td>
-                    <td style="text-align:right;">${parseFloat(value["VolHarvest"]).toFixed(2)} ก.ก.</td>
-                    <td style="text-align:center;">
-                        <form method="post"  name="formID" action="./OilPalmAreaVolDetail.php?FMID=${value["FMID"]}">
-                            <button type="submit"  class="btn btn-info btn-sm" data-toggle="tooltip" title="รายละเอียด"><i class="fas fa-bars"></i></button></a>
-                        </form>
-                    </td>
-                    <label class="click-map" hidden id="${i++}"
-                    namesubfarm="${value["NameFarm"]}"
-                    la="${value["Latitude"]}" long="${value["Longitude"]}"
-                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
-                    owner="${value["FullName"]}"></label>
-                </tr>`;
+    if(DATA != null){
+        for (const [key, value] of Object.entries(DATA)) {
+            html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
+                        <td>${value["FullName"]}</td>
+                        <td>${value["NameFarm"]}</td>
+                        <td style="text-align:right;">${value["NumSubFarm"]} แปลง</td>
+                        <td style="text-align:right;">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} วา</td>
+                        <td style="text-align:right;">${value["NumTree"]} ต้น</td>
+                        <td style="text-align:right;">${parseFloat(value["VolHarvest"]).toFixed(2)} ก.ก.</td>
+                        <td style="text-align:center;">
+                            <form method="post"  name="formID" action="./OilPalmAreaVolDetail.php?FMID=${value["FMID"]}">
+                                <button type="submit"  class="btn btn-info btn-sm" data-toggle="tooltip" title="รายละเอียด"><i class="fas fa-bars"></i></button></a>
+                            </form>
+                        </td>
+                        <label class="click-map" hidden id="${i++}"
+                        namesubfarm="${value["NameFarm"]}"
+                        la="${value["Latitude"]}" long="${value["Longitude"]}"
+                        dist="${value["Distrinct"]}" pro="${value["Province"]}" 
+                        owner="${value["FullName"]}"></label>
+                    </tr>`;
+    
+         }
+    }
 
-     }
-      
     $("#body").html(html);
 }
 // pagination
@@ -77,13 +78,16 @@ function initMap() {
     // pagination
     fade = false;
     $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0}, function(result){
+      
        DATA = JSON.parse(result);
       getDataSetTable();
+      console.log("xxx");
       $(".loader-container").fadeOut(500);
       // console.log(DATA);
       // console.log("init map numrow data = "+DATA[0]["numrow"]);
-      size = Object.keys(DATA).length;
-      for (const [key, value] of Object.entries(DATA)) {
+      if(DATA != null){
+        size = Object.keys(DATA).length;
+        for (const [key, value] of Object.entries(DATA)) {
             namefarm = value['NameFarm'];
             la = value["Latitude"];
             long = value["Longitude"];
@@ -97,13 +101,18 @@ function initMap() {
             data = [namefarm,la,long,dist,pro,owner];
             locations.push(data);
         }
-        if (size == 0) {
-            center[0] = 13.736717;
-            center[1] = 100.523186;
-        }else{
-            center[0] = center[0] / size;
-            center[1] = center[1] / size;
-        }
+      }
+      else{
+        size =0;
+      }
+      
+    if (size == 0) {
+        center[0] = 13.736717;
+        center[1] = 100.523186;
+    }else{
+        center[0] = center[0] / size;
+        center[1] = center[1] / size;
+    }
       
 
       

@@ -43,28 +43,31 @@ function getDataSetTable(){
 function setTableBody(DATA){
     html = ``;
     i = 0;
-    for (const [key, value] of Object.entries(DATA)) {
-        html += `<tr  class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
-                    <td>${value["FullName"]}</td>
-                    <td>${value["NameFarm"]}</td>
-                    <td>${value["NameSubfarm"]}</td>
-                    <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
-                    <td class=\"text-right\">${value["NumTree"]} ต้น</td>
-                    <td class=\"text-right\">${value["countFertilising"]}</td>
-                    <td class=\"text-right\">${value["N"]}</td>
-                    <td class=\"text-right\">${value["P"]}</td>
-                    <td class=\"text-right\">${value["K"]}</td>
-                    <td class=\"text-center\">
-                    <a href=\"./FertilisingDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
-                    </td>
-                    <label class="click-map" hidden id="${i++}"
-                    namesubfarm="${value["NameFarm"]}"
-                    la="${value["Latitude"]}" long="${value["Longitude"]}"
-                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
-                    owner="${value["FullName"]}"></label>
-                </tr>`;
-
-     }
+    if(DATA != null){
+        for (const [key, value] of Object.entries(DATA)) {
+            html += `<tr  class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
+                        <td>${value["FullName"]}</td>
+                        <td>${value["NameFarm"]}</td>
+                        <td>${value["NameSubfarm"]}</td>
+                        <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
+                        <td class=\"text-right\">${value["NumTree"]} ต้น</td>
+                        <td class=\"text-right\">${value["countFertilising"]}</td>
+                        <td class=\"text-right\">${value["N"]}</td>
+                        <td class=\"text-right\">${value["P"]}</td>
+                        <td class=\"text-right\">${value["K"]}</td>
+                        <td class=\"text-center\">
+                        <a href=\"./FertilisingDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                        </td>
+                        <label class="click-map" hidden id="${i++}"
+                        namesubfarm="${value["NameFarm"]}"
+                        la="${value["Latitude"]}" long="${value["Longitude"]}"
+                        dist="${value["Distrinct"]}" pro="${value["Province"]}" 
+                        owner="${value["FullName"]}"></label>
+                    </tr>`;
+    
+         }
+    }
+    
       
     $("#body").html(html);
 }
@@ -77,12 +80,14 @@ function initMap() {
     $.post("manage.php", {action: "pagination",year: year,idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0}, function(result){
        DATA = JSON.parse(result);
     //    console.log(DATA);
-       getDataSetTable();
-      $(".loader-container").fadeOut(500);
-      // console.log(DATA);
-      // console.log("init map numrow data = "+DATA[0]["numrow"]);
-      size = Object.keys(DATA).length;
-      for (const [key, value] of Object.entries(DATA)) {
+    getDataSetTable();
+    $(".loader-container").fadeOut(500);
+    // console.log(DATA);
+    // console.log("init map numrow data = "+DATA[0]["numrow"]);
+    size = 0;
+    if(DATA != null){
+        size = Object.keys(DATA).length;
+        for (const [key, value] of Object.entries(DATA)) {
             namefarm = value['NameFarm'];
             la = value["Latitude"];
             long = value["Longitude"];
@@ -96,6 +101,8 @@ function initMap() {
             data = [namefarm,la,long,dist,pro,owner];
             locations.push(data);
         }
+    }
+    
         if (size == 0) {
             center[0] = 13.736717;
             center[1] = 100.523186;

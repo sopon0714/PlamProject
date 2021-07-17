@@ -218,7 +218,7 @@ $(document).ready(function() {
 });
 // pagination 
 function getDataSetTable(){
-    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start,limit: limit}, function(result){
+    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start,limit: limit,latitude: latitude,longitude: longitude}, function(result){
         DATA = JSON.parse(result);
         
         setTableBody(DATA);
@@ -227,33 +227,34 @@ function getDataSetTable(){
 function setTableBody(DATA){
     html = ``;
     i = 0;
-    for (const [key, value] of Object.entries(DATA)) {
-        html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
-                    <td>${value["FullName"]}</td>
-                    <td>${value["NameFarm"]}</td>
-                    <td>${value["NameSubfarm"]}</td>
-                    <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
-                    <td class=\"text-right\">${value["NumTree"]} ต้น</td>
-                    <td class=\"text-right\">${value["rainDay"]} วัน</td>
-                    <td class=\"text-right\">${value["notrainDay"]} วัน</td>
-                    <td class=\"text-right\">${value["longDay"]} วัน</td>
-                    <td class=\"text-right\">${parseFloat(value["totalVol"]).toFixed(2)}</td>
-                    <td class=\"text-center\">
-                    <a href=\"./WaterDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
-                    </td>
-                    <label class="click-map" hidden 
-                    namesubfarm="${value["NameFarm"]}"
-                    la="${value["Latitude"]}" long="${value["Longitude"]}"
-                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
-                    owner="${value["FullName"]}"></label>
-                </tr>`;
-     }
-      
+    if(DATA != null){
+        for (const [key, value] of Object.entries(DATA)) {
+            html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
+                        <td>${value["FullName"]}</td>
+                        <td>${value["NameFarm"]}</td>
+                        <td>${value["NameSubfarm"]}</td>
+                        <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
+                        <td class=\"text-right\">${value["NumTree"]} ต้น</td>
+                        <td class=\"text-right\">${value["rainDay"]} วัน</td>
+                        <td class=\"text-right\">${value["notrainDay"]} วัน</td>
+                        <td class=\"text-right\">${value["longDay"]} วัน</td>
+                        <td class=\"text-right\">${parseFloat(value["totalVol"]).toFixed(2)}</td>
+                        <td class=\"text-center\">
+                        <a href=\"./WaterDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                        </td>
+                        <label class="click-map" hidden 
+                        namesubfarm="${value["NameFarm"]}"
+                        la="${value["Latitude"]}" long="${value["Longitude"]}"
+                        dist="${value["Distrinct"]}" pro="${value["Province"]}" 
+                        owner="${value["FullName"]}"></label>
+                    </tr>`;
+        }
+    }
     $("#body").html(html);
 }
 
 function getDataSetTable2(){
-    $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start2,limit: limit2}, function(result){
+    $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: start2,limit: limit2,latitude: latitude,longitude: longitude}, function(result){
         DATA = JSON.parse(result);
         setTableBody2(DATA);
     });
@@ -261,27 +262,28 @@ function getDataSetTable2(){
 function setTableBody2(DATA){
     html = ``;
     i = 0;
-    for (const [key, value] of Object.entries(DATA)) {
-        html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
-                    <td>${value["FullName"]}</td>
-                    <td>${value["NameFarm"]}</td>
-                    <td>${value["NameSubfarm"]}</td>
-                    <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
-                    <td class=\"text-right\">${value["NumTree"]} ต้น</td>
-                    <td class=\"text-center\">${value["lastDate"]}</td>
-                    <td class=\"text-right\">${value["lastVol"]}</td>
-                    <td class=\"text-right\">${parseFloat(value["totalVol"]).toFixed(2)}</td>
-                    <td class=\"text-center\">
-                    <a href=\"./WaterDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
-                    </td>
-                    <label class="click-map" hidden 
-                    namesubfarm="${value["NameFarm"]}"
-                    la="${value["Latitude"]}" long="${value["Longitude"]}"
-                    dist="${value["Distrinct"]}" pro="${value["Province"]}" 
-                    owner="${value["FullName"]}"></label>
-                </tr>`;
-     }
-      
+    if(DATA != null){
+        for (const [key, value] of Object.entries(DATA)) {
+            html += `<tr class="la${value["Latitude"]} long${value["Longitude"]} table-set" test="test${i}">
+                        <td>${value["FullName"]}</td>
+                        <td>${value["NameFarm"]}</td>
+                        <td>${value["NameSubfarm"]}</td>
+                        <td class=\"text-right\">${value["AreaRai"]} ไร่ ${value["AreaNgan"]} งาน</td>
+                        <td class=\"text-right\">${value["NumTree"]} ต้น</td>
+                        <td class=\"text-center\">${value["lastDate"]}</td>
+                        <td class=\"text-right\">${value["lastVol"]}</td>
+                        <td class=\"text-right\">${parseFloat(value["totalVol"]).toFixed(2)}</td>
+                        <td class=\"text-center\">
+                        <a href=\"./WaterDetail.php?FSID=${value["FSID"]}\"><button  class=\"btn btn-info btn-sm tt\" data-toggle=\"tooltip\" title=\"รายละเอียด\"><i class=\"fas fa-bars\"></i></button></a>
+                        </td>
+                        <label class="click-map" hidden 
+                        namesubfarm="${value["NameFarm"]}"
+                        la="${value["Latitude"]}" long="${value["Longitude"]}"
+                        dist="${value["Distrinct"]}" pro="${value["Province"]}" 
+                        owner="${value["FullName"]}"></label>
+                    </tr>`;
+        }
+    }
     $("#body2").html(html);
 }
 // pagination
@@ -291,7 +293,7 @@ function initMap() {
     // pagination
     fade = false;
     
-    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: 0,limit: 0}, function(result){
+    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,score_From: score_From,score_To: score_To,year: year,start: 0,limit: 0 }, function(result){
    
     DATA = JSON.parse(result);
     getDataSetTable();
@@ -299,20 +301,23 @@ function initMap() {
     $(".loader-container").fadeOut(500);
     // console.log(DATA);
     // console.log("init map numrow data = "+DATA[0]["numrow"]);
-    size = Object.keys(DATA).length;
-    for (const [key, value] of Object.entries(DATA)) {
-        namefarm = value['NameFarm'];
-        la = value["Latitude"];
-        long = value["Longitude"];
-        laFloat = parseFloat(value["Latitude"]);
-        longFloat = parseFloat(value["Longitude"]);
-        dist = value["Distrinct"];
-        pro = value["Province"];
-        owner = value["FullName"];
-        center[0] += laFloat;
-        center[1] += longFloat;
-        data = [namefarm,la,long,dist,pro,owner];
-        locations.push(data);
+    size =0;
+    if(DATA != null){
+        size = Object.keys(DATA).length;
+        for (const [key, value] of Object.entries(DATA)) {
+            namefarm = value['NameFarm'];
+            la = value["Latitude"];
+            long = value["Longitude"];
+            laFloat = parseFloat(value["Latitude"]);
+            longFloat = parseFloat(value["Longitude"]);
+            dist = value["Distrinct"];
+            pro = value["Province"];
+            owner = value["FullName"];
+            center[0] += laFloat;
+            center[1] += longFloat;
+            data = [namefarm,la,long,dist,pro,owner];
+            locations.push(data);
+        }
     }
     if (size == 0) {
         center[0] = 13.736717;
@@ -358,11 +363,27 @@ function initMap() {
                 infowindow.open(map, marker);
 
                 if (i != -1) {
-                $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: locations[i][1],longitude: locations[i][2]}, function(result){
-                    DATA = JSON.parse(result);
+                    // pagination
+                    latitude =  locations[i][1];
+                    longitude = locations[i][2];
+                    start = 0;
+                    $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: latitude,longitude: longitude}, function(result){
                     
-                    setTableBody(DATA);
-                });
+                    DATA = JSON.parse(result);
+                    $("#size").attr("size",DATA.length);
+                    getDataSetTable();
+                    //getDataSetTable2();
+                    clickMarkOnMap();
+                    });
+                    
+                    $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: latitude,longitude: longitude}, function(result){
+                        DATA = JSON.parse(result);
+                        $("#size2").attr("size2",DATA.length);
+                        setTableBody2(DATA);
+                        
+                    });
+                    clickMarkOnMap();
+                    
                 }
 
             }

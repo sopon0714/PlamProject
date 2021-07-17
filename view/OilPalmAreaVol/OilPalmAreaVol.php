@@ -19,14 +19,7 @@ if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
 if (isset($_POST['s_name'])) {
     $fullname = rtrim($_POST['s_name']);
     $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-    $namef = explode(" ", $fullname);
-    if (isset($namef[1])) {
-        $fnamef = $namef[0]; 
-        $lnamef = $namef[1];
-    } else {
-        $fnamef = $fullname;
-        $lnamef = $fullname;
-    }
+   
 }
 
 $currentYear = date("Y") + 543;
@@ -40,7 +33,12 @@ $AREA = getAreaLogFarm();
 // pagination
 $page = 1; 
 $limit = 10;
-$times = count($OILPALMAREAVOL);
+if($OILPALMAREAVOL != null){
+    $times = count($OILPALMAREAVOL);
+}else{
+    $times = 0;
+}
+
 if($times == 0) $start = 0;
 $start = (($page - 1) * $limit)+1;
 $end = $start+$limit;

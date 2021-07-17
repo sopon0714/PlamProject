@@ -17,7 +17,7 @@ switch ($action) {
           $limit = $_POST['limit'];
           $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : '';
           $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : '';
-
+          //echo("$idformal+$fullname+$fpro+$fdist+$start+$limit+$latitude+$longitude");
           print_r(json_encode(getTableAllHarvest($idformal, $fullname, $fpro, $fdist,$start,$limit,$latitude,$longitude)));
           // print_r(getPest($idformal, $fullname, $fpro, $fdist, $fyear, $ftype,$start,$limit,$latitude,$longitude));
 
