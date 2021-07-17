@@ -1510,25 +1510,18 @@ function getYearFer()
 //ตารางผลผลิตสวนปาล์มน้ำมันในระบบ หน้า OilPalmAreaVol.php
 function getTableAllHarvest(&$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
-    $idformal = '';
-    $fpro = 0;
-    $fdist = 0;
-    $fullname = '';
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['s_province']))  $fpro     = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist    = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-        $namef = explode(" ", $fullname);
-        if (isset($namef[1])) {
-            $fnamef = $namef[0];
-            $lnamef = $namef[1];
-        } else {
-            $fnamef = $fullname;
-            $lnamef = $fullname;
-        }
+    
+    
+    $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
+    $namef = explode(" ", $fullname);
+    if (isset($namef[1])) {
+        $fnamef = $namef[0];
+        $lnamef = $namef[1];
+    } else {
+        $fnamef = $fullname;
+        $lnamef = $fullname;
     }
+    
 
     $sql = "SELECT `dim-farm`.`dbID` AS FMID ,`dim-user`.`FullName`,`dim-farm`.`Name` as NameFarm ,
       `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`, `log-farm`.`NumSubFarm`,`log-farm`.`Latitude`,
@@ -2450,7 +2443,7 @@ function getTableAllRain(&$year, &$idformal, &$fullname, &$fpro, &$fdist, &$scor
     }
     $currentYear = date("Y") + 543;
     for ($i = 1; $i < count($INFOSUBFARM); $i++) {
-        if (checkrangDrying($INFOSUBFARM[$i]['FSID'], $year, $score_From, $score_To) || $checkscore || $currentYear == $year) {
+        if (checkrangDrying($INFOSUBFARM[$i]['FSID'], $year, $score_From, $score_To) || $checkscore ) {
             $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FMID'] = $INFOSUBFARM[$i]['FMID'];
             $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FSID'] = $INFOSUBFARM[$i]['FSID'];
             $INFOSUBFARMRAIN[$INFOSUBFARM[$i]['FSID']]['FullName'] = $INFOSUBFARM[$i]['FullName'];
@@ -2502,6 +2495,9 @@ function checkrangDrying($fsid, $year, $start, $end)
                     return true;
                 }
             }
+            
+        }else{
+            
         }
 
         return false;
@@ -3104,26 +3100,16 @@ function INFOCalendar($year, $fpro, $fdist, $fullname, $checkbox)
 }
 function getTableAllFertilising(&$year, &$idformal, &$fullname, &$fpro, &$fdist,$start,$limit,$latitude,$longitude)
 {
-    $idformal = '';
-    $fpro = 0;
-    $fdist = 0;
-    $fullname = '';
-    if (isset($_POST['s_formalid']))  $idformal = rtrim($_POST['s_formalid']);
-    if (isset($_POST['year']))  $year = $_POST['year'];
-    if (isset($_POST['s_province']))  $fpro = $_POST['s_province'];
-    if (isset($_POST['s_distrinct'])) $fdist = $_POST['s_distrinct'];
-    if (isset($_POST['s_name'])) {
-        $fullname = rtrim($_POST['s_name']);
-        $fullname = preg_replace('/[[:space:]]+/', ' ', trim($fullname));
-        $namef = explode(" ", $fullname);
-        if (isset($namef[1])) {
-            $fnamef = $namef[0];
-            $lnamef = $namef[1];
-        } else {
-            $fnamef = $fullname;
-            $lnamef = $fullname;
-        }
+   
+    $namef = explode(" ", $fullname);
+    if (isset($namef[1])) {
+        $fnamef = $namef[0];
+        $lnamef = $namef[1];
+    } else {
+        $fnamef = $fullname;
+        $lnamef = $fullname;
     }
+    
     $sql = "SELECT  sf.`dbID` AS FSID ,f.`dbID` AS FMID,`dim-user`.`FullName`,f.`Name` as NameFarm ,sf.`Name` as NameSubfarm ,
             `log-farm`.`AreaRai`, `log-farm`.`AreaNgan`,`log-farm`.`Latitude`,
             `log-farm`.`Longitude`,`log-farm`.`NumTree`,`dim-address`.`Distrinct`,`dim-address`.`Province` FROM `log-farm`
