@@ -127,9 +127,16 @@
         }); 
     });
     function clickMarkOnMap(){
+        console.log("clickMarkOnMap");
         size = parseInt($("#size").attr("size"));
         limit = parseInt($("#dataTable_length").val());
         setPage(size,limit);
+    }
+    function clickMarkOnMap2(){
+        console.log("clickMarkOnMap2");
+        size2 = parseInt($("#size2").attr("size2"));
+        limit2 = parseInt($("#dataTable_length2").val());
+        setPage2(size2,limit2);
     }
     function setPage(size,limit){
         // console.log("set page");
@@ -193,6 +200,7 @@
             }
             html = `Showing 1 to ${end} of ${size} entries`;
         }
+        console.log(html);
         $("#dataTable_info").html(html);
 
     }

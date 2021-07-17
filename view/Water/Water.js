@@ -368,22 +368,21 @@ function initMap() {
                     longitude = locations[i][2];
                     start = 0;
                     $.post("manage.php", {action: "pagination",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: latitude,longitude: longitude}, function(result){
-                    
-                    DATA = JSON.parse(result);
-                    $("#size").attr("size",DATA.length);
-                    getDataSetTable();
-                    //getDataSetTable2();
-                    clickMarkOnMap();
+                        DATA = JSON.parse(result);
+                        size = Object.keys(DATA).length;
+                        $("#size").attr("size",size);
+                        getDataSetTable();
+                        clickMarkOnMap();
                     });
-                    
+
                     $.post("manage.php", {action: "pagination2",idformal: idformal,fullname: fullname,fpro: fpro,fdist: fdist,start: 0,limit: 0,latitude: latitude,longitude: longitude}, function(result){
                         DATA = JSON.parse(result);
-                        $("#size2").attr("size2",DATA.length);
-                        setTableBody2(DATA);
-                        
+                        size = Object.keys(DATA).length;
+                        $("#size2").attr("size2",size);
+                        getDataSetTable2();
+                        clickMarkOnMap2();
                     });
-                    clickMarkOnMap();
-                    
+
                 }
 
             }
