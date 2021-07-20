@@ -29,13 +29,6 @@ $(document).ready(function() {
 
     $('#chose_cal').hide();
 
-    $('#export').click(function() {
-        $("#dataTable").excelexportjs({
-            containerid: "dataTable",
-            datatype: 'table'
-        });
-    });
-
     $('#chose_type').change(function() {
         chose_type = $("#chose_type").val();
 
@@ -499,8 +492,9 @@ $(document).ready(function() {
                 chose_cal = $("#chose_cal option:selected").html();
                 chose_cond = $("#chose_cond option:selected").html();
 
-
-                html = chose_type + " " + chose_cal;
+                html = chose_type;
+                if(present != "table")
+                    html += " "+chose_cal;
                 if (chose_cond == "ทั้งหมด")
                     html += " ตาม ";
                 else
@@ -701,7 +695,7 @@ $(document).ready(function() {
                     $('#chart_chart').html(html);
                     try {
                         result = JSON.parse(result);
-                        console.log(result);
+                        // console.log(result);
                         if (result[0]['numrow'] <= 0) {
                             $('#show_chart').hide();
                             $('#show_error').hide();
@@ -783,7 +777,11 @@ $(document).ready(function() {
                         $('#no_table').hide();
 
                         $('#dataTable').DataTable({
-                            "lengthMenu": [10, 50, 100, 500, 1000]
+                            lengthMenu : [10, 50, 100, 500, 1000],
+                            dom: 'Bfrtip',
+                            buttons: [
+                                'excelHtml5'
+                            ]
                         });
 
                     } else {

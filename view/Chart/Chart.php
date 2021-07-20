@@ -955,7 +955,7 @@ $MONTH = array("มกราคม","กุมภาพันธ์","มีน�
                             <h6 class="m-0 headshow" style="color:#006633; text-align:center;" name="headshow"></h6>
                         </div>
                         <div class="card-body" id="yes_table">
-                            <button class="btn btn-success" id="export">Export Excel</button>
+                            <!-- <button class="btn btn-success" id="export">Export Excel</button> -->
                             <div class="table-responsive" style="margin-top:10px">
                                 <table class="table table-bordered table-data" id="dataTable" style="table-layout: fixed;" width="100%" cellspacing="0"> 
                                         
