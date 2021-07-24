@@ -126,9 +126,9 @@ if($times == 0){
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-6 col-12">
-                                <div id="map" style="width:auto; height:40vh;"></div>
+                                <div id="map" style="width:auto;height:60vh;"></div>
                             </div>
-                            <div class="col-xl-6 col-12" id="forMap">
+                            <div class="col-xl-6 col-12" id="forMap"> 
 
                                 <div class="row">
                                     <div class="col-12">
