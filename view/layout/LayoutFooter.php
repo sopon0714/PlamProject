@@ -37,95 +37,111 @@
             $(".loader").fadeIn(0);
         });
         $(".pagination_li").click(function() {
-            // console.log("pageItem");
-            // console.log($(".pagination_li").html());
-            $("#body").html(show_loading);
-            $(".pagination_li").removeClass("active");
-            CurrentPage = parseInt($(this).attr("page"));
-            setPageChange(CurrentPage);
-            getDataSetTable();
-        });
-        $("#dataTable_next").click(function(){
-            // console.log("next");
-            OwnPage = $("#CurrentPage").attr("CurrentPage");
-            pages = $("#pages").attr("pages");
-            // console.log("OwnPage=/"+OwnPage+"/");
-            if(OwnPage != pages){
+            if(!$("#dataTable").hasClass('tableSearch')){
+                // console.log("pageItem");
+                // console.log($(".pagination_li").html());
                 $("#body").html(show_loading);
-                $("#page_"+OwnPage).removeClass("active");
-                CurrentPage = parseInt(OwnPage)+1;
+                $(".pagination_li").removeClass("active");
+                CurrentPage = parseInt($(this).attr("page"));
                 setPageChange(CurrentPage);
                 getDataSetTable();
+            }
+        });
+        $("#dataTable_next").click(function(){
+            if(!$("#dataTable").hasClass('tableSearch')){
+                // console.log("next");
+                OwnPage = $("#CurrentPage").attr("CurrentPage");
+                pages = $("#pages").attr("pages");
+                // console.log("OwnPage=/"+OwnPage+"/");
+                if(OwnPage != pages){
+                    $("#body").html(show_loading);
+                    $("#page_"+OwnPage).removeClass("active");
+                    CurrentPage = parseInt(OwnPage)+1;
+                    setPageChange(CurrentPage);
+                    getDataSetTable();
+                }
             }
         });
         $("#dataTable_previous").click(function(){
-            // console.log("previous");
-            OwnPage = parseInt($("#CurrentPage").attr("CurrentPage"));
-            // console.log("OwnPage=/"+OwnPage+"/");
-            if(OwnPage > 1){
-                $("#body").html(show_loading);
-                $("#page_"+OwnPage).removeClass("active");
-                CurrentPage = parseInt(OwnPage)-1;
-                setPageChange(CurrentPage);
-                getDataSetTable();
+            if(!$("#dataTable").hasClass('tableSearch')){
+                // console.log("previous");
+                OwnPage = parseInt($("#CurrentPage").attr("CurrentPage"));
+                // console.log("OwnPage=/"+OwnPage+"/");
+                if(OwnPage > 1){
+                    $("#body").html(show_loading);
+                    $("#page_"+OwnPage).removeClass("active");
+                    CurrentPage = parseInt(OwnPage)-1;
+                    setPageChange(CurrentPage);
+                    getDataSetTable();
+                }
             }
         });
         $("#dataTable_length").change(function(){
-            start = 0;
-            $("#body").html(show_loading);
-            CurrentPage = 1;
-            size = parseInt($("#size").attr("size"));
-            limit = parseInt($("#dataTable_length").val());
-            setPage(size,limit);
-            // setPageChange(CurrentPage);
-            getDataSetTable();
+            if(!$("#dataTable").hasClass('tableSearch')){
+                start = 0;
+                $("#body").html(show_loading);
+                CurrentPage = 1;
+                size = parseInt($("#size").attr("size"));
+                limit = parseInt($("#dataTable_length").val());
+                setPage(size,limit);
+                // setPageChange(CurrentPage);
+                getDataSetTable();
+            }
         }); 
         
         //second table in the same page---------------------------------
 
         $(".pagination_li2").click(function() {
-            // console.log("pageItem");
-            // console.log($(".pagination_li").html());
-            $("#body2").html(show_loading2);
-            $(".pagination_li2").removeClass("active");
-            CurrentPage = parseInt($(this).attr("page"));
-            setPageChange2(CurrentPage);
-            getDataSetTable2();
-        });
-        $("#dataTable_next2").click(function(){
-            // console.log("next");
-            OwnPage = $("#CurrentPage2").attr("CurrentPage2");
-            pages = $("#pages2").attr("pages2");
-            // console.log("OwnPage=/"+OwnPage+"/");
-            if(OwnPage != pages){
+            if(!$("#dataTable").hasClass('tableSearch')){
+                // console.log("pageItem");
+                // console.log($(".pagination_li").html());
                 $("#body2").html(show_loading2);
-                $("#page2_"+OwnPage).removeClass("active");
-                CurrentPage = parseInt(OwnPage)+1;
+                $(".pagination_li2").removeClass("active");
+                CurrentPage = parseInt($(this).attr("page"));
                 setPageChange2(CurrentPage);
                 getDataSetTable2();
+            }
+        });
+        $("#dataTable_next2").click(function(){
+            if(!$("#dataTable").hasClass('tableSearch')){
+                // console.log("next");
+                OwnPage = $("#CurrentPage2").attr("CurrentPage2");
+                pages = $("#pages2").attr("pages2");
+                // console.log("OwnPage=/"+OwnPage+"/");
+                if(OwnPage != pages){
+                    $("#body2").html(show_loading2);
+                    $("#page2_"+OwnPage).removeClass("active");
+                    CurrentPage = parseInt(OwnPage)+1;
+                    setPageChange2(CurrentPage);
+                    getDataSetTable2();
+                }
             }
         });
         $("#dataTable_previous2").click(function(){
-            // console.log("previous");
-            OwnPage = parseInt($("#CurrentPage2").attr("CurrentPage2"));
-            // console.log("OwnPage=/"+OwnPage+"/");
-            if(OwnPage > 1){
-                $("#body2").html(show_loading2);
-                $("#page2_"+OwnPage).removeClass("active");
-                CurrentPage = parseInt(OwnPage)-1;
-                setPageChange2(CurrentPage);
-                getDataSetTable2();
+            if(!$("#dataTable").hasClass('tableSearch')){
+                // console.log("previous");
+                OwnPage = parseInt($("#CurrentPage2").attr("CurrentPage2"));
+                // console.log("OwnPage=/"+OwnPage+"/");
+                if(OwnPage > 1){
+                    $("#body2").html(show_loading2);
+                    $("#page2_"+OwnPage).removeClass("active");
+                    CurrentPage = parseInt(OwnPage)-1;
+                    setPageChange2(CurrentPage);
+                    getDataSetTable2();
+                }
             }
         });
         $("#dataTable_length2").change(function(){
-            start2 = 0;
-            $("#body2").html(show_loading2);
-            CurrentPage2 = 1;
-            size2 = parseInt($("#size2").attr("size2"));
-            limit2 = parseInt($("#dataTable_length2").val());
-            setPage2(size2,limit2);
-            // setPageChange2(CurrentPage2);
-            getDataSetTable2();
+            if(!$("#dataTable").hasClass('tableSearch')){
+                start2 = 0;
+                $("#body2").html(show_loading2);
+                CurrentPage2 = 1;
+                size2 = parseInt($("#size2").attr("size2"));
+                limit2 = parseInt($("#dataTable_length2").val());
+                setPage2(size2,limit2);
+                // setPageChange2(CurrentPage2);
+                getDataSetTable2();
+            }
         }); 
     });
     function clickMarkOnMap(){
